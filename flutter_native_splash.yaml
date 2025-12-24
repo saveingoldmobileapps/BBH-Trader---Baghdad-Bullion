@@ -1,0 +1,24 @@
+flutter_native_splash:
+  # Required: Set the background color
+  color: "#232323"
+
+  # Specify the splash image (ensure it's a high-resolution PNG)
+  image: "assets/png/splash_screen.png"
+
+  # Optional: Specify an iOS-specific image (recommended)
+  image_ios: "assets/png/splash_screen_ios.png"
+
+  # Set iOS content mode to scale the image properly
+  ios_content_mode: scaleAspectFit
+
+  # Enable for iOS
+  ios: true
+
+  # Ensure Android configuration is correct
+  android: true
+  android_12:
+    color: "#232323"
+    image: "assets/png/android_splash.png"
+
+  # Optional: Fullscreen mode to hide notification bar
+  fullscreen: true

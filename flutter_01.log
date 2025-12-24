@@ -1,0 +1,122 @@
+Flutter crash report.
+Please report a bug at https://github.com/flutter/flutter/issues.
+
+## command
+
+flutter gen-l10n
+
+## exception
+
+ProcessException: ProcessException: `dart format` failed with exit code 65
+
+stdout:
+Formatted no files in 0.13 seconds.
+
+
+stderr:
+Could not format because the source could not be parsed:
+
+line 414, column 14 of lib/l10n/app_localizations_ar.dart: 'continue' can't be used as an identifier because it's a keyword.
+    ╷
+414 │   String get continue => 'متابعة';
+    │              ^^^^^^^^
+    ╵
+Could not format because the source could not be parsed:
+
+line 414, column 14 of lib/l10n/app_localizations_en.dart: 'continue' can't be used as an identifier because it's a keyword.
+    ╷
+414 │   String get continue => 'Continue';
+    │              ^^^^^^^^
+    ╵
+Could not format because the source could not be parsed:
+
+line 906, column 14 of lib/l10n/app_localizations.dart: 'continue' can't be used as an identifier because it's a keyword.
+    ╷
+906 │   String get continue;
+    │              ^^^^^^^^
+    ╵
+
+  Command: /Users/saveingold/Documents/FlutterDev/flutter/bin/cache/dart-sdk/bin/dart /Users/saveingold/Documents/FlutterDev/flutter/bin/cache/dart-sdk/bin/dart format /Users/saveingold/FlutterProjects/OfficeProject/saveingold_fzco/lib/l10n/app_localizations_ar.dart /Users/saveingold/FlutterProjects/OfficeProject/saveingold_fzco/lib/l10n/app_localizations_en.dart /Users/saveingold/FlutterProjects/OfficeProject/saveingold_fzco/lib/l10n/app_localizations.dart
+
+```
+#0      generateLocalizations (package:flutter_tools/src/localizations/gen_l10n.dart:97:7)
+<asynchronous suspension>
+#1      GenerateLocalizationsCommand.runCommand (package:flutter_tools/src/commands/generate_localizations.dart:277:5)
+<asynchronous suspension>
+#2      FlutterCommand.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command.dart:1563:27)
+<asynchronous suspension>
+#3      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+<asynchronous suspension>
+#4      CommandRunner.runCommand (package:args/command_runner.dart:212:13)
+<asynchronous suspension>
+#5      FlutterCommandRunner.runCommand.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:494:9)
+<asynchronous suspension>
+#6      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+<asynchronous suspension>
+#7      FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:431:5)
+<asynchronous suspension>
+#8      run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:98:11)
+<asynchronous suspension>
+#9      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+<asynchronous suspension>
+#10     main (package:flutter_tools/executable.dart:102:3)
+<asynchronous suspension>
+```
+
+## flutter doctor
+
+```
+[32m[✓][39m Flutter (Channel stable, 3.32.7, on macOS 15.3 24D60 darwin-arm64, locale en-AE) [867ms]
+    [32m•[39m Flutter version 3.32.7 on channel stable at /Users/saveingold/Documents/FlutterDev/flutter
+    [32m•[39m Upstream repository https://github.com/flutter/flutter.git
+    [32m•[39m Framework revision d7b523b356 (5 weeks ago), 2025-07-15 17:03:46 -0700
+    [32m•[39m Engine revision 39d6d6e699
+    [32m•[39m Dart version 3.8.1
+    [32m•[39m DevTools version 2.45.1
+
+[33m[!][39m Android toolchain - develop for Android devices (Android SDK version 35.0.1) [3.6s]
+    [32m•[39m Android SDK at /Users/saveingold/Library/Android/sdk
+    [32m•[39m Platform android-35, build-tools 35.0.1
+    [32m•[39m ANDROID_SDK_ROOT = /Users/saveingold/Library/Android/sdk
+    [32m•[39m Java binary at: /Applications/Android Studio.app/Contents/jbr/Contents/Home/bin/java
+      This is the JDK bundled with the latest Android Studio installation on this machine.
+      To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
+    [32m•[39m Java version OpenJDK Runtime Environment (build 21.0.6+-13368085-b895.109)
+    [33m![39m Some Android licenses not accepted. To resolve this, run: flutter doctor --android-licenses
+
+[32m[✓][39m Xcode - develop for iOS and macOS (Xcode 16.4) [1,557ms]
+    [32m•[39m Xcode at /Applications/Xcode.app/Contents/Developer
+    [32m•[39m Build 16F6
+    [32m•[39m CocoaPods version 1.16.2
+
+[32m[✓][39m Chrome - develop for the web [6ms]
+    [32m•[39m Chrome at /Applications/Google Chrome.app/Contents/MacOS/Google Chrome
+
+[32m[✓][39m Android Studio (version 2024.3) [5ms]
+    [32m•[39m Android Studio at /Applications/Android Studio.app/Contents
+    [32m•[39m Flutter plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/9212-flutter
+    [32m•[39m Dart plugin can be installed from:
+      🔨 https://plugins.jetbrains.com/plugin/6351-dart
+    [32m•[39m Java version OpenJDK Runtime Environment (build 21.0.6+-13368085-b895.109)
+
+[32m[✓][39m VS Code (version 1.97.0) [4ms]
+    [32m•[39m VS Code at /Users/saveingold/Downloads/Visual Studio Code.app/Contents
+    [32m•[39m Flutter extension version 3.116.0
+
+[32m[✓][39m Connected device (3 available) [5.7s]
+    [32m•[39m sdk gphone64 arm64 (mobile) • emulator-5554 • android-arm64  • Android 15 (API 35) (emulator)
+    [32m•[39m macOS (desktop)             • macos         • darwin-arm64   • macOS 15.3 24D60 darwin-arm64
+    [32m•[39m Chrome (web)                • chrome        • web-javascript • Google Chrome 139.0.7258.139
+    [33m![39m Error: Browsing on the local area network for iPhone. Ensure the device is unlocked and attached with a cable or associated with the same local area network as this
+      Mac.
+      The device must be opted into Developer Mode to connect wirelessly. (code -27)
+    [33m![39m Error: Browsing on the local area network for iPhone. Ensure the device is unlocked and attached with a cable or associated with the same local area network as this
+      Mac.
+      The device must be opted into Developer Mode to connect wirelessly. (code -27)
+
+[32m[✓][39m Network resources [1,097ms]
+    [32m•[39m All expected network resources are available.
+
+[33m![39m Doctor found issues in 1 category.
+```

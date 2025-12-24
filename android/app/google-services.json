@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "421169571042",
+    "project_id": "save-in-gold-fzco",
+    "storage_bucket": "save-in-gold-fzco.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421169571042:android:8d241f1a3736b972cf2abb",
+        "android_client_info": {
+          "package_name": "ae.saveingold.saveingold.fzco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY24PRFqa2aLacx2h1AeZ4HWi9elonWAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

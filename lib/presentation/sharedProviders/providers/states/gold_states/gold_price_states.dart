@@ -12,8 +12,8 @@ class GoldPriceState {
   final double oneOunceDollarSellingPrice;
   final double oneOunceDollarBuyingPrice;
 
-  final double oneGramBuyingPriceInAED;
-  final double oneGramSellingPriceInAED;
+  final double oneGramBuyingPriceInIQD;
+  final double oneGramSellingPriceInIQD;
 
   final bool isLoading;
   final bool isButtonState;
@@ -23,8 +23,8 @@ class GoldPriceState {
     CurrentGoldPriceModel? currentGoldPriceModel,
     ErrorResponse? errorResponse,
     SuccessResponse? successResponse,
-    this.oneGramBuyingPriceInAED = 0.0,
-    this.oneGramSellingPriceInAED = 0.0,
+    this.oneGramBuyingPriceInIQD = 0.0,
+    this.oneGramSellingPriceInIQD = 0.0,
     this.oneOunceDollarSellingPrice = 0.0,
     this.oneOunceDollarBuyingPrice = 0.0,
     this.isButtonState = false,
@@ -39,8 +39,8 @@ class GoldPriceState {
     CurrentGoldPriceModel? currentGoldPriceModel,
     ErrorResponse? errorResponse,
     SuccessResponse? successResponse,
-    double? oneGramBuyingPriceInAED,
-    double? oneGramSellingPriceInAED,
+    double? oneGramBuyingPriceInIQD,
+    double? oneGramSellingPriceInIQD,
     double? oneOunceDollarSellingPrice,
     double? oneOunceDollarBuyingPrice,
     LoadingState? loadingState,
@@ -52,10 +52,10 @@ class GoldPriceState {
           currentGoldPriceModel ?? this.currentGoldPriceModel,
       errorResponse: errorResponse ?? this.errorResponse,
       successResponse: successResponse ?? this.successResponse,
-      oneGramBuyingPriceInAED:
-          oneGramBuyingPriceInAED ?? this.oneGramBuyingPriceInAED,
-      oneGramSellingPriceInAED:
-          oneGramSellingPriceInAED ?? this.oneGramSellingPriceInAED,
+      oneGramBuyingPriceInIQD:
+          oneGramBuyingPriceInIQD ?? this.oneGramBuyingPriceInIQD,
+      oneGramSellingPriceInIQD:
+          oneGramSellingPriceInIQD ?? this.oneGramSellingPriceInIQD,
       oneOunceDollarSellingPrice:
           oneOunceDollarSellingPrice ?? this.oneOunceDollarSellingPrice,
       oneOunceDollarBuyingPrice:

@@ -3,12 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/models/history_model/GetMetalStatementsResponse.dart';
 
-
 import '../../l10n/app_localizations.dart';
 
 class MetalStatementCard extends StatelessWidget {
   final VoidCallback onTap;
-  final MetalHistoryList statement;final bool rtl;
+  final MetalHistoryList statement;
+  final bool rtl;
 
   const MetalStatementCard({
     super.key,
@@ -56,45 +56,49 @@ class MetalStatementCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           /// Top: Transaction ID
-          rtl?
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlignRight():
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text: AppLocalizations.of(context)!.transactionID,
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlignRight()
+              : GetGenericText(
+                  text: AppLocalizations.of(context)!.transactionID,
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
-          rtl?
-          GetGenericText(
-            text: statement.transactionId ?? AppLocalizations.of(context)!.na,//"N/A",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlignRight():
-          GetGenericText(
-            text: statement.transactionId ?? AppLocalizations.of(context)!.na,//"N/A",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text:
+                      statement.transactionId ??
+                      AppLocalizations.of(context)!.na, //"N/A",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text:
+                      statement.transactionId ??
+                      AppLocalizations.of(context)!.na, //"N/A",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
           Divider(
             color: AppColors.grey2Color,
@@ -111,10 +115,14 @@ class MetalStatementCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GetGenericText(
-                    text: (statement.paymentModel == "Invest" &&
+                    text:
+                        (statement.paymentModel == "Invest" &&
                             statement.tradeType == kSell)
-                        ? AppLocalizations.of(context)!.sold//"Sold"
-                        : AppLocalizations.of(context)!.history_bought_label,//"Bought",
+                        ? AppLocalizations.of(context)!
+                              .sold //"Sold"
+                        : AppLocalizations.of(
+                            context,
+                          )!.history_bought_label, //"Bought",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -124,8 +132,8 @@ class MetalStatementCard extends StatelessWidget {
                   ),
                   GetGenericText(
                     text:
-                    "${AppLocalizations.of(context)!.metal_rate_aed} ${statement.paymentModel == "Invest" && statement.tradeType == kSell ? statement.sellingPrice?.toStringAsFixed(2) : statement.buyingPrice?.toStringAsFixed(2)}",
-                        // "Rate: AED ${statement.paymentModel == "Invest" && statement.tradeType == kSell ? statement.sellingPrice?.toStringAsFixed(2) : statement.buyingPrice?.toStringAsFixed(2)}",
+                        "${AppLocalizations.of(context)!.metal_rate_IQD} ${statement.paymentModel == "Invest" && statement.tradeType == kSell ? statement.sellingPrice?.toStringAsFixed(2) : statement.buyingPrice?.toStringAsFixed(2)}",
+                    // "Rate: IQD ${statement.paymentModel == "Invest" && statement.tradeType == kSell ? statement.sellingPrice?.toStringAsFixed(2) : statement.buyingPrice?.toStringAsFixed(2)}",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
                       tabletVal: 16,
@@ -150,7 +158,8 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: (statement.paymentModel == "Invest" &&
+                text:
+                    (statement.paymentModel == "Invest" &&
                         statement.tradeType == kSell)
                     ? AppLocalizations.of(context)!.goldDebit
                     : AppLocalizations.of(context)!.goldCredit,
@@ -162,7 +171,8 @@ class MetalStatementCard extends StatelessWidget {
                 color: AppColors.grey3Color,
               ),
               GetGenericText(
-                text: (statement.paymentModel == "Invest" &&
+                text:
+                    (statement.paymentModel == "Invest" &&
                         statement.tradeType == kSell)
                     ? "${statement.debit!.toStringAsFixed(2)} ${AppLocalizations.of(context)!.metal_g}"
                     : "${statement.credit!.toStringAsFixed(2)} ${AppLocalizations.of(context)!.metal_g}",
@@ -217,25 +227,25 @@ class MetalStatementCard extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 color: AppColors.grey3Color,
               ),
-              rtl?
-              GetGenericText(
-                text: statement.paymentModelInArabic ?? "",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ):
-              GetGenericText(
-                text: statement.paymentModel ?? "",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
+              rtl
+                  ? GetGenericText(
+                      text: statement.paymentModelInArabic ?? "",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    )
+                  : GetGenericText(
+                      text: statement.paymentModel ?? "",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
             ],
           ),
 
@@ -251,39 +261,32 @@ class MetalStatementCard extends StatelessWidget {
           //   fontWeight: FontWeight.w500,
           //   color: AppColors.grey4Color,
           // ).getAlign(),
-          rtl?
-          GetGenericText(
-            text:
-            "${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-            // "${AppLocalizations.of(context)!.grams_card_date_label} ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-                // "Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlignRight()
-          :GetGenericText(
-            text: "${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-            // "Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  // "${AppLocalizations.of(context)!.grams_card_date_label} ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  // "Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  // "Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlign(),
         ],
       ),
     );
@@ -302,47 +305,49 @@ class MetalStatementCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           /// Top: Transaction ID
-          rtl?
-
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlignRight():
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text: AppLocalizations.of(context)!.transactionID,
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlignRight()
+              : GetGenericText(
+                  text: AppLocalizations.of(context)!.transactionID,
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
-          rtl?
-
-          GetGenericText(
-            text: statement.transactionId ?? AppLocalizations.of(context)!.na,//"N/A",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlignRight():
-          GetGenericText(
-            text: statement.transactionId ?? AppLocalizations.of(context)!.na,//"N/A",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text:
+                      statement.transactionId ??
+                      AppLocalizations.of(context)!.na, //"N/A",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text:
+                      statement.transactionId ??
+                      AppLocalizations.of(context)!.na, //"N/A",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
           Divider(
             color: AppColors.grey2Color,
@@ -356,7 +361,9 @@ class MetalStatementCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.metal_holder,//"Metal Holder",
+                text: AppLocalizations.of(
+                  context,
+                )!.metal_holder, //"Metal Holder",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 16,
                   tabletVal: 18,
@@ -373,9 +380,10 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text:
-                    (statement.paymentModel == kMetalHold) ? AppLocalizations.of(context)!.debit : AppLocalizations.of(context)!.credit,
-                    // (statement.paymentModel == kMetalHold) ? "Debit" : "Credit",
+                text: (statement.paymentModel == kMetalHold)
+                    ? AppLocalizations.of(context)!.debit
+                    : AppLocalizations.of(context)!.credit,
+                // (statement.paymentModel == kMetalHold) ? "Debit" : "Credit",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -403,7 +411,9 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.balanceAfterTransaction,//"Balance after transaction",
+                text: AppLocalizations.of(
+                  context,
+                )!.balanceAfterTransaction, //"Balance after transaction",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -430,7 +440,9 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.transactionType,//"Transaction Type",
+                text: AppLocalizations.of(
+                  context,
+                )!.transactionType, //"Transaction Type",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -438,61 +450,59 @@ class MetalStatementCard extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 color: AppColors.grey3Color,
               ),
-              rtl?
-              GetGenericText(
-                text: statement.paymentModelInArabic ?? AppLocalizations.of(context)!.na,//"N/A",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ):
-              GetGenericText(
-                text: statement.paymentModel ?? AppLocalizations.of(context)!.na,//"N/A",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
+              rtl
+                  ? GetGenericText(
+                      text:
+                          statement.paymentModelInArabic ??
+                          AppLocalizations.of(context)!.na, //"N/A",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    )
+                  : GetGenericText(
+                      text:
+                          statement.paymentModel ??
+                          AppLocalizations.of(context)!.na, //"N/A",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
             ],
           ),
 
           /// Date
           ConstPadding.sizeBoxWithHeight(height: 6),
-          rtl?
-          GetGenericText(
-            text: "${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-            // text:"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlignRight():
-          GetGenericText(
-            text: "${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-            // text:"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  // text:"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  // text:"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlign(),
         ],
       ),
     );
@@ -511,45 +521,53 @@ class MetalStatementCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           /// Top: Transaction ID
-          rtl?
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,//"Transaction ID",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlignRight():
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,//"Transaction ID",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.transactionID, //"Transaction ID",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlignRight()
+              : GetGenericText(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.transactionID, //"Transaction ID",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
-          rtl?
-          GetGenericText(
-            text: statement.transactionId ?? AppLocalizations.of(context)!.na,//"N/A",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlignRight():
-          GetGenericText(
-            text: statement.transactionId ?? AppLocalizations.of(context)!.na,//"N/A",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text:
+                      statement.transactionId ??
+                      AppLocalizations.of(context)!.na, //"N/A",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text:
+                      statement.transactionId ??
+                      AppLocalizations.of(context)!.na, //"N/A",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
           Divider(
             color: AppColors.grey2Color,
@@ -563,7 +581,9 @@ class MetalStatementCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.metal_released,//"Metal Released",
+                text: AppLocalizations.of(
+                  context,
+                )!.metal_released, //"Metal Released",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 16,
                   tabletVal: 18,
@@ -581,8 +601,9 @@ class MetalStatementCard extends StatelessWidget {
             children: [
               GetGenericText(
                 text: (statement.paymentModel == kMetalReleased)
-                    ? AppLocalizations.of(context)!.credit//"Credit"
-                    : AppLocalizations.of(context)!.debit,//"Debit",
+                    ? AppLocalizations.of(context)!
+                          .credit //"Credit"
+                    : AppLocalizations.of(context)!.debit, //"Debit",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -610,7 +631,9 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.balanceAfterTransaction,//"Balance after transaction",
+                text: AppLocalizations.of(
+                  context,
+                )!.balanceAfterTransaction, //"Balance after transaction",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -637,7 +660,9 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.transactionType,//"Transaction Type",
+                text: AppLocalizations.of(
+                  context,
+                )!.transactionType, //"Transaction Type",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -645,61 +670,59 @@ class MetalStatementCard extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 color: AppColors.grey3Color,
               ),
-              rtl?
-              GetGenericText(
-                text: statement.paymentModelInArabic ?? AppLocalizations.of(context)!.na,//"N/A",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ):
-              GetGenericText(
-                text: statement.paymentModel ?? AppLocalizations.of(context)!.na,//"N/A",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
+              rtl
+                  ? GetGenericText(
+                      text:
+                          statement.paymentModelInArabic ??
+                          AppLocalizations.of(context)!.na, //"N/A",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    )
+                  : GetGenericText(
+                      text:
+                          statement.paymentModel ??
+                          AppLocalizations.of(context)!.na, //"N/A",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
             ],
           ),
 
           /// Date
           ConstPadding.sizeBoxWithHeight(height: 6),
-          rtl?
-          GetGenericText(
-            text:"${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-                //"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlignRight():
-          GetGenericText(
-            text:"${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-                //"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  //"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  //"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlign(),
         ],
       ),
     );
@@ -719,45 +742,49 @@ class MetalStatementCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           /// Top: Transaction ID
-          rtl?
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,//"Transaction ID",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlignRight():
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,//"Transaction ID",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.transactionID, //"Transaction ID",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlignRight()
+              : GetGenericText(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.transactionID, //"Transaction ID",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
-          rtl?
-          GetGenericText(
-            text: statement.transactionId ?? "N/A",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlignRight():
-          GetGenericText(
-            text: statement.transactionId ?? "N/A",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text: statement.transactionId ?? "N/A",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text: statement.transactionId ?? "N/A",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
           Divider(
             color: AppColors.grey2Color,
@@ -771,7 +798,7 @@ class MetalStatementCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.gift,//"Gift",
+                text: AppLocalizations.of(context)!.gift, //"Gift",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 16,
                   tabletVal: 18,
@@ -788,8 +815,9 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text:
-                    (statement.paymentModel == kGiftSent) ? AppLocalizations.of(context)!.debit : AppLocalizations.of(context)!.credit,
+                text: (statement.paymentModel == kGiftSent)
+                    ? AppLocalizations.of(context)!.debit
+                    : AppLocalizations.of(context)!.credit,
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -817,7 +845,9 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.balanceAfterTransaction,//"Balance after transaction",
+                text: AppLocalizations.of(
+                  context,
+                )!.balanceAfterTransaction, //"Balance after transaction",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -844,7 +874,9 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.transactionType,//"Transaction Type",
+                text: AppLocalizations.of(
+                  context,
+                )!.transactionType, //"Transaction Type",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -852,60 +884,55 @@ class MetalStatementCard extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 color: AppColors.grey3Color,
               ),
-              rtl?
-              GetGenericText(
-                text: statement.paymentModelInArabic ?? "N/A",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ):
-              GetGenericText(
-                text: statement.paymentModel ?? "N/A",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
+              rtl
+                  ? GetGenericText(
+                      text: statement.paymentModelInArabic ?? "N/A",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    )
+                  : GetGenericText(
+                      text: statement.paymentModel ?? "N/A",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
             ],
           ),
 
           /// Date
           ConstPadding.sizeBoxWithHeight(height: 6),
-          rtl?GetGenericText(
-            text:"${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-                //"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlignRight():
-          GetGenericText(
-            text:"${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-                //"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  //"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  //"Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlign(),
         ],
       ),
     );
@@ -924,45 +951,53 @@ class MetalStatementCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           /// Top: Transaction ID
-          rtl?
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,//"Transaction ID",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlignRight():
-          GetGenericText(
-            text: AppLocalizations.of(context)!.transactionID,//"Transaction ID",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.whiteColor,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.transactionID, //"Transaction ID",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlignRight()
+              : GetGenericText(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.transactionID, //"Transaction ID",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 14,
+                    tabletVal: 16,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.whiteColor,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
-          rtl?
-          GetGenericText(
-            text: statement.transactionId ?? AppLocalizations.of(context)!.na,//"N/A",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlignRight():
-          GetGenericText(
-            text: statement.transactionId ?? AppLocalizations.of(context)!.na,
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 18,
-              tabletVal: 20,
-            ),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text:
+                      statement.transactionId ??
+                      AppLocalizations.of(context)!.na, //"N/A",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text:
+                      statement.transactionId ??
+                      AppLocalizations.of(context)!.na,
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 18,
+                    tabletVal: 20,
+                  ),
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 2),
           Divider(
             color: AppColors.grey2Color,
@@ -979,7 +1014,9 @@ class MetalStatementCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GetGenericText(
-                    text: AppLocalizations.of(context)!.esouqPayment,//"Esouq Payment",
+                    text: AppLocalizations.of(
+                      context,
+                    )!.esouqPayment, //"Esouq Payment",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -998,7 +1035,7 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.goldDebit,//"Gold Debit",
+                text: AppLocalizations.of(context)!.goldDebit, //"Gold Debit",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -1007,7 +1044,8 @@ class MetalStatementCard extends StatelessWidget {
                 color: AppColors.grey3Color,
               ),
               GetGenericText(
-                text: "${statement.debit!.toStringAsFixed(2)} ${AppLocalizations.of(context)!.metal_g}",
+                text:
+                    "${statement.debit!.toStringAsFixed(2)} ${AppLocalizations.of(context)!.metal_g}",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 14,
                   tabletVal: 16,
@@ -1024,7 +1062,9 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.balanceAfterTransaction,//"Balance after Trade",
+                text: AppLocalizations.of(
+                  context,
+                )!.balanceAfterTransaction, //"Balance after Trade",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -1051,7 +1091,9 @@ class MetalStatementCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(context)!.transactionType,//"Transaction Type",
+                text: AppLocalizations.of(
+                  context,
+                )!.transactionType, //"Transaction Type",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 12,
                   tabletVal: 14,
@@ -1059,65 +1101,55 @@ class MetalStatementCard extends StatelessWidget {
                 fontWeight: FontWeight.w400,
                 color: AppColors.grey3Color,
               ),
-              rtl?
-              GetGenericText(
-                text: statement.paymentModelInArabic ?? "",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ):
-              GetGenericText(
-                text: statement.paymentModel ?? "",
-                fontSize: sizes!.responsiveFont(
-                  phoneVal: 14,
-                  tabletVal: 16,
-                ),
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
+              rtl
+                  ? GetGenericText(
+                      text: statement.paymentModelInArabic ?? "",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    )
+                  : GetGenericText(
+                      text: statement.paymentModel ?? "",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 16,
+                      ),
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
             ],
           ),
 
           /// Date
           ConstPadding.sizeBoxWithHeight(height: 6),
-          rtl?
-          GetGenericText(
-            text:
-
-            "${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-               // "Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlignRight():
-          GetGenericText(
-            text:
-
-            "${AppLocalizations.of(context)!.grams_card_date_label} "
-"${statement.date != null 
-  ? DateFormat('EEEE, dd MMM yyyy, HH:mm', 
-      Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en')
-      .format(DateTime.parse(statement.date.toString()).toLocal()) 
-  : 'N/A'}",
-               // "Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
-            fontSize: sizes!.responsiveFont(
-              phoneVal: 12,
-              tabletVal: 14,
-            ),
-            fontWeight: FontWeight.w500,
-            color: AppColors.grey4Color,
-          ).getAlign(),
+          rtl
+              ? GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  // "Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlignRight()
+              : GetGenericText(
+                  text:
+                      "${AppLocalizations.of(context)!.grams_card_date_label} "
+                      "${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  // "Date: ${statement.date != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm').format(DateTime.parse(statement.date.toString()).toLocal()) : 'N/A'}",
+                  fontSize: sizes!.responsiveFont(
+                    phoneVal: 12,
+                    tabletVal: 14,
+                  ),
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlign(),
         ],
       ),
     );
@@ -1143,7 +1175,7 @@ class MetalStatementCard extends StatelessWidget {
       ),
       child: Center(
         child: GetGenericText(
-          text: AppLocalizations.of(context)!.grams_card_opened,//"OPENED",
+          text: AppLocalizations.of(context)!.grams_card_opened, //"OPENED",
           fontSize: sizes!.responsiveFont(phoneVal: 10, tabletVal: 12),
           fontWeight: FontWeight.w400,
           color: Colors.white,
@@ -1158,8 +1190,10 @@ class MetalStatementCard extends StatelessWidget {
     final hasValidPnl = pnl != null && pnl != 0;
     debugPrint("statementPNL:${statement.pnl} | status: ${statement.status}");
     return GetGenericText(
-      text: hasValidPnl ? "${AppLocalizations.of(context)!.aed_currency} ${pnl.toStringAsFixed(2)}" : "AED 0.000",
-      // text: hasValidPnl ? "AED ${pnl.toStringAsFixed(2)}" : "AED 0.000",
+      text: hasValidPnl
+          ? "${AppLocalizations.of(context)!.idq_currency} ${pnl.toStringAsFixed(2)}"
+          : "IQD 0.000",
+      // text: hasValidPnl ? "IQD ${pnl.toStringAsFixed(2)}" : "IQD 0.000",
       fontSize: sizes!.responsiveFont(phoneVal: 14, tabletVal: 16),
       fontWeight: FontWeight.w500,
       color: hasValidPnl

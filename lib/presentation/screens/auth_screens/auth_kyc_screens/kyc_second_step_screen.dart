@@ -571,6 +571,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
       ),
     );
   }
+
   /// generate random hex reference
   String generateRandomHexReference() {
     try {
@@ -610,9 +611,9 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
       final shuftiProBaseUrl = dotenv.env['SHUFTIPRO_BASE_URL'];
       final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
       final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
-      final shuftiProUUIDId = Directionality.of(context) == TextDirection.rtl?
-      dotenv.env['SHUFTIPRO_UUID_Ar']
-      :dotenv.env['SHUFTIPRO_UUID_ID'];
+      final shuftiProUUIDId = Directionality.of(context) == TextDirection.rtl
+          ? dotenv.env['SHUFTIPRO_UUID_Ar']
+          : dotenv.env['SHUFTIPRO_UUID_ID'];
 
       // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
       // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
@@ -732,14 +733,18 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
 
       // Only proceed if event is success
       if (event != "verification.accepted") {
-       Toasts.getErrorToast(text: AppLocalizations.of(context)!.shufti_pro_verification_failed);
+        Toasts.getErrorToast(
+          text: AppLocalizations.of(context)!.shufti_pro_verification_failed,
+        );
         // Toasts.getErrorToast(text: 'Verification failed, try again.');
         return;
       }
 
       final userId = await LocalDatabase.instance.getUserId();
       if (userId == null) {
-        Toasts.getErrorToast(text: AppLocalizations.of(context)!.shufti_user_auth_issue);
+        Toasts.getErrorToast(
+          text: AppLocalizations.of(context)!.shufti_user_auth_issue,
+        );
         // Toasts.getErrorToast(text: 'User authentication error, try again.');
         return;
       }
@@ -747,11 +752,14 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
       final shuftiProResult = ShuftiProApiResponseModel.fromJson(
         decodedResponse,
       );
-        final newJson = {
-          'userId': userId,
-          'kycData': shuftiProResult.toJson(),
-          //'Savekycdata':shuftiProResult.toJson()
-        };
+      final newJson = {
+        'userId': userId,
+        'kycData': shuftiProResult.toJson(),
+        //'Savekycdata':shuftiProResult.toJson()
+      };
+      final kycData = shuftiProResult.toJson();
+
+      await LocalDatabase.instance.saveKycData(kycData);
 
       if (!mounted) return;
 
@@ -765,8 +773,10 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
           );
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
-      Toasts.getErrorToast(text: AppLocalizations.of(context)!.kyc_verification_failed);
-    
+      Toasts.getErrorToast(
+        text: AppLocalizations.of(context)!.kyc_verification_failed,
+      );
+
       // Toasts.getErrorToast(text: 'KYC verification failed, please try again.');
     }
   }

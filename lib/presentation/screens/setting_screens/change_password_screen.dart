@@ -56,15 +56,17 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
         foregroundColor: Colors.white,
         centerTitle: false,
         titleSpacing: 0,
-        title: GetGenericText(
-          text: AppLocalizations.of(context)!.update_password_title,//"Update Password",
-          fontSize: sizes!.responsiveFont(
-            phoneVal: 20,
-            tabletVal: 24,
-          ),
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey6Color,
-        ),
+        // title: GetGenericText(
+        //   text: AppLocalizations.of(
+        //     context,
+        //   )!.update_password_title, //"Update Password",
+        //   fontSize: sizes!.responsiveFont(
+        //     phoneVal: 20,
+        //     tabletVal: 24,
+        //   ),
+        //   fontWeight: FontWeight.w400,
+        //   color: AppColors.grey6Color,
+        // ),
       ),
       body: Container(
         height: sizes!.height,
@@ -78,60 +80,122 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
               key: _formKey,
               child: Column(
                 children: [
+                  GetGenericText(
+                    text: "Password Setting",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 26,
+                      tabletVal: 32,
+                    ),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+
+                  GetGenericText(
+                    text: "login securely using touch id or fingerprint",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 14,
+                      tabletVal: 20,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 16),
+                  GetGenericText(
+                    text: "Current Password",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 14,
+                      tabletVal: 18,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 8),
                   CommonTextFormField(
                     title: "title",
                     hintText: "******",
-                    labelText: AppLocalizations.of(context)!.current_password,//"Enter Current Password",
+                    labelText: AppLocalizations.of(
+                      context,
+                    )!.current_password, //"Enter Current Password",
                     controller: currentPasswordController,
                     textInputType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!
-                            .val_enter_current_password;//"Please enter current password";
+                        return AppLocalizations.of(
+                          context,
+                        )!.val_enter_current_password; //"Please enter current password";
                       } else if (!value.validatePassword()) {
-                        return AppLocalizations.of(context)!
-                            .val_invalid_current_password;//"Invalid Current Password";//'Password must be at least 8 characters, and must include a capital letter, a number, and a special character.';
+                        return AppLocalizations.of(
+                          context,
+                        )!.val_invalid_current_password; //"Invalid Current Password";//'Password must be at least 8 characters, and must include a capital letter, a number, and a special character.';
                       }
                       return null;
                     },
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
+                  GetGenericText(
+                    text: "New Password",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 14,
+                      tabletVal: 18,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 8),
                   CommonTextFormField(
                     title: "title",
                     hintText: "*******",
-                    labelText: AppLocalizations.of(context)!.new_password,//"New Password",
+                    labelText: AppLocalizations.of(
+                      context,
+                    )!.new_password, //"New Password",
                     controller: newPasswordController,
                     textInputType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!
-                            .val_enter_new_password;//"Please enter new password";
+                        return AppLocalizations.of(
+                          context,
+                        )!.val_enter_new_password; //"Please enter new password";
                       } else if (!value.validatePassword()) {
-                        return AppLocalizations.of(context)!
-                            .password_complexity_requirement;//'Password must be at least 8 characters, and must include a capital letter, a number, and a special character.';
+                        return AppLocalizations.of(
+                          context,
+                        )!.password_complexity_requirement; //'Password must be at least 8 characters, and must include a capital letter, a number, and a special character.';
                       } else if (value == currentPasswordController.text) {
-                        return AppLocalizations.of(context)!
-                            .new_password_different;//'New password must be different from current password';
+                        return AppLocalizations.of(
+                          context,
+                        )!.new_password_different; //'New password must be different from current password';
                       }
                       return null;
                     },
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
+                  GetGenericText(
+                    text: "Repeat Password",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 14,
+                      tabletVal: 18,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 8),
                   CommonTextFormField(
                     title: "title",
                     hintText: "******",
-                    labelText: AppLocalizations.of(context)!.confirm_password,//"Confirm Password",
+                    labelText: AppLocalizations.of(
+                      context,
+                    )!.confirm_password, //"Confirm Password",
                     controller: confirmPasswordController,
                     textInputType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!
-                            .val_enter_confirm_password;//"Please enter confirm password";
+                        return AppLocalizations.of(
+                          context,
+                        )!.val_enter_confirm_password; //"Please enter confirm password";
                       } else if (value != newPasswordController.text) {
-                        return AppLocalizations.of(context)!
-                            .val_passwords_do_not_match;//"Passwords do not match. Please re-enter confirm password.";
-                      } 
+                        return AppLocalizations.of(
+                          context,
+                        )!.val_passwords_do_not_match; //"Passwords do not match. Please re-enter confirm password.";
+                      }
                       // else if (value == currentPasswordController.text) {
                       //   return 'New password must be different from current password';
                       // }
@@ -142,7 +206,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
                   /// update password
                   LoaderButton(
-                    title: AppLocalizations.of(context)!.update_password_title,//"Update Password",
+                    title: AppLocalizations.of(
+                      context,
+                    )!.update_password_title, //"Update Password",
                     isLoadingState: authStateWatchProvider.isButtonState,
                     tabletLandscapeVal: 74,
                     onTap: () async {

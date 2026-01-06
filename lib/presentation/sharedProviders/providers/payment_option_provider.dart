@@ -108,7 +108,7 @@ class PaymentOption extends _$PaymentOption {
         "orderDate": "2025-03-04T12:30:00Z",
         "paymentMethod": paymentMethod,
         "orderAmount": orderAmount,
-        "currency": "AED",
+        "currency": "IQD",
       };
 
       ServerResponse serverResponse = await DioNetworkManager().callAPI(

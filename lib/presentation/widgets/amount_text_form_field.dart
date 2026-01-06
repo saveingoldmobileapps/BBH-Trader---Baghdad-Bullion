@@ -82,7 +82,7 @@ class AmountTextFormField extends StatelessWidget {
             fontWeight: FontWeight.w400,
             color: AppColors.secondaryColor,
           ),
-          suffixText: "AED",
+          suffixText: "IQD",
           suffixIcon: Padding(
             padding: const EdgeInsets.all(10.0),
             child: SizedBox(

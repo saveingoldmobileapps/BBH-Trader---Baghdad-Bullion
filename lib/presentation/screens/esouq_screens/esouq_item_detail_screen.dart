@@ -20,13 +20,13 @@ import 'esouq_cart_screen.dart';
 class EsouqItemDetailScreen extends ConsumerStatefulWidget {
   final AllProducts product;
   final String productPrice;
-  final String oneGramPriceInAED;
+  final String oneGramPriceInIQD;
 
   const EsouqItemDetailScreen({
     super.key,
     required this.product,
     required this.productPrice,
-    required this.oneGramPriceInAED,
+    required this.oneGramPriceInIQD,
   });
 
   @override
@@ -133,8 +133,8 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
 
     final goldPriceStateWatchProvider = ref.watch(goldPriceProvider);
 
-    final oneGramBuyingPriceInAED =
-        goldPriceStateWatchProvider.value?.oneGramBuyingPriceInAED ?? 0.0;
+    final oneGramBuyingPriceInIQD =
+        goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD ?? 0.0;
 
     /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
@@ -185,7 +185,9 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
             final isDemo = await LocalDatabase.instance.getIsDemo() ?? false;
 
             // If residency document is not verified
-            final temporaryCreditStatus = await LocalDatabase.instance.getIsUsertemporaryCreditStatus() ?? false;
+            final temporaryCreditStatus =
+                await LocalDatabase.instance.getIsUsertemporaryCreditStatus() ??
+                false;
             //temporary credit
             if (temporaryCreditStatus) {
               if (!context.mounted) return;
@@ -215,7 +217,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                   );
                 },
                 oncloseButtonPress: () {
-                   Navigator.pop(context);
+                  Navigator.pop(context);
                 },
               );
               return;
@@ -295,7 +297,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                 builder: (context) => EsouqCartScreen(
                   product: widget.product,
                   productPrice: widget.productPrice,
-                  oneGramPriceInAED: widget.oneGramPriceInAED,
+                  oneGramPriceInIQD: widget.oneGramPriceInIQD,
                 ),
               ),
             );
@@ -428,7 +430,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                 Directionality.of(context) == TextDirection.rtl
                     ? GetGenericText(
                         text:
-                            "${oneGramBuyingPriceInAED.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                            "${oneGramBuyingPriceInIQD.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                         fontSize: sizes!.responsiveFont(
                           phoneVal: 20,
                           tabletVal: 22,
@@ -438,7 +440,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                       ).getAlignRight()
                     : GetGenericText(
                         text:
-                            "${oneGramBuyingPriceInAED.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                            "${oneGramBuyingPriceInIQD.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                         fontSize: sizes!.responsiveFont(
                           phoneVal: 20,
                           tabletVal: 22,
@@ -933,7 +935,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                             ),
                             TextSpan(
                               text:
-                                  "${AppLocalizations.of(context)!.monday_to_friday} ${widget.product.deliveryCharges} ${AppLocalizations.of(context)!.aed_currency},", //'Monday to Friday, 11:00 AM to 6:00 PM (Timezone, Gulf Standard Time) will be cost ${widget.product.deliveryCharges} AED. ',
+                                  "${AppLocalizations.of(context)!.monday_to_friday} ${widget.product.deliveryCharges} ${AppLocalizations.of(context)!.idq_currency},", //'Monday to Friday, 11:00 AM to 6:00 PM (Timezone, Gulf Standard Time) will be cost ${widget.product.deliveryCharges} IQD. ',
                               style: TextStyle(
                                 color: Color(0xFFD1D1D6),
                                 fontSize: sizes!.responsiveFont(
@@ -982,8 +984,8 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                             ),
                             TextSpan(
                               text:
-                                  '${AppLocalizations.of(context)!.monday_to_friday} ${widget.product.deliveryCharges} ${AppLocalizations.of(context)!.aed_currency}. ',
-                              // 'Monday to Friday, 11:00 AM to 6:00 PM (Timezone, Gulf Standard Time) will be cost ${widget.product.deliveryCharges} AED. ',
+                                  '${AppLocalizations.of(context)!.monday_to_friday} ${widget.product.deliveryCharges} ${AppLocalizations.of(context)!.idq_currency}. ',
+                              // 'Monday to Friday, 11:00 AM to 6:00 PM (Timezone, Gulf Standard Time) will be cost ${widget.product.deliveryCharges} IQD. ',
                               style: TextStyle(
                                 color: Color(0xFFD1D1D6),
                                 fontSize: sizes!.responsiveFont(

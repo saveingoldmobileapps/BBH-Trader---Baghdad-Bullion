@@ -64,7 +64,9 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
         centerTitle: false,
         titleSpacing: 0,
         title: GetGenericText(
-          text: AppLocalizations.of(context)!.account_detail,//"Account Details",
+          text: AppLocalizations.of(
+            context,
+          )!.account_detail, //"Account Details",
           fontSize: 20,
           fontWeight: FontWeight.w400,
           color: AppColors.grey6Color,
@@ -146,7 +148,7 @@ class _BankDetailScreenState extends ConsumerState<BankDetailScreen> {
                                     color: AppColors.grey3Color,
                                   ),
                                   GetGenericText(
-                                    text: "AED 3,000.00",
+                                    text: "IQD 3,000.00",
                                     fontSize: 11,
                                     fontWeight: FontWeight.w700,
                                     color: AppColors.primaryGold500,

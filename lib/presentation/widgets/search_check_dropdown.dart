@@ -35,6 +35,27 @@ class SearchableWithCheckBox extends StatefulWidget {
 class _SearchableWithCheckBoxState extends State<SearchableWithCheckBox> {
   late TextEditingController _controller;
   List<String> _selectedItems = [];
+  @override
+  void didUpdateWidget(SearchableWithCheckBox oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Check if selectedItems changed from non-empty to empty (reset)
+    if ((oldWidget.selectedItems != null &&
+            oldWidget.selectedItems!.isNotEmpty) &&
+        (widget.selectedItems == null || widget.selectedItems!.isEmpty)) {
+      setState(() {
+        _selectedItems = [];
+        _controller.text = '';
+      });
+    }
+    // Or if selectedItems changed in general
+    else if (widget.selectedItems != null) {
+      setState(() {
+        _selectedItems = List.from(widget.selectedItems!);
+        _controller.text = _selectedItems.join(', ');
+      });
+    }
+  }
 
   @override
   void initState() {

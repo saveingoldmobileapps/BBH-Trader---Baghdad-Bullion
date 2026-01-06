@@ -3,13 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/widgets/profile_image.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
 import '../../sharedProviders/providers/auth_provider.dart';
 import '../../sharedProviders/providers/home_provider.dart';
 import '../../widgets/shimmers/shimmer_loader.dart' show ShimmerLoader;
-import '../../widgets/signup_phone_text_field.dart';
 
 class EditPersonalInfoScreen extends ConsumerStatefulWidget {
   const EditPersonalInfoScreen({super.key});
@@ -183,12 +181,12 @@ class _EditPersonalInfoScreenState
         foregroundColor: Colors.white,
         centerTitle: false,
         titleSpacing: 0,
-        title: GetGenericText(
-          text: AppLocalizations.of(context)!.settings_personal_info,
-          fontSize: sizes!.responsiveFont(phoneVal: 20, tabletVal: 24),
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey6Color,
-        ),
+        // title: GetGenericText(
+        //   text: AppLocalizations.of(context)!.settings_personal_info,
+        //   fontSize: sizes!.responsiveFont(phoneVal: 20, tabletVal: 24),
+        //   fontWeight: FontWeight.w400,
+        //   color: AppColors.grey6Color,
+        // ),
         actions: [
           mainStateWatchProvider
                       .getUserProfileResponse
@@ -226,7 +224,7 @@ class _EditPersonalInfoScreenState
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
                                   width: 1,
-                                  color: Color(0xFFBBA473),
+                                  color: AppColors.goldColor,
                                 ),
                                 borderRadius: BorderRadius.circular(5),
                               ),
@@ -241,7 +239,7 @@ class _EditPersonalInfoScreenState
                                   tabletVal: 14,
                                 ),
                                 fontWeight: FontWeight.w400,
-                                color: Colors.white,
+                                color: AppColors.goldColor,
                               ),
                             ),
                           ),
@@ -276,9 +274,9 @@ class _EditPersonalInfoScreenState
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
                                   width: 1,
-                                  color: Color(0xFFBBA473),
+                                  color: AppColors.goldColor,
                                 ),
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(8),
                               ),
                             ),
                             child: Center(
@@ -291,7 +289,7 @@ class _EditPersonalInfoScreenState
                                   tabletVal: 14,
                                 ),
                                 fontWeight: FontWeight.w400,
-                                color: Colors.white,
+                                color: AppColors.goldColor,
                               ),
                             ),
                           ),
@@ -316,24 +314,43 @@ class _EditPersonalInfoScreenState
                     key: _formKey,
                     child: Column(
                       children: [
-                        DisplayImage(
-                          imagePath: mainStateWatchProvider
-                              .getUserProfileResponse
-                              .payload!
-                              .userProfile!
-                              .imageUrl!,
-                          onImageSelected: (file) {
-                            if (file != null) {
-                              debugPrint("Picked: ${file.path}");
-                              authStateReadProvider.uploadProfileImage(
-                                filePath: file.path,
-                                context: context,
-                              );
-                            }
-                          },
-                          isEditable: !isEditable ? false : true,
-                        ),
+                        GetGenericText(
+                          text: "Personal Information",
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 26,
+                            tabletVal: 32,
+                          ),
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.whiteColor,
+                        ).getAlign(),
 
+                        GetGenericText(
+                          text: "Manage your personal details",
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 14,
+                            tabletVal: 20,
+                          ),
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.whiteColor,
+                        ).getAlign(),
+
+                        // DisplayImage(
+                        //   imagePath: mainStateWatchProvider
+                        //       .getUserProfileResponse
+                        //       .payload!
+                        //       .userProfile!
+                        //       .imageUrl!,
+                        //   onImageSelected: (file) {
+                        //     if (file != null) {
+                        //       debugPrint("Picked: ${file.path}");
+                        //       authStateReadProvider.uploadProfileImage(
+                        //         filePath: file.path,
+                        //         context: context,
+                        //       );
+                        //     }
+                        //   },
+                        //   isEditable: !isEditable ? false : true,
+                        // ),
                         ConstPadding.sizeBoxWithHeight(height: 16),
 
                         Directionality.of(context) == TextDirection.rtl
@@ -365,6 +382,16 @@ class _EditPersonalInfoScreenState
                           color: Colors.white,
                         ).getAlign(),
                         ConstPadding.sizeBoxWithHeight(height: 16),
+                        GetGenericText(
+                          text: "First Name",
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 14,
+                            tabletVal: 18,
+                          ),
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.whiteColor,
+                        ).getAlign(),
+                        ConstPadding.sizeBoxWithHeight(height: 8),
                         CommonTextFormField(
                           title: AppLocalizations.of(context)!.pi_first_name,
                           hintText: AppLocalizations.of(
@@ -387,6 +414,16 @@ class _EditPersonalInfoScreenState
                         ),
 
                         ConstPadding.sizeBoxWithHeight(height: 16),
+                        GetGenericText(
+                          text: "Last Name",
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 14,
+                            tabletVal: 18,
+                          ),
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.whiteColor,
+                        ).getAlign(),
+                        ConstPadding.sizeBoxWithHeight(height: 8),
                         CommonTextFormField(
                           title: AppLocalizations.of(context)!.surname,
                           hintText: AppLocalizations.of(
@@ -405,6 +442,16 @@ class _EditPersonalInfoScreenState
                           },
                         ),
                         ConstPadding.sizeBoxWithHeight(height: 16),
+                        GetGenericText(
+                          text: "Email",
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 14,
+                            tabletVal: 18,
+                          ),
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.whiteColor,
+                        ).getAlign(),
+                        ConstPadding.sizeBoxWithHeight(height: 8),
                         CommonTextFormField(
                           title: AppLocalizations.of(context)!.email,
                           hintText: "jondoe@example.com",
@@ -490,33 +537,93 @@ class _EditPersonalInfoScreenState
                         //     return null;
                         //   },
                         // ),
-                        CommonPhoneFieldWithDropdown(
-                          title: AppLocalizations.of(context)!.phone_number,
-                          hintText: "52 00 00 000",
-                          controller: phoneNumberController,
-                          isoCode: currentIsoCode,
-                          onPhoneNumberChanged: (number, isoCode, dCode) {
-                            currentIsoCode = isoCode;
-                            dialCode = dCode;
-                          },
-                          validator: (value) {
-                            final text = value?.trim() ?? '';
-                            if (text.isEmpty) {
-                              return AppLocalizations.of(context)!.enter_valid_phone;//"Enter a valid phone number";
-                              // AppLocalizations.of(
-                              //   context,
-                              // )!.phone_format_note;
-                            }
-                            if (text.replaceAll(RegExp(r'\D'), '').length < 7) {
-                              return AppLocalizations.of(context)!.enter_valid_phone;//"Enter a valid phone number";
-                              // AppLocalizations.of(
-                              //   context,
-                              // )!.phone_format_note;
-                            }
-                            return null;
-                          },
+                        GetGenericText(
+                          text: "Phone",
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 14,
+                            tabletVal: 18,
+                          ),
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.whiteColor,
+                        ).getAlign(),
+                        ConstPadding.sizeBoxWithHeight(height: 8),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 15,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.secondaryColor,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    "assets/png/iraq.png",
+                                    width: 24,
+                                    errorBuilder: (c, e, s) => const Icon(
+                                      Icons.flag,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text(
+                                    "+964",
+                                    style: TextStyle(
+                                      color: AppColors.secondaryColor,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: _buildTextField(
+                                phoneNumberController,
+                                "Placeholder",
+                                isNumeric: true,
+                                readOnly: !isEditable,
+                              ),
+                            ),
+                          ],
                         ),
 
+                        // CommonPhoneFieldWithDropdown(
+                        //   title: AppLocalizations.of(context)!.phone_number,
+                        //   hintText: "52 00 00 000",
+                        //   controller: phoneNumberController,
+                        //   isoCode: currentIsoCode,
+                        //   onPhoneNumberChanged: (number, isoCode, dCode) {
+                        //     currentIsoCode = isoCode;
+                        //     dialCode = dCode;
+                        //   },
+                        //   validator: (value) {
+                        //     final text = value?.trim() ?? '';
+                        //     if (text.isEmpty) {
+                        //       return AppLocalizations.of(
+                        //         context,
+                        //       )!.enter_valid_phone; //"Enter a valid phone number";
+                        //       // AppLocalizations.of(
+                        //       //   context,
+                        //       // )!.phone_format_note;
+                        //     }
+                        //     if (text.replaceAll(RegExp(r'\D'), '').length < 7) {
+                        //       return AppLocalizations.of(
+                        //         context,
+                        //       )!.enter_valid_phone; //"Enter a valid phone number";
+                        //       // AppLocalizations.of(
+                        //       //   context,
+                        //       // )!.phone_format_note;
+                        //     }
+                        //     return null;
+                        //   },
+                        // ),
                         ConstPadding.sizeBoxWithHeight(height: 20),
                         Visibility(
                           visible: isEditable,
@@ -635,8 +742,8 @@ class _EditPersonalInfoScreenState
                                           begin: Alignment(1.00, 0.01),
                                           end: Alignment(-1, -0.01),
                                           colors: [
-                                            Color(0xFFBBA473),
-                                            Color(0xFF675A3D),
+                                            AppColors.goldColor,
+                                            AppColors.goldLightColor,
                                           ],
                                         )
                                       : null,
@@ -674,4 +781,69 @@ class _EditPersonalInfoScreenState
       ),
     );
   }
+}
+
+Widget _buildTextField(
+  TextEditingController controller,
+  String hint, {
+  bool isPassword = false,
+  bool isNumeric = false,
+  String? label,
+  bool showWarning = false,
+  bool readOnly = false, // ✅ ADD THIS
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      if (label != null)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Text(
+            label,
+            style: const TextStyle(color: AppColors.grey6Color),
+          ),
+        ),
+      TextFormField(
+        controller: controller,
+        readOnly: readOnly, // ✅ APPLY HERE
+        enabled: !readOnly, // ✅ disables keyboard & cursor
+        obscureText: isPassword,
+        keyboardType: isNumeric
+            ? TextInputType.number
+            : TextInputType.emailAddress,
+        style: const TextStyle(color: AppColors.secondaryColor),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(color: Colors.white54),
+          suffixIcon: showWarning
+              ? const Icon(Icons.error_outline, color: Colors.white54)
+              : (isPassword
+                    ? const Icon(
+                        Icons.visibility_outlined,
+                        color: Colors.white54,
+                      )
+                    : null),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(
+              color: AppColors.secondaryColor,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(
+              color: AppColors.secondaryColor,
+            ),
+          ),
+          disabledBorder: OutlineInputBorder(
+            // ✅ optional UI polish
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(
+              color: AppColors.secondaryColor,
+            ),
+          ),
+        ),
+      ),
+    ],
+  );
 }

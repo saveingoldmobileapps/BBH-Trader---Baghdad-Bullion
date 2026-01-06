@@ -31,12 +31,12 @@ enum PaymentMethod {
 class EsouqCartScreen extends ConsumerStatefulWidget {
   final AllProducts product;
   final String productPrice;
-  final String oneGramPriceInAED;
+  final String oneGramPriceInIQD;
 
   const EsouqCartScreen({
     required this.product,
     required this.productPrice,
-    required this.oneGramPriceInAED,
+    required this.oneGramPriceInIQD,
     super.key,
   });
 
@@ -116,8 +116,8 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
 
   void _calculateTotal() {
     final goldPriceState = ref.watch(goldPriceProvider);
-    final oneGramBuyingPriceInAED =
-        goldPriceState.value?.oneGramBuyingPriceInAED ?? 0.0;
+    final oneGramBuyingPriceInIQD =
+        goldPriceState.value?.oneGramBuyingPriceInIQD ?? 0.0;
     setState(() {
       final quantity =
           double.tryParse(goldQuantityController.text.trim()) ?? 1.0;
@@ -135,7 +135,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
         widget.product.deliveryCharges,
       );
       final weightFactor = parseValue(widget.product.weightFactor);
-      final fixPricingT4b = oneGramBuyingPriceInAED;
+      final fixPricingT4b = oneGramBuyingPriceInIQD;
 
       finalGoldPrice = weightFactor * fixPricingT4b * quantity;
 
@@ -177,7 +177,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
     });
   }
 
-  // Handles values like "AED 15.50" or "15.00"
+  // Handles values like "IQD 15.50" or "15.00"
   double _extractNumericValue(String? value) {
     if (value == null) return 0.0;
     final numeric = value.replaceAll(RegExp(r'[^\d.]'), '');
@@ -210,17 +210,17 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
   //
   //     final weightFactor =
   //         double.tryParse(widget.product.weightFactor ?? "0.0") ?? 0.0;
-  //     final fixPricingT4b = double.tryParse(widget.oneGramPriceInAED) ?? 0.0;
+  //     final fixPricingT4b = double.tryParse(widget.oneGramPriceInIQD) ?? 0.0;
   //     // finalGoldPrice =
   //     //     (double.tryParse(widget.product.weightFactor ?? "0.0") ??
-  //     //         0.0 * double.parse(widget.oneGramPriceInAED)) *
+  //     //         0.0 * double.parse(widget.oneGramPriceInIQD)) *
   //     //     quantity;
   //
   //     finalGoldPrice = weightFactor * fixPricingT4b * quantity;
   //     debugPrint(
-  //       "weightFactor: ${(double.tryParse(widget.product.weightFactor ?? "0.0") ?? 0.0 * double.parse(widget.oneGramPriceInAED)) * quantity}",
+  //       "weightFactor: ${(double.tryParse(widget.product.weightFactor ?? "0.0") ?? 0.0 * double.parse(widget.oneGramPriceInIQD)) * quantity}",
   //     );
-  //     debugPrint("oneGramPriceInAED: ${widget.oneGramPriceInAED}");
+  //     debugPrint("oneGramPriceInIQD: ${widget.oneGramPriceInIQD}");
   //     debugPrint("finalGoldPrice: $finalGoldPrice");
   //
   //     // Step 2: makingCharges * quantity = totalMakingCharges
@@ -281,8 +281,8 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
     //final gramStateWatchProvider = ref.watch(gramProvider);
     // final goldPriceStateWatchProvider = ref.watch(goldPriceProvider);
 
-    // final oneGramBuyingPriceInAED =
-    //     goldPriceStateWatchProvider.value?.oneGramBuyingPriceInAED ?? 0.0;
+    // final oneGramBuyingPriceInIQD =
+    //     goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD ?? 0.0;
 
     /// refresh calculate total
     // _calculateTotal();
@@ -418,6 +418,11 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                       //   FilteringTextInputFormatter.digitsOnly
                                       // ],
                                       onChanged: (value) {
+                                        setState(() {
+                                          selectedIds = null;
+                                          selectedDealsData = [];
+                                          selectedDealId = null;
+                                        });
                                         _calculateTotal();
                                       },
                                     ),
@@ -494,7 +499,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                     ),
                                   ),
                                 ),
-                                value: _selectedPaymentMethod,
+                                //initialValue: _selectedPaymentMethod,
                                 items: dropdownItems
                                     .map(
                                       (item) => DropdownMenuItem(
@@ -697,9 +702,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                             items: filteredDeals
                                                 .map<String>(
                                                   (deal) =>
-                                                      "${deal.dealId} - ${deal.tradeType == "Buy" ?
-                                                       AppLocalizations.of(context)!.buy 
-                                                       : AppLocalizations.of(context)!.sell} ${deal.tradeMetal!.toStringAsFixed(2)}g ${AppLocalizations.of(context)!.g_Gold}",
+                                                      "${deal.dealId} - ${deal.tradeType == "Buy" ? AppLocalizations.of(context)!.buy : AppLocalizations.of(context)!.sell} ${deal.tradeMetal!.toStringAsFixed(2)}g ${AppLocalizations.of(context)!.g_Gold}",
                                                 )
                                                 .toList(),
                                             label: AppLocalizations.of(
@@ -831,7 +834,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                             num: double.tryParse(
                                                   "${walletExists?.moneyBalance!.toStringAsFixed(2)}",
                                                 ) ?? 0.0,
-                                          )} ${AppLocalizations.of(context)!.aed_currency}",
+                                          )} ${AppLocalizations.of(context)!.idq_currency}",
                                       fontSize: sizes!.isPhone ? 16 : 20,
                                       fontWeight: FontWeight.w500,
                                       color: AppColors.grey6Color,
@@ -888,8 +891,8 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                       color: AppColors.grey2Color,
                                     ),
                                     GetGenericText(
-                                      text: //oneGramBuyingPriceInAED
-                                          "${finalGoldPrice.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                                      text: //oneGramBuyingPriceInIQD
+                                          "${finalGoldPrice.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                                       fontSize: sizes!.responsiveFont(
                                         phoneVal: 14,
                                         tabletVal: 16,
@@ -919,7 +922,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                               ),
                               GetGenericText(
                                 text:
-                                    "${goldPremium.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                                    "${goldPremium.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                                 fontSize: sizes!.responsiveFont(
                                   phoneVal: 14,
                                   tabletVal: 16,
@@ -946,7 +949,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                               ),
                               GetGenericText(
                                 text:
-                                    "${makingCharges.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                                    "${makingCharges.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                                 fontSize: sizes!.responsiveFont(
                                   phoneVal: 14,
                                   tabletVal: 16,
@@ -973,7 +976,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                               ),
                               GetGenericText(
                                 text:
-                                    "${valueAtTax.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                                    "${valueAtTax.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                                 fontSize: sizes!.responsiveFont(
                                   phoneVal: 14,
                                   tabletVal: 16,
@@ -998,7 +1001,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                           //     ),
                           //     GetGenericText(
                           //       text:
-                          //           "${widget.product.deliveryCharges.toString()} AED",
+                          //           "${widget.product.deliveryCharges.toString()} IQD",
                           //       fontSize: sizes!.responsiveFont(
                           //         phoneVal: 14,
                           //         tabletVal: 16,
@@ -1025,7 +1028,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                               ),
                               GetGenericText(
                                 text:
-                                    "${(totalChargeBeforeGoldPrice - deliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                                    "${(totalChargeBeforeGoldPrice - deliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                                 fontSize: sizes!.responsiveFont(
                                   phoneVal: 14,
                                   tabletVal: 16,
@@ -1069,7 +1072,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                               _selectedPaymentMethod == "Money"
                                   ? GetGenericText(
                                       text:
-                                          "${(totalGrandGoldPayableCharges - deliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                                          "${(totalGrandGoldPayableCharges - deliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                                       fontSize: sizes!.responsiveFont(
                                         phoneVal: 18,
                                         tabletVal: 20,
@@ -1269,7 +1272,11 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                     selectedPaymentMethod:
                                         _selectedPaymentMethod,
                                     selectedDealsData: selectedDealsData,
-                                    currentGoldPrice: goldPriceState.value?.oneGramBuyingPriceInAED ?? 00,
+                                    currentGoldPrice:
+                                        goldPriceState
+                                            .value
+                                            ?.oneGramBuyingPriceInIQD ??
+                                        00,
                                   ),
                                 ),
                               );

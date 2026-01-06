@@ -3,7 +3,6 @@
 // tayyabmughal676@gmail.com
 // © 2022-2023  - All Rights Reserved
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -1346,9 +1345,9 @@ Future<void> showMaintenancePopup({
           contentPadding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
           title: Column(
             children: [
-              // Animated shimmering "Save In Gold"
+              // Animated shimmering "Baghdad Bullion House"
               GoldShimmerText(
-                text: "Save In Gold",
+                text: "Baghdad Bullion House",
                 //fontSize: 26,
                 //fontWeight: FontWeight.w700,
               ),
@@ -1474,7 +1473,7 @@ SizedBox(
   );
 }
 
-// Typewriter animation for "Save In Gold"
+// Typewriter animation for "Baghdad Bullion House"
 class TypewriterAnimatedText extends StatefulWidget {
   final String text;
   final Duration duration;

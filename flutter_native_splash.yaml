@@ -1,6 +1,6 @@
 flutter_native_splash:
   # Required: Set the background color
-  color: "#232323"
+  color: "#1B1D1D"
 
   # Specify the splash image (ensure it's a high-resolution PNG)
   image: "assets/png/splash_screen.png"
@@ -17,7 +17,7 @@ flutter_native_splash:
   # Ensure Android configuration is correct
   android: true
   android_12:
-    color: "#232323"
+    color: "#1B1D1D"
     image: "assets/png/android_splash.png"
 
   # Optional: Fullscreen mode to hide notification bar

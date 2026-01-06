@@ -354,7 +354,9 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                         heading: AppLocalizations.of(
                                           context,
                                         )!.warning, //"Warning",
-                                        subtitle: AppLocalizations.of(context)!.gift_friend_del_warning,//"Are you sure want to delete",
+                                        subtitle: AppLocalizations.of(
+                                          context,
+                                        )!.gift_friend_del_warning, //"Are you sure want to delete",
                                         noButtonTitle: AppLocalizations.of(
                                           context,
                                         )!.logout_no, //"No",
@@ -431,7 +433,9 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                         heading: AppLocalizations.of(
                                           context,
                                         )!.warning, //"Warning",
-                                        subtitle: AppLocalizations.of(context)!.gift_friend_del_warning,//"Are you sure want to delete",
+                                        subtitle: AppLocalizations.of(
+                                          context,
+                                        )!.gift_friend_del_warning, //"Are you sure want to delete",
                                         noButtonTitle: AppLocalizations.of(
                                           context,
                                         )!.logout_no, //"No",
@@ -514,7 +518,9 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                   ConstPadding.sizeBoxWithHeight(height: 16),
                   CommonTextFormField(
                     title: "title",
-                    hintText: AppLocalizations.of(context)!.user_firstName,//"Amro Al Jaber",
+                    hintText: AppLocalizations.of(
+                      context,
+                    )!.user_firstName, //"Amro Al Jaber",
                     labelText: AppLocalizations.of(
                       context,
                     )!.receiverName, //"Receiver Name",
@@ -549,7 +555,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                               .enter_gram //"Enter Amount (grams) here"
                         : AppLocalizations.of(
                             context,
-                          )!.enter_amount, //"Enter Amount (AED) here",
+                          )!.enter_amount, //"Enter Amount (IQD) here",
                     labelText: AppLocalizations.of(context)!.amount, //"Amount",
                     controller: amountController,
                     inputFormatters: [
@@ -694,9 +700,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                     items: filteredDeals
                                         .map<String>(
                                           (deal) =>
-                                              "${deal.dealId} - ${deal.tradeType == "Buy" ? 
-                                              AppLocalizations.of(context)!.buy 
-                                              : AppLocalizations.of(context)!.sell} ${deal.tradeMetal!.toStringAsFixed(2)}g ${AppLocalizations.of(context)!.g_Gold}",
+                                              "${deal.dealId} - ${deal.tradeType == "Buy" ? AppLocalizations.of(context)!.buy : AppLocalizations.of(context)!.sell} ${deal.tradeMetal!.toStringAsFixed(2)}g ${AppLocalizations.of(context)!.g_Gold}",
                                         )
                                         .toList(),
                                     //items: filteredDeals

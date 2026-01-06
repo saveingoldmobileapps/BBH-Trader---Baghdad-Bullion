@@ -104,10 +104,10 @@ class MoneyStatementCard extends StatelessWidget {
                   ),
                   GetGenericText(
                     text: data.credit != null
-                        ? "${AppLocalizations.of(context)!.aed_currency} ${double.tryParse(data.credit.toString())?.toStringAsFixed(2) ?? '0.0'}"
-                        : "${AppLocalizations.of(context)!.aed_currency} ${double.tryParse(data.debit.toString())?.toStringAsFixed(2) ?? '0.0'}",
-                    // ? "AED ${double.tryParse(data.credit.toString())?.toStringAsFixed(2) ?? '0.0'}"
-                    // : "AED ${double.tryParse(data.debit.toString())?.toStringAsFixed(2) ?? '0.0'}",
+                        ? "${AppLocalizations.of(context)!.idq_currency} ${double.tryParse(data.credit.toString())?.toStringAsFixed(2) ?? '0.0'}"
+                        : "${AppLocalizations.of(context)!.idq_currency} ${double.tryParse(data.debit.toString())?.toStringAsFixed(2) ?? '0.0'}",
+                    // ? "IQD ${double.tryParse(data.credit.toString())?.toStringAsFixed(2) ?? '0.0'}"
+                    // : "IQD ${double.tryParse(data.debit.toString())?.toStringAsFixed(2) ?? '0.0'}",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -153,8 +153,8 @@ class MoneyStatementCard extends StatelessWidget {
               context,
             )!.balanceAfterTransaction, //"Balance After Transaction",
             value:
-                "${AppLocalizations.of(context)!.aed_currency} ${double.tryParse(data.moneyBalance.toString())?.toStringAsFixed(2) ?? ''}",
-            // "AED ${double.tryParse(data.moneyBalance.toString())?.toStringAsFixed(2) ?? ''}",
+                "${AppLocalizations.of(context)!.idq_currency} ${double.tryParse(data.moneyBalance.toString())?.toStringAsFixed(2) ?? ''}",
+            // "IQD ${double.tryParse(data.moneyBalance.toString())?.toStringAsFixed(2) ?? ''}",
           ),
         ],
       ),

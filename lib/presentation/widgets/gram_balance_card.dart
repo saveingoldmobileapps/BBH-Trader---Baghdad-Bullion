@@ -55,7 +55,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
     // if (isOpenedTrade && goldPriceState.hasValue) {
     //   pnl = CommonService.calculateLossOrProfit(
     //     buyingPrice: widget.gramList.buyingPrice ?? 0,
-    //     livePrice: goldPriceState.value!.oneGramSellingPriceInAED,
+    //     livePrice: goldPriceState.value!.oneGramSellingPriceInIQD,
     //     tradeMetalFactor: widget.gramList.tradeMetal ?? 0,
     //   );
     // }
@@ -63,7 +63,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
     if ((isOpenedTrade || isTakeProfitTrade) && goldPriceState.hasValue) {
       pnl = CommonService.calculateLossOrProfit(
         buyingPrice: widget.gramList.buyingPrice ?? 0,
-        livePrice: goldPriceState.value!.oneGramSellingPriceInAED,
+        livePrice: goldPriceState.value!.oneGramSellingPriceInIQD,
         tradeMetalFactor: widget.gramList.tradeMetal ?? 0,
       );
     }
@@ -169,7 +169,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                       //   grams,
                       //   price,
                       // ),
-                      "${widget.gramList.tradeType == 'Buy' ? '${AppLocalizations.of(context)!.gram_buy_word}' : '${AppLocalizations.of(context)!.gram_sell_word}'} ${widget.gramList.tradeMetal!.toStringAsFixed(2)}${AppLocalizations.of(context)!.g_Gold} @${getPrice(gramList: widget.gramList)}",
+                      "${widget.gramList.tradeType == 'Buy' ? AppLocalizations.of(context)!.gram_buy_word : AppLocalizations.of(context)!.gram_sell_word} ${widget.gramList.tradeMetal!.toStringAsFixed(2)}${AppLocalizations.of(context)!.g_Gold} @${getPrice(gramList: widget.gramList)}",
 
                   //"${widget.gramList.tradeType == 'Buy' ? 'Buy' : 'Sell'} ${widget.gramList.tradeMetal!.toStringAsFixed(2)}g Gold @${getPrice(gramList: widget.gramList)}",
                   fontSize: sizes!.responsiveFont(
@@ -190,8 +190,8 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                           children: [
                             GetGenericText(
                               text:
-                                  "${AppLocalizations.of(context)!.aed_currency} ${pnl.abs().toStringAsFixed(2)}",
-                              //text: "AED ${pnl.abs().toStringAsFixed(2)}",
+                                  "${AppLocalizations.of(context)!.idq_currency} ${pnl.abs().toStringAsFixed(2)}",
+                              //text: "IQD ${pnl.abs().toStringAsFixed(2)}",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 12,
                                 tabletVal: 14,
@@ -235,8 +235,8 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                             ),
                             GetGenericText(
                               text:
-                                  "${AppLocalizations.of(context)!.aed_currency} ${pnl.abs().toStringAsFixed(2)}",
-                              //text: "AED ${pnl.abs().toStringAsFixed(2)}",
+                                  "${AppLocalizations.of(context)!.idq_currency} ${pnl.abs().toStringAsFixed(2)}",
+                              //text: "IQD ${pnl.abs().toStringAsFixed(2)}",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 12,
                                 tabletVal: 14,
@@ -263,7 +263,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                 //           width: sizes!.widthRatio * (sizes!.isPhone ? 18 : 32),
                 //         ),
                 //         GetGenericText(
-                //           text: "AED ${pnl.toStringAsFixed(2)}",
+                //           text: "IQD ${pnl.toStringAsFixed(2)}",
                 //           fontSize: sizes!.responsiveFont(
                 //             phoneVal: 12,
                 //             tabletVal: 14,
@@ -287,7 +287,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                 //           width: sizes!.widthRatio * (sizes!.isPhone ? 18 : 32),
                 //         ),
                 //         GetGenericText(
-                //           text: "AED ${pnl.abs().toStringAsFixed(2)}",
+                //           text: "IQD ${pnl.abs().toStringAsFixed(2)}",
                 //           fontSize: sizes!.responsiveFont(
                 //             phoneVal: 12,
                 //             tabletVal: 14,
@@ -307,7 +307,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                     text:
                         "${AppLocalizations.of(context)!.gram_invest_money} ${widget.gramList.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
 
-                    //"Invest Money: AED ${widget.gramList.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
+                    //"Invest Money: IQD ${widget.gramList.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 12,
                       tabletVal: 14,
@@ -320,7 +320,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                     text:
                         "${AppLocalizations.of(context)!.gram_invest_money} ${widget.gramList.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
 
-                    // "Invest Money: AED ${widget.gramList.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
+                    // "Invest Money: IQD ${widget.gramList.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
                       tabletVal: 16,
@@ -393,39 +393,43 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                     color: AppColors.grey4Color,
                   ).getAlign(),
 
-
             ConstPadding.sizeBoxWithHeight(height: 6),
             widget.rtl
-                ?widget.gramList.barNumber!= null? GetGenericText(
-                    text: "${AppLocalizations.of(context)!.gram_bar_nmbr} ${widget.gramList.barNumber.toString()}",
+                ? widget.gramList.barNumber != null
+                      ? GetGenericText(
+                          text:
+                              "${AppLocalizations.of(context)!.gram_bar_nmbr} ${widget.gramList.barNumber.toString()}",
+                          color: AppColors.goldLightColor,
+                          //"${AppLocalizations.of(context)!.grams_card_date_label} ${widget.gramList.createdAt != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
+                          //  "${AppLocalizations.of(context)!.grams_card_date_label} ${widget.gramList.createdAt != null ? DateFormat('EEE, dd MMM yyyy, HH:mm').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
+                          //"Date: ${widget.gramList.createdAt != null ? DateFormat('EEE, dd MMM yyyy, HH:mm').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 12,
+                            tabletVal: 14,
+                          ),
+                          //14,
+                          fontWeight: FontWeight.w500,
+                        ).getAlignRight()
+                      : SizedBox.shrink()
+                : widget.gramList.barNumber != null
+                ? GetGenericText(
+                    text:
+                        "${AppLocalizations.of(context)!.gram_bar_nmbr} ${widget.gramList.barNumber.toString()}",
                     color: AppColors.goldLightColor,
-                        //"${AppLocalizations.of(context)!.grams_card_date_label} ${widget.gramList.createdAt != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
-                    //  "${AppLocalizations.of(context)!.grams_card_date_label} ${widget.gramList.createdAt != null ? DateFormat('EEE, dd MMM yyyy, HH:mm').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
-                    //"Date: ${widget.gramList.createdAt != null ? DateFormat('EEE, dd MMM yyyy, HH:mm').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 12,
-                      tabletVal: 14,
-                    ),
-                    //14,
-                    fontWeight: FontWeight.w500,
-                  ).getAlignRight(): SizedBox.shrink()
-                :widget.gramList.barNumber!= null? GetGenericText(
-                    text: "${AppLocalizations.of(context)!.gram_bar_nmbr} ${widget.gramList.barNumber.toString()}",
-                    color: AppColors.goldLightColor,
-                    
-                        //"${AppLocalizations.of(context)!.grams_card_date_label} ${widget.gramList.createdAt != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
+
+                    //"${AppLocalizations.of(context)!.grams_card_date_label} ${widget.gramList.createdAt != null ? DateFormat('EEEE, dd MMM yyyy, HH:mm', Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
                     // "${AppLocalizations.of(context)!.grams_card_date_label} ${widget.gramList.createdAt != null ? DateFormat('EEE, dd MMM yyyy, HH:mm').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
                     //"Date: ${widget.gramList.createdAt != null ? DateFormat('EEE, dd MMM yyyy, HH:mm').format(DateTime.parse(widget.gramList.createdAt.toString()).toLocal()) : 'N/A'}",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 12,
                       tabletVal: 14,
-                      
+
                       //
                     ),
                     //14,
                     fontWeight: FontWeight.w500,
                   ).getAlign()
-                  : SizedBox.shrink(),
+                : SizedBox.shrink(),
           ],
         ),
       ),

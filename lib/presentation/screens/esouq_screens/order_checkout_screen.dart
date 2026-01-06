@@ -434,15 +434,19 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
           color: AppColors.grey6Color,
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: OneMinuteTimer(
-              key: timerKey,
-              onFinish: () {
-                print("Timer finished");
-              },
-            ),
-          ),
+          widget.paymentMethod == "Money"
+              ? Padding(
+                  padding: Directionality.of(context) == TextDirection.rtl
+                      ? EdgeInsets.only(left: 20.0)
+                      : EdgeInsets.only(right: 20.0),
+                  child: OneMinuteTimer(
+                    key: timerKey,
+                    onFinish: () {
+                      print("Timer finished");
+                    },
+                  ),
+                )
+              : SizedBox.shrink(),
         ],
       ),
 
@@ -606,8 +610,8 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                               children: [
                                 GetGenericText(
                                   text: _selectedItem == "Delivery"
-                                      ? "${(widget.deliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}"
-                                      : "${collectionTotal.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                                      ? "${(widget.deliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}"
+                                      : "${collectionTotal.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.grey6Color,
@@ -651,10 +655,10 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                           GetGenericText(
                             text: _selectedItem == "Delivery"
                                 ? widget.paymentMethod == "Money"
-                                      ? "${(withDeliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}"
+                                      ? "${(withDeliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}"
                                       : "${(withDeliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.grams}"
                                 : widget.paymentMethod == "Money"
-                                ? "${collectionTotal.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}"
+                                ? "${collectionTotal.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}"
                                 : "${collectionTotal.toStringAsFixed(2)} ${AppLocalizations.of(context)!.grams}",
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
@@ -699,8 +703,8 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                               children: [
                                 GetGenericText(
                                   text: _selectedItem == "Delivery"
-                                      ? "${widget.totalCharges.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}"
-                                      : "${collectionCharges.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}",
+                                      ? "${widget.totalCharges.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}"
+                                      : "${collectionCharges.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
                                   //collectionTotal.toStringAsFixed(2),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -794,7 +798,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                         //     product: widget.product,
                         //     goldPrice: widget.goldPrice.toString(),
                         //     currentGoldPrice:
-                        //         goldPriceState.value?.oneGramBuyingPriceInAED ??
+                        //         goldPriceState.value?.oneGramBuyingPriceInIQD ??
                         //         0.0,
                         //     paymentMethod: widget.paymentMethod.toString(),
                         //     deliveryAddress: deliveryAddress,
@@ -864,7 +868,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                       //     product: widget.product,
                       //     goldQuantity: widget.goldQuantity.toString(),
                       //     currentGoldPrice:
-                      //         goldPriceState.value?.oneGramBuyingPriceInAED ??
+                      //         goldPriceState.value?.oneGramBuyingPriceInIQD ??
                       //         0.0,
                       //     goldPrice: widget.goldPrice.toString(),
                       //     paymentMethod: widget.paymentMethod.toString(),

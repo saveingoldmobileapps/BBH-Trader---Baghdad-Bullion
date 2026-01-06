@@ -411,9 +411,9 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
                                                 .paymentMethod ==
                                             'Money'
                                         ? widget.kAllOrders.grandTotal != null
-                                              ? "${widget.kAllOrders.grandTotal} ${AppLocalizations.of(context)!.aed_currency}"
+                                              ? "${widget.kAllOrders.grandTotal} ${AppLocalizations.of(context)!.idq_currency}"
                                               : ""
-                                        //"${esouqStateWatchProvider.selectedOrder.payload!.grandTotal!.toStringAsFixed(3)} AED"
+                                        //"${esouqStateWatchProvider.selectedOrder.payload!.grandTotal!.toStringAsFixed(3)} IQD"
                                         : widget.kAllOrders.grandTotal != null
                                         ? "${CommonService.convertToWeight(
                                             num: double.parse("${widget.kAllOrders.grandTotal}"),

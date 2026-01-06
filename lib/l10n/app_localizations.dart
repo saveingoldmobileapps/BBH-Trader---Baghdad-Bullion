@@ -800,11 +800,11 @@ abstract class AppLocalizations {
   /// **'Total Gold ( Grams )'**
   String get total_gold_grams;
 
-  /// No description provided for @total_funds_aed.
+  /// No description provided for @total_funds_IQD.
   ///
   /// In en, this message translates to:
-  /// **'Total Funds (AED)'**
-  String get total_funds_aed;
+  /// **'Total Funds (IQD)'**
+  String get total_funds_IQD;
 
   /// No description provided for @deposit.
   ///
@@ -1001,13 +1001,13 @@ abstract class AppLocalizations {
   /// No description provided for @whatsapp_inbox.
   ///
   /// In en, this message translates to:
-  /// **'Hi Save In Gold Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this WhatsApp message. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nSave In Gold Team.'**
+  /// **'Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this WhatsApp message. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.'**
   String get whatsapp_inbox;
 
   /// No description provided for @email_message.
   ///
   /// In en, this message translates to:
-  /// **'Hi Save In Gold Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this email. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nSave In Gold Team.'**
+  /// **'Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this email. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.'**
   String get email_message;
 
   /// No description provided for @email_url_title.
@@ -1361,7 +1361,7 @@ abstract class AppLocalizations {
   /// No description provided for @enter_amount.
   ///
   /// In en, this message translates to:
-  /// **'Enter Amount (AED) here'**
+  /// **'Enter Amount (IQD) here'**
   String get enter_amount;
 
   /// No description provided for @enter_amount_plz.
@@ -1733,7 +1733,7 @@ abstract class AppLocalizations {
   /// No description provided for @dep_min_amount_note.
   ///
   /// In en, this message translates to:
-  /// **'Minimum deposit amount is AED 100, charges will apply'**
+  /// **'Minimum deposit amount is IQD 100, charges will apply'**
   String get dep_min_amount_note;
 
   /// No description provided for @dep_dt_intro_title.
@@ -1787,7 +1787,7 @@ abstract class AppLocalizations {
   /// No description provided for @dep_share_desc.
   ///
   /// In en, this message translates to:
-  /// **'Choose any of the options below to share the receipt once you’ve transferred the funds in Save In Gold FZCO account.'**
+  /// **'Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House FZCO account.'**
   String get dep_share_desc;
 
   /// No description provided for @dep_share_whatsapp.
@@ -1811,7 +1811,7 @@ abstract class AppLocalizations {
   /// No description provided for @dip_min_100.
   ///
   /// In en, this message translates to:
-  /// **'Minimum deposit amount is AED 100'**
+  /// **'Minimum deposit amount is IQD 100'**
   String get dip_min_100;
 
   /// No description provided for @wait_please.
@@ -1967,7 +1967,7 @@ abstract class AppLocalizations {
   /// No description provided for @bank_charge_message.
   ///
   /// In en, this message translates to:
-  /// **'A bank fee of AED 25 plus VAT will be applied.'**
+  /// **'A bank fee of IQD 25 plus VAT will be applied.'**
   String get bank_charge_message;
 
   /// No description provided for @save_changes.
@@ -2063,7 +2063,7 @@ abstract class AppLocalizations {
   /// No description provided for @save_inGold.
   ///
   /// In en, this message translates to:
-  /// **'Save in Gold FZCO'**
+  /// **'Baghdad Bullion House FZCO'**
   String get save_inGold;
 
   /// No description provided for @features.
@@ -2465,7 +2465,7 @@ abstract class AppLocalizations {
   /// No description provided for @all_additional_charge.
   ///
   /// In en, this message translates to:
-  /// **'Note: All the additional charges (AED'**
+  /// **'Note: All the additional charges (IQD'**
   String get all_additional_charge;
 
   /// No description provided for @will_deducted.
@@ -2684,11 +2684,11 @@ abstract class AppLocalizations {
   /// **'Money Statement'**
   String get money_st;
 
-  /// No description provided for @metal_rate_aed.
+  /// No description provided for @metal_rate_IQD.
   ///
   /// In en, this message translates to:
-  /// **'Rate: AED'**
-  String get metal_rate_aed;
+  /// **'Rate: IQD'**
+  String get metal_rate_IQD;
 
   /// No description provided for @metal_g.
   ///
@@ -2699,13 +2699,13 @@ abstract class AppLocalizations {
   /// No description provided for @withdraw_success.
   ///
   /// In en, this message translates to:
-  /// **'An amount of {amount} (AED) has been debited from your account.'**
+  /// **'An amount of {amount} (IQD) has been debited from your account.'**
   String withdraw_success(Object amount);
 
   /// No description provided for @deposit_success.
   ///
   /// In en, this message translates to:
-  /// **'Your account has been credited with AED {amount}.'**
+  /// **'Your account has been credited with IQD {amount}.'**
   String deposit_success(Object amount);
 
   /// No description provided for @login_success.
@@ -2723,7 +2723,7 @@ abstract class AppLocalizations {
   /// No description provided for @gift_sent.
   ///
   /// In en, this message translates to:
-  /// **'You’ve successfully sent (AED {amount}) gift to {recipient}.'**
+  /// **'You’ve successfully sent (IQD {amount}) gift to {recipient}.'**
   String gift_sent(Object amount, Object recipient);
 
   /// No description provided for @esouq_order.
@@ -2735,7 +2735,7 @@ abstract class AppLocalizations {
   /// No description provided for @buy_order_filled.
   ///
   /// In en, this message translates to:
-  /// **'You bought {quantity} gram(s) of gold at price {price} AED. Deal Id: {dealId}.'**
+  /// **'You bought {quantity} gram(s) of gold at price {price} IQD. Deal Id: {dealId}.'**
   String buy_order_filled(Object dealId, Object price, Object quantity);
 
   /// No description provided for @no_notification.
@@ -2831,7 +2831,7 @@ abstract class AppLocalizations {
   /// No description provided for @invest_insufficient_balance_desc.
   ///
   /// In en, this message translates to:
-  /// **'Your balance (AED {balance}) is less than the required amount (AED {required}). Please add funds.'**
+  /// **'Your balance (IQD {balance}) is less than the required amount (IQD {required}). Please add funds.'**
   String invest_insufficient_balance_desc(Object balance, Object required);
 
   /// No description provided for @invest_confirmation_title.
@@ -2885,7 +2885,7 @@ abstract class AppLocalizations {
   /// No description provided for @insufficient_balance_message.
   ///
   /// In en, this message translates to:
-  /// **'Your balance (AED {walletBalance}) is less than the required amount (AED {inputAmount}). Please add funds.'**
+  /// **'Your balance (IQD {walletBalance}) is less than the required amount (IQD {inputAmount}). Please add funds.'**
   String insufficient_balance_message(String walletBalance, String inputAmount);
 
   /// No description provided for @invest_confirm_purchase_btn.
@@ -3017,7 +3017,7 @@ abstract class AppLocalizations {
   /// No description provided for @metal_plus_na.
   ///
   /// In en, this message translates to:
-  /// **'+ AED N/A'**
+  /// **'+ IQD N/A'**
   String get metal_plus_na;
 
   /// No description provided for @deal_cant_close.
@@ -3617,7 +3617,7 @@ abstract class AppLocalizations {
   /// No description provided for @total_funds.
   ///
   /// In en, this message translates to:
-  /// **'Total Funds (AED)'**
+  /// **'Total Funds (IQD)'**
   String get total_funds;
 
   /// No description provided for @upgrade_to_real_account.
@@ -3686,11 +3686,11 @@ abstract class AppLocalizations {
   /// **'Wallet empty. Add funds to buy gold.'**
   String get wallet_empty;
 
-  /// No description provided for @per_gram_aed.
+  /// No description provided for @per_gram_IQD.
   ///
   /// In en, this message translates to:
-  /// **'Per Gram AED'**
-  String get per_gram_aed;
+  /// **'Per Gram IQD'**
+  String get per_gram_IQD;
 
   /// No description provided for @buy_gold.
   ///
@@ -3842,11 +3842,11 @@ abstract class AppLocalizations {
   /// **'Gram'**
   String get gram;
 
-  /// No description provided for @aed_currency.
+  /// No description provided for @idq_currency.
   ///
   /// In en, this message translates to:
-  /// **' AED'**
-  String get aed_currency;
+  /// **' IQD'**
+  String get idq_currency;
 
   /// No description provided for @amountVar.
   ///
@@ -3989,7 +3989,7 @@ abstract class AppLocalizations {
   /// No description provided for @gram_invest_money.
   ///
   /// In en, this message translates to:
-  /// **'Invest Money: AED'**
+  /// **'Invest Money: IQD'**
   String get gram_invest_money;
 
   /// No description provided for @gram_invest_status.
@@ -4061,7 +4061,7 @@ abstract class AppLocalizations {
   /// No description provided for @deal_price_per_gram.
   ///
   /// In en, this message translates to:
-  /// **'Price per gram (AED)'**
+  /// **'Price per gram (IQD)'**
   String get deal_price_per_gram;
 
   /// No description provided for @deal_gram_price.
@@ -4070,11 +4070,11 @@ abstract class AppLocalizations {
   /// **'Gram Price'**
   String get deal_gram_price;
 
-  /// No description provided for @deal_enter_amount_aed.
+  /// No description provided for @deal_enter_amount_IQD.
   ///
   /// In en, this message translates to:
-  /// **'Please enter an amount in AED'**
-  String get deal_enter_amount_aed;
+  /// **'Please enter an amount in IQD'**
+  String get deal_enter_amount_IQD;
 
   /// No description provided for @deal_valid_number.
   ///
@@ -4115,19 +4115,19 @@ abstract class AppLocalizations {
   /// No description provided for @deal_sell_greater_than_bought.
   ///
   /// In en, this message translates to:
-  /// **'Please enter a sell price greater than the bought at price (AED'**
+  /// **'Please enter a sell price greater than the bought at price (IQD'**
   String get deal_sell_greater_than_bought;
 
   /// No description provided for @deal_pending_sell_greater_with_zero_buying_than_current_sell.
   ///
   /// In en, this message translates to:
-  /// **'Please enter a sell price greater than or equal to the current sell price (AED'**
+  /// **'Please enter a sell price greater than or equal to the current sell price (IQD'**
   String get deal_pending_sell_greater_with_zero_buying_than_current_sell;
 
   /// No description provided for @deal_buy_price_less.
   ///
   /// In en, this message translates to:
-  /// **'Please enter a buy price less than the current buy price (AED'**
+  /// **'Please enter a buy price less than the current buy price (IQD'**
   String get deal_buy_price_less;
 
   /// No description provided for @deal_sure_confirm.
@@ -4169,7 +4169,7 @@ abstract class AppLocalizations {
   /// No description provided for @is_below_buy.
   ///
   /// In en, this message translates to:
-  /// **'is below your buying price (AED'**
+  /// **'is below your buying price (IQD'**
   String get is_below_buy;
 
   /// No description provided for @deal_confirm_loss.
@@ -4418,11 +4418,11 @@ abstract class AppLocalizations {
   /// **'Yes'**
   String get yes;
 
-  /// No description provided for @aed.
+  /// No description provided for @idq.
   ///
   /// In en, this message translates to:
-  /// **'AED'**
-  String get aed;
+  /// **'IQD'**
+  String get idq;
 
   /// No description provided for @rejected.
   ///
@@ -4829,7 +4829,7 @@ abstract class AppLocalizations {
   /// No description provided for @bank_fee_notice.
   ///
   /// In en, this message translates to:
-  /// **'A bank fee of AED 25 plus VAT will be applied.'**
+  /// **'A bank fee of IQD 25 plus VAT will be applied.'**
   String get bank_fee_notice;
 
   /// No description provided for @bank_name.
@@ -4937,7 +4937,7 @@ abstract class AppLocalizations {
   /// No description provided for @maintainance_description.
   ///
   /// In en, this message translates to:
-  /// **'Save In Gold is currently undergoing a scheduled system upgrade to enhance security, stability, and real-time gold trading performance'**
+  /// **'Baghdad Bullion House is currently undergoing a scheduled system upgrade to enhance security, stability, and real-time gold trading performance'**
   String get maintainance_description;
 
   /// No description provided for @server_under_maintainance.
@@ -5035,6 +5035,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your account has been temporarily frozen. To restore access, please contact our support team for assistance.'**
   String get temporary_freezed_account_desc;
+
+  /// No description provided for @doc_mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Document name and profile name language do not match. Please upload a matching ID.'**
+  String get doc_mismatch;
+
+  /// No description provided for @nam_mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Name Mismatch'**
+  String get nam_mismatch;
 }
 
 class _AppLocalizationsDelegate

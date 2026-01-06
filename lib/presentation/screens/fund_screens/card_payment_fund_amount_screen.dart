@@ -107,7 +107,7 @@ class _FundAmountScreenState
                         )!.enter_correct_amount; //'Please add correct amount';
                       }
                       if (amount < 100) {
-                        return 'Minimum deposit amount is AED 100';
+                        return 'Minimum deposit amount is IQD 100';
                       }
                       return null;
                     },
@@ -118,7 +118,7 @@ class _FundAmountScreenState
                           text: AppLocalizations.of(
                             context,
                           )!.dep_min_amount_note,
-                          // "Minimum deposit amount is AED 100, charges may apply",
+                          // "Minimum deposit amount is IQD 100, charges may apply",
                           fontSize: sizes!.isPhone ? 11 : 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.grey3Color,
@@ -127,7 +127,7 @@ class _FundAmountScreenState
                           text: AppLocalizations.of(
                             context,
                           )!.dep_min_amount_note,
-                          // "Minimum deposit amount is AED 100, charges may apply",
+                          // "Minimum deposit amount is IQD 100, charges may apply",
                           fontSize: sizes!.isPhone ? 11 : 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.grey3Color,
@@ -193,7 +193,7 @@ class _FundAmountScreenState
           .read(paymentOptionProvider.notifier)
           .createPaymentIntent(
             amount: amount,
-            currency: 'AED',
+            currency: 'IQD',
             customerId: customer['id'],
           );
 
@@ -202,7 +202,7 @@ class _FundAmountScreenState
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent['client_secret'],
           style: ThemeMode.dark,
-          merchantDisplayName: 'Save In Gold',
+          merchantDisplayName: 'Baghdad Bullion House',
           billingDetails: BillingDetails(
             name: '${user?.firstName} ${user?.surname}',
             email: user?.email ?? "",

@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:saveingold_fzco/core/theme/const_colors.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/widgets/kyc_financial_info_screen.dart';
 
-
 import '../../../../../core/theme/const_padding.dart';
 
 class VerifyIdentitySheet {
@@ -43,15 +42,20 @@ class VerifyIdentitySheet {
                         child: DropdownButton<String>(
                           dropdownColor: const Color(0xFF1E1C1A),
                           value: selectedLang,
-                          icon: const Icon(Icons.arrow_drop_down,
-                              color: Colors.white70),
+                          icon: const Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.white70,
+                          ),
                           items: ["En", "Ar"].map((lang) {
                             return DropdownMenuItem(
                               value: lang,
                               child: Row(
                                 children: [
-                                  const Icon(Icons.g_translate,
-                                      size: 18, color: AppColors.whiteColor),
+                                  const Icon(
+                                    Icons.g_translate,
+                                    size: 18,
+                                    color: AppColors.whiteColor,
+                                  ),
                                   ConstPadding.sizeBoxWithWidth(width: 6),
                                   Text(
                                     lang,
@@ -103,20 +107,22 @@ class VerifyIdentitySheet {
                         child: RichText(
                           text: TextSpan(
                             style: GoogleFonts.poppins(
-                                fontSize: 14,
-                                color: AppColors.primaryGold500,
-                                fontWeight: FontWeight.w500),
+                              fontSize: 14,
+                              color: AppColors.primaryGold500,
+                              fontWeight: FontWeight.w500,
+                            ),
                             children: [
                               const TextSpan(
                                 text:
-                                    "I consent to Save In Gold using and processing my personal information, and I confirm that I'm 18 or older. ",
+                                    "I consent to Baghdad Bullion House using and processing my personal information, and I confirm that I'm 18 or older. ",
                               ),
                               TextSpan(
                                 text: "Privacy Policy",
                                 style: const TextStyle(
-                                    color: AppColors.primaryGold500,
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.bold),
+                                  color: AppColors.primaryGold500,
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),

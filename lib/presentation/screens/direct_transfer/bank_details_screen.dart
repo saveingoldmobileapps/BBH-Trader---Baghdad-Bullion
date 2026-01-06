@@ -308,7 +308,7 @@ class _BankDetailsScreenState extends ConsumerState<BankDetailsScreen> {
                     ConstPadding.sizeBoxWithHeight(height: 4),
                     GetGenericText(
                       text: AppLocalizations.of(context)!.dep_share_desc,
-                      //"Choose any of the options below to share the receipt once you’ve transferred the funds in Save In Gold FZCO account.",
+                      //"Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House FZCO account.",
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       color: AppColors.grey3Color,
@@ -386,7 +386,7 @@ class _BankDetailsScreenState extends ConsumerState<BankDetailsScreen> {
                         final message = AppLocalizations.of(
                           context,
                         )!.whatsapp_inbox;
-                        //"Hi Save In Gold Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this WhatsApp message. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nSave In Gold Team.";
+                        //"Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this WhatsApp message. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.";
 
                         /// launch whatsapp
                         await CommonService.openWhatsappUrl(
@@ -453,7 +453,7 @@ class _BankDetailsScreenState extends ConsumerState<BankDetailsScreen> {
                         final body = AppLocalizations.of(
                           context,
                         )!.email_message;
-                        //"Hi Save In Gold Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this email. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nSave In Gold Team.";
+                        //"Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this email. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.";
                         // Send via email
                         await CommonService.openEmailApp(
                           emailAddress: "info@saveingold.ae",

@@ -110,7 +110,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
     num pnl = CommonService.calculateLossOrProfit(
       buyingPrice: widget.gramData.buyingPrice ?? 0,
       livePrice:
-          goldPriceStateWatchProvider.value?.oneGramSellingPriceInAED ?? 0.0,
+          goldPriceStateWatchProvider.value?.oneGramSellingPriceInIQD ?? 0.0,
       tradeMetalFactor: widget.gramData.tradeMetal ?? 0,
     );
     debugPrint("GramDealDetailScreenRebuild");
@@ -198,7 +198,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                             // if (widget.gramData.tradeStatus == "Opened"  ) ...[
                             GetGenericText(
                               text:
-                                  "${AppLocalizations.of(context)!.aed_currency} ${pnl.toStringAsFixed(2)}", //"AED ${pnl.toStringAsFixed(2)}",
+                                  "${AppLocalizations.of(context)!.idq_currency} ${pnl.toStringAsFixed(2)}", //"IQD ${pnl.toStringAsFixed(2)}",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 16,
                                 tabletVal: 18,
@@ -229,8 +229,8 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                 ),
                                 GetGenericText(
                                   text:
-                                      "${AppLocalizations.of(context)!.aed_currency} ${widget.gramData.buyingPrice?.toStringAsFixed(2)}",
-                                  // "AED ${widget.gramData.buyingPrice?.toStringAsFixed(2)}",
+                                      "${AppLocalizations.of(context)!.idq_currency} ${widget.gramData.buyingPrice?.toStringAsFixed(2)}",
+                                  // "IQD ${widget.gramData.buyingPrice?.toStringAsFixed(2)}",
                                   fontSize: sizes!.responsiveFont(
                                     phoneVal: 16,
                                     tabletVal: 18,
@@ -269,7 +269,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                           ),
                           GetGenericText(
                             text:
-                                "${AppLocalizations.of(context)!.aed} ${widget.gramData.tradeType == "Sell"
+                                "${AppLocalizations.of(context)!.idq} ${widget.gramData.tradeType == "Sell"
                                     ? (widget.gramData.tradeStatus == "Pending" ? widget.gramData.sellAtProfit?.toStringAsFixed(2) : widget.gramData.sellingPrice?.toStringAsFixed(2))
                                     : widget.gramData.tradeType == "Buy"
                                     ? (widget.gramData.tradeStatus == "Pending" ? widget.gramData.buyAtPrice?.toStringAsFixed(2) : widget.gramData.buyingPrice?.toStringAsFixed(2))
@@ -309,8 +309,8 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                       //     GetGenericText(
                       //       text: //widget.gramData.tradeType == "Sell"
                       //       widget.gramData.tradeStatus == "Opened"
-                      //           ? "AED ${goldPriceStateWatchProvider.value?.oneGramSellingPriceInAED.toStringAsFixed(2)}"
-                      //           : "AED ${goldPriceStateWatchProvider.value?.oneGramBuyingPriceInAED.toStringAsFixed(2)}",
+                      //           ? "IQD ${goldPriceStateWatchProvider.value?.oneGramSellingPriceInIQD.toStringAsFixed(2)}"
+                      //           : "IQD ${goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD.toStringAsFixed(2)}",
                       //       fontSize: sizes!.responsiveFont(
                       //         phoneVal: 16,
                       //         tabletVal: 18,
@@ -346,8 +346,8 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                 (widget.gramData.tradeStatus == "Opened" ||
                                     (widget.gramData.tradeStatus == "Pending" &&
                                         widget.gramData.tradeType == "Sell"))
-                                ? "${AppLocalizations.of(context)!.aed} ${goldPriceStateWatchProvider.value?.oneGramSellingPriceInAED.toStringAsFixed(2)}"
-                                : "${AppLocalizations.of(context)!.aed} ${goldPriceStateWatchProvider.value?.oneGramBuyingPriceInAED.toStringAsFixed(2)}",
+                                ? "${AppLocalizations.of(context)!.idq} ${goldPriceStateWatchProvider.value?.oneGramSellingPriceInIQD.toStringAsFixed(2)}"
+                                : "${AppLocalizations.of(context)!.idq} ${goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD.toStringAsFixed(2)}",
                             fontSize: sizes!.responsiveFont(
                               phoneVal: 16,
                               tabletVal: 18,
@@ -382,8 +382,8 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                           ),
                           GetGenericText(
                             text:
-                                "${AppLocalizations.of(context)!.aed_currency} ${widget.gramData.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
-                            // "AED ${widget.gramData.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
+                                "${AppLocalizations.of(context)!.idq_currency} ${widget.gramData.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
+                            // "IQD ${widget.gramData.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
                             fontSize: sizes!.responsiveFont(
                               phoneVal: 16,
                               tabletVal: 18,
@@ -519,7 +519,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   title: "",
                                   hintText: AppLocalizations.of(
                                     context,
-                                  )!.deal_price_per_gram, //"Price per gram (AED)",
+                                  )!.deal_price_per_gram, //"Price per gram (IQD)",
                                   labelText: AppLocalizations.of(
                                     context,
                                   )!.deal_gram_price, //"Gram Price",
@@ -537,7 +537,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                     if (value == null || value.isEmpty) {
                                       return AppLocalizations.of(
                                         context,
-                                      )!.deal_enter_amount_aed; //'Please enter an amount in AED';
+                                      )!.deal_enter_amount_IQD; //'Please enter an amount in IQD';
                                     }
                                     final amount = num.tryParse(value);
                                     if (amount == null) {
@@ -703,11 +703,11 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   final double? currentSellPrice =
                                       goldPriceStateWatchProvider
                                           .value
-                                          ?.oneGramSellingPriceInAED;
+                                          ?.oneGramSellingPriceInIQD;
                                   final double? currentBuyPrice =
                                       goldPriceStateWatchProvider
                                           .value
-                                          ?.oneGramBuyingPriceInAED;
+                                          ?.oneGramBuyingPriceInIQD;
 
                                   // Pending Sell - edited price must be greater than current sell price
                                   // if (isEditPrice &&
@@ -718,7 +718,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   //       editedPrice < currentSellPrice) {
                                   //     Toasts.getErrorToast(
                                   //       text:
-                                  //           "Please enter a sell price greater than the current sell price (AED ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
+                                  //           "Please enter a sell price greater than the current sell price (IQD ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
                                   //       gravity: ToastGravity.TOP,
                                   //     );
                                   //     return;
@@ -745,7 +745,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                           editedPrice < currentSellPrice) {
                                         Toasts.getErrorToast(
                                           text:
-                                              "Please enter a sell price greater than the current sell price (AED ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
+                                              "Please enter a sell price greater than the current sell price (IQD ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
                                           gravity: ToastGravity.TOP,
                                         );
                                         return;
@@ -778,7 +778,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   //       text:
                                   //           "${AppLocalizations.of(context)!.deal_sell_greater_than_bought} ${buyingPrice?.toStringAsFixed(2) ?? "-"})",
 
-                                  //       // "Please enter a sell price greater than the bought at price (AED ${buyingPrice?.toStringAsFixed(2) ?? "-"})",
+                                  //       // "Please enter a sell price greater than the bought at price (IQD ${buyingPrice?.toStringAsFixed(2) ?? "-"})",
                                   //       gravity: ToastGravity.TOP,
                                   //     );
                                   //     return;
@@ -797,7 +797,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                         text:
                                             "${AppLocalizations.of(context)!.deal_pending_sell_greater_with_zero_buying_than_current_sell} ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
 
-                                        // "Please enter a sell price greater than or equal to the current sell price (AED ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
+                                        // "Please enter a sell price greater than or equal to the current sell price (IQD ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
                                         gravity: ToastGravity.TOP,
                                       );
                                       return;
@@ -815,7 +815,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                         text:
                                             "${AppLocalizations.of(context)!.deal_buy_price_less} ${currentBuyPrice?.toStringAsFixed(2) ?? "-"})",
 
-                                        // "Please enter a buy price less than the current buy price (AED ${currentBuyPrice?.toStringAsFixed(2) ?? "-"})",
+                                        // "Please enter a buy price less than the current buy price (IQD ${currentBuyPrice?.toStringAsFixed(2) ?? "-"})",
                                         gravity: ToastGravity.TOP,
                                       );
                                       return;
@@ -1064,7 +1064,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   title: "",
                                   hintText: AppLocalizations.of(
                                     context,
-                                  )!.deal_price_per_gram, //"Price per gram (AED)",
+                                  )!.deal_price_per_gram, //"Price per gram (IQD)",
                                   labelText: AppLocalizations.of(
                                     context,
                                   )!.deal_sell_at_price, //"Sell at Price",
@@ -1082,7 +1082,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                     if (value == null || value.isEmpty) {
                                       return AppLocalizations.of(
                                         context,
-                                      )!.deal_enter_amount_aed; //'Please enter an amount in AED';
+                                      )!.deal_enter_amount_IQD; //'Please enter an amount in IQD';
                                     }
                                     final amount = num.tryParse(value);
                                     if (amount == null) {
@@ -1113,7 +1113,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                               print("hello");
                               final sellingPrice = goldPriceStateWatchProvider
                                   .value
-                                  ?.oneGramSellingPriceInAED;
+                                  ?.oneGramSellingPriceInIQD;
                               final homeFeed = ref
                                   .read(homeProvider)
                                   .getHomeFeedResponse;
@@ -1533,7 +1533,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                 // Get current selling price
                                 final sellingPrice = goldPriceStateWatchProvider
                                     .value
-                                    ?.oneGramSellingPriceInAED;
+                                    ?.oneGramSellingPriceInIQD;
                                 final kSellingPrice = double.parse(
                                   "$sellingPrice",
                                 );
@@ -1569,7 +1569,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                     text:
                                         "${AppLocalizations.of(context)!.deal_cant_close} ${kSellingPrice.toStringAsFixed(2)}) ${AppLocalizations.of(context)!.is_below_buy} ${buyingPrice.toStringAsFixed(2)}).",
 
-                                    // "You can't close this deal at a loss. Current price ${kSellingPrice.toStringAsFixed(2)}) is below your buying price (AED ${buyingPrice.toStringAsFixed(2)}).",
+                                    // "You can't close this deal at a loss. Current price ${kSellingPrice.toStringAsFixed(2)}) is below your buying price (IQD ${buyingPrice.toStringAsFixed(2)}).",
                                     gravity: ToastGravity.TOP,
                                   );
                                   return;
@@ -1587,7 +1587,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   subtitle: wouldBeLoss
                                       ? AppLocalizations.of(context)!
                                             .deal_about_to_close //"You're about to close this deal at a loss. Are you sure?"
-                                      : "${AppLocalizations.of(context)!.deal_sure_want_to_close} ${tradeMetal}${AppLocalizations.of(context)!.deal_g_of_deal}", //"Are you sure you want to close ${tradeMetal}g of this deal?",
+                                      : "${AppLocalizations.of(context)!.deal_sure_want_to_close} $tradeMetal${AppLocalizations.of(context)!.deal_g_of_deal}", //"Are you sure you want to close ${tradeMetal}g of this deal?",
                                   noButtonTitle: AppLocalizations.of(
                                     context,
                                   )!.cancel, //"Cancel",

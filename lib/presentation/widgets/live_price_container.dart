@@ -61,9 +61,9 @@ class _LivePriceContainerState extends ConsumerState<LivePriceContainer>
           final goldPriceState = ref.watch(goldPriceProvider);
           return goldPriceState.when(
             data: (data) {
-              final oneGramAEDPrice = widget.isSelling
-                  ? data.oneGramSellingPriceInAED
-                  : data.oneGramBuyingPriceInAED;
+              final oneGramIQDPrice = widget.isSelling
+                  ? data.oneGramSellingPriceInIQD
+                  : data.oneGramBuyingPriceInIQD;
               final pricePerOunce = widget.isSelling
                   ? data.oneOunceDollarSellingPrice
                   : data.oneOunceDollarBuyingPrice;
@@ -71,7 +71,7 @@ class _LivePriceContainerState extends ConsumerState<LivePriceContainer>
                   ? data.lastLowSellingPrice
                   : data.lastHighBuyingPrice;
 
-              final isPriceValid = oneGramAEDPrice > 0 && pricePerOunce > 0;
+              final isPriceValid = oneGramIQDPrice > 0 && pricePerOunce > 0;
               if (!isPriceValid) {
                 return const Center(
                   child: CircularProgressIndicator(
@@ -92,7 +92,7 @@ class _LivePriceContainerState extends ConsumerState<LivePriceContainer>
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 6),
                   GetGenericText(
-                    text: NumberFormat("#,##0.00").format(oneGramAEDPrice),
+                    text: NumberFormat("#,##0.00").format(oneGramIQDPrice),
                     fontSize: sizes!.isPhone ? 16 : 45,
                     fontWeight: FontWeight.w500,
                     color: widget.isSelling
@@ -195,10 +195,10 @@ class _LivePriceContainerState extends ConsumerState<LivePriceContainer>
 //           final goldPriceState = ref.watch(goldPriceProvider);
 //           return goldPriceState.when(
 //             data: (data) {
-//               final buyingPrice = data.oneGramBuyingPriceInAED;
-//               final sellingPrice = data.oneGramSellingPriceInAED;
+//               final buyingPrice = data.oneGramBuyingPriceInIQD;
+//               final sellingPrice = data.oneGramSellingPriceInIQD;
 
-//               final oneGramAEDPrice = isSelling ? sellingPrice : buyingPrice;
+//               final oneGramIQDPrice = isSelling ? sellingPrice : buyingPrice;
 //               final pricePerOunce = isSelling
 //                   ? data.oneOunceDollarSellingPrice
 //                   : data.oneOunceDollarBuyingPrice;
@@ -206,7 +206,7 @@ class _LivePriceContainerState extends ConsumerState<LivePriceContainer>
 //                   ? data.lastLowSellingPrice
 //                   : data.lastHighBuyingPrice;
 //               // debugPrint(
-//               //   "Buying: ${buyingPrice.toStringAsFixed(3)} AED | Selling: ${sellingPrice.toStringAsFixed(3)} AED",
+//               //   "Buying: ${buyingPrice.toStringAsFixed(3)} IQD | Selling: ${sellingPrice.toStringAsFixed(3)} IQD",
 //               // );
 
 //               return Column(
@@ -222,7 +222,7 @@ class _LivePriceContainerState extends ConsumerState<LivePriceContainer>
 //                   ),
 //                   ConstPadding.sizeBoxWithHeight(height: 6),
 //                   GetGenericText(
-//                     text: NumberFormat("#,##0.00").format(oneGramAEDPrice),
+//                     text: NumberFormat("#,##0.00").format(oneGramIQDPrice),
 //                     fontSize: sizes!.isPhone ? 16 : 45,
 //                     fontWeight: FontWeight.w500,
 //                     color: isSelling

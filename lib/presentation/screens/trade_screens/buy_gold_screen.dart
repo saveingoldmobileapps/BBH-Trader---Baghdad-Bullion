@@ -36,7 +36,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
   bool isSwitchValue = true;
 
   // Constants
-  // static const double _usdToAed = 3.674; // 1 USD to AED
+  // static const double _usdToIQD = 3.674; // 1 USD to IQD
   // static const double _gramsPerOunce = 31.10347; // 1 ounce in grams
   static const String _defaultValue = '0.00';
 
@@ -58,13 +58,12 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final mainState = ref.read(homeProvider);
 
-        ref
-            .read(homeProvider.notifier)
-            .getHomeFeed(
-              context: context,
-              showLoading: false,
-            );
-
+      ref
+          .read(homeProvider.notifier)
+          .getHomeFeed(
+            context: context,
+            showLoading: false,
+          );
     });
     userInputController.addListener(_debouncedUpdateCalculation);
     buyAtPriceController.addListener(
@@ -93,16 +92,16 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
 
     goldPriceState.when(
       data: (data) {
-        // final buyingPX = data.oneGramBuyingPriceInAED;
+        // final buyingPX = data.oneGramBuyingPriceInIQD;
         //data.getGoldPriceResponse.prices?.last.mDBuyingPx ?? 0.0;
-        // final oneGramAEDPrice = (buyingPX * _usdToAed) / _gramsPerOunce;
+        // final oneGramIQDPrice = (buyingPX * _usdToIQD) / _gramsPerOunce;
 
-        final oneGramAEDPrice = data.oneGramBuyingPriceInAED;
+        final oneGramIQDPrice = data.oneGramBuyingPriceInIQD;
         final inputValue =
             double.tryParse(userInputController.text.trim()) ?? 0.0;
 
         // Use buyAtPrice if enabled and valid, otherwise use current price
-        double priceToUse = oneGramAEDPrice;
+        double priceToUse = oneGramIQDPrice;
         if (isBuyAtPriceStatus && buyAtPriceController.text.isNotEmpty) {
           final buyAtPrice = double.tryParse(buyAtPriceController.text.trim());
           if (buyAtPrice != null && buyAtPrice > 0) {
@@ -112,7 +111,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
 
         setState(() {
           calculatedValue = (inputValue * priceToUse).toStringAsFixed(2);
-          buyingPriceInOneGram = oneGramAEDPrice;
+          buyingPriceInOneGram = oneGramIQDPrice;
         });
       },
       error: (error, stackTrace) {
@@ -229,7 +228,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                             ) ??
                             0.0;
                         final double buyingPriceInOneGram =
-                            data.oneGramBuyingPriceInAED;
+                            data.oneGramBuyingPriceInIQD;
                         final maxGrams = buyingPriceInOneGram > 0
                             ? walletBalance / buyingPriceInOneGram
                             : 0.0;
@@ -269,7 +268,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
               // CommonTextFormField(
               //   focusNode: _focusBuyAtPrice,
               //   title: "",
-              //   hintText: AppLocalizations.of(context)!.per_gram_aed,
+              //   hintText: AppLocalizations.of(context)!.per_gram_IQD,
               //   labelText: AppLocalizations.of(context)!.buy_at_price,
               //   controller: buyAtPriceController,
               //   inputFormatters: [
@@ -293,7 +292,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
               CommonTextFormField(
                 focusNode: _focusBuyAtPrice,
                 title: "",
-                hintText: AppLocalizations.of(context)!.per_gram_aed,
+                hintText: AppLocalizations.of(context)!.per_gram_IQD,
                 labelText: AppLocalizations.of(context)!.buy_at_price,
                 controller: buyAtPriceController,
                 inputFormatters: [
@@ -457,7 +456,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                           inputAmount.toStringAsFixed(2),
                         ),
 
-                    //"Your balance (AED ${walletBalance.toStringAsFixed(2)}) is less than the required amount (AED ${inputAmount.toStringAsFixed(2)}). Please add funds.",
+                    //"Your balance (IQD ${walletBalance.toStringAsFixed(2)}) is less than the required amount (IQD ${inputAmount.toStringAsFixed(2)}). Please add funds.",
                     noButtonTitle: AppLocalizations.of(context)!.close,
                     yesButtonTitle: AppLocalizations.of(context)!.add_funds,
                     isLoadingState: false,
@@ -626,7 +625,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     //     context: context,
                     //     heading: "Insufficient Balance",
                     //     subtitle:
-                    //         "Your balance ($walletBalance AED) is less than the required amount ($inputAmount AED). Please add funds.",
+                    //         "Your balance ($walletBalance IQD) is less than the required amount ($inputAmount IQD). Please add funds.",
                     //     noButtonTitle: "Close",
                     //     yesButtonTitle: "Add Funds",
                     //     isLoadingState: false,
@@ -866,7 +865,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     //     context: context,
                     //     heading: "Insufficient Balance",
                     //     subtitle:
-                    //         "Your balance ($walletBalance AED) is less than the required amount ($inputAmount AED). Please add funds.",
+                    //         "Your balance ($walletBalance IQD) is less than the required amount ($inputAmount IQD). Please add funds.",
                     //     noButtonTitle: "Close",
                     //     yesButtonTitle: "Add Funds",
                     //     isLoadingState: false,
@@ -952,7 +951,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                           return goldPriceState.when(
                             data: (data) {
                               double oneGramPrice =
-                                  data.oneGramBuyingPriceInAED;
+                                  data.oneGramBuyingPriceInIQD;
                               if (isBuyAtPriceStatus &&
                                   buyAtPriceController.text.isNotEmpty) {
                                 final customPrice = double.tryParse(
@@ -967,7 +966,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                               calculatedValue = total.toString();
                               return GetGenericText(
                                 text:
-                                    '${AppLocalizations.of(context)!.buy_gold_pop} ${oneGramPrice.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency}',
+                                    '${AppLocalizations.of(context)!.buy_gold_pop} ${oneGramPrice.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}',
                                 fontSize: sizes!.responsiveFont(
                                   phoneVal: 18,
                                   tabletVal: 20,
@@ -1191,7 +1190,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                         ? AppLocalizations.of(context)!.gram
                         : AppLocalizations.of(
                             context,
-                          )!.aed_currency, //"Gram" : " AED",
+                          )!.idq_currency, //"Gram" : " IQD",
                     fontSize: sizes!.isPhone ? 14 : 16,
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
@@ -1243,15 +1242,15 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
 
                         return goldPriceState.when(
                           data: (data) {
-                            final oneGramAEDPrice =
-                                data.oneGramBuyingPriceInAED;
+                            final oneGramIQDPrice =
+                                data.oneGramBuyingPriceInIQD;
                             final inputValue =
                                 double.tryParse(
                                   userInputController.text.trim(),
                                 ) ??
                                 0.0;
 
-                            double priceToUse = oneGramAEDPrice;
+                            double priceToUse = oneGramIQDPrice;
                             if (isBuyAtPriceStatus &&
                                 buyAtPriceController.text.isNotEmpty) {
                               final buyAtPrice = double.tryParse(
@@ -1314,8 +1313,8 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   // ),
                   GetGenericText(
                     text: isSwitchValue
-                        ? AppLocalizations.of(context)!.aed_currency
-                        : AppLocalizations.of(context)!.gram, //" AED" : "Gram",
+                        ? AppLocalizations.of(context)!.idq_currency
+                        : AppLocalizations.of(context)!.gram, //" IQD" : "Gram",
                     fontSize: sizes!.isPhone ? 14 : 16,
                     fontWeight: FontWeight.w400,
                     color: AppColors.grey4Color,

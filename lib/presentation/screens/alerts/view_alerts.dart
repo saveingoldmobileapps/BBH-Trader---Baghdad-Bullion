@@ -198,7 +198,7 @@ class _ActiveAlertsScreenState extends ConsumerState<ActiveAlertsScreen> {
                               style: const TextStyle(color: Colors.white),
                             ),
                             subtitle: Text(
-                              "${_getArabicAlertType(alert.alertType)} | ${_getArabicCondition(alert.condition)} ${alert.price!.toStringAsFixed(2) ?? ""} ${AppLocalizations.of(context)!.aed_currency}",
+                              "${_getArabicAlertType(alert.alertType)} | ${_getArabicCondition(alert.condition)} ${alert.price!.toStringAsFixed(2) ?? ""} ${AppLocalizations.of(context)!.idq_currency}",
                               style: const TextStyle(color: Colors.white70),
                             ),
                           )
@@ -212,7 +212,7 @@ class _ActiveAlertsScreenState extends ConsumerState<ActiveAlertsScreen> {
                               style: const TextStyle(color: Colors.white),
                             ),
                             subtitle: Text(
-                              "${alert.alertType ?? ""} | ${alert.condition ?? ""} ${alert.price!.toStringAsFixed(2) ?? ""} ${AppLocalizations.of(context)!.aed_currency}",
+                              "${alert.alertType ?? ""} | ${alert.condition ?? ""} ${alert.price!.toStringAsFixed(2) ?? ""} ${AppLocalizations.of(context)!.idq_currency}",
                               style: const TextStyle(color: Colors.white70),
                             ),
                           ),

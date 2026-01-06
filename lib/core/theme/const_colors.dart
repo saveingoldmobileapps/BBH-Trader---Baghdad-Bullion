@@ -27,7 +27,7 @@ class AppColors {
   static const green900Color = Color.fromRGBO(12, 76, 43, 1);
   static const green800Color = Color.fromRGBO(52, 199, 89, 1);
 
-  static const greyScale1000 = Color.fromRGBO(35, 35, 35, 1);
+  static const greyScale1000 = Color.fromRGBO(27, 29, 29, 1);
   static const greyScale900 = Color.fromRGBO(51, 51, 51, 1);
   static const greyScale800 = Color.fromRGBO(83, 84, 86, 1);
   static const greyScale700 = Color.fromRGBO(131, 132, 132, 1);
@@ -40,9 +40,19 @@ class AppColors {
 
   static const whiteColor = Color.fromRGBO(255, 251, 247, 1);
   static const barColor = Color.fromRGBO(222, 106, 76, 1);
-  static const goldColor = Color.fromRGBO(161, 129, 101, 1);
+  static const goldColor = Color.fromRGBO(177, 148, 84, 1);
   static const goldLightColor = Color.fromRGBO(200, 158, 108, 1);
   static const goldMoreLightColor = Color.fromRGBO(232, 200, 160, 1);
+  static const kScaffoldBackgroundGradient = BoxDecoration(
+    gradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color(0xff74540E),
+        Color(0xFFB19454),
+      ],
+    ),
+  );
 }
 
 class HexColor extends Color {

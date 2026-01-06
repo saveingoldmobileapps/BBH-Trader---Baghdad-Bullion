@@ -200,7 +200,7 @@ class _GramScreenState extends ConsumerState<GramScreen> {
                         final pnl = CommonService.calculateLossOrProfit(
                           buyingPrice: item.buyingPrice ?? 0,
                           livePrice:
-                              goldPriceState.value!.oneGramSellingPriceInAED,
+                              goldPriceState.value!.oneGramSellingPriceInIQD,
                           tradeMetalFactor: item.tradeMetal ?? 0,
                         );
                         totalPnl += pnl;
@@ -252,7 +252,7 @@ class _GramScreenState extends ConsumerState<GramScreen> {
                             pnlIcon,
                             const SizedBox(width: 8),
                             Text(
-                              "$pnlText (${totalPnl.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency})",
+                              "$pnlText (${totalPnl.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency})",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -283,7 +283,7 @@ class _GramScreenState extends ConsumerState<GramScreen> {
                 //         final pnl = CommonService.calculateLossOrProfit(
                 //           buyingPrice: item.buyingPrice ?? 0,
                 //           livePrice:
-                //               goldPriceState.value!.oneGramSellingPriceInAED,
+                //               goldPriceState.value!.oneGramSellingPriceInIQD,
                 //           tradeMetalFactor: item.tradeMetal ?? 0,
                 //         );
                 //         totalPnl += pnl;
@@ -338,8 +338,8 @@ class _GramScreenState extends ConsumerState<GramScreen> {
                 //             pnlIcon,
                 //             const SizedBox(width: 8),
                 //             Text(
-                //               "$pnlText (${totalPnl.toStringAsFixed(2)} ${AppLocalizations.of(context)!.aed_currency})",
-                //               // "$pnlText (${totalPnl.toStringAsFixed(2)} AED)",
+                //               "$pnlText (${totalPnl.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency})",
+                //               // "$pnlText (${totalPnl.toStringAsFixed(2)} IQD)",
                 //               style: TextStyle(
                 //                 fontSize: 16,
                 //                 fontWeight: FontWeight.bold,

@@ -820,7 +820,7 @@ class Auth extends _$Auth {
           bool isFingerPrintEnabled =
               await LocalDatabase.instance.getFingerEnable() ?? false;
           // await LocalDatabase.instance.getFingerEnable() ?? false;
-
+        CommonService.connectSocket();
           // clear storage
           String lang =
               await LocalDatabase.instance.read(key: Strings.kLanguageCode) ??

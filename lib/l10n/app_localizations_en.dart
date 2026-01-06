@@ -377,7 +377,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get total_gold_grams => 'Total Gold ( Grams )';
 
   @override
-  String get total_funds_aed => 'Total Funds (AED)';
+  String get total_funds_IQD => 'Total Funds (IQD)';
 
   @override
   String get deposit => 'Deposit';
@@ -480,11 +480,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get whatsapp_inbox =>
-      'Hi Save In Gold Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this WhatsApp message. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nSave In Gold Team.';
+      'Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this WhatsApp message. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.';
 
   @override
   String get email_message =>
-      'Hi Save In Gold Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this email. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nSave In Gold Team.';
+      'Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this email. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.';
 
   @override
   String get email_url_title => 'Direct Bank Transfer Payment Receipt';
@@ -666,7 +666,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enter_gram => 'Enter Amount (grams) here';
 
   @override
-  String get enter_amount => 'Enter Amount (AED) here';
+  String get enter_amount => 'Enter Amount (IQD) here';
 
   @override
   String get enter_amount_plz => 'Please enter amount.';
@@ -858,7 +858,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dep_min_amount_note =>
-      'Minimum deposit amount is AED 100, charges will apply';
+      'Minimum deposit amount is IQD 100, charges will apply';
 
   @override
   String get dep_dt_intro_title => 'Direct Transfer';
@@ -887,7 +887,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dep_share_desc =>
-      'Choose any of the options below to share the receipt once you’ve transferred the funds in Save In Gold FZCO account.';
+      'Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House FZCO account.';
 
   @override
   String get dep_share_whatsapp => 'Share on Whatsapp';
@@ -899,7 +899,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dep_toast_txSaved => 'Transaction saved successfully';
 
   @override
-  String get dip_min_100 => 'Minimum deposit amount is AED 100';
+  String get dip_min_100 => 'Minimum deposit amount is IQD 100';
 
   @override
   String get wait_please => 'Please wait...';
@@ -979,7 +979,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bank_charge_message =>
-      'A bank fee of AED 25 plus VAT will be applied.';
+      'A bank fee of IQD 25 plus VAT will be applied.';
 
   @override
   String get save_changes => 'Save Changes';
@@ -1029,7 +1029,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get mashriq_bank => 'Mashreq Bank';
 
   @override
-  String get save_inGold => 'Save in Gold FZCO';
+  String get save_inGold => 'Baghdad Bullion House FZCO';
 
   @override
   String get features => 'Features';
@@ -1233,7 +1233,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get select_deal_for_checkout => 'Please select deals for checkout';
 
   @override
-  String get all_additional_charge => 'Note: All the additional charges (AED';
+  String get all_additional_charge => 'Note: All the additional charges (IQD';
 
   @override
   String get will_deducted => ') will be deducted from your Money Balance';
@@ -1344,19 +1344,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get money_st => 'Money Statement';
 
   @override
-  String get metal_rate_aed => 'Rate: AED';
+  String get metal_rate_IQD => 'Rate: IQD';
 
   @override
   String get metal_g => 'g';
 
   @override
   String withdraw_success(Object amount) {
-    return 'An amount of $amount (AED) has been debited from your account.';
+    return 'An amount of $amount (IQD) has been debited from your account.';
   }
 
   @override
   String deposit_success(Object amount) {
-    return 'Your account has been credited with AED $amount.';
+    return 'Your account has been credited with IQD $amount.';
   }
 
   @override
@@ -1369,7 +1369,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String gift_sent(Object amount, Object recipient) {
-    return 'You’ve successfully sent (AED $amount) gift to $recipient.';
+    return 'You’ve successfully sent (IQD $amount) gift to $recipient.';
   }
 
   @override
@@ -1378,7 +1378,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String buy_order_filled(Object dealId, Object price, Object quantity) {
-    return 'You bought $quantity gram(s) of gold at price $price AED. Deal Id: $dealId.';
+    return 'You bought $quantity gram(s) of gold at price $price IQD. Deal Id: $dealId.';
   }
 
   @override
@@ -1430,7 +1430,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String invest_insufficient_balance_desc(Object balance, Object required) {
-    return 'Your balance (AED $balance) is less than the required amount (AED $required). Please add funds.';
+    return 'Your balance (IQD $balance) is less than the required amount (IQD $required). Please add funds.';
   }
 
   @override
@@ -1466,7 +1466,7 @@ class AppLocalizationsEn extends AppLocalizations {
     String walletBalance,
     String inputAmount,
   ) {
-    return 'Your balance (AED $walletBalance) is less than the required amount (AED $inputAmount). Please add funds.';
+    return 'Your balance (IQD $walletBalance) is less than the required amount (IQD $inputAmount). Please add funds.';
   }
 
   @override
@@ -1535,7 +1535,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get metal_profit => 'Profit';
 
   @override
-  String get metal_plus_na => '+ AED N/A';
+  String get metal_plus_na => '+ IQD N/A';
 
   @override
   String get deal_cant_close => 'You can\'t close this deal at a loss.';
@@ -1863,7 +1863,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get total_gold => 'Total Gold';
 
   @override
-  String get total_funds => 'Total Funds (AED)';
+  String get total_funds => 'Total Funds (IQD)';
 
   @override
   String get upgrade_to_real_account => 'Upgrade to Real Account';
@@ -1900,7 +1900,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wallet_empty => 'Wallet empty. Add funds to buy gold.';
 
   @override
-  String get per_gram_aed => 'Per Gram AED';
+  String get per_gram_IQD => 'Per Gram IQD';
 
   @override
   String get buy_gold => 'Buy Gold';
@@ -1983,7 +1983,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gram => 'Gram';
 
   @override
-  String get aed_currency => ' AED';
+  String get idq_currency => ' IQD';
 
   @override
   String get amountVar => 'Amount';
@@ -2061,7 +2061,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gram_buy_at_price => 'Buy at Price Order';
 
   @override
-  String get gram_invest_money => 'Invest Money: AED';
+  String get gram_invest_money => 'Invest Money: IQD';
 
   @override
   String get gram_invest_status => 'Invest Status:';
@@ -2099,13 +2099,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deal_edit_price => 'Edit Price';
 
   @override
-  String get deal_price_per_gram => 'Price per gram (AED)';
+  String get deal_price_per_gram => 'Price per gram (IQD)';
 
   @override
   String get deal_gram_price => 'Gram Price';
 
   @override
-  String get deal_enter_amount_aed => 'Please enter an amount in AED';
+  String get deal_enter_amount_IQD => 'Please enter an amount in IQD';
 
   @override
   String get deal_valid_number => 'Please enter a valid number';
@@ -2128,15 +2128,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deal_sell_greater_than_bought =>
-      'Please enter a sell price greater than the bought at price (AED';
+      'Please enter a sell price greater than the bought at price (IQD';
 
   @override
   String get deal_pending_sell_greater_with_zero_buying_than_current_sell =>
-      'Please enter a sell price greater than or equal to the current sell price (AED';
+      'Please enter a sell price greater than or equal to the current sell price (IQD';
 
   @override
   String get deal_buy_price_less =>
-      'Please enter a buy price less than the current buy price (AED';
+      'Please enter a buy price less than the current buy price (IQD';
 
   @override
   String get deal_sure_confirm => 'Are you sure you want to Update this order?';
@@ -2157,7 +2157,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deal_amount_must_less => 'Amount must be less than or equal to';
 
   @override
-  String get is_below_buy => 'is below your buying price (AED';
+  String get is_below_buy => 'is below your buying price (IQD';
 
   @override
   String get deal_confirm_loss => 'Confirm Loss';
@@ -2287,7 +2287,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yes => 'Yes';
 
   @override
-  String get aed => 'AED';
+  String get idq => 'IQD';
 
   @override
   String get rejected => 'Rejected';
@@ -2507,7 +2507,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bank_fee_notice =>
-      'A bank fee of AED 25 plus VAT will be applied.';
+      'A bank fee of IQD 25 plus VAT will be applied.';
 
   @override
   String get bank_name => 'Bank Name';
@@ -2564,7 +2564,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get maintainance_description =>
-      'Save In Gold is currently undergoing a scheduled system upgrade to enhance security, stability, and real-time gold trading performance';
+      'Baghdad Bullion House is currently undergoing a scheduled system upgrade to enhance security, stability, and real-time gold trading performance';
 
   @override
   String get server_under_maintainance => 'Server Under Maintenance';
@@ -2619,4 +2619,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get temporary_freezed_account_desc =>
       'Your account has been temporarily frozen. To restore access, please contact our support team for assistance.';
+
+  @override
+  String get doc_mismatch =>
+      'Document name and profile name language do not match. Please upload a matching ID.';
+
+  @override
+  String get nam_mismatch => 'Name Mismatch';
 }

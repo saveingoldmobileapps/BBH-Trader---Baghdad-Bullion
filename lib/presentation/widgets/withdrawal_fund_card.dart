@@ -20,12 +20,12 @@ class WithdrawalFundCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // // Convert from UTC to local time
     DateTime parsedDate = DateTime.parse("${kAllWithdraw.createdAt}").toLocal();
- 
-  final String localeCode = Localizations.localeOf(context).languageCode;
-  String formattedDate = DateFormat(
-    'EEE, dd MMM yyyy, HH:mm',
-    localeCode == 'ar' ? 'ar' : 'en',
-  ).format(parsedDate);
+
+    final String localeCode = Localizations.localeOf(context).languageCode;
+    String formattedDate = DateFormat(
+      'EEE, dd MMM yyyy, HH:mm',
+      localeCode == 'ar' ? 'ar' : 'en',
+    ).format(parsedDate);
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: ShapeDecoration(
@@ -51,7 +51,7 @@ class WithdrawalFundCard extends StatelessWidget {
                   ),
                   GetGenericText(
                     text:
-                        "${AppLocalizations.of(context)!.aed} ${kAllWithdraw.amount}",
+                        "${AppLocalizations.of(context)!.idq} ${kAllWithdraw.amount}",
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: AppColors.grey5Color,
@@ -62,98 +62,97 @@ class WithdrawalFundCard extends StatelessWidget {
             ],
           ),
           ConstPadding.sizeBoxWithHeight(height: 4),
-          rtl?
-          
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              GetGenericText(
-                text: AppLocalizations.of(context)!.bank_name,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey3Color,
-              ),
+          rtl
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.bank_name,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey3Color,
+                    ),
 
-              GetGenericText(
-                text: "${kAllWithdraw.bankName}",
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
-              ConstPadding.sizeBoxWithHeight(height: 4),
-              GetGenericText(
-                text: AppLocalizations.of(context)!.beneficiary,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey3Color,
-              ),
-              GetGenericText(
-                text: "${kAllWithdraw.beneficiaryName}",
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
-              ConstPadding.sizeBoxWithHeight(height: 4),
-              GetGenericText(
-                text: AppLocalizations.of(context)!.dep_label_iban,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey3Color,
-              ),
-              GetGenericText(
-                text: "${kAllWithdraw.iban}",
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
-            ],
-          ).getAlignRight():
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              GetGenericText(
-                text: AppLocalizations.of(context)!.bank_name,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey3Color,
-              ),
+                    GetGenericText(
+                      text: "${kAllWithdraw.bankName}",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
+                    ConstPadding.sizeBoxWithHeight(height: 4),
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.beneficiary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey3Color,
+                    ),
+                    GetGenericText(
+                      text: "${kAllWithdraw.beneficiaryName}",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
+                    ConstPadding.sizeBoxWithHeight(height: 4),
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.dep_label_iban,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey3Color,
+                    ),
+                    GetGenericText(
+                      text: "${kAllWithdraw.iban}",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
+                  ],
+                ).getAlignRight()
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.bank_name,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey3Color,
+                    ),
 
-              GetGenericText(
-                text: "${kAllWithdraw.bankName}",
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
-              ConstPadding.sizeBoxWithHeight(height: 4),
-              GetGenericText(
-                text: AppLocalizations.of(context)!.beneficiary,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey3Color,
-              ),
-              GetGenericText(
-                text: "${kAllWithdraw.beneficiaryName}",
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
-              ConstPadding.sizeBoxWithHeight(height: 4),
-              GetGenericText(
-                text: AppLocalizations.of(context)!.dep_label_iban,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey3Color,
-              ),
-              GetGenericText(
-                text: "${kAllWithdraw.iban}",
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey5Color,
-              ),
-            ],
-          ).getAlign(),
+                    GetGenericText(
+                      text: "${kAllWithdraw.bankName}",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
+                    ConstPadding.sizeBoxWithHeight(height: 4),
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.beneficiary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey3Color,
+                    ),
+                    GetGenericText(
+                      text: "${kAllWithdraw.beneficiaryName}",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
+                    ConstPadding.sizeBoxWithHeight(height: 4),
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.dep_label_iban,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey3Color,
+                    ),
+                    GetGenericText(
+                      text: "${kAllWithdraw.iban}",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.grey5Color,
+                    ),
+                  ],
+                ).getAlign(),
           ConstPadding.sizeBoxWithHeight(height: 4),
           Row(
             children: [

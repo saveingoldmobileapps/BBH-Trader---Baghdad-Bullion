@@ -40,11 +40,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   double amountDouble = 0.0;
 
   final List<String> amountOptions = [
-    "10000 AED",
-    "50000 AED",
-    "100000 AED",
-    "150000 AED",
-    "200000 AED",
+    "10000 IQD",
+    "50000 IQD",
+    "100000 IQD",
+    "150000 IQD",
+    "200000 IQD",
   ];
 
   @override
@@ -112,7 +112,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ConstPadding.sizeBoxWithHeight(height: 20),
                     Directionality.of(context) == TextDirection.rtl
                         ? GetGenericText(
-                            text: AppLocalizations.of(context)!.createAccount_title, //"Start Your Gold Journey",
+                            text: AppLocalizations.of(
+                              context,
+                            )!.createAccount_title, //"Start Your Gold Journey",
                             fontSize: sizes!.responsiveFont(
                               phoneVal: 24,
                               tabletVal: 32,
@@ -121,7 +123,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             color: AppColors.grey6Color,
                           ).getAlignRight()
                         : GetGenericText(
-                            text: AppLocalizations.of(context)!.createAccount_title,//"Start Your Gold Journey",
+                            text: AppLocalizations.of(
+                              context,
+                            )!.createAccount_title, //"Start Your Gold Journey",
                             fontSize: sizes!.responsiveFont(
                               phoneVal: 24,
                               tabletVal: 32,
@@ -209,7 +213,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                         Switch(
                           value: _isDemoAccount,
-                          activeColor: AppColors.primaryGold500,
+                          //activeThumbColor: AppColors.primaryGold500,
                           onChanged: (bool value) {
                             setState(() {
                               _isDemoAccount = value;
@@ -226,25 +230,29 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Directionality.of(context) != TextDirection.rtl?
-                              SizedBox(
+                              Directionality.of(context) != TextDirection.rtl
+                                  ? SizedBox(
                                       // width: 350,
                                       child: DemoModeAnimatedText(
-                                        text: AppLocalizations.of(context)!.demo_mode, //"Note: You are in Demo mode",
+                                        text: AppLocalizations.of(
+                                          context,
+                                        )!.demo_mode, //"Note: You are in Demo mode",
                                         fontSize: 18,
                                         color: AppColors.goldLightColor,
                                         fontWeight: FontWeight.normal,
                                       ),
-                                    ):
-                               SizedBox(
+                                    )
+                                  : SizedBox(
                                       // width: 350,
-                                child: DemoModeAnimatedText(
-                                  text: AppLocalizations.of(context)!.demo_mode,//"Note: You are in Demo mode",
-                                  fontSize: 18,
-                                  color: AppColors.goldLightColor,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                                                             ),
+                                      child: DemoModeAnimatedText(
+                                        text: AppLocalizations.of(
+                                          context,
+                                        )!.demo_mode, //"Note: You are in Demo mode",
+                                        fontSize: 18,
+                                        color: AppColors.goldLightColor,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
                             ],
                           )
                         : SizedBox.shrink(),
@@ -252,7 +260,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
                     CommonTextFormField(
                       title: "title",
-                      hintText: AppLocalizations.of(context)!.user_firstName,//"Amro",
+                      hintText: AppLocalizations.of(
+                        context,
+                      )!.user_firstName, //"Amro",
                       labelText: AppLocalizations.of(
                         context,
                       )!.first_name, //"First Name (Legal Name)",
@@ -273,7 +283,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ConstPadding.sizeBoxWithHeight(height: 20),
                     CommonTextFormField(
                       title: "title",
-                      hintText: AppLocalizations.of(context)!.user_lastName,//"Jaber",
+                      hintText: AppLocalizations.of(
+                        context,
+                      )!.user_lastName, //"Jaber",
                       labelText: AppLocalizations.of(
                         context,
                       )!.surname, //"Surname (Legal Name)",
@@ -295,8 +307,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     CommonTextFormField(
                       title: "title",
                       hintText: "jondoe@example.com",
-                      labelText:AppLocalizations.of(context)!.email_address,
-                          //"Email Address",
+                      labelText: AppLocalizations.of(context)!.email_address,
+                      //"Email Address",
                       controller: emailController,
                       textInputType: TextInputType.emailAddress,
 
@@ -323,15 +335,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       )!.phone_number, //"Phone Number",
                       hintText: "52 00 00 000",
                       controller: phoneNumberController,
-                      onPhoneNumberChanged: (updatedPhoneNumber, isoCode, dCode) {
-                        _phoneNumber = updatedPhoneNumber;
-                        _currentIsoCode = isoCode;
-                        dialCode = dCode;
-                      },
+                      onPhoneNumberChanged:
+                          (updatedPhoneNumber, isoCode, dCode) {
+                            _phoneNumber = updatedPhoneNumber;
+                            _currentIsoCode = isoCode;
+                            dialCode = dCode;
+                          },
                       isoCode: "AE",
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return AppLocalizations.of(context)!.enter_valid_phone;//"Enter a valid phone number";
+                          return AppLocalizations.of(
+                            context,
+                          )!.enter_valid_phone; //"Enter a valid phone number";
                           // AppLocalizations.of(
                           //   context,
                           // )!.please_enter_email_or_phone;
@@ -394,7 +409,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           // 'Password must be at least 8 characters, including capital letter, digit, and special character';
                         } else if (value.trim() !=
                             passwordController.text.toString().trim()) {
-                          return AppLocalizations.of(context)!.confirm_pwd;//'Password do not match, Please re-enter confirm paswword.';
+                          return AppLocalizations.of(
+                            context,
+                          )!.confirm_pwd; //'Password do not match, Please re-enter confirm paswword.';
                         }
                         return null;
                       },

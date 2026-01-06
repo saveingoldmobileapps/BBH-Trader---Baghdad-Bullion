@@ -55,7 +55,7 @@ class _ReturningUserScreenState extends ConsumerState<ReturningUserScreen> {
               ).getAlign(),
               GetGenericText(
                 text:
-                    "Save In Gold-FZCO uses Lean to connect to your bank account.",
+                    "Baghdad Bullion House-FZCO uses Lean to connect to your bank account.",
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 16,
                   tabletVal: 18,

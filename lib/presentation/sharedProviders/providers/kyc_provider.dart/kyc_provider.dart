@@ -350,7 +350,7 @@ class KYC extends _$KYC {
     try {
       String? userid = await LocalDatabase.instance.getUserId();
       String? refreshToken = await SecureStorageService.instance.getRefreshToken();
-
+      final kycData = await LocalDatabase.instance.getKycData();
       if (refreshToken == null) {
         getLocator<Logger>().e("No refresh token found!");
         Toasts.getErrorToast(text: "Session expired. Please login again.");
@@ -369,6 +369,7 @@ class KYC extends _$KYC {
         "salaryRange": state.kycData["salaryRange"] ?? "",
         "documentOfCountry": state.issuingCountry ?? "",
         "documentType": state.selectedDocumentType!.displayName,
+        'Savekycdata': kycData,
         "documentImages": [
           state.frontImagePath ?? "",
           state.backImagePath ?? "",

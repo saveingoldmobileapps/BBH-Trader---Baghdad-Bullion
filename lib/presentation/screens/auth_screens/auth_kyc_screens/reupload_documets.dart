@@ -40,10 +40,10 @@ class _ReUploadScreenState extends ConsumerState<ReUploadScreen> {
   ];
 
   final List<String> annualIncomeOptions = [
-    "Below \AED 20,000",
-    "\AED20,000 - \AED 50,000",
-    "\AED 50,000 - \AED 100,000",
-    "Above \AED 100,000",
+    "Below IQD 20,000",
+    "IQD20,000 - IQD 50,000",
+    "IQD 50,000 - IQD 100,000",
+    "Above IQD 100,000",
   ];
 
   final List<String> incomeSourceOptions = [

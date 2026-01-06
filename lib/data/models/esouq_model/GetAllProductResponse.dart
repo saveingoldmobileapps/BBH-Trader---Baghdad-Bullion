@@ -3,7 +3,7 @@ import 'dart:convert';
 /// status : "success"
 /// code : 1
 /// message : "OK: The request has succeeded."
-/// payload : {"page":1,"limit":10,"totalPages":1,"hasNextPage":false,"hasPreviousPage":false,"allProducts":[{"_id":"67c6b706f80da73228ecb624","adminId":"67c2c70559e139298c5984da","productName":"50 gram","productPricing":"6999.99","productCode":"412451","weightFactor":"18.0 - 20.0","vat":"10%","premiumDiscount":"12.1","deliveryCharges":"23.50","makingCharges":"0","availableBranches":["Save In Gold (Jummeriah)","Save In Gold (Abu Dhabi)"],"description":"populating data..........","purity":"A1","dimensions":"20.2","origin":"6.25","brand":"Save in Gold","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-8145789f-77fb-4fdf-b131-1019cbc75558.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"10","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"10","createdAt":"2025-03-04T08:17:10.508Z","updatedAt":"2025-03-04T08:17:10.508Z","__v":0},{"_id":"67c2ce7d59e139298c598605","adminId":"67c2c70559e139298c5984da","productName":"150 gram","productPricing":"320","productCode":"8121","weightFactor":"18.0 - 20.0","vat":"10%","premiumDiscount":"15","deliveryCharges":"10.12","makingCharges":"20.00","availableBranches":["Save In Gold (Abu Dhabi)"],"description":"populating","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-fe6eebcd-c6bd-4e61-9bc8-6f6094f5a21b.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Ounce","weight":"10","createdAt":"2025-03-01T09:08:13.552Z","updatedAt":"2025-03-01T09:08:13.552Z","__v":0},{"_id":"67c2cdc959e139298c5985f1","adminId":"67c2c70559e139298c5984da","productName":"440 gram","productPricing":"500","productCode":"7812","weightFactor":"18.0 - 20.0","vat":"20%","premiumDiscount":"15","deliveryCharges":"10","makingCharges":"20.00","availableBranches":["Save In Gold (Al Yarmook, Sharjah)"],"description":"populating data","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-d4c15092-5a87-4619-900b-2ad896a721af.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"20","createdAt":"2025-03-01T09:05:13.743Z","updatedAt":"2025-03-01T09:05:13.743Z","__v":0},{"_id":"67c2cd6359e139298c5985dd","adminId":"67c2c70559e139298c5984da","productName":"700 gram","productPricing":"1000","productCode":"23651","weightFactor":"18.0 - 20.0","vat":"5%","premiumDiscount":"15","deliveryCharges":"10.12","makingCharges":"20.00","availableBranches":["Save In Gold (Al Yarmook, Sharjah)","Save In Gold (Abu Dhabi)"],"description":"populating some data","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-62bc6bbd-f28f-40cb-bec6-480743bc3a10.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"20","createdAt":"2025-03-01T09:03:31.126Z","updatedAt":"2025-03-01T09:03:31.126Z","__v":0}]}
+/// payload : {"page":1,"limit":10,"totalPages":1,"hasNextPage":false,"hasPreviousPage":false,"allProducts":[{"_id":"67c6b706f80da73228ecb624","adminId":"67c2c70559e139298c5984da","productName":"50 gram","productPricing":"6999.99","productCode":"412451","weightFactor":"18.0 - 20.0","vat":"10%","premiumDiscount":"12.1","deliveryCharges":"23.50","makingCharges":"0","availableBranches":["Baghdad Bullion House (Jummeriah)","Baghdad Bullion House (Abu Dhabi)"],"description":"populating data..........","purity":"A1","dimensions":"20.2","origin":"6.25","brand":"Baghdad Bullion House","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-8145789f-77fb-4fdf-b131-1019cbc75558.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"10","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"10","createdAt":"2025-03-04T08:17:10.508Z","updatedAt":"2025-03-04T08:17:10.508Z","__v":0},{"_id":"67c2ce7d59e139298c598605","adminId":"67c2c70559e139298c5984da","productName":"150 gram","productPricing":"320","productCode":"8121","weightFactor":"18.0 - 20.0","vat":"10%","premiumDiscount":"15","deliveryCharges":"10.12","makingCharges":"20.00","availableBranches":["Baghdad Bullion House (Abu Dhabi)"],"description":"populating","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-fe6eebcd-c6bd-4e61-9bc8-6f6094f5a21b.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Ounce","weight":"10","createdAt":"2025-03-01T09:08:13.552Z","updatedAt":"2025-03-01T09:08:13.552Z","__v":0},{"_id":"67c2cdc959e139298c5985f1","adminId":"67c2c70559e139298c5984da","productName":"440 gram","productPricing":"500","productCode":"7812","weightFactor":"18.0 - 20.0","vat":"20%","premiumDiscount":"15","deliveryCharges":"10","makingCharges":"20.00","availableBranches":["Baghdad Bullion House (Al Yarmook, Sharjah)"],"description":"populating data","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-d4c15092-5a87-4619-900b-2ad896a721af.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"20","createdAt":"2025-03-01T09:05:13.743Z","updatedAt":"2025-03-01T09:05:13.743Z","__v":0},{"_id":"67c2cd6359e139298c5985dd","adminId":"67c2c70559e139298c5984da","productName":"700 gram","productPricing":"1000","productCode":"23651","weightFactor":"18.0 - 20.0","vat":"5%","premiumDiscount":"15","deliveryCharges":"10.12","makingCharges":"20.00","availableBranches":["Baghdad Bullion House (Al Yarmook, Sharjah)","Baghdad Bullion House (Abu Dhabi)"],"description":"populating some data","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-62bc6bbd-f28f-40cb-bec6-480743bc3a10.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"20","createdAt":"2025-03-01T09:03:31.126Z","updatedAt":"2025-03-01T09:03:31.126Z","__v":0}]}
 
 GetAllProductResponse getAllProductResponseFromJson(String str) =>
     GetAllProductResponse.fromJson(json.decode(str));
@@ -28,8 +28,9 @@ class GetAllProductResponse {
     _status = json['status'];
     _code = json['code'];
     _message = json['message'];
-    _payload =
-        json['payload'] != null ? Payload.fromJson(json['payload']) : null;
+    _payload = json['payload'] != null
+        ? Payload.fromJson(json['payload'])
+        : null;
   }
 
   String? _status;
@@ -42,13 +43,12 @@ class GetAllProductResponse {
     int? code,
     String? message,
     Payload? payload,
-  }) =>
-      GetAllProductResponse(
-        status: status ?? _status,
-        code: code ?? _code,
-        message: message ?? _message,
-        payload: payload ?? _payload,
-      );
+  }) => GetAllProductResponse(
+    status: status ?? _status,
+    code: code ?? _code,
+    message: message ?? _message,
+    payload: payload ?? _payload,
+  );
 
   String? get status => _status;
 
@@ -75,7 +75,7 @@ class GetAllProductResponse {
 /// totalPages : 1
 /// hasNextPage : false
 /// hasPreviousPage : false
-/// allProducts : [{"_id":"67c6b706f80da73228ecb624","adminId":"67c2c70559e139298c5984da","productName":"50 gram","productPricing":"6999.99","productCode":"412451","weightFactor":"18.0 - 20.0","vat":"10%","premiumDiscount":"12.1","deliveryCharges":"23.50","makingCharges":"0","availableBranches":["Save In Gold (Jummeriah)","Save In Gold (Abu Dhabi)"],"description":"populating data..........","purity":"A1","dimensions":"20.2","origin":"6.25","brand":"Save in Gold","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-8145789f-77fb-4fdf-b131-1019cbc75558.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"10","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"10","createdAt":"2025-03-04T08:17:10.508Z","updatedAt":"2025-03-04T08:17:10.508Z","__v":0},{"_id":"67c2ce7d59e139298c598605","adminId":"67c2c70559e139298c5984da","productName":"150 gram","productPricing":"320","productCode":"8121","weightFactor":"18.0 - 20.0","vat":"10%","premiumDiscount":"15","deliveryCharges":"10.12","makingCharges":"20.00","availableBranches":["Save In Gold (Abu Dhabi)"],"description":"populating","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-fe6eebcd-c6bd-4e61-9bc8-6f6094f5a21b.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Ounce","weight":"10","createdAt":"2025-03-01T09:08:13.552Z","updatedAt":"2025-03-01T09:08:13.552Z","__v":0},{"_id":"67c2cdc959e139298c5985f1","adminId":"67c2c70559e139298c5984da","productName":"440 gram","productPricing":"500","productCode":"7812","weightFactor":"18.0 - 20.0","vat":"20%","premiumDiscount":"15","deliveryCharges":"10","makingCharges":"20.00","availableBranches":["Save In Gold (Al Yarmook, Sharjah)"],"description":"populating data","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-d4c15092-5a87-4619-900b-2ad896a721af.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"20","createdAt":"2025-03-01T09:05:13.743Z","updatedAt":"2025-03-01T09:05:13.743Z","__v":0},{"_id":"67c2cd6359e139298c5985dd","adminId":"67c2c70559e139298c5984da","productName":"700 gram","productPricing":"1000","productCode":"23651","weightFactor":"18.0 - 20.0","vat":"5%","premiumDiscount":"15","deliveryCharges":"10.12","makingCharges":"20.00","availableBranches":["Save In Gold (Al Yarmook, Sharjah)","Save In Gold (Abu Dhabi)"],"description":"populating some data","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-62bc6bbd-f28f-40cb-bec6-480743bc3a10.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"20","createdAt":"2025-03-01T09:03:31.126Z","updatedAt":"2025-03-01T09:03:31.126Z","__v":0}]
+/// allProducts : [{"_id":"67c6b706f80da73228ecb624","adminId":"67c2c70559e139298c5984da","productName":"50 gram","productPricing":"6999.99","productCode":"412451","weightFactor":"18.0 - 20.0","vat":"10%","premiumDiscount":"12.1","deliveryCharges":"23.50","makingCharges":"0","availableBranches":["Baghdad Bullion House (Jummeriah)","Baghdad Bullion House (Abu Dhabi)"],"description":"populating data..........","purity":"A1","dimensions":"20.2","origin":"6.25","brand":"Baghdad Bullion House","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-8145789f-77fb-4fdf-b131-1019cbc75558.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"10","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"10","createdAt":"2025-03-04T08:17:10.508Z","updatedAt":"2025-03-04T08:17:10.508Z","__v":0},{"_id":"67c2ce7d59e139298c598605","adminId":"67c2c70559e139298c5984da","productName":"150 gram","productPricing":"320","productCode":"8121","weightFactor":"18.0 - 20.0","vat":"10%","premiumDiscount":"15","deliveryCharges":"10.12","makingCharges":"20.00","availableBranches":["Baghdad Bullion House (Abu Dhabi)"],"description":"populating","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-fe6eebcd-c6bd-4e61-9bc8-6f6094f5a21b.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Ounce","weight":"10","createdAt":"2025-03-01T09:08:13.552Z","updatedAt":"2025-03-01T09:08:13.552Z","__v":0},{"_id":"67c2cdc959e139298c5985f1","adminId":"67c2c70559e139298c5984da","productName":"440 gram","productPricing":"500","productCode":"7812","weightFactor":"18.0 - 20.0","vat":"20%","premiumDiscount":"15","deliveryCharges":"10","makingCharges":"20.00","availableBranches":["Baghdad Bullion House (Al Yarmook, Sharjah)"],"description":"populating data","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-d4c15092-5a87-4619-900b-2ad896a721af.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"20","createdAt":"2025-03-01T09:05:13.743Z","updatedAt":"2025-03-01T09:05:13.743Z","__v":0},{"_id":"67c2cd6359e139298c5985dd","adminId":"67c2c70559e139298c5984da","productName":"700 gram","productPricing":"1000","productCode":"23651","weightFactor":"18.0 - 20.0","vat":"5%","premiumDiscount":"15","deliveryCharges":"10.12","makingCharges":"20.00","availableBranches":["Baghdad Bullion House (Al Yarmook, Sharjah)","Baghdad Bullion House (Abu Dhabi)"],"description":"populating some data","purity":"10","dimensions":"20.2","origin":"625","brand":"A1","condition":"A1","imageUrl":"https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-62bc6bbd-f28f-40cb-bec6-480743bc3a10.jpg","isAvailable":true,"inStoreCollection":true,"shippingFees":"20.75","timingDate":"9:00 am to 7:00 pm","weightCategory":"Gram","weight":"20","createdAt":"2025-03-01T09:03:31.126Z","updatedAt":"2025-03-01T09:03:31.126Z","__v":0}]
 
 Payload payloadFromJson(String str) => Payload.fromJson(json.decode(str));
 
@@ -126,15 +126,14 @@ class Payload {
     bool? hasNextPage,
     bool? hasPreviousPage,
     List<AllProducts>? allProducts,
-  }) =>
-      Payload(
-        page: page ?? _page,
-        limit: limit ?? _limit,
-        totalPages: totalPages ?? _totalPages,
-        hasNextPage: hasNextPage ?? _hasNextPage,
-        hasPreviousPage: hasPreviousPage ?? _hasPreviousPage,
-        allProducts: allProducts ?? _allProducts,
-      );
+  }) => Payload(
+    page: page ?? _page,
+    limit: limit ?? _limit,
+    totalPages: totalPages ?? _totalPages,
+    hasNextPage: hasNextPage ?? _hasNextPage,
+    hasPreviousPage: hasPreviousPage ?? _hasPreviousPage,
+    allProducts: allProducts ?? _allProducts,
+  );
 
   int? get page => _page;
 
@@ -172,12 +171,12 @@ class Payload {
 /// premiumDiscount : "12.1"
 /// deliveryCharges : "23.50"
 /// makingCharges : "0"
-/// availableBranches : ["Save In Gold (Jummeriah)","Save In Gold (Abu Dhabi)"]
+/// availableBranches : ["Baghdad Bullion House (Jummeriah)","Baghdad Bullion House (Abu Dhabi)"]
 /// description : "populating data.........."
 /// purity : "A1"
 /// dimensions : "20.2"
 /// origin : "6.25"
-/// brand : "Save in Gold"
+/// brand : "Baghdad Bullion House"
 /// condition : "A1"
 /// imageUrl : "https://saveingoldbucket.s3.me-central-1.amazonaws.com/default/image-8145789f-77fb-4fdf-b131-1019cbc75558.jpg"
 /// isAvailable : true
@@ -274,10 +273,10 @@ class AllProducts {
     _origin = json['origin'];
     _brand = json['brand'];
     _condition = json['condition'];
-    _imageUrl = json['imageUrl'] != null 
-        ? (json['imageUrl'] is String 
-            ? [json['imageUrl']] 
-            : json['imageUrl'].cast<String>())
+    _imageUrl = json['imageUrl'] != null
+        ? (json['imageUrl'] is String
+              ? [json['imageUrl']]
+              : json['imageUrl'].cast<String>())
         : [];
     _isAvailable = json['isAvailable'];
     _inStoreCollection = json['inStoreCollection'];
@@ -346,36 +345,35 @@ class AllProducts {
     String? createdAt,
     String? updatedAt,
     num? v,
-  }) =>
-      AllProducts(
-        id: id ?? _id,
-        adminId: adminId ?? _adminId,
-        productName: productName ?? _productName,
-        productPricing: productPricing ?? _productPricing,
-        productCode: productCode ?? _productCode,
-        weightFactor: weightFactor ?? _weightFactor,
-        vat: vat ?? _vat,
-        premiumDiscount: premiumDiscount ?? _premiumDiscount,
-        deliveryCharges: deliveryCharges ?? _deliveryCharges,
-        makingCharges: makingCharges ?? _makingCharges,
-        availableBranches: availableBranches ?? _availableBranches,
-        description: description ?? _description,
-        purity: purity ?? _purity,
-        dimensions: dimensions ?? _dimensions,
-        origin: origin ?? _origin,
-        brand: brand ?? _brand,
-        condition: condition ?? _condition,
-        imageUrl: imageUrl ?? _imageUrl,
-        isAvailable: isAvailable ?? _isAvailable,
-        inStoreCollection: inStoreCollection ?? _inStoreCollection,
-        shippingFees: shippingFees ?? _shippingFees,
-        timingDate: timingDate ?? _timingDate,
-        weightCategory: weightCategory ?? _weightCategory,
-        weight: weight ?? _weight,
-        createdAt: createdAt ?? _createdAt,
-        updatedAt: updatedAt ?? _updatedAt,
-        v: v ?? _v,
-      );
+  }) => AllProducts(
+    id: id ?? _id,
+    adminId: adminId ?? _adminId,
+    productName: productName ?? _productName,
+    productPricing: productPricing ?? _productPricing,
+    productCode: productCode ?? _productCode,
+    weightFactor: weightFactor ?? _weightFactor,
+    vat: vat ?? _vat,
+    premiumDiscount: premiumDiscount ?? _premiumDiscount,
+    deliveryCharges: deliveryCharges ?? _deliveryCharges,
+    makingCharges: makingCharges ?? _makingCharges,
+    availableBranches: availableBranches ?? _availableBranches,
+    description: description ?? _description,
+    purity: purity ?? _purity,
+    dimensions: dimensions ?? _dimensions,
+    origin: origin ?? _origin,
+    brand: brand ?? _brand,
+    condition: condition ?? _condition,
+    imageUrl: imageUrl ?? _imageUrl,
+    isAvailable: isAvailable ?? _isAvailable,
+    inStoreCollection: inStoreCollection ?? _inStoreCollection,
+    shippingFees: shippingFees ?? _shippingFees,
+    timingDate: timingDate ?? _timingDate,
+    weightCategory: weightCategory ?? _weightCategory,
+    weight: weight ?? _weight,
+    createdAt: createdAt ?? _createdAt,
+    updatedAt: updatedAt ?? _updatedAt,
+    v: v ?? _v,
+  );
 
   String? get id => _id;
 
@@ -411,7 +409,8 @@ class AllProducts {
 
   String? get condition => _condition;
 
-  List<String>? get imageUrl => _imageUrl; // Changed from String? to List<String>?
+  List<String>? get imageUrl =>
+      _imageUrl; // Changed from String? to List<String>?
   bool? get isAvailable => _isAvailable;
 
   bool? get inStoreCollection => _inStoreCollection;

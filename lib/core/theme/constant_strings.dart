@@ -7,7 +7,7 @@ class Strings {
 
   static const String localCartModelData = "localCartModelData";
   static const String addToCartServices = "addToCartServices";
-
+  static const String kycData = "kycData";
   static const String loginUserData = "loginUserData";
   static const String loginUserDetailData = "loginUserDetailData";
   static const String loginUserVerifyData = "loginUserVerifyData";

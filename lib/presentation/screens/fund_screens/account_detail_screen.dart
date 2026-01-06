@@ -32,7 +32,7 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
     text: "Mashreq Bank",
   );
   final accountNameController = TextEditingController(
-    text: "Save in Gold FZCO",
+    text: "Baghdad Bullion House FZCO",
   );
   final fabAccController = TextEditingController(
     text: "1641325917125001",
@@ -109,8 +109,9 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
         centerTitle: false,
         titleSpacing: 0,
         title: GetGenericText(
-          text: AppLocalizations.of(context)!
-              .account_details, //"Account Details",
+          text: AppLocalizations.of(
+            context,
+          )!.account_details, //"Account Details",
           fontSize: 20,
           fontWeight: FontWeight.w400,
           color: AppColors.grey6Color,
@@ -129,8 +130,9 @@ class _AccountDetailScreenState extends ConsumerState<AccountDetailScreen> {
                 ConstPadding.sizeBoxWithHeight(height: 24),
                 CommonTextFormField(
                   title: "title",
-                  hintText: AppLocalizations.of(context)!
-                      .enter_withdraw_amount, //"Enter amount to be withdrawn",
+                  hintText: AppLocalizations.of(
+                    context,
+                  )!.enter_withdraw_amount, //"Enter amount to be withdrawn",
                   labelText: "Amount",
                   controller: amountController,
                 ),

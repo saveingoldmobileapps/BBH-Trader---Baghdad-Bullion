@@ -6,6 +6,7 @@ import 'package:saveingold_fzco/core/sounds/app_sounds.dart';
 import 'package:saveingold_fzco/core/theme/const_toasts.dart';
 import 'package:saveingold_fzco/data/data_sources/network_sources/api_url.dart';
 import 'package:saveingold_fzco/data/data_sources/network_sources/dio_network_manager.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/reupload_infromation.dart';
 import 'package:saveingold_fzco/presentation/screens/main_home_screens/main_home_screen.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -15,6 +16,8 @@ import '../../../../data/models/SuccessResponse.dart';
 import '../../../../data/models/shuftipro_model/ShuftiProApiReponseModel.dart';
 import '../../../../data/models/shuftipro_model/SubmitKycError.dart';
 import '../../../feature_injection.dart';
+import '../../../screens/auth_screens/auth_kyc_screens/kyc_second_step_screen.dart';
+import '../../../widgets/pop_up_widget.dart';
 import '../states/shufti_pro_state.dart';
 
 part 'shuftiProProvider.g.dart';
@@ -45,8 +48,8 @@ class ShuftiPro extends _$ShuftiPro {
       state = state.copyWith(isLoading: true);
 
       /// Get refresh token from storage
-      String? refreshToken = await SecureStorageService.instance
-          .getRefreshToken();
+      String? refreshToken =
+          await SecureStorageService.instance.getRefreshToken();
 
       final headers = {
         "Authorization": "Bearer $refreshToken",
@@ -104,6 +107,39 @@ class ShuftiPro extends _$ShuftiPro {
 
           if (context.mounted) {
             // Check if status is "validationFailed" and navigate to KycReentryScreen
+            if (errorResponse.payload?.validStatus ==
+                "documentNativeNameValidationFailed") {
+              await genericPopUpWidget(
+                isLoadingState: false,
+                context: context,
+                heading: AppLocalizations.of(context)!.nam_mismatch,
+                    //"Name Mismatch", //"Email Verification Required",
+                subtitle: AppLocalizations.of(context)!.doc_mismatch,//"Document name and profile name language do not match. Please upload a matching ID.",
+                //"To continue, please verify your email address. Do you want to verify now?",
+                noButtonTitle: AppLocalizations.of(context)!.later,//"Later", //"Cancel",
+                yesButtonTitle: AppLocalizations.of(context)!.re_submit_document,//"Resubmit", //"Verify",
+                onNoPress: () async {
+                  Navigator.pop(context);
+                },
+                onYesPress: () async {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => KycSecondStepScreen(),
+                    ),
+                  );
+                },
+              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => KycReentryScreen(
+              //       responseData: errorResponse,
+              //     ),
+              //   ),
+              // );
+            }
             if (errorResponse.payload?.validStatus == "validationFailed") {
               Navigator.push(
                 context,
@@ -124,7 +160,7 @@ class ShuftiPro extends _$ShuftiPro {
           getLocator<Logger>().e(
             "Exception: ${serverResponse.resultData}",
           );
-          Toasts.getErrorToast(text: "${serverResponse.resultData}");
+          //Toasts.getErrorToast(text: "${serverResponse.resultData}");
           state = state.copyWith(isLoading: false);
           break;
       }

@@ -111,7 +111,7 @@ class _SigPaymentMethodState extends ConsumerState<SigPaymentMethod> {
                                 ),
                               ),
                               Text(
-                                "Total Fund (AED)",
+                                "Total Fund (IQD)",
                                 style: TextStyle(
                                   fontSize: sizes!.isPhone ? 12 : 16,
                                   fontWeight: FontWeight.normal,
@@ -140,7 +140,7 @@ class _SigPaymentMethodState extends ConsumerState<SigPaymentMethod> {
                     }
                     return null;
                   },
-                  suffixText: "AED",
+                  suffixText: "IQD",
                   suffixIcon: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SvgPicture.asset(

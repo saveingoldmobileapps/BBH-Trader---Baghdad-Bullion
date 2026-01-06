@@ -103,7 +103,7 @@ class _BankAddFundScreenState extends ConsumerState<BankAddFundScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     GetGenericText(
-                      text: "AED",
+                      text: "IQD",
                       fontSize: 20,
                       fontWeight: FontWeight.w400,
                       color: Colors.white,
@@ -112,10 +112,11 @@ class _BankAddFundScreenState extends ConsumerState<BankAddFundScreen> {
                     Expanded(
                       child: TextFormField(
                         controller: _controller,
-                        keyboardType: TextInputType.numberWithOptions(signed: true,
+                        keyboardType: TextInputType.numberWithOptions(
+                          signed: true,
                           decimal: true,
                         ),
-                        textInputAction: TextInputAction.done, 
+                        textInputAction: TextInputAction.done,
                         cursorColor: Colors.white30,
                         validator: (value) {
                           if (value == null || value.isEmpty) {

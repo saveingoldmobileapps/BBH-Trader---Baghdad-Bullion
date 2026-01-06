@@ -1,6 +1,6 @@
-
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 
 import '../../../core/res_sizes/res.dart';
 import '../../../core/theme/const_colors.dart';
@@ -39,57 +39,49 @@ class OneMinuteTimerState extends State<OneMinuteTimer>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 0.95, end: 1.12)
-        .chain(CurveTween(curve: Curves.easeOutBack))
-        .animate(_controller);
+    _scaleAnimation = Tween<double>(
+      begin: 0.95,
+      end: 1.12,
+    ).chain(CurveTween(curve: Curves.easeOutBack)).animate(_controller);
 
-    _fadeAnimation = Tween<double>(begin: 0.6, end: 1.0)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+    _fadeAnimation = Tween<double>(
+      begin: 0.6,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.bounceIn));
 
-    _colorAnimation = ColorTween(
-      begin: AppColors.primaryGold500,
-      end: Colors.redAccent,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.0, 1.0),
-    ));
+    _colorAnimation =
+        ColorTween(
+          begin: AppColors.primaryGold500,
+          end: Colors.redAccent,
+        ).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.0, 1.0),
+          ),
+        );
 
     startTimer();
   }
 
-  // void startTimer() {
-  //   timer = Timer.periodic(const Duration(seconds: 1), (t) {
-  //     if (remainingSeconds <= 1) {
-  //       t.cancel();
-  //       widget.onFinish?.call();
-  //     } else {
-  //       setState(() => remainingSeconds--);
-
-  //       /// Trigger animation every second
-  //       _controller.forward(from: 0);
-  //     }
-  //   });
-  // }
   void startTimer() {
-  timer = Timer.periodic(const Duration(seconds: 1), (t) {
-    if (remainingSeconds <= 1) {
-      t.cancel();
+    timer = Timer.periodic(const Duration(seconds: 1), (t) {
+      if (remainingSeconds <= 1) {
+        t.cancel();
 
-      // Call parent callback
-      widget.onFinish?.call();
+        // Call parent callback
+        widget.onFinish?.call();
 
-      // Auto navigate back
-      if (mounted) {
-        Navigator.of(context).pop();
+        // Auto navigate back
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      } else {
+        setState(() => remainingSeconds--);
+
+        _controller.forward(from: 0);
       }
-    } else {
-      setState(() => remainingSeconds--);
-
-      _controller.forward(from: 0);
-    }
-  });
-}
-
+    });
+  }
 
   void stopTimer() {
     timer?.cancel();
@@ -107,24 +99,28 @@ class OneMinuteTimerState extends State<OneMinuteTimer>
     return AnimatedBuilder(
       animation: _controller,
       builder: (_, __) {
-        final bool isEnding = remainingSeconds <= 10;
+        final Color timerColor;
+
+        if (remainingSeconds <= 10) {
+          timerColor = Colors.red; // Red
+        } else if (remainingSeconds <= 20) {
+          timerColor = Colors.yellow; // Yellow
+        } else {
+          timerColor = Colors.green; // Green
+        }
 
         return Transform.scale(
           scale: _scaleAnimation.value,
           child: Opacity(
             opacity: _fadeAnimation.value,
             child: GetGenericText(
-              text: "$remainingSeconds sec",
+              text: "$remainingSeconds ${AppLocalizations.of(context)!.sec}",
               fontSize: sizes!.responsiveFont(
                 phoneVal: 18,
                 tabletVal: 20,
               ),
               fontWeight: FontWeight.bold,
-              color: isEnding
-    ? (_colorAnimation.value ?? Colors.redAccent)
-    : AppColors.primaryGold500,
-
-              //color: isEnding ? _colorAnimation.value : AppColors.primaryGold500,
+              color: timerColor,
             ),
           ),
         );

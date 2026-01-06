@@ -74,8 +74,8 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
       return AppLocalizations.of(context)!.unable_to_fetch_current_prices;
     }
 
-    final currentBuyingPrice = currentPrices.oneGramBuyingPriceInAED;
-    final currentSellingPrice = currentPrices.oneGramSellingPriceInAED;
+    final currentBuyingPrice = currentPrices.oneGramBuyingPriceInIQD;
+    final currentSellingPrice = currentPrices.oneGramSellingPriceInIQD;
 
     if (side == "Buy") {
       if (enteredPrice >= currentBuyingPrice) {
@@ -108,7 +108,8 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
         titleSpacing: 0,
         title: GetGenericText(
           text: isEditMode
-              ? AppLocalizations.of(context)!.add_alert//"Update Alert"
+              ? AppLocalizations.of(context)!
+                    .add_alert //"Update Alert"
               : AppLocalizations.of(context)!.add_alert,
           fontSize: sizes!.responsiveFont(phoneVal: 20, tabletVal: 24),
           fontWeight: FontWeight.w400,
@@ -160,7 +161,7 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                       DropdownButtonFormField<String>(
                         dropdownColor: AppColors.greyScale1000,
                         style: const TextStyle(color: Colors.white),
-                        value: alertType,
+                        //initialValue: alertType,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintStyle: TextStyle(color: Colors.white70),
@@ -169,8 +170,9 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                           DropdownMenuItem(
                             value: "Price Alert", // API value
                             child: Text(
-                              AppLocalizations.of(context)!
-                                  .price_alert, // localized text
+                              AppLocalizations.of(
+                                context,
+                              )!.price_alert, // localized text
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),
@@ -215,8 +217,9 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                             child: RadioListTile<String>(
                               activeColor: AppColors.primaryGold500,
                               title: Text(
-                                AppLocalizations.of(context)!
-                                    .gram_buy_word, // localized text
+                                AppLocalizations.of(
+                                  context,
+                                )!.gram_buy_word, // localized text
                                 style: const TextStyle(color: Colors.white),
                               ),
                               value: "Buy", // API value
@@ -228,8 +231,9 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                             child: RadioListTile<String>(
                               activeColor: AppColors.primaryGold500,
                               title: Text(
-                                AppLocalizations.of(context)!
-                                    .gram_sell_word, // localized text
+                                AppLocalizations.of(
+                                  context,
+                                )!.gram_sell_word, // localized text
                                 style: const TextStyle(color: Colors.white),
                               ),
                               value: "Sell", // API value
@@ -282,7 +286,7 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                       DropdownButtonFormField<String>(
                         dropdownColor: AppColors.greyScale1000,
                         style: const TextStyle(color: Colors.white),
-                        value: selectedScript,
+                        //initialValue: selectedScript,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintStyle: TextStyle(color: Colors.white70),
@@ -291,8 +295,9 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                           DropdownMenuItem(
                             value: "1 Gram Price", // API value
                             child: Text(
-                              AppLocalizations.of(context)!
-                                  .one_gram_price, // localized text
+                              AppLocalizations.of(
+                                context,
+                              )!.one_gram_price, // localized text
                               style: const TextStyle(color: Colors.white),
                             ),
                           ),
@@ -335,7 +340,9 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 16),
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.grey.shade600),
                           borderRadius: BorderRadius.circular(4),
@@ -343,11 +350,14 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                         child: Text(
                           condition == "Less"
                               ? AppLocalizations.of(context)!
-                                  .less // localized “Below”
-                              : AppLocalizations.of(context)!
-                                  .more, // localized “Above”
+                                    .less // localized “Below”
+                              : AppLocalizations.of(
+                                  context,
+                                )!.more, // localized “Above”
                           style: const TextStyle(
-                              color: Colors.white, fontSize: 16),
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                       // Container(
@@ -381,11 +391,11 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                         controller: priceController,
                         inputFormatters: [
                           DecimalTextInputFormatter(decimalRange: 2),
-                         ],
-                       keyboardType: const TextInputType.numberWithOptions(
-                         signed: true,
-                        decimal: true,
-                      ),
+                        ],
+                        keyboardType: const TextInputType.numberWithOptions(
+                          signed: true,
+                          decimal: true,
+                        ),
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
@@ -394,17 +404,18 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                           helperText: goldPriceState.when(
                             data: (data) {
                               final currentBuying =
-                                  data.oneGramBuyingPriceInAED;
+                                  data.oneGramBuyingPriceInIQD;
                               final currentSelling =
-                                  data.oneGramSellingPriceInAED;
+                                  data.oneGramSellingPriceInIQD;
                               return side == "Buy"
                                   ? "${AppLocalizations.of(context)!.must_be_below} ${currentBuying.toStringAsFixed(2)}"
                                   : "${AppLocalizations.of(context)!.must_be_above} ${currentSelling.toStringAsFixed(2)}";
                             },
                             error: (error, stackTrace) =>
                                 "Unable to fetch current prices",
-                            loading: () => AppLocalizations.of(context)!
-                                .loading_current_prices,
+                            loading: () => AppLocalizations.of(
+                              context,
+                            )!.loading_current_prices,
                           ),
                           helperStyle: TextStyle(
                             color: AppColors.primaryGold500,
@@ -483,8 +494,6 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                 ),
               ),
             ],
-
-            
           ),
         ),
       ),

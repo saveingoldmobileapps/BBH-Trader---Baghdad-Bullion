@@ -1,8 +1,9 @@
 import 'dart:convert';
+
 /// status : "success"
 /// code : 1
 /// message : "OK: The request has succeeded."
-/// payload : {"isPhoneVerified":true,"isEmailVerified":true,"isUserKYCVerified":true,"isBasicUserVerified":true,"walletExists":{"_id":"6819af0bd80794b60a37e01f","userId":"6819af0bd80794b60a37e01e","moneyBalance":399700,"metalBalance":392,"createdAt":"2025-05-06T06:41:15.382Z","updatedAt":"2025-05-06T07:40:24.278Z","__v":0},"offers":[{"_id":"6819f27cadf8bf34773dd46f","title":"Save In Gold","offerImgUrl":"https://sigprodbucket.s3.me-central-1.amazonaws.com/default/image-c27b9cc1-72ed-431f-a44b-7d617c1a9a0b.png","isOfferEnabled":true,"createdAt":"2025-05-06T11:29:00.113Z","updatedAt":"2025-05-07T08:03:43.853Z","__v":0}],"newsUpdates":[{"_id":"681b63487d086ad402945d0a","title":"Gold prices fall to lowest levels in over 3 weeks as market sell-off hits bullion","description":"Gold prices fell on Monday to their lowest levels in more than three weeks, continuing their retreat amid a wider market sell-off, as investors dumped bullion to cover losses in other trades on fears of a global recession due to an escalating trade war.\nIn UAE, 24k opened at Dh365.75 per gram while 22K was selling at Dh338.50 per gram. Among the other variants, 21K and 18K opened at Dh324.75 and Dh278.25 per gram, respectively.","url":"https://www.khaleejtimes.com/business/markets/uae-gold-prices-drop-lowest-over-3-weeks","createdAt":"2025-05-07T13:42:32.040Z","updatedAt":"2025-05-07T13:42:32.040Z","__v":0},{"_id":"681b62ef7d086ad402945a0b","title":"UAE Gold Market Thrives Amid Rising Prices","description":"Gold prices in the UAE rise as geopolitical tensions and economic factors influence the market.\nThe United Arab Emirates (UAE) has solidified its position as a formidable player in the global gold market, with gold imports reaching a staggering $20 billion in 2019. This figure highlights the nation’s reliance on gold, which constitutes over a third of its total imports. The UAE’s primary markets for gold include India, Switzerland, and the USA, showcasing its strategic connections in the international trade landscape.","url":"https://evrimagaci.org/tpg/uae-gold-market-thrives-amid-rising-prices-343896","createdAt":"2025-05-07T13:41:03.098Z","updatedAt":"2025-05-07T13:41:03.098Z","__v":0},{"_id":"681b62bd7d086ad402945868","title":"Gold prices spike in Dubai: Why UAE shoppers should wait until Thursday","description":"Dubai: The Dubai Gold Rate has risen by Dh3.5 a gram to start the week, with a gram of 22K selling at Dh365 (and Dh394 for 24K), in what will be a huge disappointment for shoppers who were expecting prices to soften.\n\nToday’s rate is still lower than last Monday’s (April 28) Dh371, but all through last week the trend was for the local gold rate to drop. On May 1, it was at Dh359.\n\n“Shoppers would have been expecting gold to slip to around Dh350-Dh355 levels, so to see prices around Dh365 will be a huge blow to sales this week if this trend continues,” said a jeweller. “Even tourist demand will come in lower. The only hope is that some of the planning wedding purchases materialize.”","url":"https://gulfnews.com/business/retail/dubai-gold-rate-shoots-up-by-dh35-disappointing-shoppers-1.500115900","createdAt":"2025-05-07T13:40:13.902Z","updatedAt":"2025-05-07T13:40:13.902Z","__v":0},{"_id":"681b62987d086ad402945702","title":"Dubai Gold Rate back to touching distance of highest level - shoppers stay away","description":"Dubai: The Dubai Gold Rate is just Dh5 away from its highest point in the last 30 days – and also the highest ever as prices swelled ahead of the crucial meeting of the US Federal Reserve Wednesday. Currently, the Dubai rate is at Dh376.5 a gram for 22K – and Dh406.5 for 24K.\n\nThe highest single-day Dubai gold rate was the Dh381.5 on April 21.\n\nTo put matters more starkly, the difference between today’s Dubai Gold Rate and on April 7 is a whopping Dh45.50.  That’s the sort of price gap that will push shoppers to the sidelines. Most shoppers and jewellery retailers in the UAE certainly didn’t see this coming, after gold recorded a gradually softening in rates last week.","url":"https://gulfnews.com/business/retail/dubai-gold-rate-back-to-touching-distance-of-highest-level-shoppers-stay-away-1.500117145","createdAt":"2025-05-07T13:39:36.547Z","updatedAt":"2025-05-07T13:39:36.547Z","__v":0}]}
+/// payload : {"isPhoneVerified":true,"isEmailVerified":true,"isUserKYCVerified":true,"isBasicUserVerified":true,"walletExists":{"_id":"6819af0bd80794b60a37e01f","userId":"6819af0bd80794b60a37e01e","moneyBalance":399700,"metalBalance":392,"createdAt":"2025-05-06T06:41:15.382Z","updatedAt":"2025-05-06T07:40:24.278Z","__v":0},"offers":[{"_id":"6819f27cadf8bf34773dd46f","title":"Baghdad Bullion House","offerImgUrl":"https://sigprodbucket.s3.me-central-1.amazonaws.com/default/image-c27b9cc1-72ed-431f-a44b-7d617c1a9a0b.png","isOfferEnabled":true,"createdAt":"2025-05-06T11:29:00.113Z","updatedAt":"2025-05-07T08:03:43.853Z","__v":0}],"newsUpdates":[{"_id":"681b63487d086ad402945d0a","title":"Gold prices fall to lowest levels in over 3 weeks as market sell-off hits bullion","description":"Gold prices fell on Monday to their lowest levels in more than three weeks, continuing their retreat amid a wider market sell-off, as investors dumped bullion to cover losses in other trades on fears of a global recession due to an escalating trade war.\nIn UAE, 24k opened at Dh365.75 per gram while 22K was selling at Dh338.50 per gram. Among the other variants, 21K and 18K opened at Dh324.75 and Dh278.25 per gram, respectively.","url":"https://www.khaleejtimes.com/business/markets/uae-gold-prices-drop-lowest-over-3-weeks","createdAt":"2025-05-07T13:42:32.040Z","updatedAt":"2025-05-07T13:42:32.040Z","__v":0},{"_id":"681b62ef7d086ad402945a0b","title":"UAE Gold Market Thrives Amid Rising Prices","description":"Gold prices in the UAE rise as geopolitical tensions and economic factors influence the market.\nThe United Arab Emirates (UAE) has solidified its position as a formidable player in the global gold market, with gold imports reaching a staggering $20 billion in 2019. This figure highlights the nation’s reliance on gold, which constitutes over a third of its total imports. The UAE’s primary markets for gold include India, Switzerland, and the USA, showcasing its strategic connections in the international trade landscape.","url":"https://evrimagaci.org/tpg/uae-gold-market-thrives-amid-rising-prices-343896","createdAt":"2025-05-07T13:41:03.098Z","updatedAt":"2025-05-07T13:41:03.098Z","__v":0},{"_id":"681b62bd7d086ad402945868","title":"Gold prices spike in Dubai: Why UAE shoppers should wait until Thursday","description":"Dubai: The Dubai Gold Rate has risen by Dh3.5 a gram to start the week, with a gram of 22K selling at Dh365 (and Dh394 for 24K), in what will be a huge disappointment for shoppers who were expecting prices to soften.\n\nToday’s rate is still lower than last Monday’s (April 28) Dh371, but all through last week the trend was for the local gold rate to drop. On May 1, it was at Dh359.\n\n“Shoppers would have been expecting gold to slip to around Dh350-Dh355 levels, so to see prices around Dh365 will be a huge blow to sales this week if this trend continues,” said a jeweller. “Even tourist demand will come in lower. The only hope is that some of the planning wedding purchases materialize.”","url":"https://gulfnews.com/business/retail/dubai-gold-rate-shoots-up-by-dh35-disappointing-shoppers-1.500115900","createdAt":"2025-05-07T13:40:13.902Z","updatedAt":"2025-05-07T13:40:13.902Z","__v":0},{"_id":"681b62987d086ad402945702","title":"Dubai Gold Rate back to touching distance of highest level - shoppers stay away","description":"Dubai: The Dubai Gold Rate is just Dh5 away from its highest point in the last 30 days – and also the highest ever as prices swelled ahead of the crucial meeting of the US Federal Reserve Wednesday. Currently, the Dubai rate is at Dh376.5 a gram for 22K – and Dh406.5 for 24K.\n\nThe highest single-day Dubai gold rate was the Dh381.5 on April 21.\n\nTo put matters more starkly, the difference between today’s Dubai Gold Rate and on April 7 is a whopping Dh45.50.  That’s the sort of price gap that will push shoppers to the sidelines. Most shoppers and jewellery retailers in the UAE certainly didn’t see this coming, after gold recorded a gradually softening in rates last week.","url":"https://gulfnews.com/business/retail/dubai-gold-rate-back-to-touching-distance-of-highest-level-shoppers-stay-away-1.500117145","createdAt":"2025-05-07T13:39:36.547Z","updatedAt":"2025-05-07T13:39:36.547Z","__v":0}]}
 
 GetHomeFeedResponse getHomeFeedResponseFromJson(String str) =>
     GetHomeFeedResponse.fromJson(json.decode(str));
@@ -62,15 +63,15 @@ class GetHomeFeedResponse {
   }
 }
 
-        // "temporaryCreditStatus": false,
-        // "temporaryCreditAmount": 0,
-        // "isFrozen": false
+// "temporaryCreditStatus": false,
+// "temporaryCreditAmount": 0,
+// "isFrozen": false
 /// isPhoneVerified : true
 /// isEmailVerified : true
 /// isUserKYCVerified : true
 /// isBasicUserVerified : true
 /// walletExists : {"_id":"6819af0bd80794b60a37e01f","userId":"6819af0bd80794b60a37e01e","moneyBalance":399700,"metalBalance":392,"createdAt":"2025-05-06T06:41:15.382Z","updatedAt":"2025-05-06T07:40:24.278Z","__v":0}
-/// offers : [{"_id":"6819f27cadf8bf34773dd46f","title":"Save In Gold","offerImgUrl":"https://sigprodbucket.s3.me-central-1.amazonaws.com/default/image-c27b9cc1-72ed-431f-a44b-7d617c1a9a0b.png","isOfferEnabled":true,"createdAt":"2025-05-06T11:29:00.113Z","updatedAt":"2025-05-07T08:03:43.853Z","__v":0}]
+/// offers : [{"_id":"6819f27cadf8bf34773dd46f","title":"Baghdad Bullion House","offerImgUrl":"https://sigprodbucket.s3.me-central-1.amazonaws.com/default/image-c27b9cc1-72ed-431f-a44b-7d617c1a9a0b.png","isOfferEnabled":true,"createdAt":"2025-05-06T11:29:00.113Z","updatedAt":"2025-05-07T08:03:43.853Z","__v":0}]
 /// newsUpdates : [{"_id":"681b63487d086ad402945d0a","title":"Gold prices fall to lowest levels in over 3 weeks as market sell-off hits bullion","description":"Gold prices fell on Monday to their lowest levels in more than three weeks, continuing their retreat amid a wider market sell-off, as investors dumped bullion to cover losses in other trades on fears of a global recession due to an escalating trade war.\nIn UAE, 24k opened at Dh365.75 per gram while 22K was selling at Dh338.50 per gram. Among the other variants, 21K and 18K opened at Dh324.75 and Dh278.25 per gram, respectively.","url":"https://www.khaleejtimes.com/business/markets/uae-gold-prices-drop-lowest-over-3-weeks","createdAt":"2025-05-07T13:42:32.040Z","updatedAt":"2025-05-07T13:42:32.040Z","__v":0},{"_id":"681b62ef7d086ad402945a0b","title":"UAE Gold Market Thrives Amid Rising Prices","description":"Gold prices in the UAE rise as geopolitical tensions and economic factors influence the market.\nThe United Arab Emirates (UAE) has solidified its position as a formidable player in the global gold market, with gold imports reaching a staggering $20 billion in 2019. This figure highlights the nation’s reliance on gold, which constitutes over a third of its total imports. The UAE’s primary markets for gold include India, Switzerland, and the USA, showcasing its strategic connections in the international trade landscape.","url":"https://evrimagaci.org/tpg/uae-gold-market-thrives-amid-rising-prices-343896","createdAt":"2025-05-07T13:41:03.098Z","updatedAt":"2025-05-07T13:41:03.098Z","__v":0},{"_id":"681b62bd7d086ad402945868","title":"Gold prices spike in Dubai: Why UAE shoppers should wait until Thursday","description":"Dubai: The Dubai Gold Rate has risen by Dh3.5 a gram to start the week, with a gram of 22K selling at Dh365 (and Dh394 for 24K), in what will be a huge disappointment for shoppers who were expecting prices to soften.\n\nToday’s rate is still lower than last Monday’s (April 28) Dh371, but all through last week the trend was for the local gold rate to drop. On May 1, it was at Dh359.\n\n“Shoppers would have been expecting gold to slip to around Dh350-Dh355 levels, so to see prices around Dh365 will be a huge blow to sales this week if this trend continues,” said a jeweller. “Even tourist demand will come in lower. The only hope is that some of the planning wedding purchases materialize.”","url":"https://gulfnews.com/business/retail/dubai-gold-rate-shoots-up-by-dh35-disappointing-shoppers-1.500115900","createdAt":"2025-05-07T13:40:13.902Z","updatedAt":"2025-05-07T13:40:13.902Z","__v":0},{"_id":"681b62987d086ad402945702","title":"Dubai Gold Rate back to touching distance of highest level - shoppers stay away","description":"Dubai: The Dubai Gold Rate is just Dh5 away from its highest point in the last 30 days – and also the highest ever as prices swelled ahead of the crucial meeting of the US Federal Reserve Wednesday. Currently, the Dubai rate is at Dh376.5 a gram for 22K – and Dh406.5 for 24K.\n\nThe highest single-day Dubai gold rate was the Dh381.5 on April 21.\n\nTo put matters more starkly, the difference between today’s Dubai Gold Rate and on April 7 is a whopping Dh45.50.  That’s the sort of price gap that will push shoppers to the sidelines. Most shoppers and jewellery retailers in the UAE certainly didn’t see this coming, after gold recorded a gradually softening in rates last week.","url":"https://gulfnews.com/business/retail/dubai-gold-rate-back-to-touching-distance-of-highest-level-shoppers-stay-away-1.500117145","createdAt":"2025-05-07T13:39:36.547Z","updatedAt":"2025-05-07T13:39:36.547Z","__v":0}]
 
 Payload payloadFromJson(String str) => Payload.fromJson(json.decode(str));
@@ -100,11 +101,11 @@ class Payload {
     _isUserKYCVerified = isUserKYCVerified;
     _isBasicUserVerified = isBasicUserVerified;
     _sellAtLoss = sellAtLoss;
-    _googlePay= googlePay;
+    _googlePay = googlePay;
     _applePay = applePay;
     _temporaryCreditStatus = temporaryCreditStatus;
     _isFrozen = isFrozen;
-   // _temporaryCreditAmount = temporaryCreditAmount;
+    // _temporaryCreditAmount = temporaryCreditAmount;
     _walletExists = walletExists;
     _offers = offers;
     _newsUpdates = newsUpdates;
@@ -146,7 +147,7 @@ class Payload {
   bool? _googlePay;
   bool? _applePay;
   bool? _temporaryCreditStatus;
-  bool?  _isFrozen;
+  bool? _isFrozen;
   //double?  _temporaryCreditAmount;
   String? _userType;
   WalletExists? _walletExists;
@@ -169,7 +170,7 @@ class Payload {
     isBasicUserVerified: isBasicUserVerified ?? _isBasicUserVerified,
     sellAtLoss: sellAtLoss ?? _sellAtLoss,
     googlePay: googlePay ?? _googlePay,
-    applePay: applePay?? _applePay,
+    applePay: applePay ?? _applePay,
     temporaryCreditStatus: temporaryCreditStatus ?? _temporaryCreditStatus,
     isFrozen: isFrozen ?? _isFrozen,
     //temporaryCreditAmount: temporaryCreditAmount ?? _temporaryCreditAmount,
@@ -203,7 +204,7 @@ class Payload {
     map['isBasicUserVerified'] = _isBasicUserVerified;
     map['sellAtLoss'] = _sellAtLoss;
     map['googlePay'] = _googlePay;
-    map['applePay']= _applePay;
+    map['applePay'] = _applePay;
     map['temporaryCreditStatus'] = _temporaryCreditStatus;
     map['isFrozen'] = _isFrozen;
     //map['temporaryCreditAmount'] = _temporaryCreditAmount;
@@ -306,7 +307,7 @@ class NewsUpdates {
 }
 
 /// _id : "6819f27cadf8bf34773dd46f"
-/// title : "Save In Gold"
+/// title : "Baghdad Bullion House"
 /// offerImgUrl : "https://sigprodbucket.s3.me-central-1.amazonaws.com/default/image-c27b9cc1-72ed-431f-a44b-7d617c1a9a0b.png"
 /// isOfferEnabled : true
 /// createdAt : "2025-05-06T11:29:00.113Z"

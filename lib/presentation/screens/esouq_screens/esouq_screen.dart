@@ -36,7 +36,9 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
   /// fetch esouq products
   Future<void> fetchESouqProductData() async {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(esouqProvider.notifier).fetchEsouqProducts(
+      ref
+          .read(esouqProvider.notifier)
+          .fetchEsouqProducts(
             paramWeight: selectedWeight,
             paramWeightCategory: selectedWeightCategory,
             reset: true,
@@ -48,7 +50,9 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      ref.read(esouqProvider.notifier).loadMoreProducts(
+      ref
+          .read(esouqProvider.notifier)
+          .loadMoreProducts(
             paramWeight: selectedWeight,
             paramWeightCategory: selectedWeightCategory,
           );
@@ -79,8 +83,8 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
     final goldPriceStateWatchProvider = ref.watch(goldPriceProvider);
 
     /// AsyncValue builder
-    final oneGramBuyingPriceInAED =
-        goldPriceStateWatchProvider.value?.oneGramBuyingPriceInAED ?? 0.0;
+    final oneGramBuyingPriceInIQD =
+        goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD ?? 0.0;
     return Scaffold(
       key: _scaffoldKey,
       drawer: GetFilterDrawerBar(
@@ -132,9 +136,11 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                 color: Colors.transparent,
                 child: SvgPicture.asset(
                   'assets/svg/filter_icon.svg',
-                  height: sizes!.heightRatio *
+                  height:
+                      sizes!.heightRatio *
                       (sizes!.isPhone ? 24 : (sizes!.isLandscape() ? 32 : 24)),
-                  width: sizes!.widthRatio *
+                  width:
+                      sizes!.widthRatio *
                       (sizes!.isPhone ? 24 : (sizes!.isLandscape() ? 32 : 24)),
                 ),
               ),
@@ -172,88 +178,86 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                             ),
                           )
                         : esouqState.products.isEmpty
-                            ? NoDataWidget(
-                                title: AppLocalizations.of(
-                                  context,
-                                )!
-                                    .empty_no_data, //"No Data To Show",
-                                description: "",
-                              )
-                            : GridView.builder(
-                                controller: _scrollController,
-                                itemCount: esouqState.products.length +
-                                    (esouqState.hasNextPage ? 1 : 0),
-                                shrinkWrap: true,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
+                        ? NoDataWidget(
+                            title: AppLocalizations.of(
+                              context,
+                            )!.empty_no_data, //"No Data To Show",
+                            description: "",
+                          )
+                        : GridView.builder(
+                            controller: _scrollController,
+                            itemCount:
+                                esouqState.products.length +
+                                (esouqState.hasNextPage ? 1 : 0),
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: sizes!.isLandscape() ? 3 : 2,
                                   crossAxisSpacing: 6.0,
                                   mainAxisSpacing: 6.0,
                                   childAspectRatio: sizes!.isPhone
                                       ? 0.45
                                       : sizes!.isLandscape() && !sizes!.isPhone
-                                          ? 0.9
-                                          : (sizes!.isLandscape() ? 1.4 : 0.9),
+                                      ? 0.9
+                                      : (sizes!.isLandscape() ? 1.4 : 0.9),
                                 ),
-                                itemBuilder: (context, index) {
-                                  if (index == esouqState.products.length) {
-                                    return const Center(
-                                      child: CircularProgressIndicator(
-                                        color: AppColors.primaryGold500,
-                                        strokeWidth: 2,
-                                      ),
-                                    );
-                                  }
+                            itemBuilder: (context, index) {
+                              if (index == esouqState.products.length) {
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.primaryGold500,
+                                    strokeWidth: 2,
+                                  ),
+                                );
+                              }
 
-                                  /// product
-                                  final product = esouqState.products[index];
+                              /// product
+                              final product = esouqState.products[index];
 
-                                  /// eSouq product price
-                                  final eSouqProductPrice =
-                                      CommonService.calculateWeightPrice(
+                              /// eSouq product price
+                              final eSouqProductPrice =
+                                  CommonService.calculateWeightPrice(
                                     weightFactor: product.weightFactor,
                                     oneGramSellingPrice:
-                                        oneGramBuyingPriceInAED,
+                                        oneGramBuyingPriceInIQD,
                                   );
 
-                                  /// item price
-                                  final itemPrice =
-                                      CommonService.formatCurrency(
-                                    amount: eSouqProductPrice.toString(),
-                                  );
+                              /// item price
+                              final itemPrice = CommonService.formatCurrency(
+                                amount: eSouqProductPrice.toString(),
+                              );
 
-                                  /// esouq item card
-                                  return EsouqItemCard(
-                                    title: product.productName ??
-                                        AppLocalizations.of(context)!
-                                            .na, //"N/A",
-                                    imageUrl: product.imageUrl?.isNotEmpty ==
-                                            true
-                                        ? product.imageUrl!.first
-                                        : "", // or use a placeholder image URL
-                                    itemPrice: itemPrice,
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              EsouqItemDetailScreen(
+                              /// esouq item card
+                              return EsouqItemCard(
+                                title:
+                                    product.productName ??
+                                    AppLocalizations.of(context)!.na, //"N/A",
+                                imageUrl: product.imageUrl?.isNotEmpty == true
+                                    ? product.imageUrl!.first
+                                    : "", // or use a placeholder image URL
+                                itemPrice: itemPrice,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          EsouqItemDetailScreen(
                                             product: product,
                                             productPrice: eSouqProductPrice
                                                 .toStringAsFixed(2),
-                                            oneGramPriceInAED:
-                                                oneGramBuyingPriceInAED
+                                            oneGramPriceInIQD:
+                                                oneGramBuyingPriceInIQD
                                                     .toStringAsFixed(2),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                    onTapAddToCart: () {
-                                      // Add to cart logic
-                                    },
+                                    ),
                                   );
                                 },
-                              ),
+                                onTapAddToCart: () {
+                                  // Add to cart logic
+                                },
+                              );
+                            },
+                          ),
                   ),
                 ],
               ).get16HorizontalPadding(),

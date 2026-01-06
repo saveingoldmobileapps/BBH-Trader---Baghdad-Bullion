@@ -3,7 +3,7 @@ import 'dart:convert';
 /// status : "success"
 /// code : 1
 /// message : "OK: The request has succeeded."
-/// payload : [{"_id":"6815bddf09cf95538a3b4263","branchName":"Save In Gold","branchLocation":"Gold Souk, Dubai, UAE","branchPhoneNumber":"+971562656180","branchEmail":"amro@saveingold.ae"},{"_id":"6815be3f09cf95538a3b446b","branchName":"Save In Gold","branchLocation":"Sharjah, UAE","branchPhoneNumber":"+971562654987","branchEmail":"ceo@saveingold.ae"},{"_id":"6815bf0709cf95538a3b48ae","branchName":"Save In Gold","branchLocation":"Abu Dhabi, UAE","branchPhoneNumber":"+971569879987","branchEmail":"info@saveingold.ae"},{"_id":"682ed61a5592fd7a25b97208","branchName":"Save In Gold","branchLocation":"Jordan","branchPhoneNumber":"+962791234567","branchEmail":"amro@saveingold.ae"}]
+/// payload : [{"_id":"6815bddf09cf95538a3b4263","branchName":"Baghdad Bullion House","branchLocation":"Gold Souk, Dubai, UAE","branchPhoneNumber":"+971562656180","branchEmail":"amro@saveingold.ae"},{"_id":"6815be3f09cf95538a3b446b","branchName":"Baghdad Bullion House","branchLocation":"Sharjah, UAE","branchPhoneNumber":"+971562654987","branchEmail":"ceo@saveingold.ae"},{"_id":"6815bf0709cf95538a3b48ae","branchName":"Baghdad Bullion House","branchLocation":"Abu Dhabi, UAE","branchPhoneNumber":"+971569879987","branchEmail":"info@saveingold.ae"},{"_id":"682ed61a5592fd7a25b97208","branchName":"Baghdad Bullion House","branchLocation":"Jordan","branchPhoneNumber":"+962791234567","branchEmail":"amro@saveingold.ae"}]
 
 BankBranchesApiResponseModel bankBranchesApiResponseModelFromJson(String str) =>
     BankBranchesApiResponseModel.fromJson(json.decode(str));
@@ -12,10 +12,11 @@ String bankBranchesApiResponseModelToJson(BankBranchesApiResponseModel data) =>
 
 class BankBranchesApiResponseModel {
   BankBranchesApiResponseModel({
-    String? status, 
-    num? code, 
-    String? message, 
-    List<Payload>? payload,}){
+    String? status,
+    num? code,
+    String? message,
+    List<Payload>? payload,
+  }) {
     _status = status;
     _code = code;
     _message = message;
@@ -66,7 +67,7 @@ class BankBranchesApiResponseModel {
 }
 
 /// _id : "6815bddf09cf95538a3b4263"
-/// branchName : "Save In Gold"
+/// branchName : "Baghdad Bullion House"
 /// branchLocation : "Gold Souk, Dubai, UAE"
 /// branchPhoneNumber : "+971562656180"
 /// branchEmail : "amro@saveingold.ae"

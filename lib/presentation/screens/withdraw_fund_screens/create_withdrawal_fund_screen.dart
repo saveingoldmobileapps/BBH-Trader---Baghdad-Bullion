@@ -43,7 +43,9 @@ class _WithdrawFundScreenState
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint("fetchWithdrawalFundsRequests initState");
-      ref.read(homeProvider.notifier).getHomeFeed(context: context, showLoading: true);
+      ref
+          .read(homeProvider.notifier)
+          .getHomeFeed(context: context, showLoading: true);
       ref.read(withdrawProvider.notifier).fetchAllCards(context: context);
     });
   }
@@ -91,10 +93,12 @@ class _WithdrawFundScreenState
     final currentBeneficiaryName = beneficiaryNameController.text.trim();
     final currentIban = ibanAccountNumberController.text.trim();
 
-    return cardsList.any((card) =>
-        card.bankName?.trim() == currentBankName &&
-        card.beneficiaryName?.trim() == currentBeneficiaryName &&
-        card.ibanNumber?.trim() == currentIban);
+    return cardsList.any(
+      (card) =>
+          card.bankName?.trim() == currentBankName &&
+          card.beneficiaryName?.trim() == currentBeneficiaryName &&
+          card.ibanNumber?.trim() == currentIban,
+    );
   }
 
   /// Check if all required fields are filled
@@ -114,7 +118,9 @@ class _WithdrawFundScreenState
         "iban": ibanAccountNumberController.text.trim(),
       };
 
-      await ref.read(withdrawProvider.notifier).createCard(
+      await ref
+          .read(withdrawProvider.notifier)
+          .createCard(
             context: context,
             body: cardData,
           );
@@ -134,7 +140,9 @@ class _WithdrawFundScreenState
       };
 
       /// resend phone passcode
-      await ref.read(authProvider.notifier).resendPhonePasscodeForWithdraw(
+      await ref
+          .read(authProvider.notifier)
+          .resendPhonePasscodeForWithdraw(
             json: withdrawRequestJson,
             context: context,
           );
@@ -168,8 +176,7 @@ class _WithdrawFundScreenState
         title: GetGenericText(
           text: AppLocalizations.of(
             context,
-          )!
-              .withdrawTitle, //"Withdrawal Funds",
+          )!.withdrawTitle, //"Withdrawal Funds",
           fontSize: 20,
           fontWeight: FontWeight.w400,
           color: AppColors.grey6Color,
@@ -194,12 +201,10 @@ class _WithdrawFundScreenState
                       title: "title",
                       hintText: AppLocalizations.of(
                         context,
-                      )!
-                          .enter_withdraw_amount, //"Enter amount to be withdrawn",
+                      )!.enter_withdraw_amount, //"Enter amount to be withdrawn",
                       labelText: AppLocalizations.of(
                         context,
-                      )!
-                          .amount, //"Amount",
+                      )!.amount, //"Amount",
                       controller: amountController,
                       textInputType: TextInputType.numberWithOptions(
                         signed: true,
@@ -209,21 +214,18 @@ class _WithdrawFundScreenState
                         if (value == null || value.trim().isEmpty) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .amountReq; //"Amount is required";
+                          )!.amountReq; //"Amount is required";
                         }
                         if (!RegExp(r'^\d+$').hasMatch(value.trim())) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .withdraw_digit; //"Amount must be digits only";
+                          )!.withdraw_digit; //"Amount must be digits only";
                         }
                         final amount = double.tryParse(value.trim());
                         if (amount == null || amount <= 0) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .please_enter_valid_amount; //"Enter a valid amount";
+                          )!.please_enter_valid_amount; //"Enter a valid amount";
                         }
                         return null;
                       },
@@ -233,26 +235,22 @@ class _WithdrawFundScreenState
                       title: "title",
                       hintText: AppLocalizations.of(
                         context,
-                      )!
-                          .withdraw_enter_bank_name, //"Enter Bank Name",
+                      )!.withdraw_enter_bank_name, //"Enter Bank Name",
                       labelText: AppLocalizations.of(
                         context,
-                      )!
-                          .withdraw_bank_name, //"Bank Name",
+                      )!.withdraw_bank_name, //"Bank Name",
                       controller: bankController,
                       textInputType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .bankReq; //"Bank name is required";
+                          )!.bankReq; //"Bank name is required";
                         }
                         if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(value.trim())) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .withdraw_only_alphabet; //"Only alphabets are allowed";
+                          )!.withdraw_only_alphabet; //"Only alphabets are allowed";
                         }
                         return null;
                       },
@@ -262,26 +260,22 @@ class _WithdrawFundScreenState
                       title: "title",
                       hintText: AppLocalizations.of(
                         context,
-                      )!
-                          .withdraw_benf_name, //"Enter Beneficiary Name",
+                      )!.withdraw_benf_name, //"Enter Beneficiary Name",
                       labelText: AppLocalizations.of(
                         context,
-                      )!
-                          .beneficiary, //"Beneficiary Name",
+                      )!.beneficiary, //"Beneficiary Name",
                       controller: beneficiaryNameController,
                       textInputType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .beneficiaryReq; //"Beneficiary name is required";
+                          )!.beneficiaryReq; //"Beneficiary name is required";
                         }
                         if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(value.trim())) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .withdraw_only_alphabet; //"Only alphabets are allowed";
+                          )!.withdraw_only_alphabet; //"Only alphabets are allowed";
                         }
                         return null;
                       },
@@ -291,20 +285,17 @@ class _WithdrawFundScreenState
                       title: "title",
                       hintText: AppLocalizations.of(
                         context,
-                      )!
-                          .iban, //"IBAN Number",
+                      )!.iban, //"IBAN Number",
                       labelText: AppLocalizations.of(
                         context,
-                      )!
-                          .iban, //"IBAN Number",
+                      )!.iban, //"IBAN Number",
                       controller: ibanAccountNumberController,
                       textInputType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .ibanReq; //"IBAN Account number is required";
+                          )!.ibanReq; //"IBAN Account number is required";
                         }
 
                         final trimmed = value.trim();
@@ -313,8 +304,7 @@ class _WithdrawFundScreenState
                         if (trimmed.length < 23 || trimmed.length > 30) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .ibanLength; //"IBAN number must be between 23 and 30 characters";
+                          )!.ibanLength; //"IBAN number must be between 23 and 30 characters";
                         }
 
                         // Must contain both letters and digits
@@ -323,8 +313,7 @@ class _WithdrawFundScreenState
                         ).hasMatch(trimmed)) {
                           return AppLocalizations.of(
                             context,
-                          )!
-                              .withdraw_alphabet_char; //"Must include both letters and digits";
+                          )!.withdraw_alphabet_char; //"Must include both letters and digits";
                         }
 
                         return null;
@@ -334,14 +323,19 @@ class _WithdrawFundScreenState
 
                     // Add Card Button - Conditionally shown
                     if (_areAllFieldsFilled() &&
-                        !_isCurrentDetailsInCardList(withdrawalState
-                            .getAllCardsResponse.payload?.cardsList))
+                        !_isCurrentDetailsInCardList(
+                          withdrawalState
+                              .getAllCardsResponse
+                              .payload
+                              ?.cardsList,
+                        ))
                       Padding(
                         padding: const EdgeInsets.only(bottom: 16),
                         child: Row(
                           children: [
                             Expanded(
-                              child: withdrawalState.cardCreateLoadingState ==
+                              child:
+                                  withdrawalState.cardCreateLoadingState ==
                                       LoadingWithdrawalState.loading
                                   ? Container(
                                       height: 48,
@@ -371,7 +365,9 @@ class _WithdrawFundScreenState
                                         size: 20,
                                       ),
                                       label: GetGenericText(
-                                        text: AppLocalizations.of(context)!.save_card_detail, //"Save Card Details",
+                                        text: AppLocalizations.of(
+                                          context,
+                                        )!.save_card_detail, //"Save Card Details",
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: AppColors.primaryGold500,
@@ -384,11 +380,13 @@ class _WithdrawFundScreenState
                                           width: 1,
                                         ),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         padding: const EdgeInsets.symmetric(
-                                            vertical: 12),
+                                          vertical: 12,
+                                        ),
                                       ),
                                     ),
                             ),
@@ -398,7 +396,7 @@ class _WithdrawFundScreenState
 
                     GetGenericText(
                       text: AppLocalizations.of(context)!.bank_fee_notice,
-                      //"Minimum deposit amount is AED 100, charges may apply",
+                      //"Minimum deposit amount is IQD 100, charges may apply",
                       fontSize: sizes!.isPhone ? 11 : 14,
                       fontWeight: FontWeight.w400,
                       color: AppColors.grey3Color,
@@ -407,13 +405,16 @@ class _WithdrawFundScreenState
                     LoaderArrowButton(
                       title: AppLocalizations.of(
                         context,
-                      )!
-                          .withdrawBtn, //"Withdrawal",
+                      )!.withdrawBtn, //"Withdrawal",
                       isLoadingState: authStateWatchProvider.isButtonState,
                       onTap: () async {
-                        final walletBalance = double.tryParse(
-                              mainStateWatchProvider.getHomeFeedResponse.payload
-                                      ?.walletExists?.moneyBalance
+                        final walletBalance =
+                            double.tryParse(
+                              mainStateWatchProvider
+                                      .getHomeFeedResponse
+                                      .payload
+                                      ?.walletExists
+                                      ?.moneyBalance
                                       ?.toString() ??
                                   '0',
                             ) ??
@@ -421,27 +422,23 @@ class _WithdrawFundScreenState
 
                         double enteredAmount =
                             double.tryParse(amountController.text.trim()) ??
-                                0.0;
+                            0.0;
                         if (walletBalance < enteredAmount) {
                           await genericPopUpWidget(
                             context: context,
                             heading: AppLocalizations.of(
                               context,
-                            )!
-                                .invest_insufficient_balance_title, //"Insufficient Balance",
+                            )!.invest_insufficient_balance_title, //"Insufficient Balance",
                             subtitle: AppLocalizations.of(
                               context,
-                            )!
-                                .withdraw_add_fund,
+                            )!.withdraw_add_fund,
                             //"Please add funds into your account.",
                             noButtonTitle: AppLocalizations.of(
                               context,
-                            )!
-                                .gift_back, //"Back",
+                            )!.gift_back, //"Back",
                             yesButtonTitle: AppLocalizations.of(
                               context,
-                            )!
-                                .dep_method_header, //"Add funds",
+                            )!.dep_method_header, //"Add funds",
                             isLoadingState: false,
                             onNoPress: () => Navigator.pop(context),
                             onYesPress: () async {
@@ -473,8 +470,7 @@ class _WithdrawFundScreenState
                           GetGenericText(
                             text: AppLocalizations.of(
                               context,
-                            )!
-                                .previous_bank_accounts,
+                            )!.previous_bank_accounts,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: AppColors.grey6Color,
@@ -494,8 +490,7 @@ class _WithdrawFundScreenState
                       child: GetGenericText(
                         text: AppLocalizations.of(
                           context,
-                        )!
-                            .tap_any_account_to_fill_details,
+                        )!.tap_any_account_to_fill_details,
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: AppColors.grey3Color,
@@ -506,13 +501,19 @@ class _WithdrawFundScreenState
                         LoadingWithdrawalState.loading)
                       const Center(
                         child: CircularProgressIndicator(
-                            color: AppColors.primaryGold500),
+                          color: AppColors.primaryGold500,
+                        ),
                       )
                     else if (withdrawalState
-                            .getAllCardsResponse.payload?.cardsList!.isEmpty ??
+                            .getAllCardsResponse
+                            .payload
+                            ?.cardsList!
+                            .isEmpty ??
                         true)
                       GetGenericText(
-                        text: AppLocalizations.of(context)!.no_save_card_found,//"No Saved Card Found",
+                        text: AppLocalizations.of(
+                          context,
+                        )!.no_save_card_found, //"No Saved Card Found",
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: AppColors.grey4Color,
@@ -522,166 +523,174 @@ class _WithdrawFundScreenState
                         height: 120,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: withdrawalState.getAllCardsResponse.payload?.cardsList?.length ?? 0,
+                          itemCount:
+                              withdrawalState
+                                  .getAllCardsResponse
+                                  .payload
+                                  ?.cardsList
+                                  ?.length ??
+                              0,
                           itemBuilder: (context, index) {
-                            final card = withdrawalState.getAllCardsResponse.payload!.cardsList![index];
+                            final card = withdrawalState
+                                .getAllCardsResponse
+                                .payload!
+                                .cardsList![index];
                             return GestureDetector(
-                                onTap: () => _fillFormData(
-                                  BankDetails(
-                                    bankName: card.bankName ?? '',
-                                    beneficiaryName: card.beneficiaryName ?? '',
-                                    iban: card.ibanNumber ?? '',
+                              onTap: () => _fillFormData(
+                                BankDetails(
+                                  bankName: card.bankName ?? '',
+                                  beneficiaryName: card.beneficiaryName ?? '',
+                                  iban: card.ibanNumber ?? '',
+                                ),
+                              ),
+                              child: Container(
+                                width: 220,
+                                margin: const EdgeInsets.only(right: 12),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: AppColors.greyScale900,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: AppColors.greyScale700,
+                                    width: 1,
                                   ),
                                 ),
-                                child: Container(
-                                  width: 220,
-                                  margin: const EdgeInsets.only(right: 12),
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.greyScale900,
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(
-                                      color: AppColors.greyScale700,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Stack(
-                                    children: [
-                                      /// Main card content
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          const SizedBox(
-                                            height: 4
-                                          ), // spacing for delete icon area
-                                          GetGenericText(
-                                            text: card.bankName ?? '',
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.grey6Color,
+                                child: Stack(
+                                  children: [
+                                    /// Main card content
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const SizedBox(
+                                          height: 4,
+                                        ), // spacing for delete icon area
+                                        GetGenericText(
+                                          text: card.bankName ?? '',
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.grey6Color,
+                                        ),
+                                        GetGenericText(
+                                          text: card.beneficiaryName ?? '',
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500,
+                                          color: AppColors.grey5Color,
+                                        ),
+                                        GetGenericText(
+                                          text: _formatIBAN(
+                                            card.ibanNumber ?? '',
                                           ),
-                                          GetGenericText(
-                                            text: card.beneficiaryName ?? '',
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppColors.grey5Color,
-                                          ),
-                                          GetGenericText(
-                                            text: _formatIBAN( card.ibanNumber ?? ''),
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.grey4Color,
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: GetGenericText(
+                                            text: AppLocalizations.of(
+                                              context,
+                                            )!.tap_to_use,
                                             fontSize: 10,
                                             fontWeight: FontWeight.w400,
-                                            color: AppColors.grey4Color,
+                                            color: AppColors.primaryGold500,
                                           ),
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: GetGenericText(
-                                              text: AppLocalizations.of(context)!.tap_to_use,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w400,
-                                              color: AppColors.primaryGold500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
+                                    ),
 
-                                      /// Delete button (top right)
-                                      Positioned(
-                                        top: 0,
-                                        right: CommonService.lang == "en"
-                                            ? 0
-                                            : null,
-                                        left: CommonService.lang == "ar"
-                                            ? 0
-                                            : null,
-                                        child: InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          onTap: () {
-                                            genericPopUpWidget(
-                                              isLoadingState: false,
-                                              context: context,
-                                              heading: AppLocalizations.of(
-                                                context,
-                                              )!
-                                                  .warning, //"Warning",
-                                              subtitle: AppLocalizations.of(
-                                                      context)!
-                                                  .sure_want_to_delete_account_detail, //"Are you sure want to delete",
-                                              noButtonTitle:
-                                                  AppLocalizations.of(
-                                                context,
-                                              )!
-                                                      .logout_no, //"No",
-                                              yesButtonTitle:
-                                                  AppLocalizations.of(
-                                                context,
-                                              )!
-                                                      .logout_yes, //"Yes",
-                                              onNoPress: () async {
-                                                Navigator.pop(context);
-                                              },
-                                              onYesPress: () async {
-                                                Navigator.pop(context);
-                                                ref
-                                                    .read(withdrawProvider
-                                                        .notifier)
-                                                    .deleteCard(
-                                                        context: context,
-                                                        cardId: card.id ?? '');
-                                              },
-                                            );
-                                            //  Call your delete card method here
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: Icon(
-                                              Icons.delete_outline,
-                                              size: 18,
-                                              color: AppColors
-                                                  .redColor, // or AppColors.grey5Color for subtle
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 0,
-                                        right: CommonService.lang == "en"
-                                            ? 28
-                                            : null,
-                                        left: CommonService.lang == "ar"
-                                            ? 28
-                                            : null, // leave space between edit and delete
-                                        child: InkWell(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          onTap: () {
-                                            Navigator.push(
+                                    /// Delete button (top right)
+                                    Positioned(
+                                      top: 0,
+                                      right: CommonService.lang == "en"
+                                          ? 0
+                                          : null,
+                                      left: CommonService.lang == "ar"
+                                          ? 0
+                                          : null,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(20),
+                                        onTap: () {
+                                          genericPopUpWidget(
+                                            isLoadingState: false,
+                                            context: context,
+                                            heading: AppLocalizations.of(
                                               context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditBankCardScreen(
-                                                  card: card,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: Icon(
-                                              Icons.edit_outlined,
-                                              size: 18,
-                                              color: AppColors.primaryGold500,
-                                            ),
+                                            )!.warning, //"Warning",
+                                            subtitle: AppLocalizations.of(
+                                              context,
+                                            )!.sure_want_to_delete_account_detail, //"Are you sure want to delete",
+                                            noButtonTitle: AppLocalizations.of(
+                                              context,
+                                            )!.logout_no, //"No",
+                                            yesButtonTitle: AppLocalizations.of(
+                                              context,
+                                            )!.logout_yes, //"Yes",
+                                            onNoPress: () async {
+                                              Navigator.pop(context);
+                                            },
+                                            onYesPress: () async {
+                                              Navigator.pop(context);
+                                              ref
+                                                  .read(
+                                                    withdrawProvider.notifier,
+                                                  )
+                                                  .deleteCard(
+                                                    context: context,
+                                                    cardId: card.id ?? '',
+                                                  );
+                                            },
+                                          );
+                                          //  Call your delete card method here
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Icon(
+                                            Icons.delete_outline,
+                                            size: 18,
+                                            color: AppColors
+                                                .redColor, // or AppColors.grey5Color for subtle
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                )
-                              );
+                                    ),
+                                    Positioned(
+                                      top: 0,
+                                      right: CommonService.lang == "en"
+                                          ? 28
+                                          : null,
+                                      left: CommonService.lang == "ar"
+                                          ? 28
+                                          : null, // leave space between edit and delete
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(20),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditBankCardScreen(
+                                                    card: card,
+                                                  ),
+                                            ),
+                                          );
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Icon(
+                                            Icons.edit_outlined,
+                                            size: 18,
+                                            color: AppColors.primaryGold500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
                           },
                         ),
                       ),

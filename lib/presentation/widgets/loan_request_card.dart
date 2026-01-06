@@ -49,7 +49,7 @@ class LoanRequestCard extends StatelessWidget {
                     color: AppColors.grey3Color,
                   ),
                   GetGenericText(
-                    text: "AED $amount",
+                    text: "IQD $amount",
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: AppColors.grey5Color,

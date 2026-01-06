@@ -58,7 +58,9 @@ class _FundAmountScreenState extends ConsumerState<GooglePayFundAmountScreen> {
         centerTitle: false,
         titleSpacing: 0,
         title: GetGenericText(
-          text: AppLocalizations.of(context)!.dep_amount_title, //"Deposit Amount",
+          text: AppLocalizations.of(
+            context,
+          )!.dep_amount_title, //"Deposit Amount",
           fontSize: 20,
           fontWeight: FontWeight.w400,
           color: AppColors.grey6Color,
@@ -91,17 +93,20 @@ class _FundAmountScreenState extends ConsumerState<GooglePayFundAmountScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!
-                            .enter_amount_plz; //'Please enter amount';
+                        return AppLocalizations.of(
+                          context,
+                        )!.enter_amount_plz; //'Please enter amount';
                       }
                       final amount = num.tryParse(value);
                       if (amount == null || amount <= 0) {
-                        return AppLocalizations.of(context)!
-                            .enter_correct_amount; //'Please add correct amount';
+                        return AppLocalizations.of(
+                          context,
+                        )!.enter_correct_amount; //'Please add correct amount';
                       }
                       if (amount < 100) {
-                        return AppLocalizations.of(context)!
-                            .dip_min_100; //'Minimum deposit amount is AED 100';
+                        return AppLocalizations.of(
+                          context,
+                        )!.dip_min_100; //'Minimum deposit amount is IQD 100';
                       }
                       return null;
                     },
@@ -109,17 +114,19 @@ class _FundAmountScreenState extends ConsumerState<GooglePayFundAmountScreen> {
                   ConstPadding.sizeBoxWithHeight(height: 4),
                   Directionality.of(context) == TextDirection.rtl
                       ? GetGenericText(
-                          text:
-                              AppLocalizations.of(context)!.dep_min_amount_note,
-                          //"Minimum deposit amount is AED 100, charges may apply",
+                          text: AppLocalizations.of(
+                            context,
+                          )!.dep_min_amount_note,
+                          //"Minimum deposit amount is IQD 100, charges may apply",
                           fontSize: sizes!.isPhone ? 11 : 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.grey3Color,
                         ).getAlignRight()
                       : GetGenericText(
-                          text:
-                              AppLocalizations.of(context)!.dep_min_amount_note,
-                          //"Minimum deposit amount is AED 100, charges may apply",
+                          text: AppLocalizations.of(
+                            context,
+                          )!.dep_min_amount_note,
+                          //"Minimum deposit amount is IQD 100, charges may apply",
                           fontSize: sizes!.isPhone ? 11 : 14,
                           fontWeight: FontWeight.w400,
                           color: AppColors.grey3Color,
@@ -132,7 +139,8 @@ class _FundAmountScreenState extends ConsumerState<GooglePayFundAmountScreen> {
                       if (_formKey.currentState?.validate() ?? false) {
                         FocusScope.of(context).unfocus();
                         Toasts.getWarningToast(
-                            text: AppLocalizations.of(context)!.wait_please);
+                          text: AppLocalizations.of(context)!.wait_please,
+                        );
 
                         // Toasts.getWarningToast(text: "Please wait...");
 
@@ -205,24 +213,26 @@ class _FundAmountScreenState extends ConsumerState<GooglePayFundAmountScreen> {
       );
 
       // Step 1: Create Customer
-      final customer =
-          await ref.read(paymentOptionProvider.notifier).createStripeCustomer(
-                firstName: user?.firstName!.en ?? "",
-                lastName: user?.surname!.en ?? "",
-                email: user?.email ?? "",
-                countryCode: 'AE',
-              );
+      final customer = await ref
+          .read(paymentOptionProvider.notifier)
+          .createStripeCustomer(
+            firstName: user?.firstName!.en ?? "",
+            lastName: user?.surname!.en ?? "",
+            email: user?.email ?? "",
+            countryCode: 'AE',
+          );
 
       getLocator<Logger>().i("stripeCustomer: ${customer['id']}");
 
       /// 1. Create a PaymentIntent on the server (see step 4)
       getLocator<Logger>().i("paymentAmount: $amount");
-      final paymentIntent =
-          await ref.read(paymentOptionProvider.notifier).createPaymentIntent(
-                amount: amount,
-                currency: 'AED',
-                customerId: customer['id'],
-              );
+      final paymentIntent = await ref
+          .read(paymentOptionProvider.notifier)
+          .createPaymentIntent(
+            amount: amount,
+            currency: 'IQD',
+            customerId: customer['id'],
+          );
 
       final clientSecret = paymentIntent['client_secret'] as String;
 
@@ -234,9 +244,9 @@ class _FundAmountScreenState extends ConsumerState<GooglePayFundAmountScreen> {
             // United Arab Emirates country code
             testEnv: bool.parse(stripeBaseTestEnv), //true,
             // Set to false in production,
-            currencyCode: "AED",
-            //"AED",
-            merchantName: 'Save In Gold FZCO',
+            currencyCode: "IQD",
+            //"IQD",
+            merchantName: 'Baghdad Bullion House FZCO',
           ),
         ),
       );
@@ -246,11 +256,11 @@ class _FundAmountScreenState extends ConsumerState<GooglePayFundAmountScreen> {
       //   paymentSheetParameters: SetupPaymentSheetParameters(
       //     paymentIntentClientSecret: clientSecret,
       //     style: ThemeMode.dark,
-      //     merchantDisplayName: 'Save In Gold',
+      //     merchantDisplayName: 'Baghdad Bullion House',
       //     googlePay: PaymentSheetGooglePay(
       //       merchantCountryCode: 'AE', // United Arab Emirates country code
       //       testEnv: true, // Set to false in production),
-      //       currencyCode: "AED",
+      //       currencyCode: "IQD",
       //       // amount: amount,
       //     ),
       //     billingDetails: BillingDetails(
@@ -283,7 +293,9 @@ class _FundAmountScreenState extends ConsumerState<GooglePayFundAmountScreen> {
       );
 
       if (!mounted) return;
-      await ref.read(paymentOptionProvider.notifier).savePaymentTransaction(
+      await ref
+          .read(paymentOptionProvider.notifier)
+          .savePaymentTransaction(
             orderAmount: CommonService.calculateAfterTax(
               amount: amount,
             ),

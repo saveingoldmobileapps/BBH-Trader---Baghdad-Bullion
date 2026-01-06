@@ -354,7 +354,7 @@ class _OrderListScreenState extends ConsumerState<OrderListScreen> {
                   ),
                   GetGenericText(
                     text:
-                        "${AppLocalizations.of(context)!.aed} $amount", // "AED $amount",
+                        "${AppLocalizations.of(context)!.idq} $amount", // "IQD $amount",
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                     color: AppColors.grey5Color,

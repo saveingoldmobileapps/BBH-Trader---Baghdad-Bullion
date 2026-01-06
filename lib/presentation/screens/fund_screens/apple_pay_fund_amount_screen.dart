@@ -100,7 +100,7 @@ class _FundAmountScreenState extends ConsumerState<ApplePayFundAmountScreen> {
                       }
                       if (amount < 100) {
                         return AppLocalizations.of(context)!
-                            .dip_min_100; //'Minimum deposit amount is AED 100';
+                            .dip_min_100; //'Minimum deposit amount is IQD 100';
                       }
                       return null;
                     },
@@ -110,14 +110,14 @@ class _FundAmountScreenState extends ConsumerState<ApplePayFundAmountScreen> {
                   Directionality.of(context) == TextDirection.rtl?
                   GetGenericText(
                     text: AppLocalizations.of(context)!.dep_min_amount_note,
-                    //"Minimum deposit amount is AED 100, charges may apply",
+                    //"Minimum deposit amount is IQD 100, charges may apply",
                     fontSize: sizes!.isPhone ? 11 : 14,
                     fontWeight: FontWeight.w400,
                     color: AppColors.grey3Color,
                   ).getAlignRight():
                   GetGenericText(
                     text: AppLocalizations.of(context)!.dep_min_amount_note,
-                    //"Minimum deposit amount is AED 100, charges may apply",
+                    //"Minimum deposit amount is IQD 100, charges may apply",
                     fontSize: sizes!.isPhone ? 11 : 14,
                     fontWeight: FontWeight.w400,
                     color: AppColors.grey3Color,
@@ -193,7 +193,7 @@ class _FundAmountScreenState extends ConsumerState<ApplePayFundAmountScreen> {
       final paymentIntent =
           await ref.read(paymentOptionProvider.notifier).createPaymentIntent(
                 amount: amount,
-                currency: 'AED',
+                currency: 'IQD',
                 customerId: customer['id'],
               );
 
@@ -204,7 +204,7 @@ class _FundAmountScreenState extends ConsumerState<ApplePayFundAmountScreen> {
         confirmParams: PlatformPayConfirmParamsApplePay(
           applePay: ApplePayParams(
             merchantCountryCode: "AE",
-            currencyCode: "AED",
+            currencyCode: "IQD",
             cartItems: [
               ApplePayCartSummaryItem.immediate(
                 label: "Deposit",

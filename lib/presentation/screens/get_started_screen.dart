@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
@@ -168,528 +167,169 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
             ),
           ),
           child: SafeArea(
-            child: sizes!.isLandscape()
-                ? Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ConstPadding.sizeBoxWithHeight(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            "English",
-                            style: TextStyle(
-                              color: isEnglish ? Colors.white : Colors.grey,
-                              fontSize: 16,
-                            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// Language Switch (Top Right)
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "English",
+                          style: TextStyle(
+                            color: isEnglish ? Colors.white : Colors.grey,
+                            fontSize: 14,
                           ),
-                          const SizedBox(width: 8),
-                          Switch.adaptive(
-                            activeColor: AppColors.primaryGold500,
-                            value: !isEnglish, // true = Arabic
-                            onChanged: (value) {
-                              languageNotifier.toggleLanguage(context);
-                            },
+                        ),
+                        const SizedBox(width: 6),
+                        Switch.adaptive(
+                          activeColor: AppColors.primaryGold500,
+                          value: !isEnglish,
+                          onChanged: (_) {
+                            languageNotifier.toggleLanguage(context);
+                          },
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          "العربية",
+                          style: TextStyle(
+                            color: !isEnglish ? Colors.white : Colors.grey,
+                            fontSize: 14,
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            "العربية",
-                            style: TextStyle(
-                              color: !isEnglish ? Colors.white : Colors.grey,
-                              fontSize: 16,
-                            ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const Spacer(flex: 2),
+
+                  /// Logo
+                  Center(
+                    child: Container(
+                      height: 250,
+                      width: 250,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: const DecorationImage(
+                          image: AssetImage(
+                            "assets/png/main_logo.png",
                           ),
-                        ],
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                      const Spacer(),
-                      Align(
-                        alignment: isRtl
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    '${AppLocalizations.of(context)!.track}${sizes!.isPhone ? '\n' : ' '}',
-                                // text: 'Track${sizes!.isPhone ? '\n' : ' '}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? isRtl
-                                            ? sizes!.fontRatio * 90
-                                            : sizes!.fontRatio * 95
-                                      : isRtl
-                                      ? sizes!.fontRatio * 146
-                                      : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w300,
-                                  height: 0.9,
-                                ),
-                              ),
-                              TextSpan(
-                                text: AppLocalizations.of(context)!.gold,
-                                // text: 'Gold',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? isRtl
-                                            ? sizes!.fontRatio * 90
-                                            : sizes!.fontRatio * 95
-                                      : isRtl
-                                      ? sizes!.fontRatio * 146
-                                      : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              TextSpan(
-                                text: '.${sizes!.isPhone ? '\n' : '  '}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? sizes!.fontRatio * 98
-                                      : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              TextSpan(
-                                text:
-                                    '${AppLocalizations.of(context)!.build}${sizes!.isPhone ? '\n' : ' '}',
-                                // text: 'Build\n',
-                                // text: 'Build${sizes!.isPhone ? '\n' : ' '}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? isRtl
-                                            ? sizes!.fontRatio * 86
-                                            : sizes!.fontRatio * 95
-                                      : isRtl
-                                      ? sizes!.fontRatio * 146
-                                      : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w500,
-                                  height: 0.9,
-                                ),
-                              ),
-                              TextSpan(
-                                text: AppLocalizations.of(context)!.wealth,
-                                // text: 'Wealth',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? isRtl
-                                            ? sizes!.fontRatio * 86
-                                            : sizes!.fontRatio * 95
-                                      : isRtl
-                                      ? sizes!.fontRatio * 146
-                                      : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              TextSpan(
-                                text: '.',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: isRtl
-                                      ? sizes!.fontRatio * 146
-                                      : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  /// Title
+                  Text(
+                    "Your Gold\nYour Wealth.",
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.roboto(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                      height: 1.2,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  /// Subtitle
+                  Text(
+                    AppLocalizations.of(context)!.gs_subtitle,
+                    textAlign: TextAlign.left,
+                    style: GoogleFonts.roboto(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white70,
+                    ),
+                  ),
+
+                  const Spacer(flex: 1),
+
+                  /// Primary Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 54,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RegisterScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xffB19454),
+                              Color(0xff74540E),
                             ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
                         ),
-                      ),
-
-                      Align(
-                        alignment: isRtl
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: GetGenericText(
-                          text: //AppLocalizations.of(context)!.gs_subtitle,
-                              "Seamlessly buy, sell, and grow your gold portfolio with the platform you trust.",
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ),
-                      ),
-
-                      // ConstPadding.sizeBoxWithHeight(height: 24),
-                      const Spacer(),
-
-                      /// Buttons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // login button
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              width: sizes!.width / 2.25,
-                              height: sizes!.heightRatio * 84,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: GetGenericText(
-                                  text: AppLocalizations.of(
-                                    context,
-                                  )!.login, //"Login",
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.primaryGold500,
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          // get started button
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RegisterScreen(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              width: sizes!.width / 2.25,
-                              height: sizes!.heightRatio * 84,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: LinearGradient(
-                                  begin: Alignment(1.00, 0.01),
-                                  end: Alignment(-1, -0.01),
-                                  colors: [
-                                    Color(0xFFBBA473),
-                                    Color(0xFF675A3D),
-                                  ],
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  if (isRtl)
-                                    SvgPicture.asset(
-                                      'assets/svg/forward_arrow.svg',
-                                      height: sizes!.heightRatio * 32,
-                                      width: sizes!.widthRatio * 32,
-                                    ),
-                                  GetGenericText(
-                                    text: AppLocalizations.of(
-                                      context,
-                                    )!.getStarted,
-                                    //"Get Started",
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                  ConstPadding.sizeBoxWithWidth(width: 6),
-                                  if (!isRtl)
-                                    SvgPicture.asset(
-                                      'assets/svg/forward_arrow.svg',
-                                      height: sizes!.heightRatio * 32,
-                                      width: sizes!.widthRatio * 32,
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                    ],
-                  ).getHorizontalPadding(padding: 40)
-                : Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ConstPadding.sizeBoxWithHeight(height: 10),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            "English",
+                        child: const Center(
+                          child: Text(
+                            "I'm new to B&H",
                             style: TextStyle(
-                              color: isEnglish ? Colors.white : Colors.grey,
                               fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Switch.adaptive(
-                            activeColor: AppColors.primaryGold500,
-                            value: !isEnglish, // true = Arabic
-                            onChanged: (value) {
-                              languageNotifier.toggleLanguage(context);
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            "العربية",
-                            style: TextStyle(
-                              color: !isEnglish ? Colors.white : Colors.grey,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // ElevatedButton(
-                      //   onPressed: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (_) =>
-                      //               const BuyPhysicalGoldFormScreen()),
-                      //     );
-                      //   },
-                      //   child: const Text("Buy Physical Gold"),
-                      // ),
-                      const Spacer(),
-                      // ConstPadding.sizeBoxWithHeight(height: 70),
-                      Align(
-                        alignment: isRtl
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    "${AppLocalizations.of(context)!.track}\n",
-                                // text: 'Track\n',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? isRtl
-                                            ? sizes!.fontRatio * 90
-                                            : sizes!.fontRatio * 102
-                                      : isRtl
-                                      ? sizes!.fontRatio * 146
-                                      : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w300,
-                                  height: 0.9,
-                                ),
-                              ),
-                              TextSpan(
-                                text: AppLocalizations.of(context)!.gold,
-                                // text: 'Gold',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? isRtl
-                                            ? sizes!.fontRatio * 90
-                                            : sizes!.fontRatio * 102
-                                      : isRtl
-                                      ? sizes!.fontRatio * 146
-                                      : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              TextSpan(
-                                text: '.\n',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? isRtl
-                                            ? sizes!.fontRatio * 86
-                                            : sizes!.fontRatio * 98
-                                      : isRtl
-                                      ? sizes!.fontRatio * 146
-                                      : sizes!.fontRatio * 158,
-                                  // ? sizes!.fontRatio * 98
-                                  // : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                              TextSpan(
-                                text:
-                                    "${AppLocalizations.of(context)!.build}\n",
-                                // text: 'Build\n',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? isRtl
-                                            ? sizes!.fontRatio * 70
-                                            : sizes!.fontRatio * 80
-                                      : isRtl
-                                      ? sizes!.fontRatio * 148
-                                      : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w300,
-                                  height: 0.9,
-                                ),
-                              ),
-                              TextSpan(
-                                text: AppLocalizations.of(context)!.wealth,
-                                // text: 'Wealth',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: sizes!.isPhone
-                                      ? isRtl
-                                            ? sizes!.fontRatio * 86
-                                            : sizes!.fontRatio * 98
-                                      : isRtl
-                                      ? sizes!.fontRatio * 146
-                                      : sizes!.fontRatio * 158,
-                                  // ? sizes!.fontRatio * 98
-                                  // : sizes!.fontRatio * 158,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
                       ),
-                      ConstPadding.sizeBoxWithHeight(height: 14),
-                      isRtl
-                          ? GetGenericText(
-                              text: AppLocalizations.of(context)!.gs_subtitle,
-                              fontSize: sizes!.isPhone ? 10 : 22,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ).getAlignRight()
-                          : GetGenericText(
-                              text: AppLocalizations.of(context)!.gs_subtitle,
-                              fontSize: sizes!.isPhone ? 16 : 22,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
-                            ).getAlign(),
+                    ),
+                  ),
 
-                      const Spacer(),
+                  const SizedBox(height: 14),
 
-                      /// Buttons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // login button
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              width: sizes!.isPhone
-                                  ? sizes!.widthRatio * 150
-                                  : sizes!.width / 2.1,
-                              height: sizes!.heightRatio * 50,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Center(
-                                child: GetGenericText(
-                                  text: AppLocalizations.of(
-                                    context,
-                                  )!.login, //"Login",
-                                  fontSize: sizes!.isPhone ? 16 : 20,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.primaryGold500,
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          // get started button
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RegisterScreen(),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              width: sizes!.isPhone
-                                  ? sizes!.widthRatio * 150
-                                  : sizes!.width / 2.1,
-                              height: sizes!.isPhone
-                                  ? sizes!.heightRatio * 50
-                                  : sizes!.heightRatio * 64,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                gradient: LinearGradient(
-                                  begin: Alignment(1.00, 0.01),
-                                  end: Alignment(-1, -0.01),
-                                  colors: [
-                                    Color(0xFFBBA473),
-                                    Color(0xFF675A3D),
-                                  ],
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  if (isRtl)
-                                    SvgPicture.asset(
-                                      'assets/svg/forward_arrow.svg',
-                                      height: sizes!.isPhone
-                                          ? sizes!.heightRatio * 20
-                                          : sizes!.heightRatio * 24,
-                                      width: sizes!.isPhone
-                                          ? sizes!.widthRatio * 20
-                                          : sizes!.widthRatio * 24,
-                                    ),
-                                  GetGenericText(
-                                    text: AppLocalizations.of(
-                                      context,
-                                    )!.getStarted,
-                                    //"Get Started",
-                                    fontSize: sizes!.isPhone ? 16 : 20,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                  ConstPadding.sizeBoxWithWidth(width: 6),
-                                  if (!isRtl)
-                                    SvgPicture.asset(
-                                      'assets/svg/forward_arrow.svg',
-                                      height: sizes!.heightRatio * 20,
-                                      width: sizes!.widthRatio * 20,
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+                  /// Secondary Button
+                  SizedBox(
+                    width: double.infinity,
+                    height: 54,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Color(0xff74540E),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
-                      const Spacer(),
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     Toasts.getWarningToast(text: "Try it later");
-                      //   },
-                      //   child: GetGenericText(
-                      //     text: "Register for a Demo Account",
-                      //     fontSize:
-                      //         sizes!.responsiveFont(phoneVal: 14, tabletVal: 18),
-                      //     //14,
-                      //     fontWeight: FontWeight.w700,
-                      //     color: AppColors.primaryGold500,
-                      //     isUnderline: true,
-                      //   ),
-                      // ),
-                      // ConstPadding.sizeBoxWithHeight(height: 24),
-                    ],
-                  ).get20HorizontalPadding(),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const LoginScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "I'm an existing user",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.whiteColor,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const Spacer(),
+                ],
+              ),
+            ),
           ),
         ),
       ),

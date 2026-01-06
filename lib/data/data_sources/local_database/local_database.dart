@@ -249,6 +249,7 @@ class LocalDatabase {
       return null;
     }
   }
+
   Future<void> setIsUsertemporaryCreditStatus({
     required bool temporaryCreditStatusIsVerified,
   }) async {
@@ -274,8 +275,6 @@ class LocalDatabase {
       return null;
     }
   }
-
-
 
   Future<void> setIsUserKycVerified({
     required bool isVerified,
@@ -340,6 +339,28 @@ class LocalDatabase {
       return result;
     } catch (e) {
       _logger.e("onErrorUserId: $e");
+      return null;
+    }
+  }
+
+  Future<void> saveKycData(Map<String, dynamic> data) async {
+    try {
+      await getStorageInstance.write(Strings.kycData, data);
+      _logger.i("KYC data saved: $data");
+    } catch (e) {
+      _logger.e("saveKycDataError: $e");
+    }
+  }
+
+  Future<Map<String, dynamic>?> getKycData() async {
+    try {
+      final result = await getStorageInstance.read(Strings.kycData);
+      if (result == null) return null;
+
+      _logger.i("KYC data fetched: $result");
+      return Map<String, dynamic>.from(result);
+    } catch (e) {
+      _logger.e("getKycDataError: $e");
       return null;
     }
   }

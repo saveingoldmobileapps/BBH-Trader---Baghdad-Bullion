@@ -40,7 +40,8 @@ class _EsouqCartScreenState extends ConsumerState<GiftSuccessScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       /// create gift
-      ref.read(giftProvider.notifier)
+      ref
+          .read(giftProvider.notifier)
           .createGift(
             receiverEmail: widget.receiverEmail,
             receiverId: widget.receiverId,
@@ -117,7 +118,9 @@ class _EsouqCartScreenState extends ConsumerState<GiftSuccessScreen> {
                             ConstPadding.sizeBoxWithHeight(height: 10),
                             // success
                             GetGenericText(
-                              text: AppLocalizations.of(context)!.success,//"Success!",
+                              text: AppLocalizations.of(
+                                context,
+                              )!.success, //"Success!",
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
                               color: AppColors.grey6Color,
@@ -129,8 +132,8 @@ class _EsouqCartScreenState extends ConsumerState<GiftSuccessScreen> {
                               alignment: Alignment.centerLeft,
                               child: GetGenericText(
                                 text:
-                                "${AppLocalizations.of(context)!.giftSentMsg} ${widget.giftAmount} ${widget.paymentMethod == "Metal" ? "${AppLocalizations.of(context)!.gram} ${AppLocalizations.of(context)!.gold} " : "${AppLocalizations.of(context)!.aed_currency}"} ${AppLocalizations.of(context)!.gift_to} ${widget.receiverName}",
-                                    // "You've successfully sent ${widget.giftAmount} ${widget.paymentMethod == "Metal" ? "gram" : "AED"} to ${widget.receiverName}",
+                                    "${AppLocalizations.of(context)!.giftSentMsg} ${widget.giftAmount} ${widget.paymentMethod == "Metal" ? "${AppLocalizations.of(context)!.gram} ${AppLocalizations.of(context)!.gold} " : AppLocalizations.of(context)!.idq_currency} ${AppLocalizations.of(context)!.gift_to} ${widget.receiverName}",
+                                // "You've successfully sent ${widget.giftAmount} ${widget.paymentMethod == "Metal" ? "gram" : "IQD"} to ${widget.receiverName}",
                                 fontSize: 16,
                                 fontWeight: FontWeight.w300,
                                 color: AppColors.grey4Color,
@@ -170,7 +173,9 @@ class _EsouqCartScreenState extends ConsumerState<GiftSuccessScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       GetGenericText(
-                                        text: AppLocalizations.of(context)!.returnHome,//"Return to Home",
+                                        text: AppLocalizations.of(
+                                          context,
+                                        )!.returnHome, //"Return to Home",
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white,

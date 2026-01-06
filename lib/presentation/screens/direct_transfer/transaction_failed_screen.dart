@@ -98,7 +98,7 @@ class _TransactionFailedScreenState
                               alignment: Alignment.centerLeft,
                               child: GetGenericText(
                                 text:
-                                    "Your direct transfer of AED10,000.00 failed due to technical issues. Click on the button below to try again or contact customer support.",
+                                    "Your direct transfer of IQD10,000.00 failed due to technical issues. Click on the button below to try again or contact customer support.",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w300,
                                 color: AppColors.grey4Color,

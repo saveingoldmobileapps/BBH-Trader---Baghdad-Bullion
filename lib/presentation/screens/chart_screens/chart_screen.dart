@@ -60,7 +60,7 @@
 //               goldPriceStateWatchProvider
 //                   .when(
 //                     data: (data) {
-//                       final aed = 3.674; // 1 USD to AED
+//                       final IQD = 3.674; // 1 USD to IQD
 //                       final ounce = 31.10347; // 1 ounce in grams
 //
 //                       // Access the last price entry
@@ -69,7 +69,7 @@
 //                       final goldPricePerOunce =
 //                           lastPrice?.price ?? 0.0; // Using 'price' field
 //
-//                       final oneGramAEDPrice = (goldPricePerOunce * aed) / ounce;
+//                       final oneGramIQDPrice = (goldPricePerOunce * IQD) / ounce;
 //
 //                       chartData = _generateChartDataFromResponse(
 //                         data.currentGoldPriceModel,
@@ -78,7 +78,7 @@
 //
 //                       return GetGenericText(
 //                         text:
-//                             "1g Gold ${oneGramAEDPrice.toStringAsFixed(2)} AED",
+//                             "1g Gold ${oneGramIQDPrice.toStringAsFixed(2)} IQD",
 //                         fontSize: 18,
 //                         fontWeight: FontWeight.w700,
 //                         color: AppColors.primaryGold500,
@@ -229,7 +229,7 @@
 //     }
 //
 //     // Conversion factors
-//     final double aed = 3.674; // 1 USD to AED
+//     final double IQD = 3.674; // 1 USD to IQD
 //     final double ounce = 31.10347; // 1 ounce in grams
 //
 //     List<double> prices = chartData.map((spot) => spot.y).toList();
@@ -270,13 +270,13 @@
 //             reservedSize: 60,
 //             interval: interval,
 //             getTitlesWidget: (value, meta) {
-//               // Convert the displayed value to AED
-//               final aedValue = value * aed / ounce;
+//               // Convert the displayed value to IQD
+//               final IQDValue = value * IQD / ounce;
 //               return Padding(
 //                 padding: const EdgeInsets.only(right: 8.0),
 //                 child: Text(
-//                   '${aedValue.toStringAsFixed(2)} AED',
-//                   // Changed to AED with 2 decimal places
+//                   '${IQDValue.toStringAsFixed(2)} IQD',
+//                   // Changed to IQD with 2 decimal places
 //                   style: TextStyle(
 //                     color: Colors.white,
 //                     fontSize: 12,

@@ -172,7 +172,7 @@
 //                               num: double.parse(
 //                                 "${widget.walletExists.moneyBalance}",
 //                               ),
-//                             )}\nAED",
+//                             )}\nIQD",
 //                             fontSize: sizes!.isPhone ? 16 : 20,
 //                             fontWeight: FontWeight.w400,
 //                             color: AppColors.grey4Color,

@@ -45,7 +45,9 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
         centerTitle: false,
         titleSpacing: 0,
         title: GetGenericText(
-          text: AppLocalizations.of(context)!.customer_support_title,//"Customer Support",
+          text: AppLocalizations.of(
+            context,
+          )!.customer_support_title, //"Customer Support",
           fontSize: sizes!.responsiveFont(
             phoneVal: 20,
             tabletVal: 24,
@@ -66,127 +68,133 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
               ConstPadding.sizeBoxWithHeight(height: 24),
 
               /// Live chat section
-              Directionality.of(context) == TextDirection.rtl?
-              Container(
-                color: Colors.transparent,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/svg/live_chat_icon.svg",
-                      height: sizes!.responsiveHeight(
-                        phoneVal: 24,
-                        tabletVal: 32,
+              Directionality.of(context) == TextDirection.rtl
+                  ? Container(
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/svg/live_chat_icon.svg",
+                            height: sizes!.responsiveHeight(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                            width: sizes!.responsiveWidth(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.email_us_title, //"Email Us",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 16,
+                              tabletVal: 18,
+                            ),
+                            //sizes!.isPhone ? 16 : 18,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.grey5Color,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.email_us_desc,
+                            //"Need instant help? Start an Email Us with our team, available 24/7!",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 16,
+                            ),
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.grey3Color,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GestureDetector(
+                            onTap: () async {
+                              await CommonService.openEmailApp(
+                                emailAddress: "info@saveingold.ae",
+                              );
+                            },
+                            child: GetGenericText(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.email_now, //"Email Now",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 14,
+                                tabletVal: 16,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primaryGold500,
+                              isUnderline: true,
+                            ),
+                          ),
+                        ],
                       ),
-                      width: sizes!.responsiveWidth(
-                        phoneVal: 24,
-                        tabletVal: 32,
+                    ).getAlignRight()
+                  : Container(
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/svg/live_chat_icon.svg",
+                            height: sizes!.responsiveHeight(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                            width: sizes!.responsiveWidth(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.email_us_title, //"Email Us",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 16,
+                              tabletVal: 18,
+                            ),
+                            //sizes!.isPhone ? 16 : 18,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.grey5Color,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.email_us_desc,
+                            //"Need instant help? Start an Email Us with our team, available 24/7!",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 16,
+                            ),
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.grey3Color,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GestureDetector(
+                            onTap: () async {
+                              await CommonService.openEmailApp(
+                                emailAddress: "info@saveingold.ae",
+                              );
+                            },
+                            child: GetGenericText(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.email_now, //"Email Now",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 14,
+                                tabletVal: 16,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primaryGold500,
+                              isUnderline: true,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.email_us_title,//"Email Us",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 16,
-                        tabletVal: 18,
-                      ),
-                      //sizes!.isPhone ? 16 : 18,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.grey5Color,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text:
-                      AppLocalizations.of(context)!.email_us_desc,
-                          //"Need instant help? Start an Email Us with our team, available 24/7!",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 14,
-                        tabletVal: 16,
-                      ),
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey3Color,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GestureDetector(
-                      onTap: () async {
-                        await CommonService.openEmailApp(
-                          emailAddress: "info@saveingold.ae",
-                        );
-                      },
-                      child: GetGenericText(
-                        text: AppLocalizations.of(context)!.email_now,//"Email Now",
-                        fontSize: sizes!.responsiveFont(
-                          phoneVal: 14,
-                          tabletVal: 16,
-                        ),
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primaryGold500,
-                        isUnderline: true,
-                      ),
-                    ),
-                  ],
-                ),
-              ).getAlignRight():
-              Container(
-                color: Colors.transparent,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/svg/live_chat_icon.svg",
-                      height: sizes!.responsiveHeight(
-                        phoneVal: 24,
-                        tabletVal: 32,
-                      ),
-                      width: sizes!.responsiveWidth(
-                        phoneVal: 24,
-                        tabletVal: 32,
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.email_us_title,//"Email Us",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 16,
-                        tabletVal: 18,
-                      ),
-                      //sizes!.isPhone ? 16 : 18,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.grey5Color,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text:
-                      AppLocalizations.of(context)!.email_us_desc,
-                          //"Need instant help? Start an Email Us with our team, available 24/7!",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 14,
-                        tabletVal: 16,
-                      ),
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey3Color,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GestureDetector(
-                      onTap: () async {
-                        await CommonService.openEmailApp(
-                          emailAddress: "info@saveingold.ae",
-                        );
-                      },
-                      child: GetGenericText(
-                        text: AppLocalizations.of(context)!.email_now,//"Email Now",
-                        fontSize: sizes!.responsiveFont(
-                          phoneVal: 14,
-                          tabletVal: 16,
-                        ),
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primaryGold500,
-                        isUnderline: true,
-                      ),
-                    ),
-                  ],
-                ),
-              ).getAlign(),
+                    ).getAlign(),
               ConstPadding.sizeBoxWithHeight(height: 16),
               Divider(
                 color: AppColors.greyScale900,
@@ -195,129 +203,134 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
               ConstPadding.sizeBoxWithHeight(height: 16),
 
               /// Call us section
-              
-             Directionality.of(context) == TextDirection.rtl?
-              Container(
-                color: Colors.transparent,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/svg/call_icon.svg",
-                      height: sizes!.responsiveHeight(
-                        phoneVal: 24,
-                        tabletVal: 32,
+              Directionality.of(context) == TextDirection.rtl
+                  ? Container(
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/svg/call_icon.svg",
+                            height: sizes!.responsiveHeight(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                            width: sizes!.responsiveWidth(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.call_us_title, //"Call Us",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 16,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.grey5Color,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.call_us_desc,
+                            //"Speak directly with one of our support representatives, available Monday to Friday, 9:00 AM - 6:00 PM (Your Time Zone).",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 16,
+                            ),
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.grey3Color,
+                            lines: 4,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GestureDetector(
+                            onTap: () async {
+                              await CommonService.openCallingUrl(
+                                phoneNumber: "+971504971269",
+                              );
+                            },
+                            child: GetGenericText(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.call_now, //"Call Now",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 14,
+                                tabletVal: 16,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primaryGold500,
+                              isUnderline: true,
+                            ),
+                          ),
+                        ],
                       ),
-                      width: sizes!.responsiveWidth(
-                        phoneVal: 24,
-                        tabletVal: 32,
+                    ).getAlignRight()
+                  : Container(
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/svg/call_icon.svg",
+                            height: sizes!.responsiveHeight(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                            width: sizes!.responsiveWidth(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.call_us_title, //"Call Us",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 16,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.grey5Color,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.call_us_desc,
+                            //"Speak directly with one of our support representatives, available Monday to Friday, 9:00 AM - 6:00 PM (Your Time Zone).",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 16,
+                            ),
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.grey3Color,
+                            lines: 4,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GestureDetector(
+                            onTap: () async {
+                              await CommonService.openCallingUrl(
+                                phoneNumber: "+971504971269",
+                              );
+                            },
+                            child: GetGenericText(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.call_now, //"Call Now",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 14,
+                                tabletVal: 16,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primaryGold500,
+                              isUnderline: true,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.call_us_title,//"Call Us",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 16,
-                        tabletVal: 18,
-                      ),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.grey5Color,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text:
-                        AppLocalizations.of(context)!.call_us_desc,
-                          //"Speak directly with one of our support representatives, available Monday to Friday, 9:00 AM - 6:00 PM (Your Time Zone).",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 14,
-                        tabletVal: 16,
-                      ),
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey3Color,
-                      lines: 4,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GestureDetector(
-                      onTap: () async {
-                        await CommonService.openCallingUrl(
-                          phoneNumber: "+971504971269",
-                        );
-                      },
-                      child: GetGenericText(
-                        text: AppLocalizations.of(context)!.call_now,//"Call Now",
-                        fontSize: sizes!.responsiveFont(
-                          phoneVal: 14,
-                          tabletVal: 16,
-                        ),
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primaryGold500,
-                        isUnderline: true,
-                      ),
-                    ),
-                  ],
-                ),
-              ).getAlignRight()
-              : Container(
-                color: Colors.transparent,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/svg/call_icon.svg",
-                      height: sizes!.responsiveHeight(
-                        phoneVal: 24,
-                        tabletVal: 32,
-                      ),
-                      width: sizes!.responsiveWidth(
-                        phoneVal: 24,
-                        tabletVal: 32,
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.call_us_title,//"Call Us",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 16,
-                        tabletVal: 18,
-                      ),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.grey5Color,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text:
-                        AppLocalizations.of(context)!.call_us_desc,
-                          //"Speak directly with one of our support representatives, available Monday to Friday, 9:00 AM - 6:00 PM (Your Time Zone).",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 14,
-                        tabletVal: 16,
-                      ),
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey3Color,
-                      lines: 4,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GestureDetector(
-                      onTap: () async {
-                        await CommonService.openCallingUrl(
-                          phoneNumber: "+971504971269",
-                        );
-                      },
-                      child: GetGenericText(
-                        text: AppLocalizations.of(context)!.call_now,//"Call Now",
-                        fontSize: sizes!.responsiveFont(
-                          phoneVal: 14,
-                          tabletVal: 16,
-                        ),
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primaryGold500,
-                        isUnderline: true,
-                      ),
-                    ),
-                  ],
-                ),
-              ).getAlign(),
-              
+                    ).getAlign(),
+
               ConstPadding.sizeBoxWithHeight(height: 16),
               Divider(
                 color: AppColors.greyScale900,
@@ -326,136 +339,141 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
               ConstPadding.sizeBoxWithHeight(height: 16),
 
               /// WhatsApp
-              Directionality.of(context) == TextDirection.rtl?
-              Container(
-                color: Colors.transparent,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/svg/whatsapp_icon.svg",
-                      height: sizes!.responsiveHeight(
-                        phoneVal: 24,
-                        tabletVal: 32,
-                      ),
-                      width: sizes!.responsiveWidth(
-                        phoneVal: 24,
-                        tabletVal: 32,
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.whatsapp_title,//"Whatsapp",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 16,
-                        tabletVal: 18,
-                      ),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.grey5Color,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text:
-                         AppLocalizations.of(context)!.whatsapp_desc,
-                          //"Message us on WhatsApp for quick and easy support, available 24/7.",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 14,
-                        tabletVal: 16,
-                      ),
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey3Color,
-                      lines: 4,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
+              Directionality.of(context) == TextDirection.rtl
+                  ? Container(
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/svg/whatsapp_icon.svg",
+                            height: sizes!.responsiveHeight(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                            width: sizes!.responsiveWidth(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.whatsapp_title, //"Whatsapp",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 16,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.grey5Color,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.whatsapp_desc,
+                            //"Message us on WhatsApp for quick and easy support, available 24/7.",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 16,
+                            ),
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.grey3Color,
+                            lines: 4,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
 
-                    /// Whatsapp button
-                    GestureDetector(
-                      onTap: () async {
-                        await CommonService.openWhatsappUrl(
-                          phoneNumber: "+971504971269",
-                          message:
-                              "Hello, I need an assistance from Save in Gold Team",
-                        );
-                      },
-                      child: GetGenericText(
-                        text: AppLocalizations.of(context)!.message_on_whatsapp,//"Message on Whatsapp",
-                        fontSize: sizes!.responsiveFont(
-                          phoneVal: 14,
-                          tabletVal: 16,
-                        ),
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primaryGold500,
-                        isUnderline: true,
+                          /// Whatsapp button
+                          GestureDetector(
+                            onTap: () async {
+                              await CommonService.openWhatsappUrl(
+                                phoneNumber: "+971504971269",
+                                message:
+                                    "Hello, I need an assistance from Baghdad Bullion House Team",
+                              );
+                            },
+                            child: GetGenericText(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.message_on_whatsapp, //"Message on Whatsapp",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 14,
+                                tabletVal: 16,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primaryGold500,
+                              isUnderline: true,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ).getAlignRight():
-            
-              Container(
-                color: Colors.transparent,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/svg/whatsapp_icon.svg",
-                      height: sizes!.responsiveHeight(
-                        phoneVal: 24,
-                        tabletVal: 32,
-                      ),
-                      width: sizes!.responsiveWidth(
-                        phoneVal: 24,
-                        tabletVal: 32,
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.whatsapp_title,//"Whatsapp",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 16,
-                        tabletVal: 18,
-                      ),
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.grey5Color,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text:
-                         AppLocalizations.of(context)!.whatsapp_desc,
-                          //"Message us on WhatsApp for quick and easy support, available 24/7.",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 14,
-                        tabletVal: 16,
-                      ),
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey3Color,
-                      lines: 4,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
+                    ).getAlignRight()
+                  : Container(
+                      color: Colors.transparent,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SvgPicture.asset(
+                            "assets/svg/whatsapp_icon.svg",
+                            height: sizes!.responsiveHeight(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                            width: sizes!.responsiveWidth(
+                              phoneVal: 24,
+                              tabletVal: 32,
+                            ),
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.whatsapp_title, //"Whatsapp",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 16,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.grey5Color,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.whatsapp_desc,
+                            //"Message us on WhatsApp for quick and easy support, available 24/7.",
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 16,
+                            ),
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.grey3Color,
+                            lines: 4,
+                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
 
-                    /// Whatsapp button
-                    GestureDetector(
-                      onTap: () async {
-                        await CommonService.openWhatsappUrl(
-                          phoneNumber: "+971504971269",
-                          message:
-                              "Hello, I need an assistance from Save in Gold Team",
-                        );
-                      },
-                      child: GetGenericText(
-                        text: AppLocalizations.of(context)!.message_on_whatsapp,//"Message on Whatsapp",
-                        fontSize: sizes!.responsiveFont(
-                          phoneVal: 14,
-                          tabletVal: 16,
-                        ),
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.primaryGold500,
-                        isUnderline: true,
+                          /// Whatsapp button
+                          GestureDetector(
+                            onTap: () async {
+                              await CommonService.openWhatsappUrl(
+                                phoneNumber: "+971504971269",
+                                message:
+                                    "Hello, I need an assistance from Baghdad Bullion House Team",
+                              );
+                            },
+                            child: GetGenericText(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.message_on_whatsapp, //"Message on Whatsapp",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 14,
+                                tabletVal: 16,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primaryGold500,
+                              isUnderline: true,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-              ).getAlign(),
+                    ).getAlign(),
             ],
           ).get16HorizontalPadding(),
         ),

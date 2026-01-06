@@ -47,7 +47,7 @@ class SuccessPlaceholderScreen extends StatelessWidget {
               ConstPadding.sizeBoxWithHeight(height: 6),
               GetGenericText(
                 text:
-                    "Your payment of AED $amount to SaveInGold has been processed. Your funds may take up to 24 hours to reach Save In Gold-FZCO.",
+                    "Your payment of IQD $amount to SaveInGold has been processed. Your funds may take up to 24 hours to reach Baghdad Bullion House-FZCO.",
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: const Color(0xFFC9C6C5),

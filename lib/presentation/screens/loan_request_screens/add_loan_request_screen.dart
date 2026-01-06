@@ -35,19 +35,19 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
 
   void _calculateMetalHold() {
     final goldPriceState = ref.read(goldPriceProvider);
-    // final oneGramSellingPriceInAED =
-    //     goldPriceState.value?.oneGramSellingPriceInAED ?? 0.0;
-    final oneGramBuyingPriceInAED =
-        goldPriceState.value?.oneGramBuyingPriceInAED ?? 0.0;
+    // final oneGramSellingPriceInIQD =
+    //     goldPriceState.value?.oneGramSellingPriceInIQD ?? 0.0;
+    final oneGramBuyingPriceInIQD =
+        goldPriceState.value?.oneGramBuyingPriceInIQD ?? 0.0;
     debugPrint(
-      'Gold price in calculation: $oneGramBuyingPriceInAED',
+      'Gold price in calculation: $oneGramBuyingPriceInIQD',
     ); // Add this
 
     final loanAmount = double.tryParse(amountController.text.trim()) ?? 0.0;
     debugPrint('Loan amount: $loanAmount'); // Add this
 
-    if (loanAmount > 0 && oneGramBuyingPriceInAED > 0) {
-      final calculated = (loanAmount / oneGramBuyingPriceInAED) * 2;
+    if (loanAmount > 0 && oneGramBuyingPriceInIQD > 0) {
+      final calculated = (loanAmount / oneGramBuyingPriceInIQD) * 2;
       debugPrint('Calculated hold amount: $calculated'); // Add this
       setState(() {
         _metalHolded = calculated;
@@ -103,12 +103,12 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
     final bankBranchNotifier = ref.watch(bankBranchProvider.notifier);
     final bankBranchState = ref.watch(bankBranchProvider);
 
-    // debugPrint('Current gold price: $oneGramSellingPriceInAED');
+    // debugPrint('Current gold price: $oneGramSellingPriceInIQD');
 
     /// StreamProvider
     // final goldPriceStateWatchProvider = ref.watch(goldPriceProvider);
-    // final oneGramSellingPriceInAED =
-    //     goldPriceStateWatchProvider.value?.oneGramSellingPriceInAED ?? 0.0;
+    // final oneGramSellingPriceInIQD =
+    //     goldPriceStateWatchProvider.value?.oneGramSellingPriceInIQD ?? 0.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -312,7 +312,8 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
                               DecimalTextInputFormatter(decimalRange: 2),
                               //LengthLimitingTextInputFormatter(15),
                             ],
-                            textInputType: TextInputType.numberWithOptions(signed: true,
+                            textInputType: TextInputType.numberWithOptions(
+                              signed: true,
                               decimal: true,
                             ),
                             validator: (value) {
@@ -326,7 +327,7 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
                               return null;
                             },
                           ),
-                          
+
                           ConstPadding.sizeBoxWithHeight(height: 4),
 
                           /// information messages
@@ -358,7 +359,7 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
                                 ).getAlign(),
                                 // GetGenericText(
                                 //   text:
-                                //       "Calculated as: (${amountController.text} AED / ${oneGramSellingPriceInAED.toStringAsFixed(2)} AED) × 2",
+                                //       "Calculated as: (${amountController.text} IQD / ${oneGramSellingPriceInIQD.toStringAsFixed(2)} IQD) × 2",
                                 //   fontSize: sizes!.responsiveFont(
                                 //     phoneVal: 10,
                                 //     tabletVal: 12,

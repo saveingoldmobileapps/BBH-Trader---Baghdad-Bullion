@@ -13,11 +13,11 @@ import 'package:saveingold_fzco/presentation/screens/auth_screens/email_verify_c
 import 'package:saveingold_fzco/presentation/screens/esouq_screens/esouq_screen.dart';
 import 'package:saveingold_fzco/presentation/screens/gift_fund_screens/gift_fund_screen.dart';
 import 'package:saveingold_fzco/presentation/screens/my_order_screens/my_order_screen.dart';
-import 'package:saveingold_fzco/presentation/screens/setting_screens/setting_screen.dart';
 import 'package:saveingold_fzco/presentation/screens/setting_screens/support_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
 import 'package:saveingold_fzco/presentation/widgets/demo_account_popup.dart'
     show UpgradeAccountPopup;
+import 'package:saveingold_fzco/presentation/widgets/drawer_screen.dart';
 import 'package:saveingold_fzco/presentation/widgets/profile_image.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
@@ -263,7 +263,9 @@ class GetDrawerBar extends ConsumerWidget {
                         _copyToClipboard(
                           context: context,
                           text: userDetails,
-                          label: AppLocalizations.of(context)!.account_detail,//"Account Detail",
+                          label: AppLocalizations.of(
+                            context,
+                          )!.account_detail, //"Account Detail",
                           rtl: Directionality.of(context) == TextDirection.rtl,
                         );
                       },
@@ -473,7 +475,10 @@ class GetDrawerBar extends ConsumerWidget {
                           );
                           return;
                         }
-                        final temporaryCreditStatus = await LocalDatabase.instance.getIsUsertemporaryCreditStatus() ?? false;
+                        final temporaryCreditStatus =
+                            await LocalDatabase.instance
+                                .getIsUsertemporaryCreditStatus() ??
+                            false;
 
                         //temporary credit
                         if (temporaryCreditStatus) {
@@ -490,7 +495,8 @@ class GetDrawerBar extends ConsumerWidget {
                             buttonTitle: AppLocalizations.of(
                               context,
                             )!.temporary_credit_contact_support,
-                            icon: Icons.account_balance_wallet_outlined,//Icons.card_giftcard, 
+                            icon: Icons
+                                .account_balance_wallet_outlined, //Icons.card_giftcard,
                             onButtonPress: () {
                               Navigator.pop(context);
 
@@ -502,9 +508,9 @@ class GetDrawerBar extends ConsumerWidget {
                                 ),
                               );
                             },
-                            oncloseButtonPress:() {
-                               Navigator.pop(context);
-                            }
+                            oncloseButtonPress: () {
+                              Navigator.pop(context);
+                            },
                           );
                           return;
                         }
@@ -719,7 +725,7 @@ class GetDrawerBar extends ConsumerWidget {
                             buttonTitle: AppLocalizations.of(
                               context,
                             )!.temporary_credit_contact_support,
-                            icon: Icons.card_giftcard,//Icons.card_giftcard, 
+                            icon: Icons.card_giftcard, //Icons.card_giftcard,
                             onButtonPress: () {
                               Navigator.pop(context);
 
@@ -731,9 +737,9 @@ class GetDrawerBar extends ConsumerWidget {
                                 ),
                               );
                             },
-                            oncloseButtonPress:() {
-                               Navigator.pop(context);
-                            }
+                            oncloseButtonPress: () {
+                              Navigator.pop(context);
+                            },
                           );
                           return;
                         }
@@ -1138,7 +1144,7 @@ class GetDrawerBar extends ConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const SettingScreen(),
+                            builder: (context) => const DrawerScreen(),
                           ),
                         );
                       },

@@ -88,7 +88,8 @@ class _FundAmountScreenState extends ConsumerState<FundAmountScreen> {
                     hintText: "1000",
                     labelText: "Amoun",
                     controller: amountController,
-                    textInputType: TextInputType.numberWithOptions(signed: true,
+                    textInputType: TextInputType.numberWithOptions(
+                      signed: true,
                       decimal: true,
                     ),
                     validator: (value) {
@@ -148,7 +149,7 @@ class _FundAmountScreenState extends ConsumerState<FundAmountScreen> {
       getLocator<Logger>().i("paymentAmount: $amount");
       final paymentIntent = await _createPaymentIntent(
         amount: amount,
-        currency: 'AED',
+        currency: 'IQD',
       );
 
       /// 2. Initialize the Payment Sheet
@@ -156,11 +157,11 @@ class _FundAmountScreenState extends ConsumerState<FundAmountScreen> {
         paymentSheetParameters: SetupPaymentSheetParameters(
           paymentIntentClientSecret: paymentIntent['client_secret'],
           style: ThemeMode.dark,
-          merchantDisplayName: 'Save In Gold',
+          merchantDisplayName: 'Baghdad Bullion House',
           // googlePay: PaymentSheetGooglePay(
           //   merchantCountryCode: 'AE', // United Arab Emirates country code
           //   testEnv: true, // Set to false in production),
-          //   currencyCode: "AED",
+          //   currencyCode: "IQD",
           //   // amount: amount,
           // ),
           applePay: PaymentSheetApplePay(
@@ -220,7 +221,7 @@ class _FundAmountScreenState extends ConsumerState<FundAmountScreen> {
   //     getLocator<Logger>().i("paymentAmount: $amount");
   //     final paymentIntent = await _createPaymentIntent(
   //       amount: amount,
-  //       currency: 'AED',
+  //       currency: 'IQD',
   //     );
   //
   //     /// 2. Initialize the Payment Sheet
@@ -228,11 +229,11 @@ class _FundAmountScreenState extends ConsumerState<FundAmountScreen> {
   //       paymentSheetParameters: SetupPaymentSheetParameters(
   //         paymentIntentClientSecret: paymentIntent['client_secret'],
   //         style: ThemeMode.dark,
-  //         merchantDisplayName: 'Save In Gold',
+  //         merchantDisplayName: 'Baghdad Bullion House',
   //         // googlePay: PaymentSheetGooglePay(
   //         //   merchantCountryCode: 'AE', // United Arab Emirates country code
   //         //   testEnv: true, // Set to false in production),
-  //         //   currencyCode: "AED",
+  //         //   currencyCode: "IQD",
   //         //   // amount: amount,
   //         // ),
   //         applePay: PaymentSheetApplePay(

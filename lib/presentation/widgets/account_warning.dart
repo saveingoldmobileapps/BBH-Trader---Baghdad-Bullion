@@ -18,7 +18,13 @@ class AccountWarning extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        color: Colors.transparent,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0xffE04c4E), 
+            width: 1.5,
+          ),
+          borderRadius: BorderRadius.circular(12), 
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -30,16 +36,6 @@ class AccountWarning extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // GetGenericText(
-                  //   text:
-                  //       "Please verify your $kycStatus to get access to all the features.",
-                  //   fontSize: sizes!.isPhone ? 12 : 16,
-                  //   fontWeight: sizes!.isPhone
-                  //       ? FontWeight.w400
-                  //       : FontWeight.w600,
-                  //   color: AppColors.whiteColor,
-                  //   isInter: true,
-                  // ),
                   GetGenericText(
                     text: AppLocalizations.of(
                       context,
@@ -51,15 +47,9 @@ class AccountWarning extends StatelessWidget {
                     color: AppColors.whiteColor,
                     isInter: true,
                   ),
-
                   ConstPadding.sizeBoxWithHeight(height: 4),
                   GetGenericText(
-                    text: AppLocalizations.of(
-                      context,
-                    )!.verify_account, //"Verify Account",
-                    // text: kycStatus == "custom Kyc"
-                    //     ? "See More"
-                    //     : "Verify Account",
+                    text: AppLocalizations.of(context)!.verify_account,
                     fontSize: sizes!.isPhone ? 12 : 14,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryGold500,

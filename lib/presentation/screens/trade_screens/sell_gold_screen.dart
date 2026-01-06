@@ -38,7 +38,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
   final _focusSellAtPrice = FocusNode(); // Add FocusNode
 
   // Constants
-  // static const double _usdToAed = 3.674; // 1 USD to AED
+  // static const double _usdToIQD = 3.674; // 1 USD to IQD
   // static const double _gramsPerOunce = 31.10347; // 1 ounce in grams
   static const String _defaultValue = '0.00';
 
@@ -84,13 +84,13 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
         // final sellingPX =
         //     data.getGoldPriceResponse.prices?.last.mDSellingPx ?? 0.0;
 
-        // final oneGramAEDPrice = (sellingPX * _usdToAed) / _gramsPerOunce;
-        final oneGramAEDPrice = data.oneGramSellingPriceInAED;
+        // final oneGramIQDPrice = (sellingPX * _usdToIQD) / _gramsPerOunce;
+        final oneGramIQDPrice = data.oneGramSellingPriceInIQD;
         final inputValue =
             double.tryParse(userInputController.text.trim()) ?? 0.0;
 
         // Use sellAtProfit price if enabled and valid, otherwise use current price
-        double priceToUse = oneGramAEDPrice;
+        double priceToUse = oneGramIQDPrice;
         if (isSellAtProfitStatus && sellAtProfitController.text.isNotEmpty) {
           final sellAtProfit = double.tryParse(
             sellAtProfitController.text.trim(),
@@ -102,7 +102,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
 
         setState(() {
           calculatedValue = (inputValue * priceToUse).toStringAsFixed(2);
-          sellingPriceInOneGram = oneGramAEDPrice;
+          sellingPriceInOneGram = oneGramIQDPrice;
         });
       },
       error: (error, stackTrace) {
@@ -203,7 +203,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
               CommonTextFormField(
                 focusNode: _focusSellAtPrice,
                 title: "",
-                hintText: "Per Gram AED",
+                hintText: "Per Gram IQD",
                 labelText: "Sell at Profit",
                 controller: sellAtProfitController,
                 inputFormatters: [
@@ -645,7 +645,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                         signed: true,
                         decimal: true,
                       ),
-                      textInputAction: TextInputAction.done, 
+                      textInputAction: TextInputAction.done,
                       inputFormatters: [
                         DecimalTextInputFormatter(decimalRange: 2),
                         LengthLimitingTextInputFormatter(15),
@@ -674,7 +674,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                   ),
                   const Spacer(),
                   GetGenericText(
-                    text: isSwitchValue ? "Gram" : " AED",
+                    text: isSwitchValue ? "Gram" : " IQD",
                     fontSize: sizes!.isPhone ? 14 : 16,
                     fontWeight: FontWeight.w400,
                     color: Colors.white,
@@ -729,7 +729,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                   ),
                   // const Spacer(),
                   GetGenericText(
-                    text: isSwitchValue ? "AED" : "Gram",
+                    text: isSwitchValue ? "IQD" : "Gram",
                     fontSize: sizes!.isPhone ? 14 : 16,
                     fontWeight: FontWeight.w400,
                     color: AppColors.grey4Color,

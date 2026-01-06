@@ -12,14 +12,13 @@ class CommonTextFormField extends StatefulWidget {
   final void Function(String)? onChanged;
   final TextEditingController controller;
   final String? Function(String?)? validator;
-  final TextInputType? textInputType; // Made optional
+  final TextInputType? textInputType;
   final List<TextInputFormatter>? inputFormatters;
   final int maxLines;
   final bool readOnly;
   final bool obscureText;
   final Widget? suffixIcon;
   final bool isCapitalizationEnabled;
-
 
   const CommonTextFormField({
     super.key,
@@ -32,13 +31,12 @@ class CommonTextFormField extends StatefulWidget {
     this.onChanged,
     this.maxLines = 1,
     this.readOnly = false,
-    this.textInputType, // Optional now
+    this.textInputType,
     this.inputFormatters = const [],
     this.validator,
     this.obscureText = false,
     this.suffixIcon,
-
-  this.isCapitalizationEnabled = true,
+    this.isCapitalizationEnabled = true,
   });
 
   @override
@@ -54,14 +52,20 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
     _obscureText = widget.obscureText;
   }
 
+  OutlineInputBorder _border(Color color) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12), // ✅ radius 12
+      borderSide: BorderSide(color: color),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: TextFormField(
         textCapitalization: widget.isCapitalizationEnabled
-        ? TextCapitalization.sentences
-        : TextCapitalization.none,
-        
+            ? TextCapitalization.sentences
+            : TextCapitalization.none,
         focusNode: widget.focusNode,
         controller: widget.controller,
         validator: widget.validator,
@@ -69,7 +73,7 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
         inputFormatters: widget.inputFormatters,
         cursorColor: AppColors.secondaryColor,
         keyboardType: widget.textInputType ?? TextInputType.text,
-        textInputAction: TextInputAction.done, 
+        textInputAction: TextInputAction.done,
         onChanged: widget.onChanged,
         readOnly: widget.readOnly,
         obscureText: widget.obscureText ? _obscureText : false,
@@ -83,24 +87,10 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
           alignLabelWithHint: true,
           errorMaxLines: 3,
           helperMaxLines: 2,
-          border: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.secondaryColor,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.secondaryColor,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.secondaryColor,
-            ),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.redAccent),
-          ),
+          border: _border(AppColors.secondaryColor),
+          enabledBorder: _border(AppColors.secondaryColor),
+          focusedBorder: _border(AppColors.secondaryColor),
+          errorBorder: _border(Colors.redAccent),
           labelText: widget.labelText,
           hintText: widget.hintText,
           labelStyle: TextStyle(

@@ -143,7 +143,7 @@ class CommonService {
       email: email,
       avatar: await LocalDatabase.instance.getUserProfileImage() ?? "",
       accountId: accountId,
-      userType: userType ==true? "Demo": "Real"
+      userType: userType ? "Demo": "Real"
     );
   }
 
@@ -160,8 +160,8 @@ class CommonService {
     }
   }
 
-  /// get once gram price in aed
-  static double getOneGramPriceInAED({
+  /// get once gram price in IQD
+  static double getOneGramPriceInIQD({
     required double ounceDollarPrice,
     required double dirham,
     required double ounce,

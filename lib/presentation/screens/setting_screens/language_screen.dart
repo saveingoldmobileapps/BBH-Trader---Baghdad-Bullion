@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/language_provider.dart';
 
 class LanguageScreen extends ConsumerStatefulWidget {
@@ -13,18 +12,6 @@ class LanguageScreen extends ConsumerStatefulWidget {
 }
 
 class _LanguageScreenState extends ConsumerState<LanguageScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -38,8 +25,6 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
 
     final languageState = ref.watch(languageProvider);
     final languageNotifier = ref.read(languageProvider.notifier);
-    // Determine the direction of the arrow based on the current locale
-    bool isRtl = languageNotifier.isRtl();
 
     return Scaffold(
       appBar: AppBar(
@@ -49,106 +34,158 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
         foregroundColor: Colors.white,
         centerTitle: false,
         titleSpacing: 0,
-        title: GetGenericText(
-          text: AppLocalizations.of(
-            context,
-          )!.app_lang,
-          fontSize: sizes!.responsiveFont(
-            phoneVal: 20,
-            tabletVal: 24,
-          ),
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey6Color,
-        ),
+        // leading: IconButton(
+        //   icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+        //   onPressed: () => Navigator.of(context).pop(),
+        // ),
+        // title: GetGenericText(
+        //   text: AppLocalizations.of(context)!.app_lang, // "Language Settings"
+        //   fontSize: sizes!.responsiveFont(phoneVal: 20, tabletVal: 24),
+        //   fontWeight: FontWeight.w400,
+        //   color: AppColors.grey6Color,
+        // ),
       ),
       body: Stack(
         children: [
           Container(
             height: sizes!.height,
             width: sizes!.width,
-            decoration: const BoxDecoration(
-              color: AppColors.greyScale1000,
-            ),
+            color: AppColors.greyScale1000,
             child: SafeArea(
-              child: ListView.separated(
-                itemCount: LanguageList.values.length,
-                separatorBuilder: (context, index) => Divider(
-                  color: AppColors.greyScale900,
-                  thickness: 1.5,
-                ),
-                itemBuilder: (context, index) {
-                  final language = LanguageList.values[index];
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GetGenericText(
+                      text: "Language Settings",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 26,
+                        tabletVal: 32,
+                      ),
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.whiteColor,
+                    ).getAlign(),
 
-                  return GestureDetector(
-                    onTap: () {
-                      languageNotifier.updateLanguage(
-                          language: language.localeCode,
-                          context: context,
-                          isDashboard: false);
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            language.flagIconPath,
-                            height: sizes!.responsiveFont(
-                              phoneVal: 18,
-                              tabletVal: 28,
-                            ),
-                            width: sizes!.responsiveFont(
-                              phoneVal: 18,
-                              tabletVal: 28,
-                            ),
-                          ),
-                          const SizedBox(width: 8.0),
-                          GetGenericText(
-                            text: language.displayName,
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 14,
-                              tabletVal: 20,
-                            ),
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey6Color,
-                          ),
-                          const Spacer(),
-                          Radio<String>(
-                            activeColor: AppColors.primaryGold500,
-                            value: language.localeCode,
-                            groupValue: languageState.languageCode,
-                            onChanged: (value) {
-                              if (value != null) {
+                    GetGenericText(
+                      text: "Select your preferred language",
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 14,
+                        tabletVal: 20,
+                      ),
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.whiteColor,
+                    ).getAlign(),
+                    ConstPadding.sizeBoxWithHeight(height: 16),
+                    Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(
+                          top: 16,
+                        ), // Optional: extra top padding after the subtitle
+                        itemCount: LanguageList.values.length,
+                        itemBuilder: (context, index) {
+                          final language = LanguageList.values[index];
+                          final isSelected =
+                              languageState.languageCode == language.localeCode;
+
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                              bottom: 12,
+                            ), // Space between items
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(
+                                12,
+                              ), // Ripple follows rounded corners
+                              onTap: () {
                                 languageNotifier.updateLanguage(
-                                    language: value,
-                                    context: context,
-                                    isDashboard: false);
-                              }
-                            },
-                          ),
-                        ],
+                                  language: language.localeCode,
+                                  context: context,
+                                  isDashboard: false,
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff262929),
+                                  borderRadius: BorderRadius.circular(
+                                    12,
+                                  ), // Rounded corners
+                                  border: Border.all(
+                                    color: AppColors
+                                        .greyScale900, // Subtle border for extra separation
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      language.flagIconPath,
+                                      height: sizes!.responsiveFont(
+                                        phoneVal: 28,
+                                        tabletVal: 36,
+                                      ),
+                                      width: sizes!.responsiveFont(
+                                        phoneVal: 28,
+                                        tabletVal: 36,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: GetGenericText(
+                                        text: language.displayName,
+                                        fontSize: sizes!.responsiveFont(
+                                          phoneVal: 16,
+                                          tabletVal: 20,
+                                        ),
+                                        fontWeight: FontWeight.w400,
+                                        color: AppColors.grey6Color,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: sizes!.responsiveFont(
+                                        phoneVal: 20,
+                                        tabletVal: 24,
+                                      ),
+                                      width: sizes!.responsiveFont(
+                                        phoneVal: 20,
+                                        tabletVal: 24,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: isSelected
+                                            ? AppColors.primaryGold500
+                                            : Colors.transparent,
+                                        border: Border.all(
+                                          color: isSelected
+                                              ? AppColors.primaryGold500
+                                              : AppColors.greyScale700,
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                  );
-                },
-              ).get16HorizontalPadding(),
-            ),
-          ),
-          if (languageState.isLoading) ...{
-            Center(
-              child: Container(
-                width: sizes!.widthRatio * 26,
-                height: sizes!.widthRatio * 26,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                ),
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                  strokeWidth: 2,
+                  ],
                 ),
               ),
             ),
-          },
+          ),
+          if (languageState.isLoading)
+            const Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            ),
         ],
       ),
     );

@@ -38,8 +38,8 @@ class SSEGoldPriceState {
   final double lastLowSellingPrice;
   final double lastHighBuyingPrice;
 
-  final double oneGramBuyingPriceInAED;
-  final double oneGramSellingPriceInAED;
+  final double oneGramBuyingPriceInIQD;
+  final double oneGramSellingPriceInIQD;
 
   /// Constructor with optional and default values for state
   SSEGoldPriceState({
@@ -49,8 +49,8 @@ class SSEGoldPriceState {
     SSEGetGoldPriceResponse? getGoldPriceResponse,
     this.currentGoldPrice = 0.0,
     this.isButtonState = false,
-    this.oneGramBuyingPriceInAED = 0.0,
-    this.oneGramSellingPriceInAED = 0.0,
+    this.oneGramBuyingPriceInIQD = 0.0,
+    this.oneGramSellingPriceInIQD = 0.0,
     this.oneOunceDollarSellingPrice = 0.0,
     this.oneOunceDollarBuyingPrice = 0.0,
     this.lastHighBuyingPrice = 0.0,
@@ -71,8 +71,8 @@ class SSEGoldPriceState {
     double? currentGoldPrice,
     LoadingState? loadingState,
     bool? isButtonState,
-    double? oneGramBuyingPriceInAED,
-    double? oneGramSellingPriceInAED,
+    double? oneGramBuyingPriceInIQD,
+    double? oneGramSellingPriceInIQD,
     double? oneOunceDollarSellingPrice,
     double? oneOunceDollarBuyingPrice,
     bool? isLoading,
@@ -86,10 +86,10 @@ class SSEGoldPriceState {
       currentGoldPrice: currentGoldPrice ?? this.currentGoldPrice,
       loadingState: loadingState ?? this.loadingState,
       isButtonState: isButtonState ?? this.isButtonState,
-      oneGramBuyingPriceInAED:
-          oneGramBuyingPriceInAED ?? this.oneGramBuyingPriceInAED,
-      oneGramSellingPriceInAED:
-          oneGramSellingPriceInAED ?? this.oneGramSellingPriceInAED,
+      oneGramBuyingPriceInIQD:
+          oneGramBuyingPriceInIQD ?? this.oneGramBuyingPriceInIQD,
+      oneGramSellingPriceInIQD:
+          oneGramSellingPriceInIQD ?? this.oneGramSellingPriceInIQD,
       oneOunceDollarSellingPrice:
           oneOunceDollarSellingPrice ?? this.oneOunceDollarSellingPrice,
       oneOunceDollarBuyingPrice:
@@ -151,7 +151,7 @@ Future<void> _startLiveGoldPriceStream({
       "Cache-Control": "no-cache",
     };
 
-    const aed = 3.674; // Conversion rate from USD to AED
+    const IQD = 3.674; // Conversion rate from USD to IQD
     const ounce = 31.10347; // Grams in a troy ounce
 
     /// cache value for last valid selling/buying price
@@ -253,36 +253,36 @@ Future<void> _startLiveGoldPriceStream({
                 //   "Live Prices Updated: Selling: [$sellingPx\$], Buying: [$buyingPx\$]",
                 // );
 
-                // Convert ounce USD price to AED per gram
-                final oneGramSellingAEDPrice =
-                    CommonService.getOneGramPriceInAED(
+                // Convert ounce USD price to IQD per gram
+                final oneGramSellingIQDPrice =
+                    CommonService.getOneGramPriceInIQD(
                       ounceDollarPrice: sellingPx,
-                      dirham: aed,
+                      dirham: IQD,
                       ounce: ounce,
                     );
 
-                final oneGramBuyingAEDPrice =
-                    CommonService.getOneGramPriceInAED(
+                final oneGramBuyingIQDPrice =
+                    CommonService.getOneGramPriceInIQD(
                       ounceDollarPrice: buyingPx,
-                      dirham: aed,
+                      dirham: IQD,
                       ounce: ounce,
                     );
-                final lastLowSellingPrice = CommonService.getOneGramPriceInAED(
+                final lastLowSellingPrice = CommonService.getOneGramPriceInIQD(
                   ounceDollarPrice: lastLow,
-                  dirham: aed,
+                  dirham: IQD,
                   ounce: ounce,
                 );
 
-                final lastHighBuyingPrice = CommonService.getOneGramPriceInAED(
+                final lastHighBuyingPrice = CommonService.getOneGramPriceInIQD(
                   ounceDollarPrice: lastHigh,
-                  dirham: aed,
+                  dirham: IQD,
                   ounce: ounce,
                 );
 
                 // Build new state
                 final xState = SSEGoldPriceState(
-                  oneGramBuyingPriceInAED: oneGramBuyingAEDPrice,
-                  oneGramSellingPriceInAED: oneGramSellingAEDPrice,
+                  oneGramBuyingPriceInIQD: oneGramBuyingIQDPrice,
+                  oneGramSellingPriceInIQD: oneGramSellingIQDPrice,
                   oneOunceDollarSellingPrice: sellingPx,
                   oneOunceDollarBuyingPrice: buyingPx,
                   lastLowSellingPrice: lastLowSellingPrice,

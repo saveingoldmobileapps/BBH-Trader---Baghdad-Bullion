@@ -85,7 +85,7 @@ class EsouqItemCard extends StatelessWidget {
                       GetGenericText(
                         text: AppLocalizations.of(
                           context,
-                        )!.aed_currency, //"AED",
+                        )!.idq_currency, //"IQD",
                         fontSize: sizes!.responsiveFont(
                           phoneVal: 14,
                           tabletVal: 16,
@@ -125,7 +125,7 @@ class EsouqItemCard extends StatelessWidget {
                       GetGenericText(
                         text: AppLocalizations.of(
                           context,
-                        )!.aed_currency, //"AED",
+                        )!.idq_currency, //"IQD",
                         fontSize: sizes!.responsiveFont(
                           phoneVal: 14,
                           tabletVal: 16,
@@ -240,7 +240,7 @@ class EsouqItemCard extends StatelessWidget {
                       ),
                       ConstPadding.sizeBoxWithWidth(width: 4),
                       GetGenericText(
-                        text: AppLocalizations.of(context)!.aed_currency,
+                        text: AppLocalizations.of(context)!.idq_currency,
                         fontSize: sizes!.responsiveFont(
                           phoneVal: 14,
                           tabletVal: 16,
@@ -251,7 +251,7 @@ class EsouqItemCard extends StatelessWidget {
                     ]
                   : [
                       GetGenericText(
-                        text: AppLocalizations.of(context)!.aed_currency,
+                        text: AppLocalizations.of(context)!.idq_currency,
                         fontSize: sizes!.responsiveFont(
                           phoneVal: 14,
                           tabletVal: 16,

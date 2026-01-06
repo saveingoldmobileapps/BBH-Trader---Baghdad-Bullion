@@ -373,7 +373,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get total_gold_grams => 'إجمالي الذهب (غرام)';
 
   @override
-  String get total_funds_aed => 'إجمالي الأموال (درهم)';
+  String get total_funds_IQD => 'إجمالي الأموال (الدينار العراقي)';
 
   @override
   String get deposit => 'إيداع';
@@ -476,11 +476,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get whatsapp_inbox =>
-      'مرحباً فريق مبيعات Save In Gold،\n\nلتأكيد ومعالجة دفعتك، يرجى إرفاق نسخة من إيصال الدفع مع هذه الرسالة على الواتساب.\n\nسيساعدنا ذلك في التحقق من المعاملة وتحديث حسابك وفقاً لذلك.\nيمكنك ببساطة الرد على هذا البريد الإلكتروني مع إرفاق الإيصال. إذا كانت لديك أي أسئلة أو استفسارات، فلا تتردد في التواصل معنا.\n\nمع التحية،\nفريق Save In Gold.';
+      'مرحباً فريق مبيعات Baghdad Bullion House،\n\nلتأكيد ومعالجة دفعتك، يرجى إرفاق نسخة من إيصال الدفع مع هذه الرسالة على الواتساب.\n\nسيساعدنا ذلك في التحقق من المعاملة وتحديث حسابك وفقاً لذلك.\nيمكنك ببساطة الرد على هذا البريد الإلكتروني مع إرفاق الإيصال. إذا كانت لديك أي أسئلة أو استفسارات، فلا تتردد في التواصل معنا.\n\nمع التحية،\nفريق Baghdad Bullion House.';
 
   @override
   String get email_message =>
-      'مرحباً فريق مبيعات Save In Gold،\n\nلتأكيد ومعالجة دفعتك، يرجى إرفاق نسخة من إيصال الدفع مع هذا البريد الإلكتروني.\n\nسيساعدنا ذلك في التحقق من المعاملة وتحديث حسابك وفقاً لذلك.\nيمكنك ببساطة الرد على هذا البريد الإلكتروني مع إرفاق الإيصال. إذا كانت لديك أي أسئلة أو استفسارات، فلا تتردد في التواصل معنا.\n\nمع التحية،\nفريق Save In Gold.';
+      'مرحباً فريق مبيعات Baghdad Bullion House،\n\nلتأكيد ومعالجة دفعتك، يرجى إرفاق نسخة من إيصال الدفع مع هذا البريد الإلكتروني.\n\nسيساعدنا ذلك في التحقق من المعاملة وتحديث حسابك وفقاً لذلك.\nيمكنك ببساطة الرد على هذا البريد الإلكتروني مع إرفاق الإيصال. إذا كانت لديك أي أسئلة أو استفسارات، فلا تتردد في التواصل معنا.\n\nمع التحية،\nفريق Baghdad Bullion House.';
 
   @override
   String get email_url_title => 'إيصال الدفع عبر التحويل البنكي المباشر';
@@ -663,7 +663,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enter_gram => 'أدخل الكمية (غرامات) هنا';
 
   @override
-  String get enter_amount => 'أدخل المبلغ (درهم) هنا';
+  String get enter_amount => 'أدخل المبلغ (الدينار العراقي) هنا';
 
   @override
   String get enter_amount_plz => 'يرجى إدخال المبلغ';
@@ -853,7 +853,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dep_min_amount_note =>
-      'الحد الأدنى للإيداع هو 100 درهم، تطبق رسوم';
+      'الحد الأدنى للإيداع هو 100 الدينار العراقي، تطبق رسوم';
 
   @override
   String get dep_dt_intro_title => 'التحويل المباشر';
@@ -882,7 +882,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dep_share_desc =>
-      'اختر أيًا من الخيارات أدناه لمشاركة الإيصال بعد تحويل الأموال إلى حساب Save In Gold FZCO.';
+      'اختر أيًا من الخيارات أدناه لمشاركة الإيصال بعد تحويل الأموال إلى حساب Baghdad Bullion House FZCO.';
 
   @override
   String get dep_share_whatsapp => 'مشاركة عبر واتساب';
@@ -894,7 +894,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dep_toast_txSaved => 'تم حفظ المعاملة بنجاح';
 
   @override
-  String get dip_min_100 => 'الحد الأدنى للإيداع هو 100 درهم';
+  String get dip_min_100 => 'الحد الأدنى للإيداع هو 100 الدينار العراقي';
 
   @override
   String get wait_please => 'الرجاء الإنتظار';
@@ -973,7 +973,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get bank_charge_message =>
-      'A bank fee of AED 25 plus VAT will be applied.';
+      'A bank fee of IQD 25 plus VAT will be applied.';
 
   @override
   String get save_changes => 'حفظ التغييرات';
@@ -1337,19 +1337,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get money_st => 'كشف الحساب المالي';
 
   @override
-  String get metal_rate_aed => 'السعر: درهم إماراتي';
+  String get metal_rate_IQD => 'السعر: الدينار العراقي إماراتي';
 
   @override
   String get metal_g => 'غرام';
 
   @override
   String withdraw_success(Object amount) {
-    return 'تم خصم مبلغ $amount درهم من حسابك.';
+    return 'تم خصم مبلغ $amount الدينار العراقي من حسابك.';
   }
 
   @override
   String deposit_success(Object amount) {
-    return 'تم إضافة $amount درهم إلى حسابك.';
+    return 'تم إضافة $amount الدينار العراقي إلى حسابك.';
   }
 
   @override
@@ -1360,7 +1360,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String gift_sent(Object amount, Object recipient) {
-    return 'لقد أرسلت بنجاح هدية بقيمة $amount درهم إلى $recipient.';
+    return 'لقد أرسلت بنجاح هدية بقيمة $amount الدينار العراقي إلى $recipient.';
   }
 
   @override
@@ -1369,7 +1369,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String buy_order_filled(Object dealId, Object price, Object quantity) {
-    return 'لقد اشتريت $quantity غرام من الذهب بسعر $price درهم. رقم الصفقة: $dealId.';
+    return 'لقد اشتريت $quantity غرام من الذهب بسعر $price الدينار العراقي. رقم الصفقة: $dealId.';
   }
 
   @override
@@ -1420,7 +1420,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String invest_insufficient_balance_desc(Object balance, Object required) {
-    return 'رصيدك (درهم $balance) أقل من المبلغ المطلوب (درهم $required). يرجى إضافة أموال.';
+    return 'رصيدك (الدينار العراقي $balance) أقل من المبلغ المطلوب (الدينار العراقي $required). يرجى إضافة أموال.';
   }
 
   @override
@@ -1456,7 +1456,7 @@ class AppLocalizationsAr extends AppLocalizations {
     String walletBalance,
     String inputAmount,
   ) {
-    return 'رصيدك (درهم إماراتي $walletBalance) أقل من المبلغ المطلوب (درهم إماراتي $inputAmount). يرجى إضافة الأموال.';
+    return 'رصيدك (الدينار العراقي إماراتي $walletBalance) أقل من المبلغ المطلوب (الدينار العراقي إماراتي $inputAmount). يرجى إضافة الأموال.';
   }
 
   @override
@@ -1525,7 +1525,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get metal_profit => 'الربح';
 
   @override
-  String get metal_plus_na => '+ درهم غير متاح';
+  String get metal_plus_na => '+ الدينار العراقي غير متاح';
 
   @override
   String get deal_cant_close => 'لا يمكنك إغلاق هذه الصفقة بخسارة.';
@@ -1848,7 +1848,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get total_gold => 'إجمالي الذهب';
 
   @override
-  String get total_funds => 'إجمالي الأموال (درهم)';
+  String get total_funds => 'إجمالي الأموال (الدينار العراقي)';
 
   @override
   String get upgrade_to_real_account => 'الترقية إلى حساب حقيقي';
@@ -1885,7 +1885,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get wallet_empty => 'المحفظة فارغة. أضف أموالاً لشراء الذهب.';
 
   @override
-  String get per_gram_aed => 'للجرام درهم';
+  String get per_gram_IQD => 'للجرام الدينار العراقي';
 
   @override
   String get buy_gold => 'شراء ذهب';
@@ -1967,7 +1967,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get gram => 'غرام';
 
   @override
-  String get aed_currency => ' درهم';
+  String get idq_currency => 'الدينار العراقي';
 
   @override
   String get amountVar => 'المبلغ';
@@ -2044,7 +2044,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get gram_buy_at_price => 'شراء بأمر السعر';
 
   @override
-  String get gram_invest_money => 'استثمار المال: درهم';
+  String get gram_invest_money => 'استثمار المال: الدينار العراقي';
 
   @override
   String get gram_invest_status => 'حالة الاستثمار:';
@@ -2082,13 +2082,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deal_edit_price => 'تعديل السعر';
 
   @override
-  String get deal_price_per_gram => 'السعر لكل غرام (درهم)';
+  String get deal_price_per_gram => 'السعر لكل غرام (الدينار العراقي)';
 
   @override
   String get deal_gram_price => 'سعر الغرام';
 
   @override
-  String get deal_enter_amount_aed => 'يرجى إدخال المبلغ بالدرهم';
+  String get deal_enter_amount_IQD => 'يرجى إدخال المبلغ بالالدينار العراقي';
 
   @override
   String get deal_valid_number => 'يرجى إدخال رقم صالح';
@@ -2110,15 +2110,15 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get deal_sell_greater_than_bought =>
-      'يرجى إدخال سعر بيع أكبر من سعر الشراء (درهم)';
+      'يرجى إدخال سعر بيع أكبر من سعر الشراء (الدينار العراقي)';
 
   @override
   String get deal_pending_sell_greater_with_zero_buying_than_current_sell =>
-      'يرجى إدخال سعر بيع أكبر من أو يساوي سعر البيع الحالي (درهم)';
+      'يرجى إدخال سعر بيع أكبر من أو يساوي سعر البيع الحالي (الدينار العراقي)';
 
   @override
   String get deal_buy_price_less =>
-      'يرجى إدخال سعر شراء أقل من سعر الشراء الحالي (درهم)';
+      'يرجى إدخال سعر شراء أقل من سعر الشراء الحالي (الدينار العراقي)';
 
   @override
   String get deal_sure_confirm => 'هل أنت متأكد أنك تريد تحديث هذا الطلب؟';
@@ -2139,7 +2139,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deal_amount_must_less => 'يجب أن يكون المبلغ أقل من أو يساوي';
 
   @override
-  String get is_below_buy => 'أقل من سعر الشراء الخاص بك (درهم';
+  String get is_below_buy => 'أقل من سعر الشراء الخاص بك (الدينار العراقي';
 
   @override
   String get deal_confirm_loss => 'تأكيد الخسارة';
@@ -2269,7 +2269,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get yes => 'نعم';
 
   @override
-  String get aed => 'درهم';
+  String get idq => 'الدينار العراقي';
 
   @override
   String get rejected => 'مرفوض';
@@ -2488,7 +2488,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get bank_fee_notice =>
-      'سيتم تطبيق رسوم بنكية قدرها 25 درهمًا إماراتيًا بالإضافة إلى ضريبة القيمة المضافة.';
+      'سيتم تطبيق رسوم بنكية قدرها 25 الدينار العراقيًا إماراتيًا بالإضافة إلى ضريبة القيمة المضافة.';
 
   @override
   String get bank_name => 'اسم البنك';
@@ -2599,4 +2599,11 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get temporary_freezed_account_desc =>
       'تم إيقاف حسابك مؤقتًا. لاستعادة الوصول، يرجى التواصل مع فريق الدعم للحصول على المساعدة.';
+
+  @override
+  String get doc_mismatch =>
+      'لغة اسم المستند واسم الملف الشخصي غير متطابقة. يرجى تحميل هوية مطابقة.';
+
+  @override
+  String get nam_mismatch => 'عدم تطابق في الأسماء';
 }

@@ -74,7 +74,9 @@ class _MetalStatementDetailScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GetGenericText(
-                    text: AppLocalizations.of(context)!.transactionID,//"Transaction ID",
+                    text: AppLocalizations.of(
+                      context,
+                    )!.transactionID, //"Transaction ID",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -108,19 +110,23 @@ class _MetalStatementDetailScreenState
                   ),
                   GetGenericText(
                     text: widget.statement.date != null
-                        ?  DateFormat(
-    'EEE, dd MMM yyyy, HH:mm',
-    Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en',
-  ).format(
-    DateTime.parse(widget.statement.date.toString()).toLocal(),
-  )
-: AppLocalizations.of(context)!.na,
-                        // DateFormat('EEE, dd MMM yyyy, HH:mm').format(
-                        //     DateTime.parse(
-                        //       widget.statement.date.toString(),
-                        //     ),
-                        //   )
-                        // : 'N/A',
+                        ? DateFormat(
+                            'EEE, dd MMM yyyy, HH:mm',
+                            Localizations.localeOf(context).languageCode == 'ar'
+                                ? 'ar'
+                                : 'en',
+                          ).format(
+                            DateTime.parse(
+                              widget.statement.date.toString(),
+                            ).toLocal(),
+                          )
+                        : AppLocalizations.of(context)!.na,
+                    // DateFormat('EEE, dd MMM yyyy, HH:mm').format(
+                    //     DateTime.parse(
+                    //       widget.statement.date.toString(),
+                    //     ),
+                    //   )
+                    // : 'N/A',
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
                       tabletVal: 16,
@@ -135,7 +141,9 @@ class _MetalStatementDetailScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GetGenericText(
-                    text: AppLocalizations.of(context)!.dateTime,//"Date & Time",
+                    text: AppLocalizations.of(
+                      context,
+                    )!.dateTime, //"Date & Time",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -145,20 +153,24 @@ class _MetalStatementDetailScreenState
                   ),
                   GetGenericText(
                     text: widget.statement.date != null
-                    ? DateFormat(
-    'EEE, dd MMM yyyy, HH:mm',
-    Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en',
-  ).format(
-    DateTime.parse(widget.statement.date.toString()).toLocal(),
-  )
-: AppLocalizations.of(context)!.na,
+                        ? DateFormat(
+                            'EEE, dd MMM yyyy, HH:mm',
+                            Localizations.localeOf(context).languageCode == 'ar'
+                                ? 'ar'
+                                : 'en',
+                          ).format(
+                            DateTime.parse(
+                              widget.statement.date.toString(),
+                            ).toLocal(),
+                          )
+                        : AppLocalizations.of(context)!.na,
 
-                        // ? DateFormat('EEE, dd MMM yyyy, HH:mm').format(
-                        //     DateTime.parse(
-                        //       widget.statement.date.toString(),
-                        //     ),
-                        //   )
-                        // : 'N/A',
+                    // ? DateFormat('EEE, dd MMM yyyy, HH:mm').format(
+                    //     DateTime.parse(
+                    //       widget.statement.date.toString(),
+                    //     ),
+                    //   )
+                    // : 'N/A',
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
                       tabletVal: 16,
@@ -250,7 +262,9 @@ class _MetalStatementDetailScreenState
                     color: AppColors.grey3Color,
                   ),
                   GetGenericText(
-                    text: AppLocalizations.of(context)!.metal_plus_na,//"AED N/A",
+                    text: AppLocalizations.of(
+                      context,
+                    )!.metal_plus_na, //"IQD N/A",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -274,7 +288,9 @@ class _MetalStatementDetailScreenState
                     color: AppColors.grey3Color,
                   ),
                   GetGenericText(
-                    text: "${AppLocalizations.of(context)!.aed} ${AppLocalizations.of(context)!.na}""AED N/A",
+                    text:
+                        "${AppLocalizations.of(context)!.idq} ${AppLocalizations.of(context)!.na}"
+                        "IQD N/A",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -289,7 +305,9 @@ class _MetalStatementDetailScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GetGenericText(
-                    text: AppLocalizations.of(context)!.metal_profit,//"Profit",
+                    text: AppLocalizations.of(
+                      context,
+                    )!.metal_profit, //"Profit",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -298,7 +316,9 @@ class _MetalStatementDetailScreenState
                     color: AppColors.grey3Color,
                   ),
                   GetGenericText(
-                    text: AppLocalizations.of(context)!.metal_plus_na,//"+ AED N/A",
+                    text: AppLocalizations.of(
+                      context,
+                    )!.metal_plus_na, //"+ IQD N/A",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -323,7 +343,9 @@ class _MetalStatementDetailScreenState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GetGenericText(
-                      text: AppLocalizations.of(context)!.metal_after_trade,//"Metal After Trade",
+                      text: AppLocalizations.of(
+                        context,
+                      )!.metal_after_trade, //"Metal After Trade",
                       fontSize: sizes!.responsiveFont(
                         phoneVal: 16,
                         tabletVal: 18,
@@ -332,7 +354,8 @@ class _MetalStatementDetailScreenState
                       color: AppColors.grey5Color,
                     ),
                     GetGenericText(
-                      text: "${widget.statement.metalBalance} ${AppLocalizations.of(context)!.metal_g}",//"${widget.statement.metalBalance} g",
+                      text:
+                          "${widget.statement.metalBalance} ${AppLocalizations.of(context)!.metal_g}", //"${widget.statement.metalBalance} g",
                       fontSize: sizes!.responsiveFont(
                         phoneVal: 16,
                         tabletVal: 18,

@@ -312,18 +312,26 @@ class DioNetworkManager {
 
               showMaintenancePopup(
                 context: navigatorKey.currentContext!,
-                heading: Directionality.of(navigatorKey.currentContext!) == TextDirection.rtl? 
-                AppLocalizations.of(navigatorKey.currentContext!)!.server_under_maintainance:"App Under Scheduled Maintenance",
-                subtitle:Directionality.of(navigatorKey.currentContext!) == TextDirection.rtl?
-                AppLocalizations.of(navigatorKey.currentContext!)!.maintainance_description:
-                    """Save In Gold is currently undergoing a scheduled system upgrade  
+                heading:
+                    Directionality.of(navigatorKey.currentContext!) ==
+                        TextDirection.rtl
+                    ? AppLocalizations.of(
+                        navigatorKey.currentContext!,
+                      )!.server_under_maintainance
+                    : "App Under Scheduled Maintenance",
+                subtitle:
+                    Directionality.of(navigatorKey.currentContext!) ==
+                        TextDirection.rtl
+                    ? AppLocalizations.of(
+                        navigatorKey.currentContext!,
+                      )!.maintainance_description
+                    : """Baghdad Bullion House is currently undergoing a scheduled system upgrade  
 to enhance security, stability, and real-time gold trading performance.
 """,
                 onExitPress: () {
-                  CommonService.isMaintenancePopupVisible =
-                      false;
+                  CommonService.isMaintenancePopupVisible = false;
                   SystemNavigator.pop();
-                }, 
+                },
                 onWebsitePress: () {
                   launchUrl(Uri.parse("https://saveingold.ae"));
                 },
@@ -335,10 +343,12 @@ to enhance security, stability, and real-time gold trading performance.
 
             return ServerResponse(
               responseType: ServerResponseType.error,
-              message: Directionality.of(navigatorKey.currentContext!) ==
+              message:
+                  Directionality.of(navigatorKey.currentContext!) ==
                       TextDirection.rtl
-                  ? AppLocalizations.of(navigatorKey.currentContext!)!
-                      .server_under_maintainance
+                  ? AppLocalizations.of(
+                      navigatorKey.currentContext!,
+                    )!.server_under_maintainance
                   : 'Server Under Maintenance',
               resultData: response.data,
             );
@@ -384,7 +394,7 @@ to enhance security, stability, and real-time gold trading performance.
           message: "Error is null: $response",
         );
       }
-    // ignore: avoid_catching_errors
+      // ignore: avoid_catching_errors
     } on DioConnectionError catch (exception, stackTrace) {
       // Handle connectivity error
       getLocator<Logger>().e(exception.message);
@@ -399,7 +409,7 @@ to enhance security, stability, and real-time gold trading performance.
         resultData: null,
         message: "Connection error: ${exception.message}",
       );
-    // ignore: avoid_catching_errors
+      // ignore: avoid_catching_errors
     } on DioHttpError catch (exception, stackTrace) {
       // Handle HTTP error with status code e.statusCode
       getLocator<Logger>().e(exception.message);
@@ -414,7 +424,7 @@ to enhance security, stability, and real-time gold trading performance.
         resultData: null,
         message: "HTTP error with status code ${exception.statusCode}",
       );
-    // ignore: avoid_catching_errors
+      // ignore: avoid_catching_errors
     } on DioRequestError catch (exception, stackTrace) {
       // Handle request-specific error
       getLocator<Logger>().e(exception.message);
@@ -429,7 +439,7 @@ to enhance security, stability, and real-time gold trading performance.
         resultData: null,
         message: "Request-specific error: ${exception.message}",
       );
-    // ignore: avoid_catching_errors
+      // ignore: avoid_catching_errors
     } on DioNetworkError catch (exception, stackTrace) {
       // Handle other custom network errors
       getLocator<Logger>().e(exception.message);

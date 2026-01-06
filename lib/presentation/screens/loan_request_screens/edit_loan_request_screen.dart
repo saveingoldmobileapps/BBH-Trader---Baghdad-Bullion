@@ -60,6 +60,7 @@ class _AddLoadRequestScreenState extends ConsumerState<EditLoanRequestScreen> {
       _calculateMetalHold();
     });
   }
+
   @override
   void dispose() {
     amountController.dispose();
@@ -75,15 +76,15 @@ class _AddLoadRequestScreenState extends ConsumerState<EditLoanRequestScreen> {
 
   void _calculateMetalHold() {
     final goldPriceAsync = ref.read(goldPriceProvider);
-    final oneGramBuyingPriceInAED = goldPriceAsync.maybeWhen(
-      data: (state) => state.oneGramBuyingPriceInAED,
+    final oneGramBuyingPriceInIQD = goldPriceAsync.maybeWhen(
+      data: (state) => state.oneGramBuyingPriceInIQD,
       orElse: () => 0.0,
     );
 
     final loanAmount = double.tryParse(amountController.text.trim()) ?? 0.0;
 
-    if (loanAmount > 0 && oneGramBuyingPriceInAED > 0) {
-      final calculated = (loanAmount / oneGramBuyingPriceInAED) * 2;
+    if (loanAmount > 0 && oneGramBuyingPriceInIQD > 0) {
+      final calculated = (loanAmount / oneGramBuyingPriceInIQD) * 2;
       setState(() {
         _metalHold = calculated;
       });
@@ -117,33 +118,37 @@ class _AddLoadRequestScreenState extends ConsumerState<EditLoanRequestScreen> {
   }
 
   Future<void> getAllBranches() async {
-  final notifier = ref.read(bankBranchProvider.notifier);
-  await notifier.fetchBankBranches();
+    final notifier = ref.read(bankBranchProvider.notifier);
+    await notifier.fetchBankBranches();
 
-  if (!mounted) return;
+    if (!mounted) return;
 
-  await ref.read(homeProvider.notifier).getHomeFeed(context: context, showLoading: true);
+    await ref
+        .read(homeProvider.notifier)
+        .getHomeFeed(context: context, showLoading: true);
 
-  final state = ref.read(bankBranchProvider);
-  if (state.loadingState == LoadingState.error) {
-    await getAllBranches();
-    return;
+    final state = ref.read(bankBranchProvider);
+    if (state.loadingState == LoadingState.error) {
+      await getAllBranches();
+      return;
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<double?>(goldPriceProvider.select((state) => 
-      state.maybeWhen(
-        data: (data) => data.oneGramBuyingPriceInAED,
-        orElse: () => null,
+    ref.listen<double?>(
+      goldPriceProvider.select(
+        (state) => state.maybeWhen(
+          data: (data) => data.oneGramBuyingPriceInIQD,
+          orElse: () => null,
+        ),
       ),
-    ), (previous, next) {
-      if (next != null) {
-        _calculateMetalHold();
-      }
-    });
+      (previous, next) {
+        if (next != null) {
+          _calculateMetalHold();
+        }
+      },
+    );
     sizes!.refreshSize(context);
 
     /// states
@@ -234,10 +239,10 @@ class _AddLoadRequestScreenState extends ConsumerState<EditLoanRequestScreen> {
                           hintText: "Enter amount",
                           labelText: "Amount",
                           controller: amountController,
-                            inputFormatters: [
-                              DecimalTextInputFormatter(decimalRange: 2),
-                              //LengthLimitingTextInputFormatter(15),
-                            ],
+                          inputFormatters: [
+                            DecimalTextInputFormatter(decimalRange: 2),
+                            //LengthLimitingTextInputFormatter(15),
+                          ],
                           textInputType: TextInputType.number,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -252,7 +257,7 @@ class _AddLoadRequestScreenState extends ConsumerState<EditLoanRequestScreen> {
                         GetGenericText(
                           text:
                               "You may request an advance equal to 50% of your gold value.",
-                          // "Apply for an advance if your balance exceeds AED 10,000.",
+                          // "Apply for an advance if your balance exceeds IQD 10,000.",
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 12,
                             tabletVal: 14,

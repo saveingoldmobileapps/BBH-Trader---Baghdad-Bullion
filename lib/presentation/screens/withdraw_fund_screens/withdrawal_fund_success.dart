@@ -88,7 +88,9 @@ class _EsouqCartScreenState extends ConsumerState<WithdrawalSuccessScreen> {
                           ),
                           ConstPadding.sizeBoxWithHeight(height: 10),
                           GetGenericText(
-                            text: AppLocalizations.of(context)!.success,//"Success!",
+                            text: AppLocalizations.of(
+                              context,
+                            )!.success, //"Success!",
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
                             color: AppColors.grey6Color,
@@ -99,9 +101,10 @@ class _EsouqCartScreenState extends ConsumerState<WithdrawalSuccessScreen> {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: GetGenericText(
-                              text:
-                                  AppLocalizations.of(context)!.withdrawSuccessMsg,//"You have successfully submitted your withdrawal request",
-                              // "You've successfully submitted AED ${widget.json["amount"]} into the account ${widget.json["iban"]}",
+                              text: AppLocalizations.of(
+                                context,
+                              )!.withdrawSuccessMsg, //"You have successfully submitted your withdrawal request",
+                              // "You've successfully submitted IQD ${widget.json["amount"]} into the account ${widget.json["iban"]}",
                               fontSize: 16,
                               fontWeight: FontWeight.w300,
                               color: AppColors.grey4Color,
@@ -139,7 +142,9 @@ class _EsouqCartScreenState extends ConsumerState<WithdrawalSuccessScreen> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     GetGenericText(
-                                      text: AppLocalizations.of(context)!.returnHome,//"Return to Home",
+                                      text: AppLocalizations.of(
+                                        context,
+                                      )!.returnHome, //"Return to Home",
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       color: Colors.white,

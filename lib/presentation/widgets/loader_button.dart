@@ -40,8 +40,8 @@ class LoaderButton extends StatelessWidget {
             begin: Alignment(1.00, 0.01),
             end: Alignment(-1, -0.01),
             colors: [
-              Color(0xFF675A3D),
-              Color(0xFFBBA473),
+              Color(0xFF74540E),
+              Color(0xFFB19454),
             ],
           ),
           borderRadius: BorderRadius.circular(10),

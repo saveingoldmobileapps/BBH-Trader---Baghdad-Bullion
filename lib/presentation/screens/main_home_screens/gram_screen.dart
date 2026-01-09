@@ -20,7 +20,6 @@ class GramScreen extends ConsumerStatefulWidget {
 }
 
 class _GramScreenState extends ConsumerState<GramScreen> {
-  // open or close drawer
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -36,12 +35,6 @@ class _GramScreenState extends ConsumerState<GramScreen> {
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     ref.invalidate(goldPriceProvider);
@@ -51,426 +44,204 @@ class _GramScreenState extends ConsumerState<GramScreen> {
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
-
-    ///provider
     final gramStateWatchProvider = ref.watch(gramProvider);
     final goldPriceState = ref.watch(goldPriceProvider);
-    //final gramStateReadProvider = ref.read(gramProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
+
+    // Logic: Calculate total grams for the large display
+    double totalGrams = 0;
+    if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
+      for (var item in gramStateWatchProvider.gramApiResponseModel.payload!) {
+        totalGrams += (item.tradeMetal ?? 0);
+      }
+    }
 
     return Scaffold(
       key: _scaffoldKey,
       drawer: GetDrawerBar(
         onTap: () => _scaffoldKey.currentState!.openEndDrawer(),
       ),
-      appBar: AppBar(
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.greyScale1000,
-        leading: GestureDetector(
-          onTap: () => _scaffoldKey.currentState!.openDrawer(),
-          child: Container(
-            color: Colors.transparent,
-            height: sizes!.heightRatio * 24,
-            width: sizes!.widthRatio * 24,
-            child: Center(
-              child: SvgPicture.asset(
-                "assets/svg/menu_icon.svg",
-              ),
-            ),
-          ),
-        ),
-        titleSpacing: 0,
-        title: GetGenericText(
-          text: AppLocalizations.of(
-            context,
-          )!.gramsBalance_title, //"Grams Balance",
-          fontSize: 20,
-          fontWeight: FontWeight.w400,
-          color: Colors.white,
-        ),
-        actions: [
-          Directionality.of(context) == TextDirection.rtl
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const NotificationScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      child: SvgPicture.asset(
-                        "assets/svg/notify_icon.svg",
-                        height: sizes!.responsiveHeight(
-                          phoneVal: 24,
-                          tabletVal: 32,
-                        ),
-                        width: sizes!.responsiveWidth(
-                          phoneVal: 24,
-                          tabletVal: 32,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const NotificationScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      child: SvgPicture.asset(
-                        "assets/svg/notify_icon.svg",
-                        height: sizes!.responsiveHeight(
-                          phoneVal: 24,
-                          tabletVal: 32,
-                        ),
-                        width: sizes!.responsiveWidth(
-                          phoneVal: 24,
-                          tabletVal: 32,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-        ],
-      ),
       body: Container(
         height: sizes!.height,
         width: sizes!.width,
         decoration: const BoxDecoration(
-          color: AppColors.greyScale1000,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF53482A), Color(0xFF121212)],
+          ),
         ),
         child: SafeArea(
-          child: RefreshIndicator(
-            backgroundColor: AppColors.primaryGold500,
-            color: AppColors.whiteColor,
-            onRefresh: () async {
-              await ref.read(gramProvider.notifier).getUserGramBalance();
-            },
-            child: Column(
-              children: [
-                ///  PNL Summary Section
-                Builder(
-                  builder: (_) {
-                    double totalPnl = 0;
-
-                    if (gramStateWatchProvider.gramApiResponseModel.payload !=
-                            null &&
-                        gramStateWatchProvider
-                            .gramApiResponseModel
-                            .payload!
-                            .isNotEmpty &&
-                        goldPriceState.hasValue) {
-                      for (var item
-                          in gramStateWatchProvider
-                              .gramApiResponseModel
-                              .payload!) {
-                        final tradeType = item.tradeType?.toLowerCase() ?? "";
-                        final tradeStatus =
-                            item.tradeStatus?.toLowerCase() ?? "";
-                        final buyAtPriceStatus = item.buyAtPriceStatus ?? false;
-
-                        // ======================================================
-                        // SKIP PNL IF:
-                        // Buy + Pending + buyAtPriceStatus == true
-                        // ======================================================
-                        if (tradeType == "buy" &&
-                            tradeStatus == "pending" &&
-                            buyAtPriceStatus == true) {
-                          continue;
-                        }
-
-                        // EXISTING SKIP FOR ANY PENDING STATUS
-                        // if (tradeStatus == "pending") {
-                        //   continue;
-                        // }
-
-                        final pnl = CommonService.calculateLossOrProfit(
-                          buyingPrice: item.buyingPrice ?? 0,
-                          livePrice:
-                              goldPriceState.value!.oneGramSellingPriceInIQD,
-                          tradeMetalFactor: item.tradeMetal ?? 0,
-                        );
-                        totalPnl += pnl;
-                      }
-
-                      Icon pnlIcon;
-                      Color pnlColor;
-                      String pnlText;
-
-                      if (totalPnl > 0) {
-                        pnlIcon = const Icon(
-                          Icons.arrow_upward,
-                          color: Colors.green,
-                          size: 20,
-                        );
-                        pnlColor = Colors.green;
-                        pnlText = AppLocalizations.of(context)!.gram_total;
-                      } else if (totalPnl < 0) {
-                        pnlIcon = const Icon(
-                          Icons.arrow_downward,
-                          color: Colors.red,
-                          size: 20,
-                        );
-                        pnlColor = Colors.red;
-                        pnlText = AppLocalizations.of(context)!.gram_total;
-                      } else {
-                        pnlIcon = const Icon(
-                          Icons.horizontal_rule,
-                          color: Colors.grey,
-                          size: 20,
-                        );
-                        pnlColor = Colors.grey;
-                        pnlText = AppLocalizations.of(context)!.gram_no_change;
-                      }
-
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 12,
-                          horizontal: 16,
-                        ),
-                        margin: const EdgeInsets.only(bottom: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. Search Header Section
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 10,
+                ),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _scaffoldKey.currentState!.openDrawer(),
+                      child: const CircleAvatar(
+                        radius: 20,
+                        backgroundColor: AppColors.greyScale900,
+                        backgroundImage: AssetImage(
+                          "assets/images/profile_placeholder.png",
+                        ), // Change to your profile logic
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Container(
+                        height: 44,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         decoration: BoxDecoration(
-                          color: AppColors.greyScale900,
-                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.white.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(22),
                         ),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            pnlIcon,
-                            const SizedBox(width: 8),
+                            const Icon(
+                              Icons.search,
+                              color: Colors.white54,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 10),
                             Text(
-                              "$pnlText (${totalPnl.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency})",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: pnlColor,
-                              ),
+                              "Search",
+                              style: const TextStyle(color: Colors.white54),
                             ),
                           ],
                         ),
-                      );
-                    }
-
-                    return const SizedBox.shrink();
-                  },
-                ),
-
-                ///  PNL Summary Section
-                // Builder(
-                //   builder: (_) {
-                //     double totalPnl = 0;
-
-                //     if (gramStateWatchProvider.gramApiResponseModel.payload !=
-                //             null &&
-                //         gramStateWatchProvider
-                //             .gramApiResponseModel.payload!.isNotEmpty &&
-                //         goldPriceState.hasValue) {
-                //       for (var item in gramStateWatchProvider
-                //           .gramApiResponseModel.payload!) {
-                //         final pnl = CommonService.calculateLossOrProfit(
-                //           buyingPrice: item.buyingPrice ?? 0,
-                //           livePrice:
-                //               goldPriceState.value!.oneGramSellingPriceInIQD,
-                //           tradeMetalFactor: item.tradeMetal ?? 0,
-                //         );
-                //         totalPnl += pnl;
-                //       }
-
-                //       Icon pnlIcon;
-                //       Color pnlColor;
-                //       String pnlText;
-
-                //       if (totalPnl > 0) {
-                //         pnlIcon = const Icon(
-                //           Icons.arrow_upward,
-                //           color: Colors.green,
-                //           size: 20,
-                //         );
-                //         pnlColor = Colors.green;
-                //         pnlText = AppLocalizations.of(context)!
-                //             .gram_total; //"Total";//"You are in Profit";
-                //       } else if (totalPnl < 0) {
-                //         pnlIcon = const Icon(
-                //           Icons.arrow_downward,
-                //           color: Colors.red,
-                //           size: 20,
-                //         );
-                //         pnlColor = Colors.red;
-                //         pnlText = AppLocalizations.of(context)!
-                //             .gram_total; //"Total";//"You are in Loss";
-                //       } else {
-                //         pnlIcon = const Icon(
-                //           Icons.horizontal_rule,
-                //           color: Colors.grey,
-                //           size: 20,
-                //         );
-                //         pnlColor = Colors.grey;
-                //         pnlText = AppLocalizations.of(context)!
-                //             .gram_no_change; //"No Change";
-                //       }
-
-                //       return Container(
-                //         padding: const EdgeInsets.symmetric(
-                //           vertical: 12,
-                //           horizontal: 16,
-                //         ),
-                //         margin: const EdgeInsets.only(bottom: 12),
-                //         decoration: BoxDecoration(
-                //           color: AppColors.greyScale900,
-                //           borderRadius: BorderRadius.circular(8),
-                //         ),
-                //         child: Row(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           children: [
-                //             pnlIcon,
-                //             const SizedBox(width: 8),
-                //             Text(
-                //               "$pnlText (${totalPnl.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency})",
-                //               // "$pnlText (${totalPnl.toStringAsFixed(2)} IQD)",
-                //               style: TextStyle(
-                //                 fontSize: 16,
-                //                 fontWeight: FontWeight.bold,
-                //                 color: pnlColor,
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       );
-                //     }
-                //     return const SizedBox.shrink();
-                //   },
-                // ),
-                Expanded(
-                  child:
-                      gramStateWatchProvider.loadingState ==
-                          LoadingState.loading
-                      ? Center(
-                          child: ShimmerLoader(
-                            loop: sizes!.isPhone ? 4 : 6,
-                          ),
-                        )
-                      : gramStateWatchProvider.loadingState ==
-                            LoadingState.error
-                      ? Center(
-                          child: NoDataWidget(
-                            title: AppLocalizations.of(
-                              context,
-                            )!.empty_no_data, //"No Data To Show",
-                            description: AppLocalizations.of(
-                              context,
-                            )!.empty_no_gram_balance, //"No gram balance found",
-                          ),
-                        )
-                      : (gramStateWatchProvider
-                            .gramApiResponseModel
-                            .payload!
-                            .isEmpty)
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              NoDataWidget(
-                                title: AppLocalizations.of(
-                                  context,
-                                )!.empty_no_data, //"No Data To Show",
-                                description: AppLocalizations.of(
-                                  context,
-                                )!.empty_no_gram_balance, //"No gram balance found",
-                              ),
-                            ],
-                          ),
-                        )
-                      : LayoutBuilder(
-                          builder: (context, constraints) {
-                            final appSizes = AppSizes()
-                              ..initializeSize(context);
-                            final isTablet = !appSizes.isPhone;
-
-                            return GridView.builder(
-                              itemCount:
-                                  gramStateWatchProvider
-                                      .gramApiResponseModel
-                                      .payload
-                                      ?.length ??
-                                  0,
-                              padding: const EdgeInsets.all(8),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: isTablet ? 2 : 1,
-                                    crossAxisSpacing: 7,
-                                    mainAxisSpacing: 7,
-                                    childAspectRatio: isTablet ? 2 : 1.8,
-                                  ),
-                              itemBuilder: (context, index) {
-                                return Directionality.of(context) ==
-                                        TextDirection.rtl
-                                    ? GramBalanceCard(
-                                        gramList: gramStateWatchProvider
-                                            .gramApiResponseModel
-                                            .payload![index],
-                                        rtl:
-                                            Directionality.of(context) ==
-                                            TextDirection.rtl,
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  GramDealDetailScreen(
-                                                    gramData:
-                                                        gramStateWatchProvider
-                                                            .gramApiResponseModel
-                                                            .payload![index],
-                                                  ),
-                                            ),
-                                          );
-                                        },
-                                      ).get6VerticalPadding()
-                                    : GramBalanceCard(
-                                        gramList: gramStateWatchProvider
-                                            .gramApiResponseModel
-                                            .payload![index],
-                                        rtl:
-                                            Directionality.of(context) ==
-                                            TextDirection.rtl,
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  GramDealDetailScreen(
-                                                    gramData:
-                                                        gramStateWatchProvider
-                                                            .gramApiResponseModel
-                                                            .payload![index],
-                                                  ),
-                                            ),
-                                          );
-                                        },
-                                      ).get6VerticalPadding();
-                              },
-                            );
-                          },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationScreen(),
                         ),
+                      ),
+                      child: SvgPicture.asset(
+                        "assets/svg/notify_icon.svg",
+                        height: 24,
+                        width: 24,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ).get16HorizontalPadding(),
+              ),
+
+              // 2. Gram Balance Typography Section
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.gramsBalance_title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text(
+                          totalGrams.toStringAsFixed(2),
+                          style: const TextStyle(
+                            color: AppColors.primaryGold500,
+                            fontSize: 60,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        const Text(
+                          "gram(s)",
+                          style: TextStyle(
+                            color: AppColors.primaryGold500,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      "Current trade deals",
+                      style: TextStyle(
+                        color: AppColors.primaryGold500,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // 3. Trade Deals List Section
+              Expanded(
+                child: RefreshIndicator(
+                  backgroundColor: AppColors.primaryGold500,
+                  color: AppColors.whiteColor,
+                  onRefresh: () async => await ref
+                      .read(gramProvider.notifier)
+                      .getUserGramBalance(),
+                  child: _buildTradeList(gramStateWatchProvider),
+                ),
+              ),
+            ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTradeList(dynamic provider) {
+    if (provider.loadingState == LoadingState.loading) {
+      return Center(child: ShimmerLoader(loop: sizes!.isPhone ? 4 : 6));
+    }
+    if (provider.loadingState == LoadingState.error ||
+        provider.gramApiResponseModel.payload!.isEmpty) {
+      return ListView(
+        children: [
+          SizedBox(height: sizes!.height * 0.15),
+          NoDataWidget(
+            title: AppLocalizations.of(context)!.empty_no_data,
+            description: AppLocalizations.of(context)!.empty_no_gram_balance,
+          ),
+        ],
+      );
+    }
+
+    return ListView.builder(
+      itemCount: provider.gramApiResponseModel.payload!.length,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      itemBuilder: (context, index) {
+        return GramBalanceCard(
+          gramList: provider.gramApiResponseModel.payload![index],
+          rtl: Directionality.of(context) == TextDirection.rtl,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => GramDealDetailScreen(
+                  gramData: provider.gramApiResponseModel.payload![index],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

@@ -127,10 +127,10 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
                   icon: iconButton(
-                    iconString: "assets/svg/home_icon.svg",
+                    iconString: "assets/svg/home.svg",
                   ),
                   activeIcon: iconButton(
-                    iconString: "assets/svg/home_active_icon.svg",
+                    iconString: "assets/svg/home_filled.svg",
                   ),
                   label: AppLocalizations.of(context)!.home,
                 ),
@@ -145,20 +145,21 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
                 ),
                 BottomNavigationBarItem(
                   icon: iconButton(
-                    iconString: "assets/svg/gram_icon.svg",
-                  ),
-                  activeIcon: iconButton(
-                    iconString: "assets/svg/gram_active_icon.svg",
-                  ),
-                  label: AppLocalizations.of(context)!.gram,
-                ),
-                BottomNavigationBarItem(
-                  icon: iconButton(
                     iconString: "assets/svg/metal_icon.svg",
                   ),
                   activeIcon: iconButton(
                     iconString: "assets/svg/metal_active_icon.svg",
                   ),
+                  label: AppLocalizations.of(context)!.gram,
+                ),
+                BottomNavigationBarItem(
+                  icon: iconButton(
+                    iconString: "assets/svg/archive-book.svg",
+                  ),
+                  activeIcon: iconButton(
+                    iconString: "assets/svg/archive_book_filled.svg",
+                  ),
+                  
                   label: AppLocalizations.of(context)!.history,
                 ),
                 // BottomNavigationBarItem(

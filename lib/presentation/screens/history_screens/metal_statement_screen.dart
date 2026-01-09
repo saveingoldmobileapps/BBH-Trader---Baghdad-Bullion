@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/main_home_screens/history_screen.dart';
@@ -9,6 +10,7 @@ import 'package:saveingold_fzco/presentation/widgets/pop_up_widget.dart';
 import 'package:saveingold_fzco/presentation/widgets/shimmers/shimmer_loader.dart';
 
 import '../../../core/core_export.dart';
+
 import '../../widgets/no_data_widget.dart' show NoDataWidget;
 
 class MetalStatementScreen extends ConsumerStatefulWidget {
@@ -150,8 +152,10 @@ class _MetalStatementScreenState extends ConsumerState<MetalStatementScreen> {
                       historyState.metalStatements.isEmpty)
                   ? NoDataWidget(
                       title: AppLocalizations.of(context)!.enter_verify_code,
-                      description:AppLocalizations.of(context)!.history_create_metal_st,
-                          //"Please create new metal statement or try again later",
+                      description: AppLocalizations.of(
+                        context,
+                      )!.history_create_metal_st,
+                      //"Please create new metal statement or try again later",
                     ).get20VerticalPadding()
                   : SizedBox(
                       child: LayoutBuilder(
@@ -163,39 +167,26 @@ class _MetalStatementScreenState extends ConsumerState<MetalStatementScreen> {
                               ? (sizes!.isLandscape() ? 2 : 1.2)
                               : 1.2;
 
-                          return GridView.builder(
-                            itemCount: historyState.metalStatements.length,
+                          return MasonryGridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                                SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: isTablet ? 2 : 1,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 2,
-                                  childAspectRatio: childAspectRatio,
                                 ),
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            itemCount: historyState.metalStatements.length,
                             itemBuilder: (context, index) {
                               final statement =
                                   historyState.metalStatements[index];
 
-                              /// metal statement card
                               return MetalStatementCard(
                                 statement: statement,
-                                rtl: Directionality.of(context) == TextDirection.rtl,
-                                onTap: () {
-                                  /// If the statement is a trade
-                                  // if (statement.paymentModel == "Trade") {
-                                  //   Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //       builder: (context) =>
-                                  //           MetalStatementDetailScreen(
-                                  //         statement: statement,
-                                  //       ),
-                                  //     ),
-                                  //   );
-                                  // }
-                                },
+                                rtl:
+                                    Directionality.of(context) ==
+                                    TextDirection.rtl,
+                                onTap: () {},
                               ).get6VerticalPadding();
                             },
                           );
@@ -207,14 +198,16 @@ class _MetalStatementScreenState extends ConsumerState<MetalStatementScreen> {
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
                   child: NoDataWidget(
-                    title: AppLocalizations.of(context)!.empty_no_data,//"No Data To Show",
+                    title: AppLocalizations.of(
+                      context,
+                    )!.empty_no_data, //"No Data To Show",
                     description:
                         "${historyState.errorResponse.payload?.message.toString()}",
                   ),
                 ),
               )
             : ShimmerLoader(
-                loop: sizes!.isPhone ?4:6,
+                loop: sizes!.isPhone ? 4 : 6,
               ),
       ],
     );

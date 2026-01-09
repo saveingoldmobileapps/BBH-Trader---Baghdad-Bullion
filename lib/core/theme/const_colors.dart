@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   /// Colors
-  static const primaryGold500 = Color.fromRGBO(187, 164, 115, 1);
+  static const primaryGold500 = Color.fromRGBO(177, 148, 84, 1);
   static const neutral92 = Color.fromRGBO(236, 230, 240, 1);
   static const neutral90 = Color.fromRGBO(229, 225, 225, 1);
   static const neutral80 = Color.fromRGBO(201, 198, 197, 1);

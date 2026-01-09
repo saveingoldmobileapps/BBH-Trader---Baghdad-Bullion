@@ -26,249 +26,191 @@ class _MetalScreenState extends ConsumerState<HistoryScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    sizes!.initializeSize(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
-    //final historyState = ref.watch(historyProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       key: _scaffoldKey,
       drawer: GetDrawerBar(
-        onTap: () => _scaffoldKey.currentState!.openEndDrawer(),
-      ),
-      appBar: AppBar(
-        centerTitle: false,
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.greyScale1000,
-        elevation: 0,
-        surfaceTintColor: AppColors.greyScale1000,
-        leading: GestureDetector(
-          onTap: () => _scaffoldKey.currentState!.openDrawer(),
-          child: Container(
-            color: Colors.transparent,
-            height: sizes!.heightRatio * 24,
-            width: sizes!.widthRatio * 24,
-            child: Center(
-              child: SvgPicture.asset(
-                "assets/svg/menu_icon.svg",
-              ),
-            ),
-          ),
-        ),
-        titleSpacing: 0,
-        title: GetGenericText(
-          text: AppLocalizations.of(context)!.history, //"History",
-          fontSize: 20,
-          fontWeight: FontWeight.w400,
-          color: Colors.white,
-        ),
-        actions: [
-          Directionality.of(context) == TextDirection.rtl
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const NotificationScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      child: SvgPicture.asset(
-                        "assets/svg/notify_icon.svg",
-                        height: sizes!.responsiveHeight(
-                          phoneVal: 24,
-                          tabletVal: 32,
-                        ),
-                        width: sizes!.responsiveWidth(
-                          phoneVal: 24,
-                          tabletVal: 32,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.only(right: 16.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const NotificationScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      child: SvgPicture.asset(
-                        "assets/svg/notify_icon.svg",
-                        height: sizes!.responsiveHeight(
-                          phoneVal: 24,
-                          tabletVal: 32,
-                        ),
-                        width: sizes!.responsiveWidth(
-                          phoneVal: 24,
-                          tabletVal: 32,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-        ],
+        onTap: () => Navigator.pop(context),
       ),
       body: Container(
         height: sizes!.height,
         width: sizes!.width,
         decoration: const BoxDecoration(
-          color: AppColors.greyScale1000,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF53482A), Color(0xFF121212)],
+          ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                /// Tabs for Metal and Money
-                Container(
-                  height: sizes!.responsiveLandscapeHeight(
-                    phoneVal: 44,
-                    tabletVal: 44,
-                    tabletLandscapeVal: 64,
-                    isLandscape: sizes!.isLandscape(),
-                  ),
-                  width:
-                      sizes!.isPhone ? sizes!.widthRatio * 360 : sizes!.width,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF333333),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: sizes!.widthRatio * 8,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        /// Metal History Tab
-                        Expanded(
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              debugPrint("MetalHistoryTab");
-                              setState(() {
-                                historyType = HistoryType.metal;
-                              });
-                            },
-                            child: Container(
-                              width: sizes!.responsiveWidth(
-                                phoneVal: 150,
-                                tabletVal: 380,
-                              ),
-                              height: sizes!.responsiveLandscapeHeight(
-                                phoneVal: 34,
-                                tabletVal: 44,
-                                tabletLandscapeVal: 54,
-                                isLandscape: sizes!.isLandscape(),
-                              ),
-                              decoration: historyType == HistoryType.metal
-                                  ? BoxDecoration(
-                                      color: AppColors.primaryGold500,
-                                      borderRadius: BorderRadius.circular(4),
-                                    )
-                                  : null,
-                              //replace this
-                              child: Center(
-                                child: GetGenericText(
-                                  text: sizes!.isPhone
-                                      ? AppLocalizations.of(context)!
-                                          .metal //"Metal"
-                                      : AppLocalizations.of(context)!.metal_st,
-                                  fontSize: sizes!.responsiveFont(
-                                    phoneVal: 18,
-                                    tabletVal: 22,
-                                  ),
-                                  fontWeight: historyType == HistoryType.metal
-                                      ? FontWeight.w700
-                                      : FontWeight.w400,
-                                  color: historyType == HistoryType.metal
-                                      ? AppColors.greyScale1000
-                                      : AppColors.grey3Color,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        /// Money History Tab
-                        Expanded(
-                          child: GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              debugPrint("MoneyHistoryTab");
-                              setState(() {
-                                historyType = HistoryType.money;
-                              });
-                            },
-                            child: Container(
-                              width: sizes!.responsiveWidth(
-                                phoneVal: 150,
-                                tabletVal: 380,
-                              ),
-                              height: sizes!.responsiveLandscapeHeight(
-                                phoneVal: 34,
-                                tabletVal: 44,
-                                tabletLandscapeVal: 54,
-                                isLandscape: sizes!.isLandscape(),
-                              ),
-                              decoration: historyType == HistoryType.money
-                                  ? BoxDecoration(
-                                      color: AppColors.primaryGold500,
-                                      borderRadius: BorderRadius.circular(4),
-                                    )
-                                  : null,
-                              //replace this
-                              child: Center(
-                                child: GetGenericText(
-                                  text: sizes!.isPhone
-                                      ? AppLocalizations.of(context)!
-                                          .money //"Money"
-                                      : AppLocalizations.of(context)!.money_st,
-                                  fontSize: sizes!.isPhone ? 18 : 22,
-                                  fontWeight: historyType == HistoryType.money
-                                      ? FontWeight.w700
-                                      : FontWeight.w400,
-                                  color: historyType == HistoryType.money
-                                      ? AppColors.greyScale1000
-                                      : AppColors.grey3Color,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 1. New Header with Profile, Search, and Notification
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
                 ),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () => _scaffoldKey.currentState!.openDrawer(),
+                      child: const CircleAvatar(
+                        radius: 20,
+                        backgroundImage: AssetImage(
+                          "assets/images/profile_placeholder.png",
+                        ), // Replace with your image logic
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Container(
+                        height: 40,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.search,
+                              color: Colors.white54,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              "Search",
+                              style: const TextStyle(color: Colors.white54),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    IconButton(
+                      icon: SvgPicture.asset(
+                        "assets/svg/notify_icon.svg",
+                        color: Colors.white,
+                      ),
+                      onPressed: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationScreen(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-                ConstPadding.sizeBoxWithHeight(height: 12),
-                if (historyType == HistoryType.metal)
-                  const MetalStatementScreen(),
-                if (historyType == HistoryType.money)
-                  const MoneyStatementScreen(),
-              ],
-            ).get16HorizontalPadding(),
+              // 2. Title Section
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      l10n.history,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.file_download_outlined,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      onPressed: () {
+                        // Your existing export logic
+                      },
+                    ),
+                  ],
+                ),
+              ),
+
+              // 3. Redesigned Tabs
+              Container(
+                margin: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    _buildTab(l10n.metal, HistoryType.metal),
+                    _buildTab(l10n.money, HistoryType.money),
+                  ],
+                ),
+              ),
+
+              // 4. Content Area
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      if (historyType == HistoryType.metal)
+                        const MetalStatementScreen(),
+                      if (historyType == HistoryType.money)
+                        const MoneyStatementScreen(),
+                    ],
+                  ).get16HorizontalPadding(),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTab(String label, HistoryType type) {
+    bool isSelected = historyType == type;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => historyType = type),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            gradient: isSelected
+                ? const LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      Color(0xff90722f), // left
+                      Color(0xff74540e), // center (different)
+                      Color(0xff90722f), // right
+                    ],
+                    stops: [0.0, 0.5, 1.0],
+                  )
+                : null,
+            color: isSelected ? null : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.white54,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontSize: 16,
+              ),
+            ),
           ),
         ),
       ),

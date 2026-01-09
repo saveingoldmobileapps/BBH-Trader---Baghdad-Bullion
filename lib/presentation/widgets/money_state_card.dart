@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 
 import '../../data/models/history_model/NewMoneyApiResponseModel.dart';
 
-class MoneyStatementCard extends StatelessWidget {
+class MoneyStatementCard extends StatefulWidget {
   final String title;
   final String action;
   final MoneyHistoryList data;
@@ -19,189 +20,162 @@ class MoneyStatementCard extends StatelessWidget {
   });
 
   @override
+  State<MoneyStatementCard> createState() => _MoneyStatementCardState();
+}
+
+class _MoneyStatementCardState extends State<MoneyStatementCard> {
+  bool isExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final item = widget.data;
+
     return Container(
+      margin: const EdgeInsets.only(bottom: 12),
       width: sizes!.widthRatio * 361,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(0xFF333333),
-        borderRadius: BorderRadius.circular(10),
+        color: Color(0xff262929), // Transparent dark card from UI
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min, // Prevents occupying extra space
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top: Transaction ID
-          rtl
-              ? GetGenericText(
-                  text: AppLocalizations.of(
-                    context,
-                  )!.transactionID, //"Transaction ID",
-                  fontSize: sizes!.responsiveFont(phoneVal: 14, tabletVal: 16),
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.whiteColor,
-                ).getAlignRight()
-              : GetGenericText(
-                  text: AppLocalizations.of(
-                    context,
-                  )!.transactionID, //"Transaction ID",
-                  fontSize: sizes!.responsiveFont(phoneVal: 14, tabletVal: 16),
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.whiteColor,
-                ).getAlign(),
-          GetGenericText(
-            text:
-                data.transactionId ??
-                AppLocalizations.of(context)!.not_available, //"N/A",
-            fontSize: sizes!.responsiveFont(phoneVal: 20, tabletVal: 22),
-            fontWeight: FontWeight.w600,
-            color: AppColors.grey6Color,
-          ),
-          Divider(color: AppColors.grey2Color, height: 10),
-
-          // Money Out and Debit with amount
+          // Top Row: Transaction Type and Credit/Debit Status
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Directionality.of(context) == TextDirection.rtl
-                  ? GetGenericText(
-                      text: getLocalizedTransactionType(
-                        context,
-                        data.transactionType,
-                      ),
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 16,
-                        tabletVal: 18,
-                      ),
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.grey6Color,
-                    )
-                  : GetGenericText(
-                      text:
-                          data.transactionType ??
-                          AppLocalizations.of(context)!.not_available, //"N/A",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 16,
-                        tabletVal: 18,
-                      ),
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.grey6Color,
-                    ),
+              Text(
+                widget.rtl
+                    ? getLocalizedTransactionType(context, item.transactionType)
+                    : (item.transactionType ?? l10n.not_available),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  GetGenericText(
-                    text: data.debit != null
-                        ? AppLocalizations.of(context)!.debit
-                        : AppLocalizations.of(
-                            context,
-                          )!.credit, //"Debit" : "Credit",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 18,
+                  Text(
+                    item.debit != null ? l10n.debit : l10n.credit,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.5),
+                      fontSize: 12,
                     ),
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.grey6Color,
                   ),
-                  GetGenericText(
-                    text: data.credit != null
-                        ? "${AppLocalizations.of(context)!.idq_currency} ${double.tryParse(data.credit.toString())?.toStringAsFixed(2) ?? '0.0'}"
-                        : "${AppLocalizations.of(context)!.idq_currency} ${double.tryParse(data.debit.toString())?.toStringAsFixed(2) ?? '0.0'}",
-                    // ? "IQD ${double.tryParse(data.credit.toString())?.toStringAsFixed(2) ?? '0.0'}"
-                    // : "IQD ${double.tryParse(data.debit.toString())?.toStringAsFixed(2) ?? '0.0'}",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 18,
+                  Text(
+                    item.credit != null
+                        ? "${l10n.idq_currency} ${double.tryParse(item.credit.toString())?.toStringAsFixed(2) ?? '0.00'}"
+                        : "${l10n.idq_currency} ${double.tryParse(item.debit.toString())?.toStringAsFixed(2) ?? '0.00'}",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.whiteColor,
                   ),
                 ],
               ),
             ],
           ),
-          const SizedBox(height: 14),
 
-          // Transaction Method
-          // _buildLabelValueRow(
-          //   label: AppLocalizations.of(
-          //     context,
-          //   )!.transactionMethod, //"Transaction Method",
-          //   value: data.paymentModel ?? "",
-          // ),
-          _buildLabelValueRow(
-            label: AppLocalizations.of(context)!.transactionMethod,
-            value: Directionality.of(context) == TextDirection.rtl
-                ? (data.paymentModelInArabic != null &&
-                          data.paymentModelInArabic!.isNotEmpty
-                      ? data.paymentModelInArabic!
-                      : data.paymentModel ?? "")
-                : (data.paymentModel ?? ""),
-          ),
+          // See Details Toggle
+          const SizedBox(height: 12),
 
-          const SizedBox(height: 10),
+          // Expandable Content logic
+          if (isExpanded) ...[
+            const Divider(color: Colors.white10, height: 24),
+            _buildDetailRow("ID", item.transactionId ?? l10n.not_available),
+            _buildDetailRow(
+              l10n.transactionMethod,
+              widget.rtl
+                  ? (item.paymentModelInArabic?.isNotEmpty == true
+                        ? item.paymentModelInArabic!
+                        : item.paymentModel ?? "")
+                  : (item.paymentModel ?? ""),
+            ),
+            _buildDetailRow(
+              l10n.dateTime,
+              CommonService.formatDateTime(context, item.date!),
+            ),
+            _buildDetailRow(
+              l10n.balanceAfterTransaction,
+              "${l10n.idq_currency} ${double.tryParse(item.moneyBalance.toString())?.toStringAsFixed(2) ?? '0.00'}",
+            ),
+            const SizedBox(height: 12),
+          ],
 
-          // Date & Time
-          _buildLabelValueRow(
-            label: AppLocalizations.of(context)!.dateTime, //"Date & Time",
-            value: CommonService.formatDateTime(context, data.date!),
-          ),
-          const SizedBox(height: 10),
-
-          // Balance After Transaction
-          _buildLabelValueRow(
-            label: AppLocalizations.of(
-              context,
-            )!.balanceAfterTransaction, //"Balance After Transaction",
-            value:
-                "${AppLocalizations.of(context)!.idq_currency} ${double.tryParse(data.moneyBalance.toString())?.toStringAsFixed(2) ?? ''}",
-            // "IQD ${double.tryParse(data.moneyBalance.toString())?.toStringAsFixed(2) ?? ''}",
+          // Expand/Collapse Button (Matches Screenshot)
+          Center(
+            child: GestureDetector(
+              onTap: () => setState(() => isExpanded = !isExpanded),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    isExpanded ? "See Less" : "See Details",
+                    style: const TextStyle(
+                      color: Color(0xFFBBA473),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    color: const Color(0xFFBBA473),
+                    size: 20,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildLabelValueRow({
-    required String label,
-    required String value,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        GetGenericText(
-          text: label,
-          fontSize: sizes!.responsiveFont(phoneVal: 12, tabletVal: 14),
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey3Color,
-        ),
-        GetGenericText(
-          text: value,
-          fontSize: sizes!.responsiveFont(phoneVal: 14, tabletVal: 16),
-          fontWeight: FontWeight.w500,
-          color: AppColors.whiteColor,
-        ),
-      ],
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(color: Colors.white54, fontSize: 14),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   String getLocalizedTransactionType(BuildContext context, String? type) {
     if (type == null) return AppLocalizations.of(context)!.not_available;
-
-    final isRtl = Directionality.of(context) == TextDirection.rtl;
-
-    if (!isRtl) return type; // return English as is for LTR
+    final isRtl = Directionality.of(context) == TextDirection.RTL;
+    if (!isRtl) return type;
 
     switch (type) {
       case "CreditIn":
       case "Credit In":
         return "إضافة رصيد";
-
       case "Money in":
         return "إيداع";
-
       case "Money out":
         return "سحب";
-
       case "CreditOut":
       case "Credit Out":
         return "خصم رصيد";
@@ -219,7 +193,7 @@ class MoneyStatementCard extends StatelessWidget {
       case "Referral Cashback":
         return "استرداد نقدي للإحالة";
       default:
-        return AppLocalizations.of(context)!.not_available; // fallback
+        return AppLocalizations.of(context)!.not_available;
     }
   }
 }

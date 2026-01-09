@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/main_home_screens/history_screen.dart';
@@ -146,9 +147,13 @@ class _MoneyStatementScreenState extends ConsumerState<MoneyStatementScreen> {
         historyState.loadingState == LoadingState.data
             ? (historyState.moneyStatements.isEmpty)
                   ? NoDataWidget(
-                      title: AppLocalizations.of(context)!.oops_not_found,//"Oops! Not found",
-                      description: AppLocalizations.of(context)!.no_money_statement_description,
-                          //"Please create new money statement or try again later",
+                      title: AppLocalizations.of(
+                        context,
+                      )!.oops_not_found, //"Oops! Not found",
+                      description: AppLocalizations.of(
+                        context,
+                      )!.no_money_statement_description,
+                      //"Please create new money statement or try again later",
                     ).get20VerticalPadding()
                   : SizedBox(
                       child: LayoutBuilder(
@@ -157,49 +162,89 @@ class _MoneyStatementScreenState extends ConsumerState<MoneyStatementScreen> {
 
                           /// Child Aspect Ratio
                           final double childAspectRatio = isTablet
-                              ? (sizes!.isLandscape() ? 2.2 : 1.3)
-                              : 1.3;
+                              ? (sizes!.isLandscape() ? 2 : 1.2)
+                              : 1.2;
 
-                          return GridView.builder(
-                            itemCount: historyState.moneyStatements.length,
+                          return MasonryGridView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                                SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: isTablet ? 2 : 1,
-                                  crossAxisSpacing: 12,
-                                  mainAxisSpacing: 2,
-                                  childAspectRatio: childAspectRatio,
                                 ),
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            itemCount: historyState.moneyStatements.length,
                             itemBuilder: (context, index) {
-                              final moneyList = historyState.moneyStatements;
-                              final statement = moneyList[index];
+                              final statement =
+                                  historyState.moneyStatements[index];
 
-                              /// money statement card
                               return MoneyStatementCard(
-                                title: statement.transactionType ?? AppLocalizations.of(context)!.na,//"N/A",
+                                title:
+                                    statement.transactionType ??
+                                    AppLocalizations.of(context)!.na, //"N/A",
                                 data: statement,
-                                action: statement.transactionType ?? AppLocalizations.of(context)!.na,//"N/A",
-                                rtl: Directionality.of(context) == TextDirection.rtl,
+                                action:
+                                    statement.transactionType ??
+                                    AppLocalizations.of(context)!.na, //"N/A",
+                                rtl:
+                                    Directionality.of(context) ==
+                                    TextDirection.rtl,
                               ).get6VerticalPadding();
                             },
                           );
                         },
                       ),
                     )
+            // : SizedBox(
+            //     child: LayoutBuilder(
+            //       builder: (context, constraints) {
+            //         final isTablet = !sizes!.isPhone;
+            //         /// Child Aspect Ratio
+            //         final double childAspectRatio = isTablet
+            //             ? (sizes!.isLandscape() ? 2.2 : 1.3)
+            //             : 1.3;
+            //         return GridView.builder(
+            //           itemCount: historyState.moneyStatements.length,
+            //           shrinkWrap: true,
+            //           physics: const NeverScrollableScrollPhysics(),
+            //           gridDelegate:
+            //               SliverGridDelegateWithFixedCrossAxisCount(
+            //                 crossAxisCount: isTablet ? 2 : 1,
+            //                 crossAxisSpacing: 12,
+            //                 mainAxisSpacing: 2,
+            //                 childAspectRatio: childAspectRatio,
+            //               ),
+            //           itemBuilder: (context, index) {
+            //             final moneyList = historyState.moneyStatements;
+            //             final statement = moneyList[index];
+            //             /// money statement card
+            //             return MoneyStatementCard(
+            //               title: statement.transactionType ?? AppLocalizations.of(context)!.na,//"N/A",
+            //               data: statement,
+            //               action: statement.transactionType ?? AppLocalizations.of(context)!.na,//"N/A",
+            //               rtl: Directionality.of(context) == TextDirection.rtl,
+            //             ).get6VerticalPadding();
+            //           },
+            //         );
+            //       },
+            //     ),
+            //   )
             : historyState.loadingState == LoadingState.error
             ? SizedBox(
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
                   child: NoDataWidget(
-                    title: AppLocalizations.of(context)!.empty_no_data,//"No Data To Show",
+                    title: AppLocalizations.of(
+                      context,
+                    )!.empty_no_data, //"No Data To Show",
                     description:
                         "${historyState.errorResponse.payload?.message.toString()}",
                   ),
                 ),
               )
-            :  ShimmerLoader(
-                loop: sizes!.isPhone ?4:6,
+            : ShimmerLoader(
+                loop: sizes!.isPhone ? 4 : 6,
               ),
       ],
     );

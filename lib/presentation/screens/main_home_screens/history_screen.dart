@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,6 +9,8 @@ import 'package:saveingold_fzco/presentation/screens/history_screens/metal_state
 import 'package:saveingold_fzco/presentation/screens/history_screens/money_statement_screen.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
+import '../../../data/data_sources/local_database/local_database.dart';
+import '../../sharedProviders/providers/home_provider.dart';
 import '../notification_screens/notification_screen.dart';
 
 enum HistoryType {
@@ -29,7 +33,7 @@ class _MetalScreenState extends ConsumerState<HistoryScreen> {
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
     final l10n = AppLocalizations.of(context)!;
-
+    final mainStateWatchProvider = ref.watch(homeProvider);
     return Scaffold(
       key: _scaffoldKey,
       drawer: GetDrawerBar(
@@ -49,59 +53,116 @@ class _MetalScreenState extends ConsumerState<HistoryScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. New Header with Profile, Search, and Notification
               Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
+                  horizontal: 16.0,
                   vertical: 10,
                 ),
                 child: Row(
                   children: [
-                    GestureDetector(
-                      onTap: () => _scaffoldKey.currentState!.openDrawer(),
-                      child: const CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage(
-                          "assets/images/profile_placeholder.png",
-                        ), // Replace with your image logic
-                      ),
+                    /// Profile Avatar with network/cached image logic
+                    FutureBuilder<String?>(
+                      future: LocalDatabase.instance.getUserProfileImage(),
+                      builder: (context, snapshot) {
+                        final cachedImage = snapshot.data ?? '';
+                        final networkImage =
+                            mainStateWatchProvider
+                                .getUserProfileResponse
+                                .payload
+                                ?.userProfile
+                                ?.imageUrl ??
+                            '';
+                        final imageToShow = networkImage.isNotEmpty
+                            ? networkImage
+                            : cachedImage;
+
+                        return GestureDetector(
+                          onTap: () => _scaffoldKey.currentState!.openDrawer(),
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: AppColors.goldLightColor,
+                                width: 1.2,
+                              ),
+                              image: imageToShow.isNotEmpty
+                                  ? DecorationImage(
+                                      image: imageToShow.startsWith('http')
+                                          ? NetworkImage(imageToShow)
+                                          : FileImage(File(imageToShow))
+                                                as ImageProvider,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const DecorationImage(
+                                      image: AssetImage(
+                                        "assets/images/user_avatar.png",
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
+
                     const SizedBox(width: 12),
+
+                    /// Search Bar
                     Expanded(
                       child: Container(
-                        height: 40,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        height: 44,
+                        padding: const EdgeInsets.symmetric(horizontal: 14),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(22),
+                          border: Border.all(
+                            color: AppColors.goldLightColor.withOpacity(0.4),
+                          ),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xFF2A2A2A),
+                              Color(0xFF1E1E1E),
+                            ],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
                         ),
                         child: Row(
                           children: [
+                            Expanded(
+                              child: Text(
+                                "Search here",
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
                             const Icon(
                               Icons.search,
-                              color: Colors.white54,
+                              color: Colors.white70,
                               size: 20,
-                            ),
-                            const SizedBox(width: 8),
-                            Text(
-                              "Search",
-                              style: const TextStyle(color: Colors.white54),
                             ),
                           ],
                         ),
                       ),
                     ),
+
                     const SizedBox(width: 12),
-                    IconButton(
-                      icon: SvgPicture.asset(
-                        "assets/svg/notify_icon.svg",
-                        color: Colors.white,
-                      ),
-                      onPressed: () => Navigator.push(
+
+                    /// Notification Icon
+                    GestureDetector(
+                      onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => const NotificationScreen(),
                         ),
+                      ),
+                      child: SvgPicture.asset(
+                        "assets/svg/notify_icon.svg",
+                        height: 24,
+                        width: 24,
                       ),
                     ),
                   ],

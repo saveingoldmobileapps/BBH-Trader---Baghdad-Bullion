@@ -1,13 +1,17 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
-import '../../../l10n/app_localizations.dart';
+import '../../../data/data_sources/local_database/local_database.dart';
+import '../../sharedProviders/providers/home_provider.dart';
+import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
 import '../notification_screens/notification_screen.dart';
 import '../trade_screens/buy_gold_screen.dart';
-import '../trade_screens/sell_gold_screen.dart';
 
 enum TradeType {
   buy,
@@ -22,254 +26,328 @@ class TradeScreen extends ConsumerStatefulWidget {
 }
 
 class _TradeScreenState extends ConsumerState<TradeScreen> {
-  // open or close drawer
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  var tradeType = TradeType.buy;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    sizes!.initializeSize(context);
-  }
 
   @override
   Widget build(BuildContext context) {
-    /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
-    // Get current weekday
-    //final int today = DateTime.now().weekday; // Monday = 1, Sunday = 7
-
+    final goldPriceState = ref.watch(goldPriceProvider);
+    final mainStateWatchProvider = ref.watch(homeProvider);
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: Color(0xff171919),
       drawer: GetDrawerBar(
         onTap: () => _scaffoldKey.currentState!.openEndDrawer(),
       ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.greyScale1000,
-        leading: GestureDetector(
-          onTap: () => _scaffoldKey.currentState!.openDrawer(),
-          child: Container(
-            color: Colors.transparent,
-            height: sizes!.heightRatio * 24,
-            width: sizes!.widthRatio * 24,
-            child: Center(
-              child: SvgPicture.asset(
-                "assets/svg/menu_icon.svg",
-              ),
-            ),
-          ),
-        ),
-        titleSpacing: 0,
-        title: GetGenericText(
-          text: AppLocalizations.of(context)!.invest,
-          fontSize: 20,
-          fontWeight: FontWeight.w400,
-          color: Colors.white,
-        ),
-        actions: [
-          Directionality.of(context) == TextDirection.rtl?
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationScreen(),
-                  ),
-                );
-              },
-              child: Container(
-                color: Colors.transparent,
-                child: SvgPicture.asset(
-                  "assets/svg/notify_icon.svg",
-                  height: sizes!.responsiveHeight(
-                    phoneVal: 24,
-                    tabletVal: 32,
-                  ),
-                  width: sizes!.responsiveWidth(
-                    phoneVal: 24,
-                    tabletVal: 32,
-                  ),
-                ),
-              ),
-            ),
-          )
-          : Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationScreen(),
-                  ),
-                );
-              },
-              child: Container(
-                color: Colors.transparent,
-                child: SvgPicture.asset(
-                  "assets/svg/notify_icon.svg",
-                  height: sizes!.responsiveHeight(
-                    phoneVal: 24,
-                    tabletVal: 32,
-                  ),
-                  width: sizes!.responsiveWidth(
-                    phoneVal: 24,
-                    tabletVal: 32,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: Container(
-          height: sizes!.height,
-          width: sizes!.width,
-          decoration: const BoxDecoration(
-            color: AppColors.greyScale1000,
-          ),
-          child: SafeArea(
-            child:
-                // (today == DateTime.saturday || today == DateTime.sunday)
-                //     ? MarketCloseScreen()
-                //     :
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      /// Trade Type Tabs (Buy/Sell)
-                      Container(
-                        height: sizes!.responsiveLandscapeHeight(
-                          phoneVal: 44,
-                          tabletVal: 44,
-                          tabletLandscapeVal: 64,
-                          isLandscape: sizes!.isLandscape(),
-                        ),
-                        width: sizes!.isPhone
-                            ? sizes!.widthRatio * 360
-                            : sizes!.width,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF333333),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: sizes!.widthRatio * 8,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              // Buy tab
-                              Expanded(
-                                child: GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () {
-                                    setState(() {
-                                      tradeType = TradeType.buy;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: sizes!.responsiveLandscapeHeight(
-                                      phoneVal: 34,
-                                      tabletVal: 44,
-                                      tabletLandscapeVal: 54,
-                                      isLandscape: sizes!.isLandscape(),
-                                    ),
-                                    decoration: tradeType == TradeType.buy
-                                        ? BoxDecoration(
-                                            color: AppColors.primaryGold500,
-                                            borderRadius: BorderRadius.circular(
-                                              4,
-                                            ),
-                                          )
-                                        : null,
-                                    child: Center(
-                                      child: GetGenericText(
-                                        text: AppLocalizations.of(
-                                          context,
-                                        )!.gold,
-                                        fontSize: sizes!.isPhone ? 18 : 22,
-                                        fontWeight: tradeType == TradeType.buy
-                                            ? FontWeight.w700
-                                            : FontWeight.w400,
-                                        color: tradeType == TradeType.buy
-                                            ? AppColors.greyScale1000
-                                            : AppColors.grey3Color,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
 
-                              // Sell tab
-                              // Expanded(
-                              //   child: GestureDetector(
-                              //     behavior: HitTestBehavior.opaque,
-                              //     onTap: () {
-                              //       setState(() {
-                              //         tradeType = TradeType.sell;
-                              //       });
-                              //     },
-                              //     child: Container(
-                              //       height: sizes!.responsiveLandscapeHeight(
-                              //         phoneVal: 34,
-                              //         tabletVal: 44,
-                              //         tabletLandscapeVal: 54,
-                              //         isLandscape: sizes!.isLandscape(),
-                              //       ),
-                              //       decoration: tradeType == TradeType.sell
-                              //           ? BoxDecoration(
-                              //               color: AppColors.primaryGold500,
-                              //               borderRadius:
-                              //                   BorderRadius.circular(4),
-                              //             )
-                              //           : null,
-                              //       child: Center(
-                              //         child: GetGenericText(
-                              //           text: "Sell Gold",
-                              //           fontSize: sizes!.isPhone ? 18 : 22,
-                              //           fontWeight:
-                              //               tradeType == TradeType.sell
-                              //               ? FontWeight.w700
-                              //               : FontWeight.w400,
-                              //           color: tradeType == TradeType.sell
-                              //               ? AppColors.greyScale1000
-                              //               : AppColors.grey3Color,
-                              //         ),
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-                            ],
-                          ),
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: AppColors.greyScale1000,
+        elevation: 0,
+        titleSpacing: 12,
+        title: Row(
+          children: [
+            /// Profile Avatar
+            FutureBuilder<String?>(
+              future: LocalDatabase.instance.getUserProfileImage(),
+              builder: (context, snapshot) {
+                final cachedImage = snapshot.data ?? '';
+
+                final networkImage =
+                    mainStateWatchProvider
+                        .getUserProfileResponse
+                        .payload
+                        ?.userProfile
+                        ?.imageUrl ??
+                    '';
+
+                final imageToShow = networkImage.isNotEmpty
+                    ? networkImage
+                    : cachedImage;
+
+                return GestureDetector(
+                  onTap: () {
+                    FocusScope.of(context).unfocus();
+                    _scaffoldKey.currentState!.openDrawer();
+                  },
+                  child: Container(
+                    width: 36,
+                    height: 36,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppColors.goldLightColor,
+                        width: 1.2,
+                      ),
+                      image: imageToShow.isNotEmpty
+                          ? DecorationImage(
+                              image: imageToShow.startsWith('http')
+                                  ? NetworkImage(imageToShow)
+                                  : FileImage(File(imageToShow))
+                                        as ImageProvider,
+                              fit: BoxFit.cover,
+                            )
+                          : const DecorationImage(
+                              image: AssetImage(
+                                "assets/images/user_avatar.png",
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                    ),
+                  ),
+                );
+              },
+            ),
+
+            const SizedBox(width: 12),
+
+            /// Search Bar
+            Expanded(
+              child: Container(
+                height: 42,
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(
+                    color: AppColors.goldLightColor.withOpacity(0.4),
+                  ),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFF2A2A2A),
+                      Color(0xFF1E1E1E),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Search here",
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 14,
                         ),
                       ),
-                      ConstPadding.sizeBoxWithHeight(height: 24),
-                      if (tradeType == TradeType.buy) const BuyGoldScreen(),
-                      if (tradeType == TradeType.sell) const SellGoldScreen(),
-                    ],
-                  ).get16HorizontalPadding(),
+                    ),
+                    const Icon(
+                      Icons.search,
+                      color: Colors.white70,
+                      size: 20,
+                    ),
+                  ],
                 ),
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            /// Notification Icon
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationScreen(),
+                  ),
+                );
+              },
+              child: SvgPicture.asset(
+                "assets/svg/notify_icon.svg",
+                height: 24,
+                width: 24,
+              ),
+            ),
+          ],
+        ),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 24),
+
+              // 2. Current Market Price Card
+              _buildMarketPriceCard(goldPriceState),
+
+              const SizedBox(height: 24),
+
+              // 3. Trade Gold Action Button
+              LoaderButton(
+                title: "Trade Gold",
+                // c: AppColors.primaryGold500, // Or use a gradient decoration if needed
+                onTap: () {
+                  // Navigate to the BuyGoldScreen UI previously provided
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BuyGoldScreen(),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 16),
+
+              // 4. Disclaimer Text
+              Center(
+                child: GetGenericText(
+                  text:
+                      "Disclaimer: Maximum purchase of 136.37000 Grams applies.",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.grey4Color,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ),
         ),
       ),
+      // Use your existing bottom navigation bar here if applicable
+    );
+  }
+
+  Widget _buildTopHeader(BuildContext context) {
+    return Row(
+      children: [
+        // User Profile Pic
+        CircleAvatar(
+          radius: 20,
+          backgroundImage: const AssetImage(
+            "assets/images/user_placeholder.png",
+          ), // Update with actual path
+        ),
+        const SizedBox(width: 12),
+        // Search Placeholder Bar
+        Expanded(
+          child: Container(
+            height: 40,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1A1A1A),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white10),
+            ),
+            child: Row(
+              children: [
+                const Text(
+                  "Placeholder",
+                  style: TextStyle(color: Colors.white38),
+                ),
+                const Spacer(),
+                const Icon(Icons.search, color: Colors.white70, size: 20),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        // Notification Icon
+        GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const NotificationScreen()),
+          ),
+          child: SvgPicture.asset(
+            "assets/svg/notify_icon.svg",
+            height: 24,
+            width: 24,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMarketPriceCard(AsyncValue goldPriceState) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: const Color(0xFF262929),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: goldPriceState.when(
+        data: (data) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Current Market Price",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            _buildPriceRow("Buying at", data.oneGramBuyingPriceInIQD, "+0.65%"),
+            const SizedBox(height: 16),
+            _buildPriceRow(
+              "Selling at",
+              data.oneGramSellingPriceInIQD,
+              "+0.65%",
+            ),
+          ],
+        ),
+        loading: () => const Center(
+          child: CircularProgressIndicator(color: AppColors.primaryGold500),
+        ),
+        error: (_, __) => const Center(
+          child: Text(
+            "Error loading prices",
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPriceRow(String label, double price, String percentage) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: const TextStyle(color: Colors.white38, fontSize: 14),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              "IQD ${NumberFormat("#,##0.00").format(price)} / oz",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.green.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Row(
+            children: [
+              const Icon(Icons.arrow_upward, size: 12, color: Colors.green),
+              Text(
+                percentage,
+                style: const TextStyle(
+                  color: Colors.green,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

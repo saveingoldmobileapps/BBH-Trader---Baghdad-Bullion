@@ -216,7 +216,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                         shape: BoxShape.circle,
                         image: const DecorationImage(
                           image: AssetImage(
-                            "assets/png/main_logo.png",
+                            "assets/png/app_ic.png",
                           ),
                           fit: BoxFit.cover,
                         ),

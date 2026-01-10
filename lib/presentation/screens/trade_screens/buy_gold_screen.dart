@@ -13,13 +13,11 @@ import 'package:saveingold_fzco/presentation/screens/auth_screens/email_verify_c
 import 'package:saveingold_fzco/presentation/screens/fund_screens/add_fund_screen.dart';
 import 'package:saveingold_fzco/presentation/screens/setting_screens/setting_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/trade_provider/trade_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/live_price_container.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../sharedProviders/providers/home_provider.dart';
 import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
-import '../main_home_screens/trade_screen.dart';
 
 class BuyGoldScreen extends ConsumerStatefulWidget {
   const BuyGoldScreen({super.key});
@@ -29,35 +27,22 @@ class BuyGoldScreen extends ConsumerStatefulWidget {
 }
 
 class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
-  final TradeType tradeType = TradeType.buy;
   bool isBuyAtPriceStatus = false;
   final buyAtPriceController = TextEditingController();
   final userInputController = TextEditingController();
-  bool isSwitchValue = true;
 
-  // Constants
-  // static const double _usdToIQD = 3.674; // 1 USD to IQD
-  // static const double _gramsPerOunce = 31.10347; // 1 ounce in grams
-  static const String _defaultValue = '0.00';
-
-  // State variables
-  String calculatedValue = _defaultValue;
+  String calculatedValue = '0.00';
   double buyingPriceInOneGram = 0.00;
 
   final _keyForm = GlobalKey<FormState>();
-  final _focusNode = FocusNode(); // Add FocusNode
-  final _focusBuyAtPrice = FocusNode(); // Add FocusNode
-
-  Timer? _debounce; // For debouncing _updateCalculation
+  final _focusNode = FocusNode();
+  final _focusBuyAtPrice = FocusNode();
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
-
-    ///check if home Provider is null recall api
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final mainState = ref.read(homeProvider);
-
       ref
           .read(homeProvider.notifier)
           .getHomeFeed(
@@ -66,71 +51,38 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
           );
     });
     userInputController.addListener(_debouncedUpdateCalculation);
-    buyAtPriceController.addListener(
-      _debouncedUpdateCalculation,
-    ); // Add listener for buyAtPrice
+    buyAtPriceController.addListener(_debouncedUpdateCalculation);
   }
 
-  /// debouncing update calculation
   void _debouncedUpdateCalculation() {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), _updateCalculation);
   }
 
-  // updating calculation
   void _updateCalculation() {
     final goldPriceState = ref.read(goldPriceProvider);
-    //final mainState = ref.read(homeProvider);
+    goldPriceState.whenData((data) {
+      final oneGramIQDPrice = data.oneGramBuyingPriceInIQD;
+      final inputValue =
+          double.tryParse(userInputController.text.trim()) ?? 0.0;
 
-    // final walletBalance =
-    //     double.tryParse(
-    //       mainState.getHomeFeedResponse.payload?.walletExists?.moneyBalance
-    //               ?.toString() ??
-    //           '0',
-    //     ) ??
-    //     0.0;
-
-    goldPriceState.when(
-      data: (data) {
-        // final buyingPX = data.oneGramBuyingPriceInIQD;
-        //data.getGoldPriceResponse.prices?.last.mDBuyingPx ?? 0.0;
-        // final oneGramIQDPrice = (buyingPX * _usdToIQD) / _gramsPerOunce;
-
-        final oneGramIQDPrice = data.oneGramBuyingPriceInIQD;
-        final inputValue =
-            double.tryParse(userInputController.text.trim()) ?? 0.0;
-
-        // Use buyAtPrice if enabled and valid, otherwise use current price
-        double priceToUse = oneGramIQDPrice;
-        if (isBuyAtPriceStatus && buyAtPriceController.text.isNotEmpty) {
-          final buyAtPrice = double.tryParse(buyAtPriceController.text.trim());
-          if (buyAtPrice != null && buyAtPrice > 0) {
-            priceToUse = buyAtPrice;
-          }
+      double priceToUse = oneGramIQDPrice;
+      if (isBuyAtPriceStatus && buyAtPriceController.text.isNotEmpty) {
+        final buyAtPrice = double.tryParse(buyAtPriceController.text.trim());
+        if (buyAtPrice != null && buyAtPrice > 0) {
+          priceToUse = buyAtPrice;
         }
+      }
 
-        setState(() {
-          calculatedValue = (inputValue * priceToUse).toStringAsFixed(2);
-          buyingPriceInOneGram = oneGramIQDPrice;
-        });
-      },
-      error: (error, stackTrace) {
-        setState(() {
-          calculatedValue = _defaultValue;
-        });
-      },
-      loading: () {
-        setState(() {
-          calculatedValue = _defaultValue;
-        });
-      },
-    );
+      setState(() {
+        calculatedValue = (inputValue * priceToUse).toStringAsFixed(2);
+        buyingPriceInOneGram = oneGramIQDPrice;
+      });
+    });
   }
 
   @override
   void dispose() {
-    userInputController.removeListener(_debouncedUpdateCalculation);
-    buyAtPriceController.removeListener(_debouncedUpdateCalculation);
     buyAtPriceController.dispose();
     userInputController.dispose();
     _focusNode.dispose();
@@ -140,1191 +92,603 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // ref.invalidate(goldPriceProvider);
-    sizes!.initializeSize(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    sizes!.refreshSize(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ModalRoute.of(context)?.isCurrent ?? false) {
-        ref.invalidate(goldPriceProvider);
-      }
-    });
     final tradeStateWatchProvider = ref.watch(tradeProvider);
     final mainStateWatchProvider = ref.watch(homeProvider);
+    final goldPriceState = ref.watch(goldPriceProvider);
 
-    /// for gold price
-    //final goldPriceStateWatchProvider = ref.watch(goldPriceProvider);
-    // debugPrint("buyGoldScreenRebuild");
+    return Scaffold(
+      backgroundColor: Color(0xff171919),
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        leading: Icon(
+          Icons.arrow_back,
+          color: Colors.white,
+        ),
+        backgroundColor: const Color(0xff171919),
+        elevation: 0,
+        title: Text(
+          AppLocalizations.of(context)!.buy_gold,
+          style: GoogleFonts.inter(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        actions: [
+          _buildTradeTypeDropdown(),
+          const SizedBox(width: 12),
+        ],
+      ),
 
-    /// Get wallet balance with proper null safety
-    // final walletBalance =
-    //     double.tryParse(
-    //       mainStateWatchProvider
-    //               .getHomeFeedResponse
-    //               .payload
-    //               ?.walletExists
-    //               ?.moneyBalance
-    //               ?.toString() ??
-    //           '0',
-    //     ) ??
-    //     0.0;
-
-    // debugPrint("walletBalance: $walletBalance");
-
-    return Form(
-      key: _keyForm,
-      child: GestureDetector(
-        onTap: () {
-          _focusNode.unfocus();
-          _focusBuyAtPrice.unfocus();
-        },
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Form(
+        key: _keyForm,
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Selling Price Container
-                LivePriceContainer(
-                  title: AppLocalizations.of(context)!.selling_price,
-                  isSelling: true,
-                  todayHighLow: AppLocalizations.of(context)!.low,
+                const SizedBox(height: 10),
+
+                // Market / Target Price Selector
+                const SizedBox(height: 30),
+
+                // Gram Input Section
+                Text(
+                  AppLocalizations.of(context)!.amount,
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-                ConstPadding.sizeBoxWithWidth(width: 6),
-                // Buying Price Container
-                LivePriceContainer(
-                  title: AppLocalizations.of(context)!.buying_price,
-                  isSelling: false,
-                  todayHighLow: AppLocalizations.of(context)!.high,
+                Text(
+                  "Enter the amount of gold in grams to trade",
+                  style: GoogleFonts.inter(color: Colors.grey, fontSize: 13),
                 ),
+                const SizedBox(height: 15),
+
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    IntrinsicWidth(
+                      child: TextFormField(
+                        controller: userInputController,
+                        focusNode: _focusNode,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                          signed: true,
+                        ),
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontSize: 48,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        decoration: const InputDecoration(
+                          hintText: "1.00",
+                          hintStyle: TextStyle(color: Colors.white24),
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        inputFormatters: [
+                          DecimalTextInputFormatter(decimalRange: 2),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      "grams",
+                      style: GoogleFonts.inter(
+                        color: Colors.white54,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+
+                Text(
+                  "≈ IQD $calculatedValue",
+                  style: GoogleFonts.inter(
+                    color: Colors.white70,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+
+                const SizedBox(height: 35),
+
+                // Current Market Price Display
+                _buildPriceCard(goldPriceState),
+
+                const SizedBox(height: 25),
+
+                // Conditional Target Price Input
+                if (isBuyAtPriceStatus) ...[
+                  Text(
+                    "Target Price (per gram)",
+                    style: GoogleFonts.inter(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  _buildTargetPriceInput(),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Your order will execute when the price reaches IQD ${buyAtPriceController.text.isEmpty ? '0.00' : buyAtPriceController.text}",
+                    style: GoogleFonts.inter(color: Colors.grey, fontSize: 12),
+                  ),
+                ],
+
+                const Spacer(),
+
+                // Action Button with Full Logic
+                LoaderButton(
+                  title: AppLocalizations.of(context)!.buy_gold,
+                  isLoadingState: tradeStateWatchProvider.isButtonState,
+                  onTap: () => _onTradeButtonTap(
+                    mainStateWatchProvider,
+                    tradeStateWatchProvider,
+                  ),
+                ),
+                const SizedBox(height: 40),
               ],
             ),
-            ConstPadding.sizeBoxWithHeight(height: 16),
-            _buildAmountPriceInputSection(),
-            ConstPadding.sizeBoxWithHeight(height: 8),
+          ),
+        ),
+      ),
+    );
+  }
 
-            /// Maximum purchasable grams - Updated Widget
-            Consumer(
-              builder: (context, ref, child) {
-                final goldPriceState = ref.watch(goldPriceProvider);
-                final mainState = ref.watch(homeProvider);
+  Widget _buildTradeTypeSelector() {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _selectorBtn("Trade at market price", !isBuyAtPriceStatus),
+          _selectorBtn("Target price", isBuyAtPriceStatus),
+        ],
+      ),
+    );
+  }
 
-                return goldPriceState
-                    .when(
-                      data: (data) {
-                        final walletBalance =
-                            double.tryParse(
-                              mainState
-                                      .getHomeFeedResponse
-                                      .payload
-                                      ?.walletExists
-                                      ?.moneyBalance
-                                      ?.toString() ??
-                                  '0',
-                            ) ??
-                            0.0;
-                        final double buyingPriceInOneGram =
-                            data.oneGramBuyingPriceInIQD;
-                        final maxGrams = buyingPriceInOneGram > 0
-                            ? walletBalance / buyingPriceInOneGram
-                            : 0.0;
+  Widget _selectorBtn(String title, bool isSelected) {
+    return GestureDetector(
+      onTap: () => setState(() {
+        isBuyAtPriceStatus = title == "Target price";
+        _updateCalculation();
+      }),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Colors.white.withOpacity(0.15)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          title,
+          style: GoogleFonts.inter(
+            color: isSelected ? Colors.white : Colors.white38,
+            fontSize: 12,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+          ),
+        ),
+      ),
+    );
+  }
 
-                        final message = walletBalance == 0
-                            ? AppLocalizations.of(context)!.wallet_empty
-                            : "${AppLocalizations.of(context)!.max_grams_note} ${maxGrams.toStringAsFixed(2)}"; //"Max grams you can buy: ${maxGrams.toStringAsFixed(2)}";
-                        return GetGenericText(
-                          text: message,
-                          fontSize: sizes!.isPhone ? 11 : 14,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.grey3Color,
-                        );
-                      },
-                      error: (error, stackTrace) => const SizedBox.shrink(),
-                      loading: () => const SizedBox.shrink(),
-                    )
-                    .getAlign();
-              },
-            ),
-
-            /// Buy at price
-            BuildSwitchOption(
-              title: AppLocalizations.of(context)!.buy_at_price,
-              value: isBuyAtPriceStatus,
-              onChanged: (value) {
-                setState(() {
-                  isBuyAtPriceStatus = value;
-                  _updateCalculation(); // Update calculation when switch is toggled
-                });
-              },
-            ),
-
-            /// buy at price status
-            if (isBuyAtPriceStatus) ...[
-              ConstPadding.sizeBoxWithHeight(height: 10),
-              // CommonTextFormField(
-              //   focusNode: _focusBuyAtPrice,
-              //   title: "",
-              //   hintText: AppLocalizations.of(context)!.per_gram_IQD,
-              //   labelText: AppLocalizations.of(context)!.buy_at_price,
-              //   controller: buyAtPriceController,
-              //   inputFormatters: [
-              //     DecimalTextInputFormatter(decimalRange: 2),
-              //     //LengthLimitingTextInputFormatter(15),
-              //   ],
-
-              //   textInputType: TextInputType.numberWithOptions(
-              //     signed: true,
-              //     decimal: true,
-              //   ),
-              //   validator: isBuyAtPriceStatus
-              //       ? (value) {
-              //           if (value!.isEmpty) {
-              //             return AppLocalizations.of(context)!.please_enter_valid_amount;
-              //           }
-              //           return null;
-              //         }
-              //       : null,
-              // ),
-              CommonTextFormField(
-                focusNode: _focusBuyAtPrice,
-                title: "",
-                hintText: AppLocalizations.of(context)!.per_gram_IQD,
-                labelText: AppLocalizations.of(context)!.buy_at_price,
-                controller: buyAtPriceController,
-                inputFormatters: [
-                  DecimalTextInputFormatter(decimalRange: 2),
-                  // LengthLimitingTextInputFormatter(15),
-                ],
-                textInputType: const TextInputType.numberWithOptions(
-                  signed: true,
-                  decimal: true,
+  Widget _buildPriceCard(AsyncValue goldPriceState) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF262929),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Current Market Price",
+                style: GoogleFonts.inter(color: Colors.white54, fontSize: 12),
+              ),
+              const SizedBox(height: 4),
+              goldPriceState.when(
+                data: (data) => Text(
+                  "IQD ${data.oneGramBuyingPriceInIQD.toStringAsFixed(2)} / gram",
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
-                validator: isBuyAtPriceStatus
-                    ? (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return AppLocalizations.of(
-                            context,
-                          )!.please_enter_valid_amount;
-                        }
-                        final parsedValue = double.tryParse(value);
-                        if (parsedValue == null || parsedValue <= 0) {
-                          return AppLocalizations.of(
-                            context,
-                          )!.please_enter_valid_amount;
-                        }
-                        return null;
-                      }
-                    : null,
+                loading: () => const SizedBox(
+                  height: 15,
+                  width: 15,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                error: (_, __) => const Text(
+                  "Error loading price",
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
             ],
-            ConstPadding.sizeBoxWithHeight(height: 16),
-
-            /// Loader Button
-            LoaderButton(
-              title: AppLocalizations.of(context)!.buy_gold,
-              isLoadingState: tradeStateWatchProvider.isButtonState,
-              onTap: () async {
-                ///If email not verified.
-                if (!mainStateWatchProvider.isEmailVerified) {
-                  await genericPopUpWidget(
-                    isLoadingState: false,
-                    context: context,
-                    heading: AppLocalizations.of(
-                      context,
-                    )!.email_verification_required,
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!.email_verification_message,
-                    noButtonTitle: AppLocalizations.of(context)!.not_now,
-                    yesButtonTitle: AppLocalizations.of(context)!.verify_now,
-                    onNoPress: () async {
-                      Navigator.pop(context);
-                    },
-                    onYesPress: () async {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EmailVerifyCodeScreen(
-                            email: mainStateWatchProvider.userEmail,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                  return;
-                }
-
-                ///If email verified and residency not verified.
-                ///
-
-                final isDemo =
-                    await LocalDatabase.instance.getIsDemo() ?? false;
-
-                if (!context.mounted) return;
-                if (!isDemo &&
-                    mainStateWatchProvider.isEmailVerified &&
-                    !mainStateWatchProvider.isBasicUserVerified) {
-                  await genericPopUpWidget(
-                    isLoadingState: false,
-                    context: context,
-                    heading: AppLocalizations.of(
-                      context,
-                    )!.residency_verification_required,
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!.residency_verification_message,
-                    noButtonTitle: AppLocalizations.of(context)!.not_now,
-                    yesButtonTitle: AppLocalizations.of(context)!.verify_now,
-                    onNoPress: () async {
-                      Navigator.pop(context);
-                    },
-                    onYesPress: () async {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => KycFirstStepScreen(),
-                        ),
-                      );
-                    },
-                  );
-                  return;
-                }
-
-                ///if email and residency document verified and kyc not verified
-                if (!isDemo &&
-                    mainStateWatchProvider.isEmailVerified &&
-                    mainStateWatchProvider.isBasicUserVerified &&
-                    !mainStateWatchProvider.isUserKYCVerified) {
-                  if (!context.mounted) return;
-                  await genericPopUpWidget(
-                    isLoadingState: false,
-                    context: context,
-                    heading: AppLocalizations.of(
-                      context,
-                    )!.kyc_verification_required,
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!.kyc_verification_message,
-                    noButtonTitle: AppLocalizations.of(context)!.later,
-                    yesButtonTitle: AppLocalizations.of(context)!.proceed,
-                    onNoPress: () async {
-                      Navigator.pop(context);
-                    },
-                    onYesPress: () async {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => KycSecondStepScreen(),
-                        ),
-                      );
-                    },
-                  );
-                  return;
-                }
-                // Get wallet balance and input amount safely
-                final walletBalance =
-                    double.tryParse(
-                      mainStateWatchProvider
-                              .getHomeFeedResponse
-                              .payload
-                              ?.walletExists
-                              ?.moneyBalance
-                              ?.toString() ??
-                          '0',
-                    ) ??
-                    0.0;
-
-                final inputAmount = double.tryParse(calculatedValue) ?? 0.0;
-
-                // Optional: Tolerance for floating-point errors
-                const tolerance = 0.01;
-
-                if (!isDemo && (walletBalance + tolerance < inputAmount)) {
-                  await genericPopUpWidget(
-                    context: context,
-                    heading: AppLocalizations.of(context)!.insufficient_balance,
-                    subtitle: AppLocalizations.of(context)!
-                        .insufficient_balance_message(
-                          walletBalance.toStringAsFixed(2),
-                          inputAmount.toStringAsFixed(2),
-                        ),
-
-                    //"Your balance (IQD ${walletBalance.toStringAsFixed(2)}) is less than the required amount (IQD ${inputAmount.toStringAsFixed(2)}). Please add funds.",
-                    noButtonTitle: AppLocalizations.of(context)!.close,
-                    yesButtonTitle: AppLocalizations.of(context)!.add_funds,
-                    isLoadingState: false,
-                    onNoPress: () async {
-                      _focusNode.unfocus();
-                      _focusBuyAtPrice.unfocus();
-                      Navigator.pop(context);
-                    },
-                    onYesPress: () async {
-                      _focusNode.unfocus();
-                      _focusBuyAtPrice.unfocus();
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AddFundScreen(),
-                        ),
-                      );
-                    },
-                  );
-                  return;
-                }
-                //if demo user and amount is less then navigate to the switching to real user
-                if (isDemo && (walletBalance + tolerance < inputAmount)) {
-                  await genericPopUpWidget(
-                    context: context,
-                    heading: AppLocalizations.of(
-                      context,
-                    )!.insufficient_demo_balance,
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!.demo_balance_message,
-                    noButtonTitle: AppLocalizations.of(context)!.close,
-                    // "Close",
-                    yesButtonTitle: AppLocalizations.of(context)!.upgrade_now,
-                    // "Upgrade Now",
-                    isLoadingState: false,
-                    onNoPress: () => Navigator.pop(context),
-                    onYesPress: () async {
-                      Navigator.pop(context);
-                      if (!context.mounted) return;
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const SettingScreen(),
-                        ),
-                      );
-                    },
-                  );
-                  return;
-                }
-
-                ///if all verified, then navigate to add fund screen
-                if (isBuyAtPriceStatus) {
-                  final userInput = userInputController.text.trim();
-                  final inputBuyAtPrice = buyAtPriceController.text.trim();
-                  final buyAtPrice = double.tryParse(inputBuyAtPrice) ?? 0.0;
-
-                  final checkUserBuyAtPrice = buyAtPrice < buyingPriceInOneGram;
-
-                  // Validation for zero amount of gram
-                  if (userInputController.text.trim().isEmpty) {
-                    Toasts.getErrorToast(
-                      gravity: ToastGravity.TOP,
-                      text: AppLocalizations.of(context)!.please_add_grams,
-                      // 'Please add grams amount.',
-                      duration: const Duration(seconds: 55),
-                    );
-                    return;
-                  }
-                  if (userInput.isEmpty) {
-                    Toasts.getErrorToast(
-                      gravity: ToastGravity.TOP,
-                      text: AppLocalizations.of(context)!.please_add_grams,
-                      duration: const Duration(seconds: 2),
-                    );
-                    return;
-                  }
-
-                  if (inputBuyAtPrice.isEmpty || buyAtPrice <= 0) {
-                    Toasts.getErrorToast(
-                      gravity: ToastGravity.TOP,
-                      text: AppLocalizations.of(
-                        context,
-                      )!.please_enter_valid_price,
-                      duration: const Duration(seconds: 2),
-                    );
-                    return;
-                  }
-
-                  if (userInput.isNotEmpty &&
-                      inputBuyAtPrice.isNotEmpty &&
-                      checkUserBuyAtPrice) {
-                    debugPrint("BuyGoldClicked");
-                    _focusNode.unfocus();
-                    _focusBuyAtPrice.unfocus();
-
-                    // Ensure providers are in data state
-                    final goldPriceState = ref.read(goldPriceProvider);
-                    final mainState = ref.read(homeProvider);
-
-                    if (goldPriceState is AsyncError ||
-                        mainState is AsyncError) {
-                      Toasts.getErrorToast(
-                        gravity: ToastGravity.TOP,
-                        text: AppLocalizations.of(
-                          context,
-                        )!.unable_to_fetch_data,
-                        // 'Unable to fetch latest data. Please try again.',
-                        duration: const Duration(seconds: 2),
-                      );
-                      return;
-                    }
-
-                    if (goldPriceState is AsyncLoading ||
-                        mainState is AsyncLoading) {
-                      Toasts.getSuccessToast(
-                        gravity: ToastGravity.TOP,
-                        text: AppLocalizations.of(context)!.data_loading,
-                        //  'Data is loading. Please wait.',
-                        duration: const Duration(seconds: 2),
-                      );
-                      return;
-                    }
-
-                    // Get wallet balance with proper null safety
-                    final walletBalance =
-                        double.tryParse(
-                          mainStateWatchProvider
-                                  .getHomeFeedResponse
-                                  .payload
-                                  ?.walletExists
-                                  ?.moneyBalance
-                                  ?.toString() ??
-                              '0',
-                        ) ??
-                        0.0;
-
-                    // Validate calculatedValue
-                    if (calculatedValue.isEmpty ||
-                        calculatedValue == _defaultValue) {
-                      Toasts.getErrorToast(
-                        gravity: ToastGravity.TOP,
-                        text: AppLocalizations.of(context)!.invalid_amount,
-
-                        // 'Invalid amount. Please enter a valid value.',
-                        duration: const Duration(seconds: 2),
-                      );
-                      return;
-                    }
-
-                    // Get input amount with validation
-                    final inputAmount = double.tryParse(calculatedValue) ?? 0.0;
-
-                    // Detailed logging
-                    debugPrint(
-                      "inputAmount: $inputAmount, walletBalance: $walletBalance, calculatedValue: $calculatedValue",
-                    );
-
-                    // Add tolerance for floating-point comparison
-                    // const tolerance = 0.01;
-                    // if (walletBalance < (inputAmount - tolerance)) {
-                    //   // Generic popup widget for insufficient balance
-                    //   await genericPopUpWidget(
-                    //     context: context,
-                    //     heading: "Insufficient Balance",
-                    //     subtitle:
-                    //         "Your balance ($walletBalance IQD) is less than the required amount ($inputAmount IQD). Please add funds.",
-                    //     noButtonTitle: "Close",
-                    //     yesButtonTitle: "Add Funds",
-                    //     isLoadingState: false,
-                    //     onNoPress: () async {
-                    //       _focusNode.unfocus();
-                    //       _focusBuyAtPrice.unfocus();
-                    //       Navigator.pop(context);
-                    //     },
-                    //     onYesPress: () async {
-                    //       _focusNode.unfocus();
-                    //       _focusBuyAtPrice.unfocus();
-                    //       Navigator.pop(context);
-                    //       Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => const AddFundScreen(),
-                    //         ),
-                    //       );
-                    //     },
-                    //   );
-                    //   return;
-                    // }
-
-                    // Proceed with confirmation popup
-                    await genericPopUpWidget(
-                      context: context,
-
-                      heading: AppLocalizations.of(context)!.confirmation,
-                      //  "Confirmation",
-                      subtitle: isBuyAtPriceStatus
-                          ? AppLocalizations.of(context)!.place_order_confirm
-                          // "Do you want to place this pending order?"
-                          : AppLocalizations.of(
-                              context,
-                            )!.invest_confirmation_message(
-                              userInputController.text.trim(),
-                            ), //"Do you want to buy ${userInputController.text.trim()} grams of gold now?",
-                      noButtonTitle: AppLocalizations.of(
-                        context,
-                      )!.cancel, //"Cancel",
-                      yesButtonTitle: isBuyAtPriceStatus
-                          ? AppLocalizations.of(context)!.place_order
-                          // "Place Order"
-                          : AppLocalizations.of(context)!.confirm_purchase,
-                      //  "Confirm Purchase",
-                      // heading: "Confirmation",
-                      // subtitle: isBuyAtPriceStatus
-                      //     ? "Are you sure you want to place a pending order?"
-                      //     : "Are you sure you want to buy ${userInputController.text} grams of gold?",
-                      // noButtonTitle: "Cancel",
-                      // yesButtonTitle: isBuyAtPriceStatus
-                      //     ? "Confirm"
-                      //     : "Buy Gold",
-                      isLoadingState: tradeStateWatchProvider.isButtonState,
-                      onNoPress: () async {
-                        _focusNode.unfocus();
-                        _focusBuyAtPrice.unfocus();
-                        Navigator.pop(context);
-                      },
-                      onYesPress: () async {
-                        Navigator.pop(context);
-                        _focusNode.unfocus();
-                        _focusBuyAtPrice.unfocus();
-
-                        if (!context.mounted) return;
-                        await ref
-                            .read(tradeProvider.notifier)
-                            .userCanBuyGold(
-                              context: context,
-                              tradeMoney: num.tryParse(calculatedValue) ?? 0.0,
-                              tradeMetal:
-                                  num.tryParse(
-                                    userInputController.text.trim(),
-                                  ) ??
-                                  0.0,
-                              buyAtPriceStatus: isBuyAtPriceStatus,
-                              buyAtPrice: isBuyAtPriceStatus
-                                  ? num.tryParse(
-                                      buyAtPriceController.text.trim(),
-                                    )
-                                  : null,
-
-                              // num.tryParse(
-                              //         buyAtPriceController.text.trim()) ??
-                              //     0.0,
-                              buyingPrice: buyingPriceInOneGram,
-                            )
-                            .then((onValue) {
-                              if (!context.mounted) return;
-                              userInputController.clear();
-                              buyAtPriceController.clear();
-                              setState(() {
-                                calculatedValue = '0.00';
-                                isBuyAtPriceStatus = false;
-                              });
-                            });
-                      },
-                    );
-                  } else {
-                    Toasts.getErrorToast(
-                      gravity: ToastGravity.TOP,
-                      text: checkUserBuyAtPrice
-                          ? AppLocalizations.of(
-                              context,
-                            )!.please_enter_valid_price
-                          // "Please enter a valid price."
-                          : AppLocalizations.of(
-                              context,
-                            )!.invest_price_less_than_buying,
-                      // "Enter a price that is less than or equal to the current buying price.",
-                      duration: const Duration(seconds: 2),
-                    );
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   SnackBar(
-                    //     content: GetGenericText(
-                    //       text: checkUserBuyAtPrice
-                    //           ? 'Enter a valid price.'
-                    //           : "Enter price less than or equal to the buying price",
-                    //       fontSize: 14,
-                    //       fontWeight: FontWeight.w500,
-                    //       color: AppColors.whiteColor,
-                    //     ),
-                    //     duration: const Duration(seconds: 2),
-                    //   ),
-                    // );
-                  }
-                } else {
-                  if (userInputController.text.isNotEmpty) {
-                    debugPrint("BuyGoldClicked");
-                    _focusNode.unfocus();
-                    _focusBuyAtPrice.unfocus();
-
-                    // Ensure providers are in data state
-                    final goldPriceState = ref.read(goldPriceProvider);
-                    final mainState = ref.read(homeProvider);
-
-                    if (goldPriceState is AsyncError ||
-                        mainState is AsyncError) {
-                      Toasts.getErrorToast(
-                        gravity: ToastGravity.TOP,
-                        text: AppLocalizations.of(
-                          context,
-                        )!.unable_to_fetch_data,
-                        // "Unable to retrieve the latest data. Please try again.",
-                        duration: const Duration(seconds: 2),
-                      );
-
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: GetGenericText(
-                      //       text:
-                      //           'Unable to fetch latest data. Please try again.',
-                      //       fontSize: 14,
-                      //       fontWeight: FontWeight.w500,
-                      //       color: AppColors.whiteColor,
-                      //     ),
-                      //     duration: const Duration(seconds: 2),
-                      //   ),
-                      // );
-                      return;
-                    }
-
-                    if (goldPriceState is AsyncLoading ||
-                        mainState is AsyncLoading) {
-                      Toasts.getErrorToast(
-                        gravity: ToastGravity.TOP,
-                        text: AppLocalizations.of(
-                          context,
-                        )!.data_loading,
-                        // "Data is loading. Please wait.",
-                        duration: const Duration(seconds: 2),
-                      );
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: GetGenericText(
-                      //       text: 'Data is loading. Please wait.',
-                      //       fontSize: 14,
-                      //       fontWeight: FontWeight.w500,
-                      //       color: AppColors.whiteColor,
-                      //     ),
-                      //     duration: const Duration(seconds: 2),
-                      //   ),
-                      // );
-                      return;
-                    }
-
-                    // Get wallet balance
-                    final walletBalance =
-                        double.tryParse(
-                          mainStateWatchProvider
-                                  .getHomeFeedResponse
-                                  .payload
-                                  ?.walletExists
-                                  ?.moneyBalance
-                                  ?.toString() ??
-                              '0',
-                        ) ??
-                        0.0;
-
-                    // Validate calculatedValue
-                    if (calculatedValue.isEmpty ||
-                        calculatedValue == _defaultValue) {
-                      Toasts.getSuccessToast(
-                        text: AppLocalizations.of(
-                          context,
-                        )!.invalid_amount,
-                        // "Invalid amount. Please enter a valid number.",
-                        duration: const Duration(seconds: 2),
-                      );
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   SnackBar(
-                      //     content: GetGenericText(
-                      //       text: 'Invalid amount. Please enter a valid value.',
-                      //       fontSize: 14,
-                      //       fontWeight: FontWeight.w500,
-                      //       color: AppColors.whiteColor,
-                      //     ),
-                      //     duration: const Duration(seconds: 2),
-                      //   ),
-                      // );
-                      return;
-                    }
-
-                    // Get input amount with validation
-                    final inputAmount = double.tryParse(calculatedValue) ?? 0.0;
-
-                    // Detailed logging
-                    debugPrint(
-                      "inputAmount: $inputAmount, walletBalance: $walletBalance, calculatedValue: $calculatedValue",
-                    );
-
-                    // Add tolerance for floating-point comparison
-                    // const tolerance = 0.01;
-                    // if (walletBalance < (inputAmount - tolerance)) {
-                    //   // Generic popup widget for insufficient balance
-                    //   await genericPopUpWidget(
-                    //     context: context,
-                    //     heading: "Insufficient Balance",
-                    //     subtitle:
-                    //         "Your balance ($walletBalance IQD) is less than the required amount ($inputAmount IQD). Please add funds.",
-                    //     noButtonTitle: "Close",
-                    //     yesButtonTitle: "Add Funds",
-                    //     isLoadingState: false,
-                    //     onNoPress: () async {
-                    //       _focusNode.unfocus();
-                    //       _focusBuyAtPrice.unfocus();
-                    //       Navigator.pop(context);
-                    //     },
-                    //     onYesPress: () async {
-                    //       _focusNode.unfocus();
-                    //       _focusBuyAtPrice.unfocus();
-                    //       Navigator.pop(context);
-                    //       Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => const AddFundScreen(),
-                    //         ),
-                    //       );
-                    //     },
-                    //   );
-                    //   return;
-                    // }
-
-                    /// Proceed with confirmation popup
-                    await genericPopUpLivePriceWidget(
-                      autoCloseAfterSeconds: 5,
-                      context: context,
-                      heading: AppLocalizations.of(context)!.confirmation,
-                      subtitle: isBuyAtPriceStatus
-                          ? AppLocalizations.of(context)!.place_order_confirm
-                          : AppLocalizations.of(
-                              context,
-                            )!.invest_confirmation_message(
-                              userInputController.text.trim(),
-                            ),
-                      noButtonTitle: AppLocalizations.of(context)!.cancel,
-                      yesButtonTitle: isBuyAtPriceStatus
-                          ? AppLocalizations.of(context)!.place_order
-                          : AppLocalizations.of(context)!.confirm_purchase,
-                      isLoadingState: tradeStateWatchProvider.isButtonState,
-                      onNoPress: () async {
-                        _focusNode.unfocus();
-                        _focusBuyAtPrice.unfocus();
-                        Navigator.pop(context);
-                      },
-                      onYesPress: () async {
-                        Navigator.pop(context);
-                        _focusNode.unfocus();
-                        _focusBuyAtPrice.unfocus();
-                        if (!context.mounted) return;
-                        await ref
-                            .read(tradeProvider.notifier)
-                            .userCanBuyGold(
-                              context: context,
-                              tradeMoney: num.tryParse(calculatedValue) ?? 0.0,
-                              tradeMetal:
-                                  num.tryParse(
-                                    userInputController.text.trim(),
-                                  ) ??
-                                  0.0,
-                              buyAtPriceStatus: isBuyAtPriceStatus,
-                              buyAtPrice: isBuyAtPriceStatus
-                                  ? num.tryParse(
-                                      buyAtPriceController.text.trim(),
-                                    )
-                                  : null,
-                              buyingPrice: buyingPriceInOneGram,
-                            );
-                        userInputController.clear();
-                        buyAtPriceController.clear();
-                      },
-
-                      ///  Live price section inside popup
-                      livePriceWidget: Consumer(
-                        builder: (context, ref, _) {
-                          final goldPriceState = ref.watch(goldPriceProvider);
-                          final inputValue =
-                              double.tryParse(
-                                userInputController.text.trim(),
-                              ) ??
-                              0.0;
-
-                          return goldPriceState.when(
-                            data: (data) {
-                              double oneGramPrice =
-                                  data.oneGramBuyingPriceInIQD;
-                              if (isBuyAtPriceStatus &&
-                                  buyAtPriceController.text.isNotEmpty) {
-                                final customPrice = double.tryParse(
-                                  buyAtPriceController.text,
-                                );
-                                if (customPrice != null && customPrice > 0) {
-                                  oneGramPrice = customPrice;
-                                }
-                              }
-                              final total = inputValue * oneGramPrice;
-                              buyingPriceInOneGram = oneGramPrice;
-                              calculatedValue = total.toString();
-                              return GetGenericText(
-                                text:
-                                    '${AppLocalizations.of(context)!.buy_gold_pop} ${oneGramPrice.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}',
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 18,
-                                  tabletVal: 20,
-                                ),
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.primaryGold500,
-                                textAlign: TextAlign.center,
-                              ).getChildCenter();
-                            },
-                            loading: () => const CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white70,
-                            ),
-                            error: (_, __) => const Text(
-                              'Error fetching price',
-                              style: TextStyle(color: Colors.redAccent),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                    // Future.delayed(const Duration(seconds: 5), () {
-                    //   if (Navigator.canPop(context)) {
-                    //     Navigator.pop(context);
-                    //   }
-                    // });
-                    // await genericPopUpWidget(
-                    //   context: context,
-                    //   heading: AppLocalizations.of(
-                    //     context,
-                    //   )!
-                    //       .confirmation,
-                    //   // "Confirmation",
-                    //   subtitle: isBuyAtPriceStatus
-                    //       ? AppLocalizations.of(
-                    //           context,
-                    //         )!
-                    //           .place_order_confirm
-                    //       // "Do you want to place this pending order?"
-                    //       : AppLocalizations.of(
-                    //           context,
-                    //         )!
-                    //           .invest_confirmation_message(
-                    //           userInputController.text.trim(),
-                    //         ), //"Do you want to buy ${userInputController.text.trim()} grams of gold now?",
-                    //   noButtonTitle: AppLocalizations.of(
-                    //     context,
-                    //   )!
-                    //       .cancel, //"Cancel",
-                    //   yesButtonTitle: isBuyAtPriceStatus
-                    //       ? AppLocalizations.of(
-                    //           context,
-                    //         )!
-                    //           .place_order
-                    //       // "Place Order"
-                    //       : AppLocalizations.of(
-                    //           context,
-                    //         )!
-                    //           .confirm_purchase,
-                    //   //  "Confirm Purchase",
-                    //   isLoadingState: tradeStateWatchProvider.isButtonState,
-                    //   onNoPress: () async {
-                    //     _focusNode.unfocus();
-                    //     _focusBuyAtPrice.unfocus();
-                    //     Navigator.pop(context);
-                    //   },
-                    //   onYesPress: () async {
-                    //     Navigator.pop(context);
-                    //     _focusNode.unfocus();
-                    //     _focusBuyAtPrice.unfocus();
-
-                    //     if (!context.mounted) return;
-                    //     await ref
-                    //         .read(tradeProvider.notifier)
-                    //         .userCanBuyGold(
-                    //           context: context,
-                    //           tradeMoney: num.tryParse(calculatedValue) ?? 0.0,
-                    //           tradeMetal: num.tryParse(
-                    //                 userInputController.text.trim(),
-                    //               ) ??
-                    //               0.0,
-                    //           buyAtPriceStatus: isBuyAtPriceStatus,
-                    //           buyAtPrice: isBuyAtPriceStatus
-                    //               ? num.tryParse(
-                    //                   buyAtPriceController.text.trim(),
-                    //                 )
-                    //               : null,
-                    //           buyingPrice: buyingPriceInOneGram,
-                    //         )
-                    //         .then((onValue) {
-                    //       if (!context.mounted) return;
-                    //       userInputController.clear();
-                    //       buyAtPriceController.clear();
-                    //       setState(() {
-                    //         calculatedValue = '0.00';
-                    //         isBuyAtPriceStatus = false;
-                    //       });
-                    //     });
-                    //   },
-                    // );
-                  } else {
-                    Toasts.getErrorToast(
-                      gravity: ToastGravity.TOP,
-                      text: AppLocalizations.of(
-                        context,
-                      )!.enter_valid_amount,
-                      // "Enter a valid amount to proceed.",
-                      duration: Duration(seconds: 2),
-                    );
-
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   SnackBar(
-                    //     content: GetGenericText(
-                    //       text: 'Please enter a valid amount.',
-                    //       fontSize: 14,
-                    //       fontWeight: FontWeight.w500,
-                    //       color: AppColors.whiteColor,
-                    //     ),
-                    //     duration: const Duration(seconds: 2),
-                    //   ),
-                    // );
-                  }
-                }
-              },
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.green.withOpacity(0.15),
+              borderRadius: BorderRadius.circular(6),
             ),
-            ConstPadding.sizeBoxWithHeight(height: 16),
+            child: const Text(
+              "+ 0.65%",
+              style: TextStyle(
+                color: Color(0xFF4CAF50),
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTradeTypeDropdown() {
+    return PopupMenuButton<bool>(
+      tooltip: '',
+      offset: const Offset(0, 40),
+      color: const Color(0xFF1C1E1E),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      onSelected: (value) {
+        setState(() {
+          isBuyAtPriceStatus = value;
+          _updateCalculation();
+        });
+      },
+      itemBuilder: (context) => [
+        _buildPopupItem(
+          title: "Trade at market price",
+          value: false,
+          isSelected: !isBuyAtPriceStatus,
+        ),
+        _buildPopupItem(
+          title: "Target price",
+          value: true,
+          isSelected: isBuyAtPriceStatus,
+        ),
+      ],
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.white10),
+        ),
+        child: Row(
+          children: [
+            Text(
+              isBuyAtPriceStatus ? "Target price" : "Market price",
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(width: 6),
+            const Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white70,
+              size: 18,
+            ),
           ],
         ),
       ),
     );
   }
 
-  /// build amount price input section
-  Widget _buildAmountPriceInputSection() {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        Column(
-          children: [
-            Container(
-              width: sizes!.isPhone ? sizes!.widthRatio * 360 : sizes!.width,
-              height: sizes!.responsiveLandscapeHeight(
-                phoneVal: 50,
-                tabletVal: 70,
-                tabletLandscapeVal: 80,
-                isLandscape: sizes!.isLandscape(),
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: sizes!.widthRatio * 12,
-                vertical: sizes!.heightRatio * 12,
-              ),
-              decoration: ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(
-                    width: 1,
-                    color: Color(0xFF333333),
-                  ),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  GetGenericText(
-                    text: isSwitchValue
-                        ? AppLocalizations.of(context)!.amount
-                        : AppLocalizations.of(
-                            context,
-                          )!.price, //"Amount" : "Price ",
-                    fontSize: sizes!.isPhone ? 14 : 16,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: sizes!.isPhone
-                        ? sizes!.widthRatio * 200
-                        : sizes!.widthRatio * 300,
-                    child: TextFormField(
-                      focusNode: _focusNode,
-                      // Assign FocusNode
-                      controller: userInputController,
-                      cursorColor: Colors.white,
-                      cursorHeight: sizes!.heightRatio * 20,
-                      keyboardType: TextInputType.numberWithOptions(
-                        signed: true,
-                        decimal: true,
-                      ),
-                      textInputAction: TextInputAction.done,
-                      inputFormatters: [
-                        DecimalTextInputFormatter(decimalRange: 2),
-                        //LengthLimitingTextInputFormatter(15),
-                      ],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: GoogleFonts.inter().fontFamily,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 6.0,
-                        ),
-                        border: InputBorder.none,
-                        hintText: '0.00',
-                        hintStyle: TextStyle(
-                          color: AppColors.grey4Color,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: GoogleFonts.inter().fontFamily,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  GetGenericText(
-                    text: isSwitchValue
-                        ? AppLocalizations.of(context)!.gram
-                        : AppLocalizations.of(
-                            context,
-                          )!.idq_currency, //"Gram" : " IQD",
-                    fontSize: sizes!.isPhone ? 14 : 16,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.white,
-                  ),
-                ],
+  PopupMenuItem<bool> _buildPopupItem({
+    required String title,
+    required bool value,
+    required bool isSelected,
+  }) {
+    return PopupMenuItem<bool>(
+      value: value,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontSize: 13,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
               ),
             ),
-            Container(
-              width: sizes!.isPhone ? sizes!.widthRatio * 361 : sizes!.width,
-              height: sizes!.responsiveLandscapeHeight(
-                phoneVal: 50,
-                tabletVal: 70,
-                tabletLandscapeVal: 80,
-                isLandscape: sizes!.isLandscape(),
-              ),
-              padding: EdgeInsets.symmetric(
-                horizontal: sizes!.widthRatio * 12,
-                vertical: sizes!.heightRatio * 12,
-              ),
-              decoration: const ShapeDecoration(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    width: 1,
-                    color: Color(0xFF333333),
-                  ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(10),
-                    bottomRight: Radius.circular(10),
-                  ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  GetGenericText(
-                    text: isSwitchValue
-                        ? AppLocalizations.of(context)!.price
-                        : AppLocalizations.of(
-                            context,
-                          )!.amount, //"Price " : "Amount",
-                    fontSize: sizes!.isPhone ? 14 : 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.grey4Color,
-                  ),
-
-                  Expanded(
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        final goldPriceState = ref.watch(goldPriceProvider);
-
-                        return goldPriceState.when(
-                          data: (data) {
-                            final oneGramIQDPrice =
-                                data.oneGramBuyingPriceInIQD;
-                            final inputValue =
-                                double.tryParse(
-                                  userInputController.text.trim(),
-                                ) ??
-                                0.0;
-
-                            double priceToUse = oneGramIQDPrice;
-                            if (isBuyAtPriceStatus &&
-                                buyAtPriceController.text.isNotEmpty) {
-                              final buyAtPrice = double.tryParse(
-                                buyAtPriceController.text.trim(),
-                              );
-                              if (buyAtPrice != null && buyAtPrice > 0) {
-                                priceToUse = buyAtPrice;
-                              }
-                            }
-
-                            final dynamicValue = (inputValue * priceToUse)
-                                .toStringAsFixed(2);
-
-                            return Text(
-                              dynamicValue,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: AppColors.grey4Color,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: GoogleFonts.inter().fontFamily,
-                              ),
-                            );
-                          },
-                          error: (error, stackTrace) => Text(
-                            calculatedValue,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.grey4Color,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: GoogleFonts.inter().fontFamily,
-                            ),
-                          ),
-                          loading: () => Text(
-                            calculatedValue,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: AppColors.grey4Color,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: GoogleFonts.inter().fontFamily,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  // Expanded(
-                  //   child: Text(
-                  //     calculatedValue,
-                  //     textAlign: TextAlign.center,
-                  //     style: TextStyle(
-                  //       color: AppColors.grey4Color,
-                  //       fontSize: 22,
-                  //       fontWeight: FontWeight.w400,
-                  //       fontFamily: GoogleFonts.inter().fontFamily,
-                  //     ),
-                  //   ),
-                  // ),
-                  GetGenericText(
-                    text: isSwitchValue
-                        ? AppLocalizations.of(context)!.idq_currency
-                        : AppLocalizations.of(context)!.gram, //" IQD" : "Gram",
-                    fontSize: sizes!.isPhone ? 14 : 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.grey4Color,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ],
+          ),
+          if (isSelected)
+            const Icon(Icons.check, color: Colors.green, size: 18),
+        ],
+      ),
     );
+  }
+
+  Widget _buildTargetPriceInput() {
+    return TextFormField(
+      controller: buyAtPriceController,
+      focusNode: _focusBuyAtPrice,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: const Color(0xFF121212),
+        hintText: "IQD 170,000.00",
+        hintStyle: const TextStyle(color: Colors.white24),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.white10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.white30),
+        ),
+      ),
+      keyboardType: TextInputType.number,
+      inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
+    );
+  }
+
+  /// ALL ORIGINAL BUSINESS LOGIC INTEGRATED BELOW
+  Future<void> _onTradeButtonTap(
+    dynamic mainStateWatchProvider,
+    dynamic tradeStateWatchProvider,
+  ) async {
+    // 1. Email Verification Check
+    if (!mainStateWatchProvider.isEmailVerified) {
+      await genericPopUpWidget(
+        isLoadingState: false,
+        context: context,
+        heading: AppLocalizations.of(context)!.email_verification_required,
+        subtitle: AppLocalizations.of(context)!.email_verification_message,
+        noButtonTitle: AppLocalizations.of(context)!.not_now,
+        yesButtonTitle: AppLocalizations.of(context)!.verify_now,
+        onNoPress: () => Navigator.pop(context),
+        onYesPress: () async {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EmailVerifyCodeScreen(
+                email: mainStateWatchProvider.userEmail,
+              ),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
+    final isDemo = await LocalDatabase.instance.getIsDemo() ?? false;
+    if (!context.mounted) return;
+
+    // 2. Residency Verification Check
+    if (!isDemo &&
+        mainStateWatchProvider.isEmailVerified &&
+        !mainStateWatchProvider.isBasicUserVerified) {
+      await genericPopUpWidget(
+        isLoadingState: false,
+        context: context,
+        heading: AppLocalizations.of(context)!.residency_verification_required,
+        subtitle: AppLocalizations.of(context)!.residency_verification_message,
+        noButtonTitle: AppLocalizations.of(context)!.not_now,
+        yesButtonTitle: AppLocalizations.of(context)!.verify_now,
+        onNoPress: () => Navigator.pop(context),
+        onYesPress: () async {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const KycFirstStepScreen()),
+          );
+        },
+      );
+      return;
+    }
+
+    // 3. KYC Verification Check
+    if (!isDemo &&
+        mainStateWatchProvider.isEmailVerified &&
+        mainStateWatchProvider.isBasicUserVerified &&
+        !mainStateWatchProvider.isUserKYCVerified) {
+      await genericPopUpWidget(
+        isLoadingState: false,
+        context: context,
+        heading: AppLocalizations.of(context)!.kyc_verification_required,
+        subtitle: AppLocalizations.of(context)!.kyc_verification_message,
+        noButtonTitle: AppLocalizations.of(context)!.later,
+        yesButtonTitle: AppLocalizations.of(context)!.proceed,
+        onNoPress: () => Navigator.pop(context),
+        onYesPress: () async {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const KycSecondStepScreen(),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
+    // 4. Balance Checks
+    final walletBalance =
+        double.tryParse(
+          mainStateWatchProvider
+                  .getHomeFeedResponse
+                  .payload
+                  ?.walletExists
+                  ?.moneyBalance
+                  ?.toString() ??
+              '0',
+        ) ??
+        0.0;
+    final inputAmount = double.tryParse(calculatedValue) ?? 0.0;
+    const tolerance = 0.01;
+
+    // Insufficient Real Balance
+    if (!isDemo && (walletBalance + tolerance < inputAmount)) {
+      await genericPopUpWidget(
+        context: context,
+        heading: AppLocalizations.of(context)!.insufficient_balance,
+        subtitle: AppLocalizations.of(context)!.insufficient_balance_message(
+          walletBalance.toStringAsFixed(2),
+          inputAmount.toStringAsFixed(2),
+        ),
+        noButtonTitle: AppLocalizations.of(context)!.close,
+        yesButtonTitle: AppLocalizations.of(context)!.add_funds,
+        isLoadingState: false,
+        onNoPress: () => Navigator.pop(context),
+        onYesPress: () async {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddFundScreen()),
+          );
+        },
+      );
+      return;
+    }
+
+    // Insufficient Demo Balance
+    if (isDemo && (walletBalance + tolerance < inputAmount)) {
+      await genericPopUpWidget(
+        context: context,
+        heading: AppLocalizations.of(context)!.insufficient_demo_balance,
+        subtitle: AppLocalizations.of(context)!.demo_balance_message,
+        noButtonTitle: AppLocalizations.of(context)!.close,
+        yesButtonTitle: AppLocalizations.of(context)!.upgrade_now,
+        isLoadingState: false,
+        onNoPress: () => Navigator.pop(context),
+        onYesPress: () async {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SettingScreen()),
+          );
+        },
+      );
+      return;
+    }
+
+    // 5. Final Confirmation and Execution
+    if (userInputController.text.trim().isEmpty) {
+      Toasts.getErrorToast(
+        text: AppLocalizations.of(context)!.please_add_grams,
+        gravity: ToastGravity.TOP,
+      );
+      return;
+    }
+
+    if (isBuyAtPriceStatus &&
+        (buyAtPriceController.text.isEmpty ||
+            (double.tryParse(buyAtPriceController.text) ?? 0) <= 0)) {
+      Toasts.getErrorToast(
+        text: AppLocalizations.of(context)!.please_enter_valid_price,
+        gravity: ToastGravity.TOP,
+      );
+      return;
+    }
+
+    // Open Confirmation Dialog
+    await showConfirmTradeDialog(
+      context: context,
+      isLimitOrder: isBuyAtPriceStatus,
+      amountGrams: userInputController.text.trim(),
+      targetPrice: buyAtPriceController.text,
+      totalCost: calculatedValue,
+      onConfirm: () async {
+        await ref
+            .read(tradeProvider.notifier)
+            .userCanBuyGold(
+              context: context,
+              tradeMoney: num.tryParse(calculatedValue) ?? 0,
+              tradeMetal: num.tryParse(userInputController.text.trim()) ?? 0,
+              buyAtPriceStatus: isBuyAtPriceStatus,
+              buyAtPrice: isBuyAtPriceStatus
+                  ? num.tryParse(buyAtPriceController.text)
+                  : null,
+              buyingPrice: buyingPriceInOneGram,
+            );
+      },
+    );
+
+    // await genericPopUpLivePriceWidget(
+    //   autoCloseAfterSeconds: 5,
+    //   context: context,
+    //   heading: AppLocalizations.of(context)!.confirmation,
+    //   subtitle: isBuyAtPriceStatus
+    //       ? AppLocalizations.of(context)!.place_order_confirm
+    //       : AppLocalizations.of(
+    //           context,
+    //         )!.invest_confirmation_message(userInputController.text.trim()),
+    //   noButtonTitle: AppLocalizations.of(context)!.cancel,
+    //   yesButtonTitle: isBuyAtPriceStatus
+    //       ? AppLocalizations.of(context)!.place_order
+    //       : AppLocalizations.of(context)!.confirm_purchase,
+    //   isLoadingState: tradeStateWatchProvider.isButtonState,
+    //   onNoPress: () => Navigator.pop(context),
+    //   onYesPress: () async {
+    //     Navigator.pop(context);
+    //     await ref
+    //         .read(tradeProvider.notifier)
+    //         .userCanBuyGold(
+    //           context: context,
+    //           tradeMoney: num.tryParse(calculatedValue) ?? 0.0,
+    //           tradeMetal: num.tryParse(userInputController.text.trim()) ?? 0.0,
+    //           buyAtPriceStatus: isBuyAtPriceStatus,
+    //           buyAtPrice: isBuyAtPriceStatus
+    //               ? num.tryParse(buyAtPriceController.text.trim())
+    //               : null,
+    //           buyingPrice: buyingPriceInOneGram,
+    //         );
+    //     userInputController.clear();
+    //     buyAtPriceController.clear();
+    //     setState(() {
+    //       calculatedValue = '0.00';
+    //       isBuyAtPriceStatus = false;
+    //     });
+    //   },
+    //   livePriceWidget: Consumer(
+    //     builder: (context, ref, _) {
+    //       final goldPriceState = ref.watch(goldPriceProvider);
+    //       return goldPriceState.when(
+    //         data: (data) => GetGenericText(
+    //           text:
+    //               '${AppLocalizations.of(context)!.buy_gold_pop} ${data.oneGramBuyingPriceInIQD.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}',
+    //           fontSize: 18,
+    //           fontWeight: FontWeight.w600,
+    //           color: AppColors.primaryGold500,
+    //           textAlign: TextAlign.center,
+    //         ).getChildCenter(),
+    //         loading: () => const CircularProgressIndicator(),
+    //         error: (_, __) => const Text("Error"),
+    //       );
+    //     },
+    //   ),
+    // );
   }
 }

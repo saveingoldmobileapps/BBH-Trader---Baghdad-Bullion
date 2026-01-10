@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
@@ -641,6 +642,221 @@ Future<void> genericPopUpLivePriceWidget({
   });
 }
 
+Future<void> showConfirmTradeDialog({
+  required BuildContext context,
+  required bool isLimitOrder,
+  required String amountGrams,
+  required String targetPrice,
+  required String totalCost,
+  required Future<void> Function() onConfirm,
+}) async {
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1C1E1E),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Confirm Trade",
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        "Review your order details",
+                        style: GoogleFonts.inter(
+                          color: Colors.white54,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: const Icon(Icons.close, color: Colors.white54),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 14),
+
+              /// Badge
+              if (isLimitOrder)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFBBA473).withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(
+                      color: const Color(0xFFBBA473), // 👈 gold border
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    "Limit Order",
+                    style: GoogleFonts.inter(
+                      color: const Color(0xFFBBA473),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+
+              const SizedBox(height: 18),
+
+              /// Details
+              _tradeDetailRow("Amount", "$amountGrams grams"),
+              if (isLimitOrder)
+                _tradeDetailRow("Target Price", "IQD $targetPrice / oz"),
+              _tradeDetailRow("Est. Total Cost", "IQD $totalCost"),
+
+              const SizedBox(height: 14),
+
+              /// Info box
+              if (isLimitOrder)
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Color(0xff353030),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.12),
+                      width: 1,
+                    ),
+                  ),
+                  child: Text(
+                    "Your order will be executed when the gold price reaches IQD $targetPrice per ounce. You’ll be notified when this happens.",
+                    style: GoogleFonts.inter(
+                      color: Colors.white60,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+
+              const SizedBox(height: 22),
+
+              /// Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Color(0xff3c3e3e)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: SizedBox(
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          Navigator.pop(context);
+                          await onConfirm();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Ink(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            gradient: const LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: [
+                                Color(0xff917330), // left
+                                Color(0xFF73530d), // center (brighter)
+                                Color(0xff917330), // right
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "Confirm Trade",
+                              style: GoogleFonts.inter(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget _tradeDetailRow(String title, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.inter(
+            color: Colors.white54,
+            fontSize: 13,
+          ),
+        ),
+        Text(
+          value,
+          style: GoogleFonts.inter(
+            color: Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 // Future<void> genericPopUpLivePriceWidget({
 //   required BuildContext context,
 //   required String heading,
@@ -1013,6 +1229,7 @@ Future<void> genericPopUpWidget({
     },
   );
 }
+
 Future<void> temporaryCreditFreezedPopUpWidget({
   required BuildContext context,
   required String heading,
@@ -1044,7 +1261,7 @@ Future<void> temporaryCreditFreezedPopUpWidget({
                     subtitle: subtitle,
                     buttonTitle: buttonTitle,
                     onButtonPress: onButtonPress,
-                    oncloseButtonPress:oncloseButtonPress,
+                    oncloseButtonPress: oncloseButtonPress,
                     icon: icon,
                     iconColor: iconColor,
                   ),
@@ -1099,6 +1316,7 @@ Future<void> temporaryCreditPopUpWidget({
     },
   );
 }
+
 class AnimatedCloseButton extends StatefulWidget {
   final Color color;
   final double size;
@@ -1193,8 +1411,10 @@ class _AnimatedPopupBodyState extends State<_AnimatedPopupBody>
       vsync: this,
     )..repeat(reverse: true);
 
-    _pulse = Tween<double>(begin: 0.92, end: 1.12)
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _pulse = Tween<double>(
+      begin: 0.92,
+      end: 1.12,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -1304,7 +1524,7 @@ class _AnimatedPopupBodyState extends State<_AnimatedPopupBody>
               ),
               child: Center(
                 child: GetGenericText(
-                  text: AppLocalizations.of(context)!.close,//"Close",
+                  text: AppLocalizations.of(context)!.close, //"Close",
                   fontSize: sizes!.responsiveFont(phoneVal: 14, tabletVal: 16),
                   fontWeight: FontWeight.w700,
                   color: Colors.white,
@@ -1318,7 +1538,6 @@ class _AnimatedPopupBodyState extends State<_AnimatedPopupBody>
     );
   }
 }
-
 
 // Modified showMaintenancePopup function with animation
 Future<void> showMaintenancePopup({
@@ -1368,26 +1587,24 @@ Future<void> showMaintenancePopup({
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 6),
-SizedBox(
-  height: 140,
-  child: Lottie.asset(
-    'assets/lottie/Presize_Maintenance.json',
-    fit: BoxFit.contain,
-    delegates: LottieDelegates(
-      values: [
-        ValueDelegate.colorFilter(
-          const ['*'], // apply to ALL layers
-          value: const ColorFilter.mode(
-            Colors.black,
-            BlendMode.srcATop,
-          ),
-        )
-      ],
-    ),
-  ),
-),
-
-
+              SizedBox(
+                height: 140,
+                child: Lottie.asset(
+                  'assets/lottie/Presize_Maintenance.json',
+                  fit: BoxFit.contain,
+                  delegates: LottieDelegates(
+                    values: [
+                      ValueDelegate.colorFilter(
+                        const ['*'], // apply to ALL layers
+                        value: const ColorFilter.mode(
+                          Colors.black,
+                          BlendMode.srcATop,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
               const SizedBox(height: 12),
 
@@ -1417,21 +1634,23 @@ SizedBox(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Directionality.of(context) == TextDirection.rtl? 
-                    Text(
-                      AppLocalizations.of(context)!.exit_app,//'Exit App',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ):
-                    Text(
-                      'Exit App',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                    child: Directionality.of(context) == TextDirection.rtl
+                        ? Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.exit_app, //'Exit App',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        : Text(
+                            'Exit App',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -1447,21 +1666,23 @@ SizedBox(
                       ),
                       elevation: 1,
                     ),
-                    child: Directionality.of(context) == TextDirection.rtl? 
-                    Text(
-                      AppLocalizations.of(context)!.visit_website,//'Visit Website',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ):
-                     Text(
-                      'Visit Website',
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
+                    child: Directionality.of(context) == TextDirection.rtl
+                        ? Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.visit_website, //'Visit Website',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          )
+                        : Text(
+                            'Visit Website',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                   ),
                 ),
               ],
@@ -1712,25 +1933,30 @@ Future<void> updateAppPopupWidget({
                                 ),
                                 child: Center(
                                   child: isLoadingState == false
-                                      ? Directionality.of(context) == TextDirection.rtl?
-                                      GetGenericText(
-                                          text: AppLocalizations.of(context)!.update,//"Update",
-                                          fontSize: sizes!.responsiveFont(
-                                            phoneVal: 14,
-                                            tabletVal: 16,
-                                          ),
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                        ):
-                                       GetGenericText(
-                                          text: AppLocalizations.of(context)!.update,//"Update",
-                                          fontSize: sizes!.responsiveFont(
-                                            phoneVal: 14,
-                                            tabletVal: 16,
-                                          ),
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                        )
+                                      ? Directionality.of(context) ==
+                                                TextDirection.rtl
+                                            ? GetGenericText(
+                                                text: AppLocalizations.of(
+                                                  context,
+                                                )!.update, //"Update",
+                                                fontSize: sizes!.responsiveFont(
+                                                  phoneVal: 14,
+                                                  tabletVal: 16,
+                                                ),
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                              )
+                                            : GetGenericText(
+                                                text: AppLocalizations.of(
+                                                  context,
+                                                )!.update, //"Update",
+                                                fontSize: sizes!.responsiveFont(
+                                                  phoneVal: 14,
+                                                  tabletVal: 16,
+                                                ),
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                              )
                                       : SizedBox(
                                           height: sizes!.heightRatio * 16,
                                           width: sizes!.widthRatio * 16,
@@ -1762,25 +1988,31 @@ Future<void> updateAppPopupWidget({
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Center(
-                                    child: Directionality.of(context) == TextDirection.rtl?
-                                     GetGenericText(
-                                      text: AppLocalizations.of(context)!.exit_app,//"Close",
-                                      fontSize: sizes!.responsiveFont(
-                                        phoneVal: 14,
-                                        tabletVal: 16,
-                                      ),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ):
-                                    GetGenericText(
-                                      text: AppLocalizations.of(context)!.exit_app,
-                                      fontSize: sizes!.responsiveFont(
-                                        phoneVal: 14,
-                                        tabletVal: 16,
-                                      ),
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                    ),
+                                    child:
+                                        Directionality.of(context) ==
+                                            TextDirection.rtl
+                                        ? GetGenericText(
+                                            text: AppLocalizations.of(
+                                              context,
+                                            )!.exit_app, //"Close",
+                                            fontSize: sizes!.responsiveFont(
+                                              phoneVal: 14,
+                                              tabletVal: 16,
+                                            ),
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          )
+                                        : GetGenericText(
+                                            text: AppLocalizations.of(
+                                              context,
+                                            )!.exit_app,
+                                            fontSize: sizes!.responsiveFont(
+                                              phoneVal: 14,
+                                              tabletVal: 16,
+                                            ),
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white,
+                                          ),
                                   ),
                                 ),
                               ),

@@ -9,13 +9,13 @@ import 'package:saveingold_fzco/data/data_sources/network_sources/dio_network_ma
 import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
 import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/widgets/animated_overlay_widget.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../core/sound_services.dart';
 import '../../../../core/sounds/app_sounds.dart';
 import '../../../../data/data_sources/local_database/secure_database.dart';
 import '../../../feature_injection.dart';
+import '../../../screens/trade_screens/order_placed.dart';
 import '../../../widgets/pop_up_widget.dart';
 import '../gram_provider/gram_provider.dart';
 import '../states/trade_state/trade_state.dart';
@@ -76,7 +76,7 @@ class Trade extends _$Trade {
                 ? "${successResponse.status![0].toUpperCase()}${successResponse.status!.substring(1)}"
                 : "Success",
             subtitle: successResponse.payload!.message ?? "",
-            yesButtonTitle: AppLocalizations.of(context)!.close,//"Close",
+            yesButtonTitle: AppLocalizations.of(context)!.close, //"Close",
             isLoadingState: false,
             onYesPress: () async {
               Navigator.pop(context);
@@ -100,7 +100,7 @@ class Trade extends _$Trade {
                 ? "${errorResponse.status![0].toUpperCase()}${errorResponse.status!.substring(1)}"
                 : "Success",
             subtitle: errorResponse.message ?? "",
-            yesButtonTitle: AppLocalizations.of(context)!.close,//"Close",
+            yesButtonTitle: AppLocalizations.of(context)!.close, //"Close",
             isLoadingState: false,
             onYesPress: () async {
               Navigator.pop(context);
@@ -188,23 +188,37 @@ class Trade extends _$Trade {
 
           if (!context.mounted) return;
           SoundPlayer().playSound(AppSounds.buySellSound);
-          await genericPopUpWidget(
-            context: context,
-            heading: buyAtPriceStatus
-                ? "${AppLocalizations.of(context)!.invest_order_placed}"
-                : "${AppLocalizations.of(context)!.invest_filled_oreder}", //"Buy Order Placed" : "Buy Order Filled",
-            subtitle:
-                successResponse.payload!.message ??
-                AppLocalizations.of(
-                  context,
-                )!.invest_successfully_submitted, //"Your buy order has been successfully submitted for processing.",
-            yesButtonTitle: AppLocalizations.of(context)!.close, //"Close",
-            isLoadingState: false,
-            onYesPress: () async {
-              Navigator.pop(context);
-            },
-            onNoPress: () async {},
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => OrderPlacedScreen(
+                orderId: "#GLDSQUF3K",
+                dateTime: "Dec 13, 2025, 07:02 PM",
+                tradeType: "Limit Order",
+                amount: "10 grams",
+                targetPrice: "IQD 170,000 / oz",
+                total: "IQD 1,700,000",
+              ),
+            ),
           );
+
+          // await genericPopUpWidget(
+          //   context: context,
+          //   heading: buyAtPriceStatus
+          //       ? "${AppLocalizations.of(context)!.invest_order_placed}"
+          //       : "${AppLocalizations.of(context)!.invest_filled_oreder}", //"Buy Order Placed" : "Buy Order Filled",
+          //   subtitle:
+          //       successResponse.payload!.message ??
+          //       AppLocalizations.of(
+          //         context,
+          //       )!.invest_successfully_submitted, //"Your buy order has been successfully submitted for processing.",
+          //   yesButtonTitle: AppLocalizations.of(context)!.close, //"Close",
+          //   isLoadingState: false,
+          //   onYesPress: () async {
+          //     Navigator.pop(context);
+          //   },
+          //   onNoPress: () async {},
+          // );
 
           break;
 

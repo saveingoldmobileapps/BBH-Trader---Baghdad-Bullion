@@ -74,7 +74,7 @@ class OrderPlacedScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _row("Order ID", orderId),
+                    // _row("Order ID", orderId),
                     _row("Date & Time", dateTime),
                     _badgeRow("Trade type", tradeType),
                     _row("Amount", amount),

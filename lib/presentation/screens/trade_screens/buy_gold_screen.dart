@@ -61,12 +61,17 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
 
   void _updateCalculation() {
     final goldPriceState = ref.read(goldPriceProvider);
+
     goldPriceState.whenData((data) {
       final oneGramIQDPrice = data.oneGramBuyingPriceInIQD;
+
+      // Get user input for grams
       final inputValue =
           double.tryParse(userInputController.text.trim()) ?? 0.0;
 
+      // Determine which price to use for calculation
       double priceToUse = oneGramIQDPrice;
+
       if (isBuyAtPriceStatus && buyAtPriceController.text.isNotEmpty) {
         final buyAtPrice = double.tryParse(buyAtPriceController.text.trim());
         if (buyAtPrice != null && buyAtPrice > 0) {
@@ -74,10 +79,13 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         }
       }
 
-      setState(() {
-        calculatedValue = (inputValue * priceToUse).toStringAsFixed(2);
-        buyingPriceInOneGram = oneGramIQDPrice;
-      });
+      // Update the UI
+      if (mounted) {
+        setState(() {
+          calculatedValue = (inputValue * priceToUse).toStringAsFixed(2);
+          buyingPriceInOneGram = oneGramIQDPrice;
+        });
+      }
     });
   }
 
@@ -96,7 +104,9 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     final tradeStateWatchProvider = ref.watch(tradeProvider);
     final mainStateWatchProvider = ref.watch(homeProvider);
     final goldPriceState = ref.watch(goldPriceProvider);
-
+    ref.listen(goldPriceProvider, (previous, next) {
+      _updateCalculation();
+    });
     return Scaffold(
       backgroundColor: Color(0xff171919),
       appBar: AppBar(

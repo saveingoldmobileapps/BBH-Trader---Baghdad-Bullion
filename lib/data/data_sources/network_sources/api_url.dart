@@ -1,10 +1,9 @@
 import 'package:saveingold_fzco/core/core_export.dart';
 
-import 'network_export.dart';
-
 class ApiEndpoints {
   // Base URL is fetched dynamically from EnvUtils
-  static String get baseUrl => EnvUtils.getBaseUrl();
+  static String baseUrl = "https://curiosity.saveingold.app/api/v6";
+  // => EnvUtils.getBaseUrl();
   static String get playStoreUrl =>
       "https://play.google.com/store/apps/details?id=ae.saveingold.saveingold.fzco";
   static String get appStoreUrl =>
@@ -223,7 +222,8 @@ class ApiEndpoints {
       "$baseUrl/service/banks/getBankDetailsById/${CommonService.lang}";
   static String get getAllTimeZoneApiUrl =>
       "$baseUrl/service/countries/getAllTimezones/${CommonService.lang}";
-  static String get payLoanBack => "$baseUrl/service/loanReturn/payLoanBack/${CommonService.lang}";
+  static String get payLoanBack =>
+      "$baseUrl/service/loanReturn/payLoanBack/${CommonService.lang}";
 
   //alret
   static String get getAllAlert =>

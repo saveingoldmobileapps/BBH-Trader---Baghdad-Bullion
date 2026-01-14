@@ -192,12 +192,17 @@ class Trade extends _$Trade {
             context,
             MaterialPageRoute(
               builder: (_) => OrderPlacedScreen(
-                orderId: "#GLDSQUF3K",
-                dateTime: "Dec 13, 2025, 07:02 PM",
-                tradeType: "Limit Order",
-                amount: "10 grams",
-                targetPrice: "IQD 170,000 / oz",
-                total: "IQD 1,700,000",
+                // otherwise a fallback
+                orderId: "xyz",
+
+                dateTime: DateTime.now().toLocal().toString().split('.')[0],
+                tradeType: buyAtPriceStatus ? "Limit Order" : "Market Order",
+                amount: "$tradeMetal grams",
+                targetPrice:
+                    "IQD ${buyAtPriceStatus ? buyAtPrice : buyingPrice} / gram",
+
+                // The total money calculated
+                total: "IQD ${tradeMoney.toStringAsFixed(2)}",
               ),
             ),
           );

@@ -282,13 +282,21 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 20),
-            _buildPriceRow("Buying at", data.oneGramBuyingPriceInIQD, "+0.65%"),
-            const SizedBox(height: 16),
+            SizedBox(height: 20),
             _buildPriceRow(
-              "Selling at",
-              data.oneGramSellingPriceInIQD,
-              "+0.65%",
+              label: "Buying at",
+              price: data.oneGramBuyingPriceInIQD,
+              highLowPrice: data.lastHighBuyingPrice,
+              isHigh: true,
+            ),
+
+            const SizedBox(height: 16),
+
+            _buildPriceRow(
+              label: "Selling at",
+              price: data.oneGramSellingPriceInIQD,
+              highLowPrice: data.lastLowSellingPrice,
+              isHigh: false,
             ),
           ],
         ),
@@ -305,7 +313,12 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
     );
   }
 
-  Widget _buildPriceRow(String label, double price, String percentage) {
+  Widget _buildPriceRow({
+    required String label,
+    required double price,
+    required double highLowPrice,
+    required bool isHigh,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -327,19 +340,28 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             ),
           ],
         ),
+
+        /// High / Low badge
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: Colors.green.withOpacity(0.1),
+            color: isHigh
+                ? Colors.green.withOpacity(0.15)
+                : Colors.red.withOpacity(0.15),
             borderRadius: BorderRadius.circular(4),
           ),
           child: Row(
             children: [
-              const Icon(Icons.arrow_upward, size: 12, color: Colors.green),
+              Icon(
+                isHigh ? Icons.arrow_upward : Icons.arrow_downward,
+                size: 12,
+                color: isHigh ? Colors.green : Colors.red,
+              ),
+              const SizedBox(width: 4),
               Text(
-                percentage,
-                style: const TextStyle(
-                  color: Colors.green,
+                "${isHigh ? "High" : "Low"} ${NumberFormat("#,##0.00").format(highLowPrice)}",
+                style: TextStyle(
+                  color: isHigh ? Colors.green : Colors.red,
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
@@ -350,4 +372,5 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
       ],
     );
   }
+
 }

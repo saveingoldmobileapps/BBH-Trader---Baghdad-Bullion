@@ -74,21 +74,18 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
-
     final esouqState = ref.watch(esouqProvider);
-
-    /// StreamProvider
     final goldPriceStateWatchProvider = ref.watch(goldPriceProvider);
-
-    /// AsyncValue builder
     final oneGramBuyingPriceInIQD =
         goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD ?? 0.0;
+
     return Scaffold(
       key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
+      backgroundColor: AppColors.greyScale1000,
       drawer: GetFilterDrawerBar(
-        onTap: () => _scaffoldKey.currentState!.openEndDrawer(),
+        onTap: () => Navigator.pop(context),
         onApplyFilter: (weight, category) async {
           setState(() {
             selectedWeight = weight;
@@ -99,169 +96,140 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
       ),
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        automaticallyImplyLeading: false,
-        backgroundColor: AppColors.greyScale1000,
+        backgroundColor: Colors.transparent,
+
         elevation: 0,
-        surfaceTintColor: AppColors.greyScale1000,
-        foregroundColor: Colors.white,
-        titleSpacing: 0,
         title: GetGenericText(
-          text: AppLocalizations.of(context)!.esouq, //"E-Souq",
-          fontSize: sizes!.responsiveFont(
-            phoneVal: 20,
-            tabletVal: 24,
-          ),
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey6Color,
-          isInter: true,
+          text: AppLocalizations.of(context)!.esouq,
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
         ),
         actions: [
-          Padding(
-            padding: Directionality.of(context) == TextDirection.rtl
-                ? EdgeInsets.only(left: 16)
-                : EdgeInsets.only(right: 16),
-            child: GestureDetector(
-              onTap: () {
-                _scaffoldKey.currentState!.openDrawer();
-              },
-              child: Container(
-                color: Colors.transparent,
-                child: SvgPicture.asset(
-                  'assets/svg/filter_icon.svg',
-                  height:
-                      sizes!.heightRatio *
-                      (sizes!.isPhone ? 24 : (sizes!.isLandscape() ? 32 : 24)),
-                  width:
-                      sizes!.widthRatio *
-                      (sizes!.isPhone ? 24 : (sizes!.isLandscape() ? 32 : 24)),
-                ),
-              ),
+          IconButton(
+            onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+            icon: SvgPicture.asset(
+              'assets/svg/filter_icon.svg',
+              color: Colors.white,
             ),
           ),
+          const SizedBox(width: 8),
         ],
       ),
-      body: GestureDetector(
-        onTap: () {
-          // Remove focus to close the keyboard
-          FocusScope.of(context).unfocus();
-        },
-        child: Container(
-          height: sizes!.height,
-          width: sizes!.width,
-          decoration: const BoxDecoration(
-            color: AppColors.greyScale1000,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          // --- THE BACKGROUND GRADIENT ---
+          gradient: RadialGradient(
+            center: Alignment(1, -0.8),
+            radius: 1.2,
+            colors: [
+              Color(0xFF453d23),
+              Color(0xFF121212),
+            ],
+            stops: [0.0, 0.6],
           ),
-          child: SafeArea(
-            child: RefreshIndicator(
-              backgroundColor: AppColors.primaryGold500,
-              color: AppColors.whiteColor,
-              onRefresh: () async {
-                await fetchESouqProductData();
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: esouqState.isLoading
-                        ? const Center(
-                            child: ShimmerLoader(
-                              loop: 6,
-                            ),
-                          )
-                        : esouqState.products.isEmpty
-                        ? NoDataWidget(
-                            title: AppLocalizations.of(
-                              context,
-                            )!.empty_no_data, //"No Data To Show",
-                            description: "",
-                          )
-                        : GridView.builder(
-                            controller: _scrollController,
-                            itemCount:
-                                esouqState.products.length +
-                                (esouqState.hasNextPage ? 1 : 0),
-                            shrinkWrap: true,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: sizes!.isLandscape() ? 3 : 2,
-                                  crossAxisSpacing: 6.0,
-                                  mainAxisSpacing: 6.0,
-                                  childAspectRatio: sizes!.isPhone
-                                      ? 0.45
-                                      : sizes!.isLandscape() && !sizes!.isPhone
-                                      ? 0.9
-                                      : (sizes!.isLandscape() ? 1.4 : 0.9),
-                                ),
-                            itemBuilder: (context, index) {
-                              if (index == esouqState.products.length) {
-                                return const Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.primaryGold500,
-                                    strokeWidth: 2,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // --- NEW SEARCH BAR ---
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1E1E1E),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.white10),
+                  ),
+                  child: TextField(
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      hintText: "Search",
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                  ),
+                ),
+              ),
+
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () async => await fetchESouqProductData(),
+                  child: esouqState.isLoading
+                      ? const Center(child: ShimmerLoader(loop: 6))
+                      : esouqState.products.isEmpty
+                      ? NoDataWidget(
+                          title: AppLocalizations.of(context)!.empty_no_data,
+                          description: '',
+                        )
+                      : GridView.builder(
+                          controller: _scrollController,
+                          padding: const EdgeInsets.all(16),
+                          itemCount:
+                              esouqState.products.length +
+                              (esouqState.hasNextPage ? 1 : 0),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: sizes!.isLandscape() ? 3 : 2,
+                                crossAxisSpacing: 12,
+                                mainAxisSpacing: 12,
+                                childAspectRatio:
+                                    0.62, // Adjusted for image + text
+                              ),
+                          itemBuilder: (context, index) {
+                            if (index == esouqState.products.length) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            final product = esouqState.products[index];
+                            final eSouqProductPrice =
+                                CommonService.calculateWeightPrice(
+                                  weightFactor: product.weightFactor,
+                                  oneGramSellingPrice: oneGramBuyingPriceInIQD,
+                                );
+                            final itemPrice = CommonService.formatCurrency(
+                              amount: eSouqProductPrice.toString(),
+                            );
+
+                            return EsouqItemCard(
+                              title: product.productName ?? "N/A",
+                              imageUrl: product.imageUrl?.isNotEmpty == true
+                                  ? product.imageUrl!.first
+                                  : "",
+                              itemPrice: itemPrice,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EsouqItemDetailScreen(
+                                      product: product,
+                                      productPrice: eSouqProductPrice
+                                          .toStringAsFixed(2),
+                                      oneGramPriceInIQD: oneGramBuyingPriceInIQD
+                                          .toStringAsFixed(2),
+                                    ),
                                   ),
                                 );
-                              }
-
-                              /// product
-                              final product = esouqState.products[index];
-
-                              /// eSouq product price
-                              final eSouqProductPrice =
-                                  CommonService.calculateWeightPrice(
-                                    weightFactor: product.weightFactor,
-                                    oneGramSellingPrice:
-                                        oneGramBuyingPriceInIQD,
-                                  );
-
-                              /// item price
-                              final itemPrice = CommonService.formatCurrency(
-                                amount: eSouqProductPrice.toString(),
-                              );
-
-                              /// esouq item card
-                              return EsouqItemCard(
-                                title:
-                                    product.productName ??
-                                    AppLocalizations.of(context)!.na, //"N/A",
-                                imageUrl: product.imageUrl?.isNotEmpty == true
-                                    ? product.imageUrl!.first
-                                    : "", // or use a placeholder image URL
-                                itemPrice: itemPrice,
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          EsouqItemDetailScreen(
-                                            product: product,
-                                            productPrice: eSouqProductPrice
-                                                .toStringAsFixed(2),
-                                            oneGramPriceInIQD:
-                                                oneGramBuyingPriceInIQD
-                                                    .toStringAsFixed(2),
-                                          ),
-                                    ),
-                                  );
-                                },
-                                onTapAddToCart: () {
-                                  // Add to cart logic
-                                },
-                              );
-                            },
-                          ),
-                  ),
-                ],
-              ).get16HorizontalPadding(),
-            ),
+                              },
+                              onTapAddToCart: () {},
+                            );
+                          },
+                        ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

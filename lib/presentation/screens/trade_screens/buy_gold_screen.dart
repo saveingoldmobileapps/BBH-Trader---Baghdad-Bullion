@@ -337,20 +337,35 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
               ),
             ],
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: const Text(
-              "+ 0.65%",
-              style: TextStyle(
-                color: Color(0xFF4CAF50),
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
+          goldPriceState.when(
+            data: (data) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.arrow_upward,
+                    size: 12,
+                    color: Color(0xFF4CAF50),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    "High ${data.lastHighBuyingPrice.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      color: Color(0xFF4CAF50),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
           ),
         ],
       ),

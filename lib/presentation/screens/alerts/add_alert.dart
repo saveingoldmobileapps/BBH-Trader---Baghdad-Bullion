@@ -162,6 +162,7 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                         dropdownColor: AppColors.greyScale1000,
                         style: const TextStyle(color: Colors.white),
                         //initialValue: alertType,
+                        value: alertType ,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintStyle: TextStyle(color: Colors.white70),
@@ -287,6 +288,7 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                         dropdownColor: AppColors.greyScale1000,
                         style: const TextStyle(color: Colors.white),
                         //initialValue: selectedScript,
+                        value: selectedScript ,
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
                           hintStyle: TextStyle(color: Colors.white70),

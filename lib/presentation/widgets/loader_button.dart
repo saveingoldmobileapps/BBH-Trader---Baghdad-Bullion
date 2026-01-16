@@ -35,16 +35,20 @@ class LoaderButton extends StatelessWidget {
       child: Ink(
         width: buttonWidth,
         height: buttonHeight,
-        decoration: BoxDecoration(
+        decoration: ShapeDecoration(
           gradient: const LinearGradient(
-            begin: Alignment(1.00, 0.01),
-            end: Alignment(-1, -0.01),
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
             colors: [
-              Color(0xFF74540E),
-              Color(0xFFB19454),
+              AppColors.goldColor, // start (darker gold)
+              AppColors.goldDarkColor, // center (highlight gold)
+              AppColors.goldColor, // end (darker gold)
             ],
+            stops: [0.0, 0.6, 1.0],
           ),
-          borderRadius: BorderRadius.circular(10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         child: InkWell(
           onTap: onTap,

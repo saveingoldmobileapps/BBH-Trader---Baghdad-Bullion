@@ -1,9 +1,9 @@
 import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/data_sources/network_sources/env_utils.dart';
 
 class ApiEndpoints {
   // Base URL is fetched dynamically from EnvUtils
-  static String get baseUrl => EnvUtils.getBaseUrl();
+  static String baseUrl = "https://demo.staging.saveingold.app/api/v6";
+  // => EnvUtils.getBaseUrl();
   static String get playStoreUrl =>
       "https://play.google.com/store/apps/details?id=ae.saveingold.saveingold.fzco";
   static String get appStoreUrl =>

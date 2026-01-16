@@ -8,10 +8,11 @@ class EsouqItemCard extends StatelessWidget {
   final String itemPrice;
   final VoidCallback onTap;
   final VoidCallback onTapAddToCart;
-
+  final String oneGramPrice;
   const EsouqItemCard({
     super.key,
     required this.title,
+    required this.oneGramPrice,
     required this.imageUrl,
     required this.itemPrice,
     required this.onTap,
@@ -78,7 +79,7 @@ class EsouqItemCard extends StatelessWidget {
                     color: AppColors.primaryGold500,
                   ),
                   GetGenericText(
-                    text: "IQD 181,250/g", // Example subtitle logic
+                    text: "IQD $oneGramPrice/g", // ✅ REAL PRICE
                     fontSize: 10,
                     color: Colors.grey,
                     fontWeight: FontWeight.normal,

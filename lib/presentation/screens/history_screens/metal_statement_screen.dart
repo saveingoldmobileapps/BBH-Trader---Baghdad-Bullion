@@ -10,7 +10,6 @@ import 'package:saveingold_fzco/presentation/widgets/pop_up_widget.dart';
 import 'package:saveingold_fzco/presentation/widgets/shimmers/shimmer_loader.dart';
 
 import '../../../core/core_export.dart';
-
 import '../../widgets/no_data_widget.dart' show NoDataWidget;
 
 class MetalStatementScreen extends ConsumerStatefulWidget {
@@ -151,10 +150,9 @@ class _MetalStatementScreenState extends ConsumerState<MetalStatementScreen> {
             ? (historyState.getMetalStatementsResponse.payload == null ||
                       historyState.metalStatements.isEmpty)
                   ? NoDataWidget(
-                      title: AppLocalizations.of(context)!.enter_verify_code,
-                      description: AppLocalizations.of(
-                        context,
-                      )!.history_create_metal_st,
+                      title: "No Data to Show",
+                      description:
+                          "You don’t have any metal history at the moment. Click on the button to start trading.",
                       //"Please create new metal statement or try again later",
                     ).get20VerticalPadding()
                   : SizedBox(

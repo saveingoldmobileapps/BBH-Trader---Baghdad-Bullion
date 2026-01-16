@@ -37,7 +37,7 @@ class AppColors {
   static const greyScale30 = Color.fromRGBO(234, 234, 234, 1);
   static const greyScale20 = Color.fromRGBO(247, 247, 247, 1);
   static const greyScale10 = Color.fromRGBO(234, 234, 234, 1);
-
+  static const grey1Color = Color.fromRGBO(133, 133, 133, 1);
   static const whiteColor = Color.fromRGBO(255, 251, 247, 1);
   static const barColor = Color.fromRGBO(222, 106, 76, 1);
   static const goldColor = Color.fromRGBO(177, 148, 84, 1);

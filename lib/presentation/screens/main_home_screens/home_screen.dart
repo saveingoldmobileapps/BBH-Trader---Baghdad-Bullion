@@ -25,8 +25,12 @@ import '../../../core/services/socket_services.dart';
 import '../../../data/data_sources/local_database/local_database.dart';
 import '../../../data/models/LoginResponse.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../widgets/demo_account_popup.dart';
 import '../../widgets/home_quick_actions.dart';
 import '../../widgets/pop_up_widget.dart';
+import '../fund_screens/add_fund_screen.dart';
+import '../setting_screens/support_screen.dart';
+import '../withdraw_fund_screens/withdrawal_fund_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -474,9 +478,324 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     ConstPadding.sizeBoxWithHeight(height: 8),
 
                     HomeQuickActions(
-                      onAddFunds: () {},
-                      onWithdraw: () {},
-                      onMore: () {},
+                      onAddFunds: () async {
+                        final isEmailVerified =
+                            await LocalDatabase.instance.getIsEmailVerified() ??
+                            false;
+
+                        final isUserBasicKycVerified =
+                            await LocalDatabase.instance
+                                .getIsUserBasicKycVerified() ??
+                            false;
+                        final isUserKycVerified =
+                            await LocalDatabase.instance
+                                .getIsUserBasicKycVerified() ??
+                            false;
+                        final isDemo =
+                            await LocalDatabase.instance.getIsDemo() ?? false;
+
+                        if (isDemo) {
+                          if (!context.mounted) return;
+                          await UpgradeAccountPopup.show(
+                            context: context,
+                            ref: ref,
+                          );
+                          return;
+                        }
+
+                        if (!isEmailVerified) {
+                          if (!context.mounted) return;
+                          await genericPopUpWidget(
+                            isLoadingState: false,
+                            context: context,
+                            heading: AppLocalizations.of(
+                              context,
+                            )!.email_verification_required, //"Email Verification Required",
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.email_verification_msg,
+                            //"To continue, please verify your email address. Do you want to verify now?",
+                            noButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.email_verification_cancel_btn, //"Cancel",
+                            yesButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.email_verification_verify_btn, //"Verify",
+                            onNoPress: () async {
+                              Navigator.pop(context);
+                            },
+                            onYesPress: () async {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EmailVerifyCodeScreen(
+                                    email: mainStateWatchProvider.userEmail,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        //if email verified and Residency documents not verified.
+                        if (isEmailVerified && !isUserBasicKycVerified) {
+                          if (!context.mounted) return;
+                          await genericPopUpWidget(
+                            isLoadingState: false,
+                            context: context,
+                            heading: AppLocalizations.of(
+                              context,
+                            )!.residency_document_required, //"Residency Document Required",
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.residency_verification_message, //"To continue, please complete your residency document verification. Would you like to proceed now?",
+                            noButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.later, //"Later",
+                            yesButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.proceed, //"Proceed",
+                            onNoPress: () async {
+                              Navigator.pop(context);
+                            },
+                            onYesPress: () async {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => KycFirstStepScreen(),
+                                ),
+                              );
+                            },
+                          );
+                          return;
+                        }
+                        //if email and residency document verified and kyc not verified
+                        if (isEmailVerified &&
+                            isUserBasicKycVerified &&
+                            !isUserKycVerified) {
+                          if (!context.mounted) return;
+                          await genericPopUpWidget(
+                            isLoadingState: false,
+                            context: context,
+                            heading: AppLocalizations.of(
+                              context,
+                            )!.kyc_verification_required, //"KYC Verification Required",
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.residency_verification_message, //"To continue, please complete your KYC verification. Would you like to proceed now?",
+                            noButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.later, //"Later",
+                            yesButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.proceed, //"Proceed",
+                            onNoPress: () async {
+                              Navigator.pop(context);
+                            },
+                            onYesPress: () async {
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => KycSecondStepScreen(),
+                                ),
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        // If all verifications are complete
+                        if (!context.mounted) return;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AddFundScreen(),
+                          ),
+                        );
+                      },
+                      onWithdraw: () async {
+                        final isEmailVerified =
+                            await LocalDatabase.instance.getIsEmailVerified() ??
+                            false;
+                        final isUserBasicKycVerified =
+                            await LocalDatabase.instance
+                                .getIsUserBasicKycVerified() ??
+                            false;
+                        final isUserKycVerified =
+                            await LocalDatabase.instance
+                                .getIsUserBasicKycVerified() ??
+                            false;
+
+                        final isDemo =
+                            await LocalDatabase.instance.getIsDemo() ?? false;
+                        if (isDemo) {
+                          if (!context.mounted) return;
+                          await UpgradeAccountPopup.show(
+                            context: context,
+                            ref: ref,
+                          );
+                          return;
+                        }
+                        final temporaryCreditStatus =
+                            await LocalDatabase.instance
+                                .getIsUsertemporaryCreditStatus() ??
+                            false;
+
+                        //temporary credit
+                        if (temporaryCreditStatus) {
+                          if (!context.mounted) return;
+
+                          await temporaryCreditPopUpWidget(
+                            context: context,
+                            heading: AppLocalizations.of(
+                              context,
+                            )!.temporary_credit_title,
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.temperory_credit_detect,
+                            buttonTitle: AppLocalizations.of(
+                              context,
+                            )!.temporary_credit_contact_support,
+                            icon: Icons
+                                .account_balance_wallet_outlined, //Icons.card_giftcard,
+                            onButtonPress: () {
+                              Navigator.pop(context);
+
+                              ///  Navigate to Support Screen (customizable)
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const SupportScreen(),
+                                ),
+                              );
+                            },
+                            oncloseButtonPress: () {
+                              Navigator.pop(context);
+                            },
+                          );
+                          return;
+                        }
+                        // Email not verified
+                        if (!isEmailVerified) {
+                          if (!context.mounted) return;
+                          await genericPopUpWidget(
+                            isLoadingState: false,
+                            context: context,
+                            heading: AppLocalizations.of(
+                              context,
+                            )!.email_verification_required, //"Email Verification Required",
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.email_verification_msg,
+                            //"To continue, please verify your email address. Do you want to verify now?",
+                            noButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.email_verification_cancel_btn, //"Cancel",
+                            yesButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.email_verification_verify_btn, //"Verify",
+                            onNoPress: () async {
+                              Navigator.pop(context);
+                            },
+                            onYesPress: () async {
+                              Navigator.pop(context);
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EmailVerifyCodeScreen(
+                                    email: mainStateWatchProvider.userEmail,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          return;
+                        }
+                        // Email verified but Residency Document not verified
+                        if (isEmailVerified && !isUserBasicKycVerified) {
+                          if (!context.mounted) return;
+                          await genericPopUpWidget(
+                            isLoadingState: false,
+                            context: context,
+                            heading: AppLocalizations.of(
+                              context,
+                            )!.residency_document_required, //"Residency Document Required",
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.residency_verification_message, //"You must complete Residency Document verification first. Proceed now?",
+                            noButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.later, //"Later",
+                            yesButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.proceed, //"Proceed",
+                            onNoPress: () async {
+                              Navigator.pop(context);
+                            },
+                            onYesPress: () async {
+                              Navigator.pop(context);
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => KycFirstStepScreen(),
+                                ),
+                              );
+                            },
+                          );
+                          return;
+                        }
+
+                        // Email and Residency verified but KYC not verified
+                        if (isEmailVerified &&
+                            isUserBasicKycVerified &&
+                            !isUserKycVerified) {
+                          if (!context.mounted) return;
+                          await genericPopUpWidget(
+                            isLoadingState: false,
+                            context: context,
+                            heading: AppLocalizations.of(
+                              context,
+                            )!.kyc_verification_required, //"KYC Verification Required",
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.kyc_verification_message, //"You must complete KYC verification to continue. Proceed now?",
+                            noButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.later, //"Later",
+                            yesButtonTitle: AppLocalizations.of(
+                              context,
+                            )!.proceed, //"Proceed",
+                            onNoPress: () async {
+                              Navigator.pop(context);
+                            },
+                            onYesPress: () async {
+                              Navigator.pop(context);
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => KycSecondStepScreen(),
+                                ),
+                              );
+                            },
+                          );
+                          return;
+                        }
+                        if (!context.mounted) return;
+                        // All verifications passed
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const WithdrawalFundScreen(),
+                          ),
+                        );
+                      },
+                      onMore: () {
+                        _scaffoldKey.currentState!.openDrawer();
+                      },
                     ),
 
                     /// Offers Carousel

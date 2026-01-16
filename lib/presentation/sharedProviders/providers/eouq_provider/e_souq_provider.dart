@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:saveingold_fzco/core/enums/loading_state.dart';
@@ -8,7 +8,6 @@ import 'package:saveingold_fzco/core/sounds/app_sounds.dart';
 import 'package:saveingold_fzco/core/theme/const_toasts.dart';
 import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
-import 'package:saveingold_fzco/presentation/screens/main_home_screens/main_home_screen.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../data/data_sources/local_database/local_database.dart';
@@ -20,6 +19,7 @@ import '../../../../data/models/bank_models/BankBranchResponse.dart';
 import '../../../../data/models/esouq_model/GetAllProductResponse.dart';
 import '../../../../data/models/esouq_model/GetOrderDetailResponse.dart';
 import '../../../feature_injection.dart';
+import '../../../screens/esouq_screens/esouq_success.dart';
 import '../states/e_souq_states.dart';
 
 part 'eSouqProvider.g.dart';
@@ -45,8 +45,8 @@ class Esouq extends _$Esouq {
     try {
       getLocator<Logger>().i("Starting fetchBankBranches...");
       setLoadingState(LoadingState.loading);
-      String? refreshToken =
-          await SecureStorageService.instance.getRefreshToken();
+      String? refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
       getLocator<Logger>().i("Refresh token: $refreshToken");
 
       if (refreshToken == null) {
@@ -157,8 +157,8 @@ class Esouq extends _$Esouq {
       // String? refreshToken = await LocalDatabase.instance.read(
       //   key: Strings.userRefreshToken,
       // );
-      String? refreshToken =
-          await SecureStorageService.instance.getRefreshToken();
+      String? refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
 
       /// Construct query parameters
       final Map<String, dynamic> queryParameters = {
@@ -260,8 +260,8 @@ class Esouq extends _$Esouq {
       // String? refreshToken = await LocalDatabase.instance.read(
       //   key: Strings.userRefreshToken,
       // );
-      String? refreshToken =
-          await SecureStorageService.instance.getRefreshToken();
+      String? refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
       if (refreshToken == null) {
         getLocator<Logger>().e("No refresh token found!");
         state = state.copyWith(isLoading: false);
@@ -342,8 +342,8 @@ class Esouq extends _$Esouq {
       // String? refreshToken = await LocalDatabase.instance.read(
       //   key: Strings.userRefreshToken,
       // );
-      String? refreshToken =
-          await SecureStorageService.instance.getRefreshToken();
+      String? refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
 
       if (refreshToken == null) {
         getLocator<Logger>().e("No refresh token found!");
@@ -539,7 +539,7 @@ class Esouq extends _$Esouq {
 
   //         if (!context.mounted) return;
   //         String message = successResponse.payload!.message!;
-         
+
   //   RegExp regex = RegExp(r'(?:Deal ID|رقم الصفقة)\s*[:：]?\s*(\d+)');
   //        // RegExp regex = RegExp(r'Deal ID:\s*(\d+)');
   //         Match? match = regex.firstMatch(message);
@@ -649,14 +649,16 @@ class Esouq extends _$Esouq {
   }) async {
     try {
       double goldpriceUpdated = double.parse(
-  ((double.parse(product.weightFactor!) * double.parse(goldQuantity) * currentGoldPrice)
-          .toStringAsFixed(2)),
-);
+        ((double.parse(product.weightFactor!) *
+                double.parse(goldQuantity) *
+                currentGoldPrice)
+            .toStringAsFixed(2)),
+      );
 
-double totalMetal = double.parse(
-  ((double.parse(product.weightFactor!) * double.parse(goldQuantity))
-          .toStringAsFixed(2)),
-);
+      double totalMetal = double.parse(
+        ((double.parse(product.weightFactor!) * double.parse(goldQuantity))
+            .toStringAsFixed(2)),
+      );
       setButtonState(true);
       // setLoadingState(LoadingState.loading);
 
@@ -695,7 +697,7 @@ double totalMetal = double.parse(
         "deliveryMethod": deliveryMethod, // Delivery or Pickup
         "totalCharges": totalCharges,
         "grandTotal": payableGrandTotal,
-        "goldQuantityInGrams" : totalMetal,
+        "goldQuantityInGrams": totalMetal,
         "dealsData": selectedDealsData,
       };
 
@@ -724,13 +726,40 @@ double totalMetal = double.parse(
           );
 
           if (!context.mounted) return;
-          Navigator.pushAndRemoveUntil(
+          final payload = successResponse.payload;
+
+          final String orderId = "#GLD5QUF3K";
+
+          final String dateTime = DateFormat(
+            'MMM dd, yyyy, hh:mm a',
+          ).format(DateTime.now());
+
+          final String productInfo =
+              "$goldQuantity × ${product.productName ?? "Gold"}";
+
+          final String totalPaid = paymentMethod == "Money"
+              ? "IQD ${double.parse(payableGrandTotal).toStringAsFixed(2)}"
+              : "${double.parse(payableGrandTotal).toStringAsFixed(2)} g";
+
+          Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const MainHomeScreen(),
+              builder: (_) => OrderSuccessScreen(
+                orderId: orderId,
+                dateTime: dateTime,
+                productInfo: productInfo,
+                totalPaid: totalPaid,
+              ),
             ),
-            ((route) => false),
           );
+
+          // Navigator.pushAndRemoveUntil(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => const MainHomeScreen(),
+          //   ),
+          //   ((route) => false),
+          // );
 
           setButtonState(false);
           break;

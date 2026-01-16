@@ -209,6 +209,8 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                                   ? product.imageUrl!.first
                                   : "",
                               itemPrice: itemPrice,
+                              oneGramPrice: oneGramBuyingPriceInIQD
+                                  .toStringAsFixed(3),
                               onTap: () {
                                 Navigator.push(
                                   context,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:saveingold_fzco/core/res_sizes/res.dart';
 
 import '../../core/theme/const_colors.dart';
@@ -21,28 +22,16 @@ class NoDataWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            height: sizes!.heightRatio * 50,
-            width: sizes!.widthRatio * 60,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: AppColors.primaryGold500,
-            ),
-            child: Icon(
-              Icons.cancel_outlined,
-              color: AppColors.whiteColor,
-              size: 32,
-            ),
-          ),
+          SvgPicture.asset("assets/svg/EmptyState.svg"),
           ConstPadding.sizeBoxWithHeight(height: 12),
           GetGenericText(
             text: title,
             fontSize: sizes!.responsiveFont(
-              phoneVal: 14,
-              tabletVal: 16,
+              phoneVal: 18,
+              tabletVal: 20,
             ),
             fontWeight: FontWeight.bold,
-            color: AppColors.grey6Color,
+            color: AppColors.whiteColor,
           ),
           ConstPadding.sizeBoxWithHeight(height: 10),
           GetGenericText(
@@ -53,7 +42,7 @@ class NoDataWidget extends StatelessWidget {
               tabletVal: 16,
             ),
             fontWeight: FontWeight.normal,
-            color: AppColors.grey2Color,
+            color: AppColors.whiteColor,
           ),
         ],
       ),

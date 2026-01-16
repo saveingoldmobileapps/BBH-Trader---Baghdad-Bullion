@@ -147,13 +147,10 @@ class _MoneyStatementScreenState extends ConsumerState<MoneyStatementScreen> {
         historyState.loadingState == LoadingState.data
             ? (historyState.moneyStatements.isEmpty)
                   ? NoDataWidget(
-                      title: AppLocalizations.of(
-                        context,
-                      )!.oops_not_found, //"Oops! Not found",
-                      description: AppLocalizations.of(
-                        context,
-                      )!.no_money_statement_description,
-                      //"Please create new money statement or try again later",
+                      title: "No Data to Show",
+                      description:
+                          "You don’t have any Money history at the moment. Click on the button to start trading.",
+                      //"Please create new metal statement or try again later",
                     ).get20VerticalPadding()
                   : SizedBox(
                       child: LayoutBuilder(

@@ -473,6 +473,13 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+                GetGenericText(
+                  text: "Method",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ).getAlign(),
+                ConstPadding.sizeBoxWithHeight(height: 6),
                 Container(
                   width: sizes!.isPhone
                       ? sizes!.widthRatio * 360
@@ -909,101 +916,116 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
     return Form(
       key: _formKey,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //_buildLocationToggleAndMap(),
+          /// House Number
+          GetGenericText(
+            text: AppLocalizations.of(context)!.houseNumber,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.grey4Color,
+          ),
+          ConstPadding.sizeBoxWithHeight(height: 6),
           CommonTextFormField(
             title: "",
             hintText: "10",
-            labelText: AppLocalizations.of(
-              context,
-            )!.houseNumber, //"House Number",
+            labelText: AppLocalizations.of(context)!.houseNumber,
             textInputType: TextInputType.number,
             controller: houseNumberController,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return AppLocalizations.of(
-                  context,
-                )!.enterHouseNo; //'Please enter a house number';
+                return AppLocalizations.of(context)!.enterHouseNo;
               }
               return null;
             },
           ),
+
           ConstPadding.sizeBoxWithHeight(height: 16),
+
+          /// Street Address
+          GetGenericText(
+            text: AppLocalizations.of(context)!.streetAddress,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.grey4Color,
+          ),
+          ConstPadding.sizeBoxWithHeight(height: 6),
           CommonTextFormField(
             title: "",
-            hintText: AppLocalizations.of(
-              context,
-            )!.roadingStreet, //"Roding Street",
-            labelText: AppLocalizations.of(
-              context,
-            )!.streetAddress, //"Street Address",
+            hintText: AppLocalizations.of(context)!.roadingStreet,
+            labelText: AppLocalizations.of(context)!.streetAddress,
             textInputType: TextInputType.text,
             controller: streetAddressController,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return AppLocalizations.of(
-                  context,
-                )!.enter_street_address; //'Please enter a street address';
+                return AppLocalizations.of(context)!.enter_street_address;
               }
               return null;
             },
           ),
+
           ConstPadding.sizeBoxWithHeight(height: 16),
+
+          /// Area
+          GetGenericText(
+            text: AppLocalizations.of(context)!.area,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.grey4Color,
+          ),
+          ConstPadding.sizeBoxWithHeight(height: 6),
           CommonTextFormField(
             title: "",
-            hintText: AppLocalizations.of(
-              context,
-            )!.emiratesHill, //"Emirates Hill First",
-            labelText: AppLocalizations.of(context)!.area, //"Area",
+            hintText: AppLocalizations.of(context)!.emiratesHill,
+            labelText: AppLocalizations.of(context)!.area,
             textInputType: TextInputType.text,
             controller: areaController,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return AppLocalizations.of(
-                  context,
-                )!.please_enter_area; //'Please enter an area';
+                return AppLocalizations.of(context)!.please_enter_area;
               }
               return null;
             },
           ),
+
           ConstPadding.sizeBoxWithHeight(height: 16),
+
+          /// Emirate
+          GetGenericText(
+            text: AppLocalizations.of(context)!.emirate,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: AppColors.grey4Color,
+          ),
+          ConstPadding.sizeBoxWithHeight(height: 6),
           CommonTextFormField(
             title: "",
-            hintText: AppLocalizations.of(context)!.dubai_title, //"Dubai",
-            labelText: AppLocalizations.of(context)!.emirate, //"Emirate",
+            hintText: AppLocalizations.of(context)!.dubai_title,
+            labelText: AppLocalizations.of(context)!.emirate,
             textInputType: TextInputType.text,
             controller: emirateController,
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return AppLocalizations.of(
-                  context,
-                )!.list_of_emirates; //'Please enter an emirate';
+                return AppLocalizations.of(context)!.list_of_emirates;
               }
               return null;
             },
           ),
+
           ConstPadding.sizeBoxWithHeight(height: 10),
+
+          /// Nominate Recipient Toggle
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GetGenericText(
-                text: AppLocalizations.of(
-                  context,
-                )!.nominate_recipient, //"Nominate a Recipient",
+                text: AppLocalizations.of(context)!.nominate_recipient,
                 fontSize: 16,
                 fontWeight: FontWeight.w400,
                 color: Colors.white,
               ),
               Switch.adaptive(
                 activeColor: AppColors.primaryGold500,
-                thumbColor: WidgetStateProperty.resolveWith<Color>((
-                  Set<WidgetState> states,
-                ) {
-                  if (states.contains(WidgetState.disabled)) {
-                    return Colors.orange.withValues(alpha: .48);
-                  }
-                  return Colors.white;
-                }),
                 value: isNominate,
                 onChanged: (value) {
                   setState(() {
@@ -1013,32 +1035,33 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
               ),
             ],
           ),
+
+          /// Nominee Name
           Visibility(
             visible: isNominate,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ConstPadding.sizeBoxWithHeight(height: 10),
+                GetGenericText(
+                  text: AppLocalizations.of(context)!.nominee_name,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.grey4Color,
+                ),
+                ConstPadding.sizeBoxWithHeight(height: 6),
                 CommonTextFormField(
                   title: "",
-                  hintText: AppLocalizations.of(
-                    context,
-                  )!.user_firstName, //"James",
-                  labelText: AppLocalizations.of(
-                    context,
-                  )!.nominee_name, //"Nominee Name",
+                  hintText: AppLocalizations.of(context)!.user_firstName,
+                  labelText: AppLocalizations.of(context)!.nominee_name,
                   controller: nomineeController,
                 ),
-                ConstPadding.sizeBoxWithHeight(height: 4),
-                // GetGenericText(
-                //   text:
-                //       "Your nominated recipient will be asked to show their ID.",
-                //   fontSize: 12,
-                //   fontWeight: FontWeight.w400,
-                //   color: AppColors.grey6Color,
-                // ),
               ],
             ),
           ),
+          ConstPadding.sizeBoxWithHeight(height: 6),
+
+          /// Nominee Document Upload (unchanged)
           Visibility(
             visible: isNominate,
             child: GestureDetector(
@@ -1051,9 +1074,9 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                   border: Border.all(
                     width: 1.50,
                     color: isPDFError
-                        ? Color(0xFFFF0000)
+                        ? const Color(0xFFFF0000)
                         : isPDFSelected
-                        ? Color(0xFFBBA473)
+                        ? const Color(0xFFBBA473)
                         : AppColors.secondaryColor,
                   ),
                 ),
@@ -1062,7 +1085,6 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                   children: [
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         if (selectedPDFFileName != null) ...[
                           Icon(
@@ -1079,9 +1101,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                           ),
                           ConstPadding.sizeBoxWithHeight(height: 4),
                           GetGenericText(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.kyc_doc_success, //"Document added successfully!",
+                            text: AppLocalizations.of(context)!.kyc_doc_success,
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             color: AppColors.whiteColor,
@@ -1090,42 +1110,21 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                           GetGenericText(
                             text: AppLocalizations.of(
                               context,
-                            )!.upload_residency_esoq, //"Upload residency Proof ",
+                            )!.upload_residency_esoq,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                             color: AppColors.whiteColor,
                           ),
-                          ConstPadding.sizeBoxWithHeight(
-                            height: 4,
-                          ),
+                          ConstPadding.sizeBoxWithHeight(height: 4),
                           GetGenericText(
                             text: AppLocalizations.of(context)!.nominee_id,
-                            //"Please upload the Emirates Id of Your Nominee",
                             fontSize: 10,
                             fontWeight: FontWeight.w400,
                             color: AppColors.whiteColor,
                           ),
-                          ConstPadding.sizeBoxWithHeight(
-                            height: 4,
-                          ),
-                          // GetGenericText(
-                          //   text: "Passport",
-                          //   fontSize: 8,
-                          //   fontWeight: FontWeight.w400,
-                          //   color: AppColors.whiteColor,
-                          // ),
                         ],
                       ],
                     ),
-                    // Visibility(
-                    //   visible: authState.isImageState,
-                    //   child: Positioned(
-                    //     child: CircularProgressIndicator(
-                    //       color: AppColors.primaryGold500,
-                    //       strokeWidth: 2,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

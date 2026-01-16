@@ -1,28 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
 import 'package:saveingold_fzco/presentation/widgets/button_widget.dart';
 
+import 'forgot_screens/forgot_password_screen.dart';
+
 enum LoginType { phone, email, bank }
+
+class CountryCode {
+  final String code;
+  final String dialCode;
+  final String flag;
+
+  CountryCode({
+    required this.code,
+    required this.dialCode,
+    required this.flag,
+  });
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CountryCode &&
+          runtimeType == other.runtimeType &&
+          code == other.code;
+
+  @override
+  int get hashCode => code.hashCode;
+}
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  ConsumerState createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  // State control
   LoginType _selectedType = LoginType.phone;
 
-  // Controllers
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final bankIdController = TextEditingController();
   final passwordController = TextEditingController();
 
+  bool _isPasswordVisible = false;
+
   final _formKey = GlobalKey<FormState>();
+
+  CountryCode _selectedCountry = CountryCode(
+    code: "IR",
+    dialCode: "+98",
+    flag: "assets/svg/iran.png",
+  );
+
+  final List<CountryCode> _countries = [
+    CountryCode(code: "IR", dialCode: "+964", flag: "assets/svg/iraq.svg"),
+    CountryCode(code: "AE", dialCode: "+971", flag: "assets/svg/ae_flag.svg"),
+  ];
 
   @override
   void dispose() {
@@ -38,11 +74,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final authStateWatch = ref.watch(authProvider);
 
     return Scaffold(
-      // 1. Extend the body so the background covers the AppBar area
       extendBodyBehindAppBar: true,
       backgroundColor: const Color(0xFF0F0F0F),
       appBar: AppBar(
-        backgroundColor: Colors.transparent, // Keeps AppBar clear
+        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -50,17 +85,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ),
       ),
       body: Container(
-        height: double.infinity,
-        width: double.infinity,
         decoration: const BoxDecoration(
           image: DecorationImage(
-            fit: BoxFit.cover,
-            // Ensure this path is correct in your pubspec.yaml
             image: AssetImage('assets/png/bg_start.png'),
+            fit: BoxFit.cover,
           ),
         ),
         child: SafeArea(
-          // top: false allows the content/background to bleed into the status bar area
           top: false,
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -69,7 +100,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Add top padding to account for the transparent AppBar height
                   SizedBox(height: MediaQuery.of(context).padding.top + 60),
 
                   Text(
@@ -92,12 +122,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 30),
 
-                  // --- DYNAMIC INPUT SECTION ---
                   _buildInputSection(),
 
                   const SizedBox(height: 30),
 
-                  // --- PRIMARY BUTTON ---
                   ButtonWidget(
                     title: _selectedType == LoginType.bank
                         ? "Login"
@@ -110,7 +138,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   _buildDivider(),
                   const SizedBox(height: 25),
 
-                  // --- ALTERNATIVE LOGIN METHODS ---
                   if (_selectedType != LoginType.phone)
                     _buildSecondaryButton(
                       "Login with phone",
@@ -149,42 +176,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
+  /// ---------------- INPUT SECTION ----------------
+
   Widget _buildInputSection() {
     switch (_selectedType) {
       case LoginType.phone:
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return Column(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.white),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Image.asset(
-                    "assets/png/iraq.png",
-                    width: 24,
-                    errorBuilder: (c, e, s) =>
-                        const Icon(Icons.flag, color: Colors.white),
+            Row(
+              children: [
+                _buildCountryDropdown(),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _buildTextField(
+                    controller: phoneController,
+                    hint: "Phone number",
+                    isNumeric: true,
                   ),
-                  const SizedBox(width: 8),
-                  const Text(
-                    "+964",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _buildTextField(
-                phoneController,
-                "Placeholder",
-                isNumeric: true,
-              ),
+            const SizedBox(height: 20),
+            _buildTextField(
+              controller: passwordController,
+              hint: "**********",
+              label: "Password",
+              isPassword: true,
             ),
+            _buildForgotPassword(),
           ],
         );
 
@@ -192,14 +211,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         return Column(
           children: [
             _buildTextField(
-              emailController,
-              "Enter your email",
+              controller: emailController,
+              hint: "Enter your email",
               label: "Email",
             ),
             const SizedBox(height: 20),
             _buildTextField(
-              passwordController,
-              "**********",
+              controller: passwordController,
+              hint: "**********",
               label: "Password",
               isPassword: true,
             ),
@@ -210,26 +229,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       case LoginType.bank:
         return Column(
           children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                _buildTextField(
-                  bankIdController,
-                  "Enter your user ID",
-                  label: "User ID",
-                  showWarning: true,
-                ),
-                Positioned(
-                  top: -45,
-                  right: 0,
-                  child: _buildBankHint(),
-                ),
-              ],
+            _buildTextField(
+              controller: bankIdController,
+              hint: "Enter your user ID",
+              label: "User ID",
+              showWarning: true,
             ),
             const SizedBox(height: 20),
             _buildTextField(
-              passwordController,
-              "**********",
+              controller: passwordController,
+              hint: "**********",
               label: "Password",
               isPassword: true,
             ),
@@ -239,12 +248,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  Widget _buildTextField(
-    TextEditingController controller,
-    String hint, {
+  /// ---------------- TEXT FIELD ----------------
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    String? label,
     bool isPassword = false,
     bool isNumeric = false,
-    String? label,
     bool showWarning = false,
   }) {
     return Column(
@@ -252,12 +263,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       children: [
         if (label != null)
           Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(bottom: 8),
             child: Text(label, style: const TextStyle(color: Colors.white)),
           ),
         TextFormField(
           controller: controller,
-          obscureText: isPassword,
+          obscureText: isPassword && !_isPasswordVisible,
           keyboardType: isNumeric
               ? TextInputType.number
               : TextInputType.emailAddress,
@@ -267,12 +278,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             hintStyle: const TextStyle(color: Colors.white54),
             suffixIcon: showWarning
                 ? const Icon(Icons.error_outline, color: Colors.white54)
-                : (isPassword
-                      ? const Icon(
-                          Icons.visibility_outlined,
-                          color: Colors.white54,
-                        )
-                      : null),
+                : isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility_off
+                          : Icons.visibility,
+                      color: Colors.white54,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Colors.white),
@@ -287,11 +307,65 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     );
   }
 
+  /// ---------------- COUNTRY DROPDOWN ----------------
+
+  Widget _buildCountryDropdown() {
+    return Container(
+      height: 56,
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<CountryCode>(
+          value: _selectedCountry,
+          dropdownColor: const Color(0xFF2A2A2A),
+          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+          onChanged: (value) {
+            if (value != null) {
+              setState(() => _selectedCountry = value);
+            }
+          },
+          items: _countries.map((country) {
+            return DropdownMenuItem(
+              value: country,
+              child: Row(
+                children: [
+                  SvgPicture.asset(
+                    country.flag,
+                    width: 22,
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.flag, color: Colors.white),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    country.dialCode,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  /// ---------------- HELPERS ----------------
+
   Widget _buildForgotPassword() {
     return Align(
       alignment: Alignment.centerRight,
       child: TextButton(
-        onPressed: () {}, // Navigate to ForgotPasswordScreen
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ForgotPasswordScreen(),
+            ),
+          );
+        },
         child: const Text(
           "Forgot Password?",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -316,21 +390,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           text,
           style: const TextStyle(color: Colors.white, fontSize: 16),
         ),
-      ),
-    );
-  }
-
-  Widget _buildBankHint() {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      width: 150,
-      decoration: BoxDecoration(
-        color: const Color(0xFF2A2A2A),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Text(
-        "Your user ID is your bank account number",
-        style: TextStyle(color: Colors.white70, fontSize: 11),
       ),
     );
   }
@@ -361,17 +420,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void _handleLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
-      String loginIdentifier = "";
+      String loginIdentifier;
 
       if (_selectedType == LoginType.phone) {
-        loginIdentifier = "00964${phoneController.text.trim()}";
+        loginIdentifier =
+            "${_selectedCountry.dialCode}${phoneController.text.trim()}";
       } else if (_selectedType == LoginType.email) {
         loginIdentifier = emailController.text.trim();
       } else {
         loginIdentifier = bankIdController.text.trim();
       }
 
-      // Existing auth logic
       await ref
           .read(authProvider.notifier)
           .userLogin(

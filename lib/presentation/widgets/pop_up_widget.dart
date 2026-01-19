@@ -2162,16 +2162,20 @@ Future<void> genericTransactionPopUpWidget({
                           child: Container(
                             height: sizes!.fontRatio * 48,
                             width: sizes!.widthRatio * 300,
-                            decoration: BoxDecoration(
-                              //color: AppColors.primaryGold500,
-                              borderRadius: BorderRadius.circular(10),
-                              gradient: LinearGradient(
-                                begin: Alignment(1.00, 0.01),
-                                end: Alignment(-1, -0.01),
+                            decoration: ShapeDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
                                 colors: [
-                                  Color(0xFF675A3D),
-                                  Color(0xFFBBA473),
+                                  AppColors.goldColor, // start (darker gold)
+                                  AppColors
+                                      .goldDarkColor, // center (highlight gold)
+                                  AppColors.goldColor, // end (darker gold)
                                 ],
+                                stops: [0.0, 0.6, 1.0],
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
                             child: Center(

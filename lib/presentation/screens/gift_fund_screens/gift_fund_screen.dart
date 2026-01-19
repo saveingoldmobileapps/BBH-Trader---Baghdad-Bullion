@@ -242,55 +242,30 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                               ),
                             ),
                           ),
-
-                          // Expanded(
-                          //   child: GestureDetector(
-                          //     behavior: HitTestBehavior.opaque,
-                          //     onTap: () {
-                          //       setState(() {
-                          //         giftType = GiftType.money;
-                          //       });
-                          //     },
-                          //     child: Container(
-                          //       width: sizes!.responsiveWidth(
-                          //         phoneVal: 150,
-                          //         tabletVal: 380,
-                          //       ),
-                          //       height: sizes!.responsiveLandscapeHeight(
-                          //         phoneVal: 34,
-                          //         tabletVal: 44,
-                          //         tabletLandscapeVal: 54,
-                          //         isLandscape: sizes!.isLandscape(),
-                          //       ),
-                          //       decoration: giftType == GiftType.money
-                          //           ? BoxDecoration(
-                          //               color: AppColors.primaryGold500,
-                          //               borderRadius: BorderRadius.circular(4),
-                          //             )
-                          //           : null,
-                          //       child: Center(
-                          //         child: GetGenericText(
-                          //           text: AppLocalizations.of(context)!.money,//"Money",
-                          //           fontSize: sizes!.responsiveFont(
-                          //             phoneVal: 18,
-                          //             tabletVal: 22,
-                          //           ),
-                          //           fontWeight: giftType == GiftType.money
-                          //               ? FontWeight.w700
-                          //               : FontWeight.w400,
-                          //           color: giftType == GiftType.money
-                          //               ? AppColors.greyScale1000
-                          //               : AppColors.grey3Color,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
                   ),
-
+                  ConstPadding.sizeBoxWithHeight(height: 10),
+                  GetGenericText(
+                    text: "Gift a friend",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 20,
+                      tabletVal: 24,
+                    ),
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.grey5Color,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 4),
+                  GetGenericText(
+                    text: "Please fill the form below to gift gold.",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 14,
+                      tabletVal: 18,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.grey5Color,
+                  ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 16),
                   Directionality.of(context) == TextDirection.rtl
                       ? GetGenericText(
@@ -305,14 +280,12 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                           color: AppColors.grey5Color,
                         ).getAlignRight()
                       : GetGenericText(
-                          text: AppLocalizations.of(
-                            context,
-                          )!.friends, //"Friends",
+                          text: "Existing Friends", //"Friends",
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 16,
                             tabletVal: 20,
                           ),
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.w500,
                           color: AppColors.grey5Color,
                         ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 8),
@@ -498,6 +471,16 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                       color: AppColors.grey5Color,
                     ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
+                  GetGenericText(
+                    text: "Account Number", //"Friends",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 16,
+                      tabletVal: 20,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 10),
                   CommonTextFormField(
                     title: "title",
                     hintText: "12345678",
@@ -516,6 +499,16 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     },
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
+                  GetGenericText(
+                    text: "Receiver Name", //"Friends",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 16,
+                      tabletVal: 20,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 5),
                   CommonTextFormField(
                     title: "title",
                     hintText: AppLocalizations.of(
@@ -536,6 +529,16 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     },
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
+                  GetGenericText(
+                    text: "Email", //"Friends",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 16,
+                      tabletVal: 20,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 5),
                   CommonTextFormField(
                     title: "title",
                     hintText: "name@mail.com | 00971XXXXXXXXX",
@@ -548,6 +551,16 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     validator: ValidatorUtils.validateEmailOrPhone,
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
+                  GetGenericText(
+                    text: "Amount", //"Friends",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 16,
+                      tabletVal: 20,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 5),
                   CommonTextFormField(
                     title: "title",
                     hintText: giftType == GiftType.metal
@@ -614,6 +627,16 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                   // ),
                   if (giftType == GiftType.metal)
                     ConstPadding.sizeBoxWithHeight(height: 16),
+                  GetGenericText(
+                    text: "Gram Deal", //"Friends",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 16,
+                      tabletVal: 20,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 5),
                   giftType == GiftType.metal
                       ? Consumer(
                           builder: (context, ref, child) {
@@ -948,6 +971,16 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                   //       )
                   //     : const SizedBox.shrink(),
                   ConstPadding.sizeBoxWithHeight(height: 16),
+                  GetGenericText(
+                    text: "Comment", //"Friends",
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 16,
+                      tabletVal: 20,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlign(),
+                  ConstPadding.sizeBoxWithHeight(height: 5),
                   CommonTextFormField(
                     title: "title",
                     hintText: AppLocalizations.of(
@@ -968,7 +1001,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                   ConstPadding.sizeBoxWithHeight(height: 24),
 
                   /// continue button
-                  LoaderArrowButton(
+                  LoaderButton(
                     title: AppLocalizations.of(context)!.continu, //"Continue",
                     isLoadingState: giftState.isButtonState ?? false,
                     onTap: () async {

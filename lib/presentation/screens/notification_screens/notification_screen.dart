@@ -37,6 +37,36 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     sizes!.initializeSize(context);
   }
 
+  List<String> _extractGoldChips(String message) {
+    final List<String> chips = [];
+
+    /// Match grams (e.g. 1g, 10 grams, 5 gram(s))
+    final gramRegex = RegExp(
+      r'(\d+(\.\d+)?)\s*(g|gram|grams)',
+      caseSensitive: false,
+    );
+    final gramMatch = gramRegex.firstMatch(message);
+    if (gramMatch != null) {
+      chips.add("${gramMatch.group(1)}g");
+    }
+
+    /// Match price (e.g. 544.23 AED, AED 544.23)
+    final priceRegex = RegExp(
+      r'(AED|IQD)\s*(\d+(\.\d+)?)|(\d+(\.\d+)?)\s*(AED|IQD)',
+      caseSensitive: false,
+    );
+    final priceMatch = priceRegex.firstMatch(message);
+    if (priceMatch != null) {
+      final currency = priceMatch.group(1) ?? priceMatch.group(6);
+      final amount = priceMatch.group(2) ?? priceMatch.group(4);
+      if (currency != null && amount != null) {
+        chips.add("$currency $amount");
+      }
+    }
+
+    return chips;
+  }
+
   @override
   Widget build(BuildContext context) {
     final notificationState = ref.watch(notificationProvider);
@@ -101,7 +131,14 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
                           itemBuilder: (context, index) {
                             final notification =
                                 notificationState.notifications[index];
-
+                            final chips = _extractGoldChips(
+                              Localizations.localeOf(context).languageCode ==
+                                      'ar'
+                                  ? notification.messageInArabic ??
+                                        notification.message ??
+                                        ""
+                                  : notification.message ?? "",
+                            );
                             // Calculate if text is long
                             final bool isLongTitle =
                                 (notification.title ?? '').length > 40;
@@ -110,146 +147,133 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
 
                             return Container(
                               margin: EdgeInsets.symmetric(
-                                vertical:
-                                    sizes!.heightRatio *
-                                    6, // Space between cards
+                                vertical: sizes!.heightRatio * 6,
                               ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: sizes!.widthRatio * 16,
-                                vertical:
-                                    sizes!.heightRatio *
-                                    (isLongTitle || isLongMessage ? 16 : 12),
-                              ),
+                              padding: EdgeInsets.all(sizes!.widthRatio * 14),
                               decoration: BoxDecoration(
-                                color: AppColors.greyScale800,
-                                borderRadius: BorderRadius.circular(12),
+                                color: Color(0xff262929),
+                                borderRadius: BorderRadius.circular(16),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(
-                                      alpha: 0.4,
-                                    ), // Subtle shadow
-                                    spreadRadius: 0,
-                                    blurRadius: 4,
-                                    offset: Offset(
-                                      0,
-                                      0,
-                                    ), // changes position of shadow
+                                    color: Colors.black.withOpacity(0.35),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 6),
                                   ),
                                 ],
                               ),
-                              child: Column(
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  // // Title with dynamic font size
-                                  // GetGenericText(
-                                  //   text: notification.title ?? "",
-                                  //   fontSize: _getTitleFontSize(
-                                  //     notification.title ?? "",
-                                  //     sizes!,
-                                  //   ),
-                                  //   fontWeight: FontWeight.w600, // Bolder title
-                                  //   color: AppColors.grey6Color,
-                                  //   lines: 2,
-                                  //   overflow: TextOverflow.ellipsis,
-                                  // ),
-                                  GetGenericText(
-                                    text:
-                                        Localizations.localeOf(
-                                              context,
-                                            ).languageCode ==
-                                            'ar'
-                                        ? notification.titleInArabic ??
-                                              notification.title ??
-                                              ""
-                                        : notification.title ?? "",
-                                    fontSize: _getTitleFontSize(
-                                      Localizations.localeOf(
-                                                context,
-                                              ).languageCode ==
-                                              'ar'
-                                          ? notification.titleInArabic ??
-                                                notification.title ??
-                                                ""
-                                          : notification.title ?? "",
-                                      sizes!,
+                                  /// LEFT AVATAR
+                                  Container(
+                                    width: 44,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: AppColors.primaryGold500,
+                                        width: 1.2,
+                                      ),
                                     ),
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.grey6Color,
-                                    lines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  ConstPadding.sizeBoxWithHeight(height: 8),
-                                  // Message with dynamic sizing
-                                  // GetGenericText(
-                                  //   text: notification.message ?? "",
-                                  //   fontSize: _getMessageFontSize(
-                                  //     notification.message ?? "",
-                                  //     sizes!,
-                                  //   ),
-                                  //   fontWeight: FontWeight.w400,
-                                  //   color: AppColors.grey6Color,
-                                  //   lines: 4,
-                                  //   overflow: TextOverflow.ellipsis,
-                                  // ),
-                                  GetGenericText(
-                                    text:
-                                        Localizations.localeOf(
-                                              context,
-                                            ).languageCode ==
-                                            'ar'
-                                        ? notification.messageInArabic ??
-                                              notification.message ??
-                                              ""
-                                        : notification.message ?? "",
-                                    fontSize: _getMessageFontSize(
-                                      Localizations.localeOf(
-                                                context,
-                                              ).languageCode ==
-                                              'ar'
-                                          ? notification.messageInArabic ??
-                                                notification.message ??
-                                                ""
-                                          : notification.message ?? "",
-                                      sizes!,
+                                    child: Center(
+                                      child: GetGenericText(
+                                        text: "AM",
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.primaryGold500,
+                                      ),
                                     ),
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.grey6Color,
-                                    lines: 4,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  ConstPadding.sizeBoxWithHeight(height: 12),
-                                  // Timestamp
-                                  GetGenericText(
-                                    text: CommonService.formatTimeAgo(
-                                      notification.createdAt!,
-                                      isArabic:
-                                          Localizations.localeOf(
-                                            context,
-                                          ).languageCode ==
-                                          'ar',
-                                    ),
-                                    fontSize: sizes!.responsiveFont(
-                                      phoneVal: 10,
-                                      tabletVal: 14,
-                                    ),
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors
-                                        .greyScale10, // Lighter grey for timestamp
                                   ),
 
-                                  // GetGenericText(
-                                  //   text: CommonService.formatTimeAgo(
-                                  //     notification.createdAt!,
-                                  //   ),
-                                  //   fontSize: sizes!.responsiveFont(
-                                  //     phoneVal: 10,
-                                  //     tabletVal: 14,
-                                  //   ),
-                                  //   fontWeight: FontWeight.w400,
-                                  //   color: AppColors
-                                  //       .greyScale10, // Lighter grey for timestamp
-                                  // ),
+                                  ConstPadding.sizeBoxWithWidth(width: 12),
+
+                                  /// RIGHT CONTENT
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        /// TITLE + TIME
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              child: GetGenericText(
+                                                text:
+                                                    Localizations.localeOf(
+                                                          context,
+                                                        ).languageCode ==
+                                                        'ar'
+                                                    ? notification
+                                                              .titleInArabic ??
+                                                          notification.title ??
+                                                          ""
+                                                    : notification.title ?? "",
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w600,
+                                                color: AppColors.grey6Color,
+                                                lines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            ConstPadding.sizeBoxWithWidth(
+                                              width: 8,
+                                            ),
+                                            GetGenericText(
+                                              text: CommonService.formatTimeAgo(
+                                                notification.createdAt!,
+                                                isArabic:
+                                                    Localizations.localeOf(
+                                                      context,
+                                                    ).languageCode ==
+                                                    'ar',
+                                              ),
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.greyScale10,
+                                            ),
+                                          ],
+                                        ),
+
+                                        ConstPadding.sizeBoxWithHeight(
+                                          height: 6,
+                                        ),
+
+                                        /// MESSAGE
+                                        GetGenericText(
+                                          text:
+                                              Localizations.localeOf(
+                                                    context,
+                                                  ).languageCode ==
+                                                  'ar'
+                                              ? notification.messageInArabic ??
+                                                    notification.message ??
+                                                    ""
+                                              : notification.message ?? "",
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                          color: AppColors.grey4Color,
+                                          lines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+
+                                        ConstPadding.sizeBoxWithHeight(
+                                          height: 10,
+                                        ),
+
+                                        /// TAGS / CHIPS (OPTIONAL – SAFE)
+                                        if (chips.isNotEmpty)
+                                          Wrap(
+                                            spacing: 8,
+                                            runSpacing: 6,
+                                            children: chips
+                                                .map(_goldChip)
+                                                .toList(),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -259,6 +283,28 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
               ],
             ).get16HorizontalPadding(),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _goldChip(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF2A2418),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFFBBA473),
+          width: 0.8,
+        ),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+          color: Color(0xFFBBA473),
         ),
       ),
     );

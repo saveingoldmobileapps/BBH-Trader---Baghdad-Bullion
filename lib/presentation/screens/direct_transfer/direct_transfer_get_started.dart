@@ -5,7 +5,7 @@ import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/direct_transfer/select_bank.dart';
 
-import '../../widgets/loader_arrow_button.dart';
+import '../../widgets/loader_button.dart';
 
 class DirectTransferGetStarted extends ConsumerStatefulWidget {
   const DirectTransferGetStarted({
@@ -78,8 +78,8 @@ class _GetStartedScreenState extends ConsumerState<DirectTransferGetStarted> {
               lines: 6,
             ),
             ConstPadding.sizeBoxWithHeight(height: 40),
-            LoaderArrowButton(
-              title: AppLocalizations.of(context)!.getStarted,//"Get Started",
+            LoaderButton(
+              title: AppLocalizations.of(context)!.continu, //"Get Started",
               isLoadingState: false,
               onTap: () async {
                 Navigator.push(

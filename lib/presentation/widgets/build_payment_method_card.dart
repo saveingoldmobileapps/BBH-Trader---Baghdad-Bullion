@@ -25,7 +25,7 @@ class BuildPaymentMethodCard extends StatelessWidget {
         width: sizes!.isPhone ? sizes!.widthRatio * 361 : sizes!.width,
         padding: const EdgeInsets.all(12),
         decoration: ShapeDecoration(
-          color: Color(0xFF333333),
+          color: Color(0xFF262929),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

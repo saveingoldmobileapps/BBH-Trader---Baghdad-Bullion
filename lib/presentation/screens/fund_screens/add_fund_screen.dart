@@ -3,7 +3,6 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/direct_transfer/direct_transfer_get_started.dart';
@@ -60,11 +59,10 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
   Widget build(BuildContext context) {
     /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
-   final bool googlePayTrue = 
-    ref.read(homeProvider).getHomeFeedResponse.payload?.googlePay ?? false;
-    final bool applePayTrue = 
-    ref.read(homeProvider).getHomeFeedResponse.payload?.applePay ?? false;
-
+    final bool googlePayTrue =
+        ref.read(homeProvider).getHomeFeedResponse.payload?.googlePay ?? false;
+    final bool applePayTrue =
+        ref.read(homeProvider).getHomeFeedResponse.payload?.applePay ?? false;
 
     // var permissions = [
     //   LeanPermissions.identity,
@@ -136,12 +134,6 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
         foregroundColor: Colors.white,
         centerTitle: false,
         titleSpacing: 0,
-        title: GetGenericText(
-          text: AppLocalizations.of(context)!.add_funds,//"Add Funds",
-          fontSize: sizes!.isPhone ? 20 : 24,
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey6Color,
-        ),
       ),
       body: Container(
         height: sizes!.height,
@@ -153,22 +145,30 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
           child: Column(
             children: [
               ConstPadding.sizeBoxWithHeight(height: 20),
-              Directionality.of(context) == TextDirection.rtl
-                        ?
-
               GetGenericText(
-                text: AppLocalizations.of(context)!.dep_method_sub,//"Select a Method",
-                fontSize: sizes!.isPhone ? 16 : 24,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ).getAlignRight():
-              GetGenericText(
-                text: AppLocalizations.of(context)!.dep_method_sub,//"Select a Method",
-                fontSize: sizes!.isPhone ? 16 : 24,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
+                text: AppLocalizations.of(context)!.add_funds, //"Add Funds",
+                fontSize: sizes!.isPhone ? 24 : 28,
+                fontWeight: FontWeight.bold,
+                color: AppColors.grey6Color,
               ).getAlign(),
-              
+              Directionality.of(context) == TextDirection.rtl
+                  ? GetGenericText(
+                      text: AppLocalizations.of(
+                        context,
+                      )!.dep_method_sub, //"Select a Method",
+                      fontSize: sizes!.isPhone ? 16 : 24,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                    ).getAlignRight()
+                  : GetGenericText(
+                      text: AppLocalizations.of(
+                        context,
+                      )!.dep_method_sub, //"Select a Method",
+                      fontSize: sizes!.isPhone ? 16 : 24,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                    ).getAlign(),
+
               ConstPadding.sizeBoxWithHeight(height: 12),
 
               ///TODO: Bank Transfer in-progress
@@ -190,8 +190,12 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
               // ),
               // ConstPadding.sizeBoxWithHeight(height: 12),
               BuildPaymentMethodCard(
-                title: AppLocalizations.of(context)!.dep_method_direct,//"Direct Transfer",
-                subtitle: AppLocalizations.of(context)!.dep_method_noFees,//"No Fees",
+                title: AppLocalizations.of(
+                  context,
+                )!.dep_method_direct, //"Direct Transfer",
+                subtitle: AppLocalizations.of(
+                  context,
+                )!.dep_method_noFees, //"No Fees",
                 iconString: "assets/svg/direct_icon.svg",
                 onTap: () async {
                   //Toasts.getWarningToast(text: "Try it later");
@@ -207,8 +211,12 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
               ),
               ConstPadding.sizeBoxWithHeight(height: 12),
               BuildPaymentMethodCard(
-                title: AppLocalizations.of(context)!.dep_method_card,//"Card Payment",
-                subtitle: AppLocalizations.of(context)!.dep_fee_instantNote,//"Instant Deposit, bank fees may apply.",
+                title: AppLocalizations.of(
+                  context,
+                )!.dep_method_card, //"Card Payment",
+                subtitle: AppLocalizations.of(
+                  context,
+                )!.dep_fee_instantNote, //"Instant Deposit, bank fees may apply.",
                 iconString: "assets/svg/card_icon.svg",
                 onTap: () async {
                   Navigator.push(
@@ -235,7 +243,7 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
                   },
                 ),
               ],
-              ConstPadding.sizeBoxWithHeight(height: 12),
+
               if (_showGooglePay && googlePayTrue) ...[
                 ConstPadding.sizeBoxWithHeight(height: 12),
                 BuildPaymentMethodCard(
@@ -307,7 +315,6 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
               //     ),
               //   ),
               // ],
-            
             ],
           ).get16HorizontalPadding(),
         ),

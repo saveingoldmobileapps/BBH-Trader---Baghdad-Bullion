@@ -1,10 +1,13 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/core/extensions/extensions.dart';
+import 'package:saveingold_fzco/core/res_sizes/res.dart';
+import 'package:saveingold_fzco/core/theme/const_colors.dart';
+import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/direct_transfer/bank_details_screen.dart';
-
 import '../../sharedProviders/providers/direct_transfer/direct_transfer_provider.dart';
 import '../../widgets/shimmers/shimmer_loader.dart';
 

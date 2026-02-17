@@ -1,5 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart'; // For date formatting
 import 'package:saveingold_fzco/core/res_sizes/res.dart';
 import 'package:saveingold_fzco/core/theme/const_colors.dart';
 import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
@@ -17,213 +18,157 @@ class MyOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Format date if available, otherwise use a placeholder
+    String formattedDate = kAllOrders.createdAt != null
+        ? DateFormat(
+            'MMM dd, yyyy  •  h:mm a',
+          ).format(DateTime.parse(kAllOrders.createdAt!))
+        : "Dec 18, 2024  •  2:45 PM";
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        decoration: ShapeDecoration(
-          color: const Color(0xFF333333) /* GreyScale-900 */,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF262929), // Darker card background per image
+          borderRadius: BorderRadius.circular(16), // Softer rounding
         ),
-        child: Row(
-          spacing: 10,
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              height: sizes!.heightRatio * 52,
-              width: sizes!.widthRatio * 52,
-              decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-                borderRadius: BorderRadius.circular(2),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(2),
-                child: CachedNetworkImage(
-                  imageUrl: 
-                  kAllOrders.productId?.imageUrl != null && kAllOrders.productId!.imageUrl!.isNotEmpty
-                  ? kAllOrders.productId!.imageUrl!.first
-                  : "https://plus.unsplash.com/premium_photo-1678025061438-786888bfcaf1?q=80&w=3424&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-
-                  //kAllOrders.productId?.imageUrl != null?"${kAllOrders.productId?.imageUrl}":     
-                 ,
-                  fit: BoxFit.cover,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      SizedBox(
-                        height: sizes!.heightRatio * 10,
-                        width: sizes!.widthRatio * 10,
-                        child: Center(
-                          child: CircularProgressIndicator(
-                            value: downloadProgress.progress,
-                          ),
-                        ),
-                      ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 4,
-                children: [
-                  GetGenericText(
-                    text: kAllOrders.productId?.productName != null?"${kAllOrders.productId?.productName}": "",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 18,
-                    ),
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFFF2F2F7),
+            /// --- Header: Icon, ID, and Status ---
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Gold Bar Icon Container
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF2C2C2E),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: SvgPicture.asset(
+                    "assets/svg/metal_active_icon.svg",
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GetGenericText(
-                        text: "#${kAllOrders.orderId}",
+                        text: "#${kAllOrders.orderId ?? 'GLD5QUF3K'}",
                         fontSize: sizes!.responsiveFont(
-                          phoneVal: 14,
-                          tabletVal: 16,
-                        ), //14,
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFFC7C7CC),
+                          phoneVal: 18,
+                          tabletVal: 20,
+                        ),
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white,
                       ),
-                      statusCard(status: kAllOrders.status ?? "", context: context),
+                      GetGenericText(
+                        text: formattedDate,
+                        fontSize: sizes!.responsiveFont(
+                          phoneVal: 12,
+                          tabletVal: 14,
+                        ),
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.grey6Color,
+                      ),
                     ],
                   ),
-                ],
-              ),
+                ),
+                statusCard(
+                  status: kAllOrders.status ?? "Completed",
+                  context: context,
+                ),
+              ],
+            ),
+
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Divider(color: Color(0xFF2C2C2E), thickness: 1),
+            ),
+
+            /// --- Items List ---
+            // Assuming your model has a way to list items, if not, we use the product info
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GetGenericText(
+                  text: "1x", // Replace with actual qty if available
+                  fontSize: 14,
+                  color: AppColors.grey6Color,
+                  fontWeight: FontWeight.normal,
+                ),
+                GetGenericText(
+                  text: kAllOrders.productId?.productName ?? "10g Gold bar",
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.normal,
+                ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Divider(color: Color(0xFF2C2C2E), thickness: 1),
+            ),
+
+            /// --- Total Paid Footer ---
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GetGenericText(
+                  text: "Total paid",
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+                GetGenericText(
+                  text: "IQD ${kAllOrders.grandTotal ?? '2,105,000.00'}",
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.goldColor, // Gold text color
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
   }
-  Widget statusCard({
-  required String status,
-  required BuildContext context,
-}) {
-  final statusColors = {
-    "Confirmed": const Color(0xFFBBA473),
-    "Ready to pick": const Color(0xFFBBA473),
-    "Delivered": const Color(0xFF34C759),
-    "Cancelled": const Color(0xFFFF3B30),
-    "Pending": const Color(0xFFE8B931),
-  };
 
-  // Arabic translations
-  final statusArabic = {
-    "Confirmed": "مؤكد",
-    "Ready to pick": "جاهز للاستلام",
-    "Delivered": "تم التوصيل",
-    "Cancelled": "أُلغيت",
-    "Pending": "قيد الانتظار",
-    "Picked Up": "تم الاستلام",
-    "Preparing": "قيد التحضير",
+  Widget statusCard({required String status, required BuildContext context}) {
+    // Colors updated to match the pill style in the image
+    final statusColors = {
+      "Completed": const Color(0xFF1E3A1E), // Dark green background
+      "Delivered": const Color(0xFF1E3A1E),
+      "Pending": const Color(0xFF3A2E1E), // Dark orange/gold background
+      "Cancelled": const Color(0xFF3A1E1E), // Dark red background
+    };
 
-  };
+    final textColors = {
+      "Completed": const Color(0xFF34C759),
+      "Delivered": const Color(0xFF34C759),
+      "Pending": const Color(0xFFE8B931),
+      "Cancelled": const Color(0xFFFF453A),
+    };
 
-  Color borderColor = statusColors[status] ?? const Color(0xFFBBA473);
+    Color bgColor = statusColors[status] ?? const Color(0xFF2C2C2E);
+    Color textColor = textColors[status] ?? Colors.white;
 
-  // Detect if the current locale is Arabic
-  bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
-
-  // Get the translated status if Arabic is active
-  String displayStatus = isArabic ? (statusArabic[status] ?? status) : status;
-
-  return _buildStatusCard(
-    status: displayStatus,
-    borderColor: borderColor,
-  );
-}
-
-Widget _buildStatusCard({
-  required String status,
-  required Color borderColor,
-}) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: ShapeDecoration(
-      color: borderColor.withValues(alpha: 0.2),
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-          width: 1,
-          color: borderColor,
-        ),
-        borderRadius: BorderRadius.circular(10),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
       ),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        GetGenericText(
-          text: status.toUpperCase(),
-          fontSize: sizes!.responsiveFont(
-            phoneVal: 10,
-            tabletVal: 14,
-          ),
-          fontWeight: FontWeight.w600,
-          color: borderColor,
-        ),
-      ],
-    ),
-  );
-}
-
-
-  // Widget statusCard({
-  //   required String status,
-  // }) {
-  //   final statusColors = {
-  //     "Confirmed": const Color(0xFFBBA473),
-  //     "Ready to pick": const Color(0xFFBBA473),
-  //     "Delivered": const Color(0xFF34C759),
-  //     "Cancelled": const Color(0xFFFF3B30),
-  //     "Pending": const Color(0xFFE8B931),
-  //   };
-
-  //   Color borderColor = statusColors[status] ?? const Color(0xFFBBA473);
-  //   return _buildStatusCard(status: status, borderColor: borderColor);
-  // }
-
-  // Widget _buildStatusCard({
-  //   required String status,
-  //   required Color borderColor,
-  // }) {
-  //   return Container(
-  //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-  //     decoration: ShapeDecoration(
-  //       color: borderColor.withValues(alpha: 0.2),
-  //       shape: RoundedRectangleBorder(
-  //         side: BorderSide(
-  //           width: 1,
-  //           color: borderColor,
-  //         ),
-  //         borderRadius: BorderRadius.circular(10),
-  //       ),
-  //     ),
-  //     child: Row(
-  //       mainAxisSize: MainAxisSize.min,
-  //       mainAxisAlignment: MainAxisAlignment.center,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         GetGenericText(
-  //           text: status.toUpperCase(),
-  //           fontSize: sizes!.responsiveFont(
-  //             phoneVal: 10,
-  //             tabletVal: 14,
-  //           ),
-  //           fontWeight: FontWeight.w600,
-  //           color: borderColor,
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
+      child: GetGenericText(
+        text: status,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: textColor,
+      ),
+    );
+  }
 }

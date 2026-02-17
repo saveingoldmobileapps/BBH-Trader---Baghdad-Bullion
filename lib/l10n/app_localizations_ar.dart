@@ -849,6 +849,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dep_fee_instantNote => 'إيداع فوري، تطبق رسوم البنك.';
 
   @override
+  String get dep_only_direct_title => 'تواصل مع الدعم';
+
+  @override
+  String get dep_only_direct_msg =>
+      'التحويل المباشر متاح فقط. لطرق الدفع الأخرى، يرجى التواصل معنا:\n\nالهاتف: +971504971269\nالبريد الإلكتروني: info@saveingold.ae';
+
+  @override
   String get dep_amount_title => 'مبلغ الإيداع';
 
   @override

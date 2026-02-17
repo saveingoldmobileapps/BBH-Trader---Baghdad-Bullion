@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCY24PRFqa2aLacx2h1AeZ4HWi9elonWAY',
-    appId: '1:421169571042:android:8d241f1a3736b972cf2abb',
-    messagingSenderId: '421169571042',
-    projectId: 'save-in-gold-fzco',
-    storageBucket: 'save-in-gold-fzco.firebasestorage.app',
+    apiKey: 'AIzaSyDgfXEa5XkOIDt5KBAbtL8Un-zKsQTgm9o',
+    appId: '1:182440117373:android:6ba419fe3d80508fc11d14',
+    messagingSenderId: '182440117373',
+    projectId: 'bbh-trader---baghdad-bullion',
+    storageBucket: 'bbh-trader---baghdad-bullion.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAeYqWmnOH4uhI4oysBAWEJUoT3wkE9qpk',
-    appId: '1:421169571042:ios:2b4c320b851aa952cf2abb',
-    messagingSenderId: '421169571042',
-    projectId: 'save-in-gold-fzco',
-    storageBucket: 'save-in-gold-fzco.firebasestorage.app',
-    iosBundleId: 'ae.saveingold.saveingold-fzco',
+    apiKey: 'AIzaSyDWaQ9VW6bTTQ0o_69pdsyM0edtN8gamGw',
+    appId: '1:182440117373:ios:677fca3d05a2d614c11d14',
+    messagingSenderId: '182440117373',
+    projectId: 'bbh-trader---baghdad-bullion',
+    storageBucket: 'bbh-trader---baghdad-bullion.firebasestorage.app',
+    iosBundleId: 'com.baghdadbullion.bbhtrader',
   );
 }

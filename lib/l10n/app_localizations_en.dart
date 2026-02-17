@@ -854,6 +854,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dep_fee_instantNote => 'Instant Deposit, bank fees apply.';
 
   @override
+  String get dep_only_direct_title => 'Contact Support';
+
+  @override
+  String get dep_only_direct_msg =>
+      'Only direct transfer is available. For other payment methods, please contact us:\n\nPhone: +971504971269\nEmail: info@saveingold.ae';
+
+  @override
   String get dep_amount_title => 'Deposit Amount';
 
   @override

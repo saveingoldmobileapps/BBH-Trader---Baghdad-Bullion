@@ -6,7 +6,7 @@ flutter_native_splash:
   image: "assets/png/splash_screen.png"
 
   # Optional: Specify an iOS-specific image (recommended)
-  image_ios: "assets/png/splash_screen_ios.png"
+  image_ios: "assets/png/android_splash.png"
 
   # Set iOS content mode to scale the image properly
   ios_content_mode: scaleAspectFit

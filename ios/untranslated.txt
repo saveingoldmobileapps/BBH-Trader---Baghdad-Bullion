@@ -1,0 +1,7 @@
+{
+  "ar": [
+    "bank_charge_message",
+    "failed_to_update_card",
+    "in_store"
+  ]
+}

@@ -1,13 +1,16 @@
+import 'package:flutter/cupertino.dart'; // For the iOS style switch
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/presentation/screens/alerts/add_alert.dart';
 
 import '../../../core/enums/loading_state.dart';
-import '../../../core/res_sizes/res.dart';
 import '../../../core/theme/const_colors.dart';
 import '../../../core/theme/get_generic_text_widget.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../sharedProviders/providers/alert_provider/alert_provider.dart';
+import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart'; // Import live provider
+import '../../widgets/no_data_widget.dart';
 
 class ActiveAlertsScreen extends ConsumerStatefulWidget {
   const ActiveAlertsScreen({super.key});
@@ -28,324 +31,299 @@ class _ActiveAlertsScreenState extends ConsumerState<ActiveAlertsScreen> {
   @override
   Widget build(BuildContext context) {
     final alertState = ref.watch(alertAllProvider);
+    final alerts = alertState.alerts ?? [];
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.primaryGold500,
-        child: Icon(
-          Icons.add_rounded,
-          color: AppColors.greyScale900,
-          size: 32,
-        ),
-        onPressed: () async {
-          await Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => CreateAlertScreen()),
-          ).then((_) {
-            // Refresh list after adding new alert
-            ref.read(alertAllProvider.notifier).fetchAlerts();
-          });
-        },
-      ),
+      backgroundColor: AppColors.greyScale1000,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        automaticallyImplyLeading: false,
         backgroundColor: AppColors.greyScale1000,
         elevation: 0,
-        surfaceTintColor: AppColors.greyScale1000,
-        foregroundColor: Colors.white,
-        titleSpacing: 0,
         title: GetGenericText(
           text: AppLocalizations.of(context)!.active_alerts,
-          fontSize: sizes!.responsiveFont(phoneVal: 20, tabletVal: 24),
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey6Color,
-          isInter: true,
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          color: Colors.white,
         ),
       ),
-      body: Container(
-        height: sizes!.height,
-        width: sizes!.width,
-        decoration: const BoxDecoration(
-          color: AppColors.greyScale1000,
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF91712F),
+              minimumSize: const Size(double.infinity, 56),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () => _navigateToCreate(context),
+            child: const Text(
+              "Create new alert",
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
         ),
-        child: Builder(
-          builder: (_) {
-            if (alertState.loadingState == LoadingState.loading) {
-              return const Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              );
-            }
-
-            if (alertState.loadingState == LoadingState.error) {
-              return Center(
-                child: Text(
-                  AppLocalizations.of(context)!.no_active_alerts,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              );
-            }
-
-            final alerts = alertState.alerts ?? [];
-
-            if (alerts.isEmpty) {
-              return Center(
-                child: Text(
-                  AppLocalizations.of(context)!.no_active_alerts,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              );
-            }
-
-            return ListView.builder(
+      ),
+      body: alertState.loadingState == LoadingState.loading
+          ? const Center(
+              child: CircularProgressIndicator(color: AppColors.primaryGold500),
+            )
+          : alerts.isEmpty
+          ? Center(
+              child: NoDataWidget(
+                title: "No Data",
+                description: "No active alerts found.",
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               itemCount: alerts.length,
               itemBuilder: (context, index) {
                 final alert = alerts[index];
-
-                return Dismissible(
-                  key: Key(alert.id.toString()),
-                  direction: DismissDirection.horizontal,
-                  background: Container(
-                    color: Colors.green,
-                    alignment: AlignmentDirectional.centerStart, // changed
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Icon(Icons.edit, color: Colors.white),
-                  ),
-                  secondaryBackground: Container(
-                    color: Colors.red,
-                    alignment: AlignmentDirectional.centerEnd, // changed
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: const Icon(Icons.delete, color: Colors.white),
-                  ),
-                  confirmDismiss: (direction) async {
-                    if (direction == DismissDirection.startToEnd) {
-                      // Swipe → Edit
-                      await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => CreateAlertScreen(alert: alert),
-                        ),
-                      ).then((_) {
-                        ref.read(alertAllProvider.notifier).fetchAlerts();
-                      });
-                      return false; // prevent auto dismiss
-                    } else if (direction == DismissDirection.endToStart) {
-                      // Swipe → Delete
-                      bool confirmDelete = false;
-
-                      await showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: AppColors.greyScale900,
-                          title: Text(
-                            AppLocalizations.of(context)!.delete_alert,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                          content: Text(
-                            AppLocalizations.of(context)!.delete_alert_message,
-                            style: const TextStyle(color: Colors.white70),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(
-                                AppLocalizations.of(context)!.cancel,
-                                style: const TextStyle(color: Colors.white70),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                confirmDelete = true;
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                AppLocalizations.of(context)!.delete,
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-
-                      if (confirmDelete) {
-                        await ref
-                            .read(alertAllProvider.notifier)
-                            .deleteAlert(alertId: alert.id.toString());
-                      }
-
-                      return false;
-                    }
-                    return false;
+                return InkWell(
+                  onTap: () async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CreateAlertScreen(alert: alert),
+                      ),
+                    ).then(
+                      (_) => ref.read(alertAllProvider.notifier).fetchAlerts(),
+                    );
                   },
-                  child: Card(
-                    color: const Color(0xFF333333),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    child: Directionality.of(context) == TextDirection.rtl
-                        ? ListTile(
-                            leading: Icon(
-                              Icons.notifications_active,
-                              color: AppColors.primaryGold500,
-                            ),
-                            title: Text(
-                              AppLocalizations.of(context)!.gram_price_script ??
-                                  "",
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              "${_getArabicAlertType(alert.alertType)} | ${_getArabicCondition(alert.condition)} ${alert.price!.toStringAsFixed(2) ?? ""} ${AppLocalizations.of(context)!.idq_currency}",
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                          )
-                        : ListTile(
-                            leading: Icon(
-                              Icons.notifications_active,
-                              color: AppColors.primaryGold500,
-                            ),
-                            title: Text(
-                              alert.script ?? "",
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            subtitle: Text(
-                              "${alert.alertType ?? ""} | ${alert.condition ?? ""} ${alert.price!.toStringAsFixed(2) ?? ""} ${AppLocalizations.of(context)!.idq_currency}",
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                          ),
+                  child: _AlertItemCard(
+                    alert: alert,
                   ),
-                );
-
-                // Dismissible(
-                //   key: Key(alert.id.toString()),
-                //   direction: DismissDirection.horizontal,
-                //   background: Container(
-                //     color: Colors.green,
-                //     alignment: Alignment.centerLeft,
-                //     padding: const EdgeInsets.symmetric(horizontal: 20),
-                //     child: const Icon(Icons.edit, color: Colors.white),
-                //   ),
-                //   secondaryBackground: Container(
-                //     color: Colors.red,
-                //     alignment: Alignment.centerRight,
-                //     padding: const EdgeInsets.symmetric(horizontal: 20),
-                //     child: const Icon(Icons.delete, color: Colors.white),
-                //   ),
-                //   confirmDismiss: (direction) async {
-                //     if (direction == DismissDirection.startToEnd) {
-                //       // Swipe Right → Edit
-                //       await Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //           builder: (_) => CreateAlertScreen(
-                //             alert: alert,
-                //           ),
-                //         ),
-                //       ).then((_) {
-                //         ref.read(alertAllProvider.notifier).fetchAlerts();
-                //       });
-                //       return false; // prevent auto dismiss
-                //     } else if (direction == DismissDirection.endToStart) {
-                //       // Swipe Left → Delete
-                //       bool confirmDelete = false;
-
-                //       await showDialog(
-                //         context: context,
-                //         builder: (context) => AlertDialog(
-                //           backgroundColor: AppColors.greyScale900,
-                //           title: Text(
-                //             AppLocalizations.of(context)!.delete_alert,
-                //             style: TextStyle(color: Colors.white),
-                //           ),
-                //           content: Text(
-                //             AppLocalizations.of(context)!.delete_alert_message,
-                //             style: TextStyle(color: Colors.white70),
-                //           ),
-                //           actions: [
-                //             TextButton(
-                //               onPressed: () => Navigator.pop(context),
-                //               child: Text(
-                //                 AppLocalizations.of(context)!.cancel,
-                //                 style: TextStyle(color: Colors.white70),
-                //               ),
-                //             ),
-                //             TextButton(
-                //               onPressed: () {
-                //                 confirmDelete = true;
-                //                 Navigator.pop(context);
-                //               },
-                //               child: Text(
-                //                 AppLocalizations.of(context)!.delete,
-                //                 style: TextStyle(color: Colors.red),
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       );
-
-                //       if (confirmDelete) {
-                //         await ref
-                //             .read(alertAllProvider.notifier)
-                //             .deleteAlert(alertId: alert.id.toString());
-                //       }
-
-                //       return false; // prevent auto dismiss
-                //     }
-
-                //     return false;
-                //   },
-                //   child: Card(
-                //     color: const Color(0xFF333333),
-                //     margin: const EdgeInsets.symmetric(
-                //       horizontal: 12,
-                //       vertical: 6,
-                //     ),
-                //     child: ListTile(
-                //       leading: Icon(
-                //         Icons.notifications_active,
-                //         color: AppColors.primaryGold500,
-                //       ),
-                //       title: Text(
-                //         alert.script ?? "",
-                //         style: const TextStyle(color: Colors.white),
-                //       ),
-                //       subtitle: Text(
-                //         "${alert.alertType ?? ""} | ${alert.condition ?? ""} ${alert.price ?? ""}",
-                //         style: const TextStyle(color: Colors.white70),
-                //       ),
-                //     ),
-                //   ),
-                // );
+                ); // Extracted for clean live updates
               },
-            );
-          },
-        ),
-      ),
+            ),
     );
   }
 
-  String _getArabicAlertType(String? type) {
-    switch (type?.toLowerCase()) {
-      case "buy":
-        return "شراء";
-      case "sell":
-        return "بيع";
-      default:
-        return type ?? "";
-    }
+  void _navigateToCreate(BuildContext context) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => CreateAlertScreen()),
+    );
+    ref.read(alertAllProvider.notifier).fetchAlerts();
+  }
+}
+
+class _AlertItemCard extends ConsumerWidget {
+  final dynamic alert; // Use your actual Alert Model type here
+  const _AlertItemCard({required this.alert});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final goldPriceState = ref.watch(goldPriceProvider);
+    final isSelling = alert.alertType?.toLowerCase() == 'sell';
+
+    return goldPriceState.when(
+      loading: () => const SizedBox(
+        height: 100,
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (_, __) =>
+          const Text("Price error", style: TextStyle(color: Colors.red)),
+      data: (liveData) {
+        // 1. Get Dynamic Live Price
+        final currentPrice = isSelling
+            ? liveData.oneGramSellingPriceInIQD
+            : liveData.oneGramBuyingPriceInIQD;
+
+        // 2. Calculate Dynamic Difference
+        final targetPrice = alert.price ?? 0.0;
+        final difference = targetPrice - currentPrice;
+        final diffColor = isSelling
+            ? (difference >= 0 ? Colors.green : Colors.red)
+            : (difference <= 0 ? Colors.red : Colors.red);
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF262929),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: isSelling
+                        ? Colors.green.withOpacity(0.1)
+                        : Colors.red.withOpacity(0.1),
+                    child: Icon(
+                      isSelling ? Icons.trending_up : Icons.trending_down,
+                      color: isSelling ? Colors.green : Colors.red,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          isSelling ? "Selling alert" : "Buying alert",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Text(
+                          "Active Alert",
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      bool confirm = await _showDeleteDialog(context);
+                      if (confirm) {
+                        await ref
+                            .read(alertAllProvider.notifier)
+                            .deleteAlert(alertId: alert.id.toString());
+                        ref.read(alertAllProvider.notifier).fetchAlerts();
+                      }
+                    },
+                    child: const Icon(
+                      Icons.delete_outline,
+                      color: Color(0xFFC5A358),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _row(
+                "Current Price",
+                "IQD ${NumberFormat("#,##0.00").format(currentPrice)}",
+                Colors.white,
+              ),
+              _row(
+                "Target Price",
+                "IQD ${NumberFormat("#,##0.00").format(targetPrice)}",
+                const Color(0xFFC5A358),
+              ),
+              _row(
+                "Difference",
+                "${difference >= 0 ? '+' : ''}IQD ${NumberFormat("#,##0.00").format(difference)}",
+                diffColor,
+              ),
+              const Divider(color: Colors.white10, height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Active", style: TextStyle(color: Colors.grey)),
+                  Transform.scale(
+                    scale: 0.8,
+                    child: CupertinoSwitch(
+                      value: true,
+                      activeTrackColor: const Color(0xFF91712F),
+                      onChanged: (v) {},
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
-  String _getArabicCondition(String? condition) {
-    switch (condition?.toLowerCase()) {
-      case "less":
-        return "أقل";
-      case "more":
-        return "أكثر";
-      default:
-        return condition ?? "";
-    }
+  Future<bool> _showDeleteDialog(BuildContext context) async {
+    bool confirm = false;
+    await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.greyScale900,
+        title: Text(
+          AppLocalizations.of(context)!.delete_alert,
+          style: const TextStyle(color: Colors.white),
+        ),
+        content: Text(
+          AppLocalizations.of(context)!.delete_alert_message,
+          style: const TextStyle(color: Colors.white70),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              AppLocalizations.of(context)!.cancel,
+              style: const TextStyle(color: Colors.white70),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              confirm = true;
+              Navigator.pop(context);
+            },
+            child: Text(
+              AppLocalizations.of(context)!.delete,
+              style: const TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+    return confirm;
+  }
+
+  Widget _row(String label, String value, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+          Text(
+            value,
+            style: TextStyle(
+              color: color,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+void _navigateToCreate(BuildContext context) async {
+  await Navigator.push(
+    context,
+    MaterialPageRoute(builder: (_) => CreateAlertScreen()),
+  );
+}
+
+void _confirmDelete(String id) async {
+  // Implement your delete logic here as per the original code
+}
+
+String _getArabicAlertType(String? type) {
+  switch (type?.toLowerCase()) {
+    case "buy":
+      return "شراء";
+    case "sell":
+      return "بيع";
+    default:
+      return type ?? "";
+  }
+}
+
+String _getArabicCondition(String? condition) {
+  switch (condition?.toLowerCase()) {
+    case "less":
+      return "أقل";
+    case "more":
+      return "أكثر";
+    default:
+      return condition ?? "";
   }
 }

@@ -715,13 +715,6 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
         },
       };
 
-
-
-    // PRINT REQUEST PAYLOAD
-    print("=== SHUFTI PRO REQUEST PAYLOAD ===");
-    print(jsonEncode(payload));
-    print("==================================\n");
-
       /// Send request to Shufti Pro
       final response = await ShuftiproSdk.sendRequest(
         authObject: authObject,
@@ -735,12 +728,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
         return;
       }
 
-    final decodedResponse = jsonDecode(response) as Map<String, dynamic>;
-    
-    // PRINT RAW SHUFTI PRO RESPONSE
-    print("=== SHUFTI PRO RAW RESPONSE ===");
-    print(jsonEncode(decodedResponse));
-    print("===============================\n");
+      final decodedResponse = jsonDecode(response) as Map<String, dynamic>;
       final event = decodedResponse['event'];
 
       // Only proceed if event is success
@@ -769,26 +757,11 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
         'kycData': shuftiProResult.toJson(),
         //'Savekycdata':shuftiProResult.toJson()
       };
-
-    
-    // PRINT PARSED SHUFTI PRO RESULT
       final kycData = shuftiProResult.toJson();
-
-    // PRINT DATA TO BE SAVED LOCALLY
-    print("=== KYC DATA TO SAVE LOCALLY ===");
-    print(jsonEncode(kycData));
-    print("================================\n");
 
       await LocalDatabase.instance.saveKycData(kycData);
 
       if (!mounted) return;
-
-
-    // PRINT COMPLETE DATA TO BE SENT TO SERVER
-    print("=== COMPLETE DATA FOR SERVER SUBMISSION ===");
-    final formattedJson = JsonEncoder.withIndent('  ').convert(newJson);
-    print(formattedJson);
-    print("===========================================\n");
 
       //  Only call submitKycData when ShuftiPro KYC is successful
       await ref
@@ -799,9 +772,6 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
             context: context,
           );
     } catch (e, stackTrace) {
-    // PRINT ERROR
-    print("❌ KYC ERROR: $e");
-    print("Stack Trace: $stackTrace");
       await Sentry.captureException(e, stackTrace: stackTrace);
       Toasts.getErrorToast(
         text: AppLocalizations.of(context)!.kyc_verification_failed,

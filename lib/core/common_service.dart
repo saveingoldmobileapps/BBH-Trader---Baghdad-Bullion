@@ -80,6 +80,27 @@ class CommonService {
     return formatter.format(amountInDouble);
   }
 
+  /// Format IQD balance for display - handles very large values beautifully.
+  /// Uses compact notation (1.2M, 5.3B) for values >= 1M to prevent overflow.
+  static String formatIQDForDisplay(num? value) {
+    final amount = (value ?? 0).toDouble();
+    if (amount == 0) return "0";
+    if (amount.abs() >= 1000000) {
+      return NumberFormat.compact(locale: "en_US").format(amount);
+    }
+    return NumberFormat("#,##0", "en_US").format(amount);
+  }
+
+  /// Format gram balance for display - handles large values with thousand separators.
+  static String formatGramForDisplay(num? value) {
+    final amount = (value ?? 0).toDouble();
+    if (amount == 0) return "0.00";
+    if (amount.abs() >= 1000) {
+      return NumberFormat("#,##0.00", "en_US").format(amount);
+    }
+    return amount.toStringAsFixed(2);
+  }
+
   static String getGreeting(String name, BuildContext context) {
     final hour = DateTime.now().hour;
 

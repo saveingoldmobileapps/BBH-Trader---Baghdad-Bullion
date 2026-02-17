@@ -73,6 +73,7 @@ void main() async {
 
       // Initialize Firebase early (after binding and Sentry)
       try {
+
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );

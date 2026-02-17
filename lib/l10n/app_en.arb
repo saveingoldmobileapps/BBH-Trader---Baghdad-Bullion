@@ -319,6 +319,8 @@
   "dep_method_card": "Card Payment",
   "dep_method_google": "Google Pay",
   "dep_fee_instantNote": "Instant Deposit, bank fees apply.",
+  "dep_only_direct_title": "Contact Support",
+  "dep_only_direct_msg": "Only direct transfer is available. For other payment methods, please contact us:\n\nPhone: +971504971269\nEmail: info@saveingold.ae",
   "dep_amount_title": "Deposit Amount",
   "dep_min_amount_note": "Minimum deposit amount is IQD 100, charges will apply",
   "dep_dt_intro_title": "Direct Transfer",

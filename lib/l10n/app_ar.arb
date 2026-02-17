@@ -326,6 +326,8 @@
   "dep_method_card": "الدفع بالبطاقة",
   "dep_method_google": "Google Pay",
   "dep_fee_instantNote": "إيداع فوري، تطبق رسوم البنك.",
+  "dep_only_direct_title": "تواصل مع الدعم",
+  "dep_only_direct_msg": "التحويل المباشر متاح فقط. لطرق الدفع الأخرى، يرجى التواصل معنا:\n\nالهاتف: +971504971269\nالبريد الإلكتروني: info@saveingold.ae",
   "dep_amount_title": "مبلغ الإيداع",
   "dep_min_amount_note": "الحد الأدنى للإيداع هو 100 الدينار العراقي، تطبق رسوم",
   "dep_dt_intro_title": "التحويل المباشر",

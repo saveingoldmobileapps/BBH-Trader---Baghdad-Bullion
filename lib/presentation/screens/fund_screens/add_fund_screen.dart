@@ -6,12 +6,10 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/direct_transfer/direct_transfer_get_started.dart';
+import 'package:saveingold_fzco/presentation/screens/setting_screens/support_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
 
 import '../../widgets/widget_export.dart';
-import 'apple_pay_fund_amount_screen.dart';
-import 'card_payment_fund_amount_screen.dart';
-import 'google_pay_fund_amount_screen.dart';
 
 class AddFundScreen extends ConsumerStatefulWidget {
   const AddFundScreen({super.key});
@@ -53,6 +51,28 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
       _showApplePay = Platform.isIOS && isSupported;
       _showGooglePay = Platform.isAndroid && isSupported;
     });
+  }
+
+  void _showContactSupportPopup() {
+    temporaryCreditPopUpWidget(
+      context: context,
+      heading: AppLocalizations.of(context)!.dep_only_direct_title,
+      subtitle: AppLocalizations.of(context)!.dep_only_direct_msg,
+      buttonTitle: AppLocalizations.of(
+        context,
+      )!.temporary_credit_contact_support,
+      icon: Icons.contact_support_outlined,
+      onButtonPress: () {
+        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const SupportScreen(),
+          ),
+        );
+      },
+      oncloseButtonPress: () => Navigator.pop(context),
+    );
   }
 
   @override
@@ -209,112 +229,42 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
                   );
                 },
               ),
-              ConstPadding.sizeBoxWithHeight(height: 12),
-              BuildPaymentMethodCard(
-                title: AppLocalizations.of(
-                  context,
-                )!.dep_method_card, //"Card Payment",
-                subtitle: AppLocalizations.of(
-                  context,
-                )!.dep_fee_instantNote, //"Instant Deposit, bank fees may apply.",
-                iconString: "assets/svg/card_icon.svg",
-                onTap: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CardPaymentFundAmountScreen(),
-                    ),
-                  );
-                },
-              ),
-              if (_showApplePay && applePayTrue) ...[
-                ConstPadding.sizeBoxWithHeight(height: 12),
-                BuildPaymentMethodCard(
-                  title: "Apple Pay",
-                  subtitle: AppLocalizations.of(context)!.dep_fee_instantNote,//"Instant Deposit, bank fees may apply.",
-                  iconString: "assets/svg/apple_pay_icon.svg",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ApplePayFundAmountScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-
-              if (_showGooglePay && googlePayTrue) ...[
-                ConstPadding.sizeBoxWithHeight(height: 12),
-                BuildPaymentMethodCard(
-                  title: "Google Pay",
-                  subtitle: AppLocalizations.of(context)!.dep_fee_instantNote,//"Instant Deposit, bank fees may apply.",
-                  iconString: "assets/svg/gpay_icon.svg",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const GooglePayFundAmountScreen(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-
-              //  Newly code for google pay according brand
-              // if (_showGooglePay) ...[
-              //   GestureDetector(
-              //     onTap: (){
-
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) => const GooglePayFundAmountScreen(),
-              //         ),
-              //       );
-
-              //     },
-              //     child: Container(
-              //       width: sizes!.isPhone
-              //           ? sizes!.widthRatio * 361
-              //           : sizes!.width,
-              //       padding: const EdgeInsets.all(12),
-              //       decoration: ShapeDecoration(
-              //         color: Color(0xFF333333),
-              //         shape: RoundedRectangleBorder(
-              //           borderRadius: BorderRadius.circular(12),
-              //         ),
-              //       ),
-              //       child: Row(
-              //         // mainAxisSize: MainAxisSize.min,
-              //         crossAxisAlignment: CrossAxisAlignment.start,
-              //         children: [
-              //           SvgPicture.asset(
-              //             "assets/svg/google-pay-mark_800.svg",
-              //             height: sizes!.heightRatio * 34,
-              //             width: sizes!.widthRatio * 24,
-              //           ),
-              //           ConstPadding.sizeBoxWithWidth(width: 10),
-              //           Column(
-              //             // crossAxisAlignment: CrossAxisAlignment.start,
-              //             mainAxisAlignment: MainAxisAlignment.center,
-              //             children: [
-              //               Padding(
-              //                 padding: const EdgeInsets.only(top: 8.0),
-              //                 child: GetGenericText(
-              //                   text: "Google Pay",
-              //                   fontSize: sizes!.isPhone ? 16 : 14,
-              //                   fontWeight: FontWeight.w400,
-              //                   color: AppColors.whiteColor,
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         ],
-              //       ),
-              //     ),
+              // ConstPadding.sizeBoxWithHeight(height: 12),
+              // BuildPaymentMethodCard(
+              //   title: AppLocalizations.of(
+              //     context,
+              //   )!.dep_method_card, //"Card Payment",
+              //   subtitle: AppLocalizations.of(
+              //     context,
+              //   )!.dep_fee_instantNote, //"Instant Deposit, bank fees may apply.",
+              //   iconString: "assets/svg/card_icon.svg",
+              //   onTap: _showContactSupportPopup,
+              // ),
+              // if (_showApplePay && applePayTrue) ...[
+              //   ConstPadding.sizeBoxWithHeight(height: 12),
+              //   BuildPaymentMethodCard(
+              //     title: "Apple Pay",
+              //     subtitle: AppLocalizations.of(
+              //       context,
+              //     )!.dep_fee_instantNote, //"Instant Deposit, bank fees may apply.",
+              //     iconString: "assets/svg/apple_pay_icon.svg",
+              //     onTap: _showContactSupportPopup,
               //   ),
               // ],
+
+              // if (_showGooglePay && googlePayTrue) ...[
+              //   ConstPadding.sizeBoxWithHeight(height: 12),
+              //   BuildPaymentMethodCard(
+              //     title: "Google Pay",
+              //     subtitle: AppLocalizations.of(
+              //       context,
+              //     )!.dep_fee_instantNote, //"Instant Deposit, bank fees may apply.",
+              //     iconString: "assets/svg/gpay_icon.svg",
+              //     onTap: _showContactSupportPopup,
+              //   ),
+              // ],
+
+              
             ],
           ).get16HorizontalPadding(),
         ),

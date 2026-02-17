@@ -1724,6 +1724,18 @@ abstract class AppLocalizations {
   /// **'Instant Deposit, bank fees apply.'**
   String get dep_fee_instantNote;
 
+  /// No description provided for @dep_only_direct_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get dep_only_direct_title;
+
+  /// No description provided for @dep_only_direct_msg.
+  ///
+  /// In en, this message translates to:
+  /// **'Only direct transfer is available. For other payment methods, please contact us:\n\nPhone: +971504971269\nEmail: info@saveingold.ae'**
+  String get dep_only_direct_msg;
+
   /// No description provided for @dep_amount_title.
   ///
   /// In en, this message translates to:

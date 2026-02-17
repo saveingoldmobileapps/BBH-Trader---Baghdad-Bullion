@@ -6,13 +6,13 @@ import 'package:saveingold_fzco/presentation/screens/fund_screens/add_fund_scree
 import 'package:saveingold_fzco/presentation/screens/withdraw_fund_screens/edit_card_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/loader_arrow_button.dart';
 import 'package:saveingold_fzco/presentation/widgets/pop_up_widget.dart';
 import 'package:saveingold_fzco/presentation/widgets/text_form_field.dart';
 
 import '../../../data/models/bank_models/BankCardReponse.dart';
 import '../../../data/models/withdrawal_models/bankModel.dart';
 import '../../sharedProviders/providers/withdraw_provider/withdraw_provider.dart';
+import '../../widgets/loader_button.dart';
 
 class CreateWithdrawalFundScreen extends ConsumerStatefulWidget {
   const CreateWithdrawalFundScreen({
@@ -402,7 +402,7 @@ class _WithdrawFundScreenState
                       color: AppColors.grey3Color,
                     ).getAlign(),
                     ConstPadding.sizeBoxWithHeight(height: 24),
-                    LoaderArrowButton(
+                    LoaderButton(
                       title: AppLocalizations.of(
                         context,
                       )!.withdrawBtn, //"Withdrawal",

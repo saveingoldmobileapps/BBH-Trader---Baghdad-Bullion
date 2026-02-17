@@ -83,7 +83,7 @@ class _MyOrderScreenState extends ConsumerState<MyOrdersScreen> {
         foregroundColor: Colors.white,
         titleSpacing: 0,
         title: GetGenericText(
-          text: AppLocalizations.of(context)!.my_orders,//"My Orders",
+          text: AppLocalizations.of(context)!.my_orders, //"My Orders",
           fontSize: sizes!.responsiveFont(
             phoneVal: 20,
             tabletVal: 24,
@@ -117,7 +117,9 @@ class _MyOrderScreenState extends ConsumerState<MyOrdersScreen> {
                         )
                       : esouqStateWatchProvider.kAllOrders.isEmpty
                       ? NoDataWidget(
-                          title: AppLocalizations.of(context)!.empty_no_data,//"No Data To Show",
+                          title: AppLocalizations.of(
+                            context,
+                          )!.empty_no_data, //"No Data To Show",
                           description: "",
                         )
                       : ListView.builder(

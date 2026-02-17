@@ -1,6 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
@@ -21,7 +21,6 @@ class MyOrderDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
-  String? collectionMethod = "Pickup";
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -33,435 +32,260 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     sizes!.initializeSize(context);
+  }
+
+  /// Helper to build Status specific Icon and Colors
+  Widget _buildStatusHeader(String status) {
+    IconData iconData;
+    Color primaryColor;
+
+    switch (status.toLowerCase()) {
+      case "completed":
+      case "delivered":
+      case "picked up":
+        iconData = Icons.check_circle_outline;
+        primaryColor = const Color(0xFF34C759); // Green
+        break;
+      case "cancelled":
+        iconData = Icons.cancel_outlined;
+        primaryColor = const Color(0xFFFF3B30); // Red
+        break;
+      case "pending":
+      case "confirmed":
+      case "preparing":
+      default:
+        iconData = Icons.access_time_rounded;
+        primaryColor = const Color(0xFFE8B931); // Yellow/Gold
+        break;
+    }
+
+    return Column(
+      children: [
+        Center(
+          child: Container(
+            height: 120,
+            width: 120,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: primaryColor.withValues(alpha: 0.15),
+            ),
+            child: Center(
+              child: Container(
+                height: 80,
+                width: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: primaryColor,
+                ),
+                child: Icon(
+                  iconData,
+                  color: Colors.black,
+                  size: 50,
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFF262929),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: GetGenericText(
+            text: status,
+            color: primaryColor,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final esouqStateWatchProvider = ref.watch(esouqProvider);
     sizes!.refreshSize(context);
-    final isRTL = Directionality.of(context) == TextDirection.rtl;
-    final statusText = widget.kAllOrders.status ?? "";
-    final localizedStatus = isRTL
-        ? statusArabic[statusText] ?? statusText
-        : statusText;
 
-    final deliveryMethod = widget.kAllOrders.deliveryMethod ?? "";
-    String localizedDeliveryMethod = deliveryMethod;
+    final statusText = widget.kAllOrders.status ?? "Pending";
 
-    if (isRTL) {
-      if (deliveryMethod.toLowerCase() == "delivery") {
-        localizedDeliveryMethod = "توصيل";
-      } else if (deliveryMethod.toLowerCase() == "pickup" ||
-          deliveryMethod.toLowerCase() == "collection") {
-        localizedDeliveryMethod = "استلام";
-      }
-    }
-    final paymentMethod = widget.kAllOrders.paymentMethod ?? "";
-    String localizedPaymentMethod = paymentMethod;
-
-    if (isRTL) {
-      if (paymentMethod.toLowerCase() == "money") {
-        localizedPaymentMethod = "نقدي";
-      } else if (paymentMethod.toLowerCase() == "metal") {
-        localizedPaymentMethod = "ذهب";
-      }
-    }
+    String formattedDate = widget.kAllOrders.createdAt != null
+        ? DateFormat(
+            'MMM dd, yyyy  •  h:mm a',
+          ).format(DateTime.parse(widget.kAllOrders.createdAt!))
+        : "Dec 18, 2024  •  2:45 PM";
 
     return Scaffold(
+      backgroundColor: AppColors.greyScale1000,
       appBar: AppBar(
-        backgroundColor: AppColors.greyScale1000,
+        backgroundColor: Colors.transparent,
         elevation: 0,
-        surfaceTintColor: AppColors.greyScale1000,
-        foregroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
         centerTitle: true,
         title: GetGenericText(
-          text: AppLocalizations.of(context)!.order_details, //"Order Details",
-          fontSize: sizes!.isPhone ? 20 : 24,
+          text: AppLocalizations.of(context)!.order_details,
+          fontSize: 18,
           fontWeight: FontWeight.w400,
           color: AppColors.grey6Color,
         ),
       ),
-      body: Container(
-        height: sizes!.height,
-        width: sizes!.width,
-        decoration: const BoxDecoration(
-          color: AppColors.greyScale1000,
-        ),
-        child: SafeArea(
-          child: esouqStateWatchProvider.isLoading
-              ? Center(
-                  child: ShimmerLoader(
-                    loop: 6,
-                  ),
-                )
-              : Column(
+      body: SafeArea(
+        child: esouqStateWatchProvider.isLoading
+            ? Center(child: ShimmerLoader(loop: 6))
+            : SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GetGenericText(
-                          text: AppLocalizations.of(
-                            context,
-                          )!.order_no, //"Order No.",
-                          fontSize: sizes!.isPhone ? 18 : 22,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grey6Color,
-                        ),
-                        GetGenericText(
-                          text: "#${widget.kAllOrders.orderId}",
-                          fontSize: sizes!.isPhone ? 18 : 22,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grey6Color,
-                        ),
-                      ],
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GetGenericText(
-                          text: AppLocalizations.of(
-                            context,
-                          )!.order_status, //"Order Status",
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 15,
-                            tabletVal: 17,
-                          ), //sizes!.isPhone ? 15 : 17,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grey5Color,
-                        ),
-                        GetGenericText(
-                          text: localizedStatus,
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 16,
-                            tabletVal: 18,
-                          ),
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.grey4Color,
-                        ),
-                        // GetGenericText(
-                        //   text: widget.kAllOrders.status ?? "",
-                        //   fontSize: sizes!.responsiveFont(
-                        //     phoneVal: 16,
-                        //     tabletVal: 18,
-                        //   ), //sizes!.isPhone ? 16 : 18,
-                        //   fontWeight: FontWeight.w400,
-                        //   color: AppColors.grey4Color,
-                        // ),
-                      ],
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GetGenericText(
-                          text: AppLocalizations.of(
-                            context,
-                          )!.delivery_method, //"Delivery Method",
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 15,
-                            tabletVal: 17,
-                          ), //sizes!.isPhone ? 15 : 17,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grey5Color,
-                        ),
-                        isRTL
-                            ? GetGenericText(
-                                text: localizedDeliveryMethod,
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 16,
-                                  tabletVal: 18,
-                                ),
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.grey4Color,
-                              )
-                            : GetGenericText(
-                                text: widget.kAllOrders.deliveryMethod ?? "",
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 16,
-                                  tabletVal: 18,
-                                ), //sizes!.isPhone ? 16 : 18,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.grey4Color,
-                              ),
-                      ],
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GetGenericText(
-                          text: AppLocalizations.of(
-                            context,
-                          )!.payment_method, //"Payment Method",
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 15,
-                            tabletVal: 17,
-                          ), //sizes!.isPhone ? 15 : 17,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grey5Color,
-                        ),
-                        isRTL
-                            ? GetGenericText(
-                                text: localizedPaymentMethod,
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 16,
-                                  tabletVal: 18,
-                                ),
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.grey4Color,
-                              )
-                            : GetGenericText(
-                                text: widget.kAllOrders.paymentMethod ?? "",
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 16,
-                                  tabletVal: 18,
-                                ), //sizes!.isPhone ? 16 : 18,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.grey4Color,
-                              ),
-                      ],
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 16),
-                    widget.kAllOrders.deliveryMethod != collectionMethod
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 10,
-                            children: [
-                              GetGenericText(
-                                text: AppLocalizations.of(
-                                  context,
-                                )!.customer_address, //"Customer Address",
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 15,
-                                  tabletVal: 17,
-                                ), //sizes!.isPhone ? 15 : 17,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.grey5Color,
-                              ),
-                              // const Spacer(),
-                              Expanded(
-                                child: GetGenericText(
-                                  text: widget.kAllOrders.address!.isNotEmpty
-                                      ? widget.kAllOrders.address.toString()
-                                      : AppLocalizations.of(
-                                          context,
-                                        )!.not_available, //"N/A",
-                                  fontSize: sizes!.responsiveFont(
-                                    phoneVal: 16,
-                                    tabletVal: 18,
-                                  ),
-                                  //sizes!.isPhone ? 16 : 18,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.grey4Color,
-                                  lines: 10,
-                                ),
-                              ),
-                            ],
-                          )
-                        : Container(),
-                    widget.kAllOrders.deliveryMethod != collectionMethod
-                        ? ConstPadding.sizeBoxWithHeight(height: 16)
-                        : Container(),
-                    widget.kAllOrders.deliveryMethod == collectionMethod
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 10,
-                            children: [
-                              GetGenericText(
-                                text: AppLocalizations.of(
-                                  context,
-                                )!.branch_address, //"Branch Address",
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 15,
-                                  tabletVal: 17,
-                                ), //sizes!.isPhone ? 15 : 17,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.grey5Color,
-                              ),
-                              // const Spacer(),
-                              Expanded(
-                                child: GetGenericText(
-                                  text: widget.kAllOrders.branchId != null
-                                      ? "${widget.kAllOrders.branchId!.branchName}, ${widget.kAllOrders.branchId!.branchLocation}, ${widget.kAllOrders.branchId!.branchManager}, ${widget.kAllOrders.branchId!.branchPhoneNumber}, ${widget.kAllOrders.branchId!.branchEmail}"
-                                            .toString()
-                                      : AppLocalizations.of(
-                                          context,
-                                        )!.not_available, //"N/A",
-                                  fontSize: sizes!.responsiveFont(
-                                    phoneVal: 16,
-                                    tabletVal: 18,
-                                  ),
-                                  //sizes!.isPhone ? 16 : 18,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.grey4Color,
-                                  lines: 10,
-                                ),
-                              ),
-                            ],
-                          )
-                        : Container(),
-                    ConstPadding.sizeBoxWithHeight(height: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: sizes!.heightRatio * 52,
-                          width: sizes!.widthRatio * 52,
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.circular(2),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(2),
-                            child: CachedNetworkImage(
-                              imageUrl:
-                                  widget
-                                          .kAllOrders
-                                          .productId
-                                          ?.imageUrl
-                                          ?.isNotEmpty ==
-                                      true
-                                  ? widget.kAllOrders.productId!.imageUrl!.first
-                                  : "https://plus.unsplash.com/premium_photo-1678025061438-786888bfcaf1?q=80&w=3424&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                              // placeholder: (context, url) => PlaceholderWidget(),
-                              // errorWidget: (context, url, error) => PlaceholderWidget(),
-                            ),
+                    const SizedBox(height: 40),
 
-                            // CachedNetworkImage(
-                            //   imageUrl:
-                            //       widget.kAllOrders.productId!.imageUrl !=
-                            //               null &&
-                            //           widget
-                            //               .kAllOrders
-                            //               .productId!
-                            //               .imageUrl!
-                            //               .isNotEmpty
-                            //       ? widget
-                            //             .kAllOrders
-                            //             .productId!
-                            //             .imageUrl![0] // Access first image URL
-                            //       : "https://plus.unsplash.com/premium_photo-1678025061438-786888bfcaf1?q=80&w=3424&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                            //   fit: BoxFit.cover,
-                            //   progressIndicatorBuilder:
-                            //       (context, url, downloadProgress) => SizedBox(
-                            //         height: sizes!.heightRatio * 10,
-                            //         width: sizes!.widthRatio * 10,
-                            //         child: Center(
-                            //           child: CircularProgressIndicator(
-                            //             value: downloadProgress.progress,
-                            //           ),
-                            //         ),
-                            //       ),
-                            //   errorWidget: (context, url, error) =>
-                            //       Icon(Icons.error),
-                            // ),
+                    /// --- Dynamic Status Header ---
+                    _buildStatusHeader(statusText),
+
+                    const SizedBox(height: 40),
+
+                    /// --- Order Summary Card ---
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF262929),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          GetGenericText(
+                            text: "Order Summary",
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
                           ),
-                        ),
-                        ConstPadding.sizeBoxWithWidth(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          const SizedBox(height: 20),
+                          _buildSummaryRow(
+                            "Order ID",
+                            "#${widget.kAllOrders.orderId}",
+                          ),
+                          _buildSummaryRow("Date & Time", formattedDate),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 12),
+                            child: Divider(color: Color(0xFF2C2C2E)),
+                          ),
+                          _buildSummaryRow(
+                            "${widget.kAllOrders.quantity ?? 1}x",
+                            widget.kAllOrders.productId?.productName ??
+                                "Gold bar",
+                            isItem: true,
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              GetGenericText(
+                                text: "Total paid",
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal,
+                              ),
                               GetGenericText(
                                 text:
-                                    widget.kAllOrders.productId?.productName ??
-                                    "",
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 16,
-                                  tabletVal: 18,
-                                ), //16,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.grey6Color,
-                              ),
-                              ConstPadding.sizeBoxWithHeight(height: 2),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GetGenericText(
-                                    text: widget.kAllOrders.quantity != null
-                                        ? "${AppLocalizations.of(context)!.quantity}: ${widget.kAllOrders.quantity}"
-                                        : AppLocalizations.of(
-                                            context,
-                                          )!.not_available, //"N/A",
-                                    fontSize: sizes!.responsiveFont(
-                                      phoneVal: 16,
-                                      tabletVal: 18,
-                                    ), //16,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.grey4Color,
-                                  ),
-                                  GetGenericText(
-                                    text:
-                                        esouqStateWatchProvider
-                                                .selectedOrder
-                                                .payload!
-                                                .paymentMethod ==
-                                            'Money'
-                                        ? widget.kAllOrders.grandTotal != null
-                                              ? "${widget.kAllOrders.grandTotal} ${AppLocalizations.of(context)!.idq_currency}"
-                                              : ""
-                                        //"${esouqStateWatchProvider.selectedOrder.payload!.grandTotal!.toStringAsFixed(3)} IQD"
-                                        : widget.kAllOrders.grandTotal != null
-                                        ? "${CommonService.convertToWeight(
-                                            num: double.parse("${widget.kAllOrders.grandTotal}"),
-
-                                            context: context,
-                                          )} "
-                                        : AppLocalizations.of(
-                                            context,
-                                          )!.not_available, //"N/A",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.grey4Color,
-                                  ),
-                                ],
+                                    "IQD ${widget.kAllOrders.grandTotal ?? '0.00'}",
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: const Color(0xFFBBA473),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    // const Spacer(),
-                    // LoaderButton(
-                    //   title: "Return to Home",
-                    //   onTap: () {
-                    //     Navigator.pushAndRemoveUntil(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => const MainHomeScreen(),
-                    //       ),
-                    //       ((route) => false),
-                    //     );
-                    //   },
-                    // ),
-                    ConstPadding.sizeBoxWithHeight(height: 16),
+                    const SizedBox(height: 24),
+
+                    /// --- Notification Message (Only shows for Pending/Preparing/Confirmed) ---
+                    if (statusText.toLowerCase() == "pending" ||
+                        statusText.toLowerCase() == "preparing" ||
+                        statusText.toLowerCase() == "confirmed")
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF262929),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: GetGenericText(
+                            text:
+                                "We'll notify you when your order is executed",
+
+                            fontWeight: FontWeight.normal,
+                            fontSize: 13,
+                            color: AppColors.grey5Color,
+                          ),
+                        ),
+                      ),
+
+                    const SizedBox(height: 24),
+
+                    /// --- Go Back Button ---
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: double.infinity,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF9E772A), Color(0xFF5E4619)],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            "Go back",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                   ],
-                ).get16HorizontalPadding(),
-        ),
+                ),
+              ),
       ),
     );
   }
 
-  final statusArabic = {
-    "Confirmed": "مؤكد",
-    "Ready to pick": "جاهز للاستلام",
-    "Delivered": "تم التوصيل",
-    "Cancelled": "أُلغيت",
-    "Pending": "قيد الانتظار",
-    "Picked Up": "تم الاستلام",
-    "Preparing": "قيد التحضير",
-  };
+  Widget _buildSummaryRow(String title, String value, {bool isItem = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GetGenericText(
+            text: title,
+            fontSize: 14,
+            color: isItem ? AppColors.grey6Color : AppColors.grey5Color,
+            fontWeight: FontWeight.normal,
+          ),
+          GetGenericText(
+            text: value,
+            fontSize: 14,
+            fontWeight: isItem ? FontWeight.w400 : FontWeight.w500,
+            color: Colors.white,
+          ),
+        ],
+      ),
+    );
+  }
 }

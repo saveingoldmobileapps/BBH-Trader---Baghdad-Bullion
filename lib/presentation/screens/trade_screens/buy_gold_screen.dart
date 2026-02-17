@@ -111,10 +111,14 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       backgroundColor: Color(0xff171919),
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        leading: Icon(
-          Icons.arrow_back,
-          color: Colors.white,
-        ),
+        leading: IconButton(
+    icon: const Icon(
+      Icons.arrow_back,
+      color: Colors.white,
+    ),
+    onPressed: () {
+      Navigator.pop(context);
+    },),
         backgroundColor: const Color(0xff171919),
         elevation: 0,
         title: Text(

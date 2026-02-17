@@ -423,8 +423,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       String loginIdentifier;
 
       if (_selectedType == LoginType.phone) {
-        loginIdentifier =
-            "${_selectedCountry.dialCode}${phoneController.text.trim()}";
+        final dialCode = _selectedCountry.dialCode.replaceFirst('+', '00');
+
+        loginIdentifier = "$dialCode${phoneController.text.trim()}";
       } else if (_selectedType == LoginType.email) {
         loginIdentifier = emailController.text.trim();
       } else {

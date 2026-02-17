@@ -1,7 +1,12 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/core/extensions/extensions.dart';
+import 'package:saveingold_fzco/core/res_sizes/res.dart';
+import 'package:saveingold_fzco/core/theme/const_colors.dart';
+import 'package:saveingold_fzco/core/theme/const_padding.dart';
+import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/direct_transfer/select_bank.dart';
 
@@ -63,15 +68,18 @@ class _GetStartedScreenState extends ConsumerState<DirectTransferGetStarted> {
             ),
             ConstPadding.sizeBoxWithHeight(height: 50),
             GetGenericText(
-              text: AppLocalizations.of(context)!.dep_method_direct,//"Direct Transfer",
+              text: AppLocalizations.of(
+                context,
+              )!.dep_method_direct, //"Direct Transfer",
               fontSize: 28,
               fontWeight: FontWeight.w600,
               color: AppColors.grey6Color,
             ),
             ConstPadding.sizeBoxWithHeight(height: 5),
             GetGenericText(
-              text:
-                  AppLocalizations.of(context)!.dep_dt_intro_desc,//"A direct transfer works just like sending money through your banking app. The transaction typically takes 24 to 48 hours to be confirmed.",
+              text: AppLocalizations.of(
+                context,
+              )!.dep_dt_intro_desc, //"A direct transfer works just like sending money through your banking app. The transaction typically takes 24 to 48 hours to be confirmed.",
               fontSize: 16,
               fontWeight: FontWeight.w400,
               color: AppColors.grey3Color,

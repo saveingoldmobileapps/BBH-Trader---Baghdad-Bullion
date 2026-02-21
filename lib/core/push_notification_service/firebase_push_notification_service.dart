@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:saveingold_fzco/core/services/socket_services.dart';
 import 'package:saveingold_fzco/core/theme/constant_strings.dart';
 import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
 import 'package:saveingold_fzco/presentation/screens/get_started_screen.dart';
@@ -397,6 +398,7 @@ class FirebasePushNotificationService {
     switch (type) {
       case 'Profile update request Approved':
         CommonService.logoutUser(context: context);
+        // SocketService().disconnect();
         break;
       case 'Advance Status Updated.':
         container.read(loanProvider.notifier).fetchAllLoans();

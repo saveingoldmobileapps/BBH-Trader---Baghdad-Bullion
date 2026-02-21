@@ -50,8 +50,15 @@ class OrderPlacedScreen extends StatelessWidget {
               const SizedBox(height: 8),
 
               /// ✅ Subtitle
-              Text(
+             tradeType== 'Limit Order'? Text(
                 "Your limit order has been placed and will\nexecute when the target price is reached.",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  color: Colors.white60,
+                  fontSize: 13,
+                ),
+              ):Text(
+                "You have Successfully Placed the order.",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   color: Colors.white60,
@@ -61,7 +68,7 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              /// ✅ Order Summary Card
+              // Order Summary Card
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(

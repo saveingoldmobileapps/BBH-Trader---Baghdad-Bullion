@@ -73,17 +73,23 @@ void main() async {
 
       // Initialize Firebase early (after binding and Sentry)
       try {
-
+       if(Platform.isAndroid){
         await Firebase.initializeApp(
+         // options: DefaultFirebaseOptions.currentPlatform,
+        );
+
+       }
+       else{ await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
-      } catch (e) {
+      } 
+      }catch (e) {
         debugPrint("Firebase.initializeApp failed: $e");
       }
 
       // Request notification permission BEFORE calling getAPNSToken.
       // This avoids iOS hanging on first-run when APNs calls are made too early.
-      if (Platform.isIOS) {
+      //if (Platform.isIOS) {
         try {
           await FirebaseMessaging.instance.requestPermission(
             alert: true,
@@ -93,7 +99,7 @@ void main() async {
         } catch (e) {
           debugPrint("FirebaseMessaging.requestPermission failed: $e");
         }
-      }
+     // }
 
       // Set presentation options for iOS foreground notifications.
       try {
@@ -111,6 +117,7 @@ void main() async {
       try {
         final fcmToken = await FirebaseMessaging.instance.getToken();
         debugPrint("FCM TOKEN: $fcmToken");
+        print("debugPrinF CM TOKEN: $fcmToken");
       } catch (e) {
         debugPrint("getToken failed: $e");
       }

@@ -55,10 +55,16 @@ class _GramScreenState extends ConsumerState<GramScreen> {
     // Logic: Calculate total grams for the large display
     double totalGrams = 0;
     if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
-      for (var item in gramStateWatchProvider.gramApiResponseModel.payload!) {
-        totalGrams += (item.tradeMetal ?? 0);
-      }
+  for (var item in gramStateWatchProvider.gramApiResponseModel.payload!) {
+
+    // Skip if status is pending
+    if (item.tradeStatus?.toLowerCase() == "pending") {
+      continue;
     }
+
+    totalGrams += (item.tradeMetal ?? 0);
+  }
+}
 
     return Scaffold(
       key: _scaffoldKey,

@@ -173,37 +173,37 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// Language Switch (Top Right)
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "English",
-                          style: TextStyle(
-                            color: isEnglish ? Colors.white : Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        Switch.adaptive(
-                          activeColor: AppColors.primaryGold500,
-                          value: !isEnglish,
-                          onChanged: (_) {
-                            languageNotifier.toggleLanguage(context);
-                          },
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          "العربية",
-                          style: TextStyle(
-                            color: !isEnglish ? Colors.white : Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // Align(
+                  //   alignment: Alignment.topRight,
+                  //   child: Row(
+                  //     mainAxisSize: MainAxisSize.min,
+                  //     children: [
+                  //       Text(
+                  //         "English",
+                  //         style: TextStyle(
+                  //           color: isEnglish ? Colors.white : Colors.grey,
+                  //           fontSize: 14,
+                  //         ),
+                  //       ),
+                  //       const SizedBox(width: 6),
+                  //       Switch.adaptive(
+                  //         activeColor: AppColors.primaryGold500,
+                  //         value: !isEnglish,
+                  //         onChanged: (_) {
+                  //           languageNotifier.toggleLanguage(context);
+                  //         },
+                  //       ),
+                  //       const SizedBox(width: 6),
+                  //       Text(
+                  //         "العربية",
+                  //         style: TextStyle(
+                  //           color: !isEnglish ? Colors.white : Colors.grey,
+                  //           fontSize: 14,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
 
                   const Spacer(flex: 2),
 

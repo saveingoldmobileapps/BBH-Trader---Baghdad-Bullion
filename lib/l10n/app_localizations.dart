@@ -2360,6 +2360,12 @@ abstract class AppLocalizations {
   /// **'No branches available.'**
   String get no_branch_available;
 
+  /// No description provided for @no_collection_point_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No collection point available'**
+  String get no_collection_point_available;
+
   /// No description provided for @will_notify_via_email.
   ///
   /// In en, this message translates to:
@@ -2989,6 +2995,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sell at Price'**
   String get deal_sell_at_price;
+
+  /// No description provided for @deal_save_profit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Profit'**
+  String get deal_save_profit;
+
+  /// No description provided for @deal_save_profit_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter value between bought at ({boughtAt}) and current price ({currentPrice})'**
+  String deal_save_profit_hint(String boughtAt, String currentPrice);
+
+  /// No description provided for @deal_take_profit_grams.
+  ///
+  /// In en, this message translates to:
+  /// **'Grams (max {total})'**
+  String deal_take_profit_grams(String total);
+
+  /// No description provided for @deal_grams_must_be_less_or_equal.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount must be less than or equal to {total} grams'**
+  String deal_grams_must_be_less_or_equal(String total);
 
   /// No description provided for @deal_update_position_btn.
   ///

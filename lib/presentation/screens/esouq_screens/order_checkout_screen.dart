@@ -150,10 +150,6 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
     );
 
     final state = ref.read(esouqProvider);
-    if (state.loadingState == LoadingState.error) {
-      getAllBranches();
-      return;
-    }
     final branches = state.getAllBranchesResponse.payload;
 
     if (branches != null && branches.isNotEmpty) {
@@ -578,8 +574,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                 ConstPadding.sizeBoxWithHeight(height: 16),
                 _selectedItem == "Delivery"
                     ? buildDeliveryCard()
-                    : bankBranchState.loadingState == LoadingState.loading ||
-                          bankBranchState.loadingState != LoadingState.data
+                    : bankBranchState.loadingState == LoadingState.loading
                     ? Center(
                         child: ShimmerLoader(loop: 6),
                       ).get6HorizontalPadding()
@@ -915,6 +910,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
   Widget buildDeliveryCard() {
     return Form(
       key: _formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -1137,7 +1133,8 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
 
   Widget buildCollectionCard() {
     final bankBranchState = ref.watch(esouqProvider);
-    final branches = bankBranchState.getAllBranchesResponse.payload!;
+    final branches =
+        bankBranchState.getAllBranchesResponse.payload ?? <dynamic>[];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1201,13 +1198,33 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
             },
           )
         else
-          GetGenericText(
-            text: AppLocalizations.of(
-              context,
-            )!.no_branch_available, //"No branches available.",
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: AppColors.grey6Color,
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+            decoration: BoxDecoration(
+              color: AppColors.greyScale900,
+              border: Border.all(color: AppColors.greyScale700),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.location_off_outlined,
+                  size: 48,
+                  color: AppColors.grey4Color,
+                ),
+                ConstPadding.sizeBoxWithHeight(height: 12),
+                GetGenericText(
+                  text: AppLocalizations.of(
+                    context,
+                  )!.no_collection_point_available,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.grey6Color,
+                ),
+              ],
+            ),
           ),
         ConstPadding.sizeBoxWithHeight(height: 16),
         GetGenericText(

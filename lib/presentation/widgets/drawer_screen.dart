@@ -26,7 +26,7 @@ class DrawerScreen extends ConsumerStatefulWidget {
 class _DrawerScreenState extends ConsumerState<DrawerScreen> {
   @override
   Widget build(BuildContext context) {
-    // ✅ You can safely watch/read providers here
+    // You can safely watch/read providers here
     final mainStateWatchProvider = ref.watch(homeProvider);
     final authStateReadProvider = ref.read(authProvider.notifier);
 

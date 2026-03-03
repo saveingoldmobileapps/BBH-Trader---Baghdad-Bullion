@@ -20,9 +20,8 @@ class MyOrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Format date if available, otherwise use a placeholder
     String formattedDate = kAllOrders.createdAt != null
-        ? DateFormat(
-            'MMM dd, yyyy  •  h:mm a',
-          ).format(DateTime.parse(kAllOrders.createdAt!))
+        ? DateFormat('dd MMM yyyy, HH:mm',
+          ).format(DateTime.parse(kAllOrders.createdAt!).toLocal())
         : "Dec 18, 2024  •  2:45 PM";
 
     return GestureDetector(

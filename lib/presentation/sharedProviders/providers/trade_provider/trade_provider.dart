@@ -369,6 +369,7 @@ class Trade extends _$Trade {
     required bool sellAtProfitStatus,
     required num sellAtProfit,
     required num sellingPrice,
+    bool saveProfit = false,
     required BuildContext context,
   }) async {
     try {
@@ -401,6 +402,7 @@ class Trade extends _$Trade {
         "sellAtProfitStatus": sellAtProfitStatus,
         "sellAtProfit": sellAtProfit,
         "sellingPrice": sellAtProfitStatus ? sellAtProfit : sellingPrice,
+        "saveProfit": saveProfit,
       };
 
       getLocator<Logger>().i("updateTradeDealPositionBody: $body");

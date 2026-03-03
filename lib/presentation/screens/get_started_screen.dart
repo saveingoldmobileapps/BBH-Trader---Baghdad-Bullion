@@ -5,20 +5,10 @@ import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/register_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/language_provider.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-
-import '../../data/data_sources/local_database/local_database.dart';
-import '../../data/data_sources/local_database/secure_database.dart';
-import '../sharedProviders/providers/auth_provider.dart';
 import 'auth_screens/login_screen.dart';
 
 class GetStartedScreen extends ConsumerStatefulWidget {
-  final bool? autoLogin;
-
-  const GetStartedScreen({
-    super.key,
-    this.autoLogin,
-  });
+  const GetStartedScreen({super.key});
 
   @override
   ConsumerState createState() => _GetStartedScreenState();
@@ -26,18 +16,6 @@ class GetStartedScreen extends ConsumerStatefulWidget {
 
 class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
   DateTime? lastPressed;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.autoLogin == true) {
-        _handleAutoLogin();
-      }
-    });
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -49,64 +27,6 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     sizes!.initializeSize(context);
-  }
-
-  /// auto login
-  Future<void> _handleAutoLogin() async {
-    debugPrint("Starting auto-login...");
-    _showLoadingIndicator();
-
-    final refreshToken = await SecureStorageService.instance.getRefreshToken();
-    final isAutoLoginEnabled = await LocalDatabase.instance.getAutoLogin();
-
-    debugPrint(
-      "Auto-login data - RefreshToken: $refreshToken | Enabled: $isAutoLoginEnabled",
-    );
-
-    try {
-      if (refreshToken != null && isAutoLoginEnabled == true) {
-        debugPrint("inside auto-login...");
-        if (!mounted) return;
-
-        final authNotifier = ref.read(authProvider.notifier);
-        bool loginSuccess = await authNotifier.userLoginWithToken(
-          context: context,
-        );
-
-        if (!loginSuccess) {
-          debugPrint("Auto-login failed");
-        }
-      }
-    } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
-      debugPrint("Auto-login error: $e");
-    } finally {
-      if (mounted) _hideLoadingIndicator(); // Always hides loader
-    }
-  }
-
-  void _showLoadingIndicator() {
-    // Show dialog asynchronously and continue
-    Future.microtask(() {
-      if (!mounted) return;
-
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.whiteColor),
-          ),
-        ),
-      );
-    });
-  }
-
-  /// Hides loading indicator dialog if shown
-  void _hideLoadingIndicator() {
-    if (Navigator.of(context, rootNavigator: true).canPop()) {
-      Navigator.of(context, rootNavigator: true).pop();
-    }
   }
 
   @override

@@ -40,11 +40,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   double amountDouble = 0.0;
 
   final List<String> amountOptions = [
-    "10000 IQD",
-    "50000 IQD",
-    "100000 IQD",
-    "150000 IQD",
-    "200000 IQD",
+    "1m IQD",
+    "2m IQD",
+    "3m IQD",
+    "4m IQD",
+    "5m IQD",
   ];
 
   @override
@@ -436,16 +436,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   "Raw value from dropdown: $value (${value.runtimeType})",
                                 );
 
-                                // Clean string if needed
-                                amountDouble =
-                                    double.tryParse(
-                                      value?.toString().replaceAll(
-                                            RegExp(r'[^0-9.]'),
-                                            '',
+                                // Parse "1m" -> 1000000, "2m" -> 2000000, etc.
+                                final raw = value?.toString().trim() ?? "";
+                                if (raw.toLowerCase().endsWith('m')) {
+                                  final numStr = raw
+                                      .substring(0, raw.length - 1)
+                                      .replaceAll(RegExp(r'[^0-9.]'), '');
+                                  final n = double.tryParse(numStr) ?? 0;
+                                  amountDouble = n * 1000000;
+                                } else {
+                                  amountDouble =
+                                      double.tryParse(
+                                            raw.replaceAll(
+                                                RegExp(r'[^0-9.]'), ''),
                                           ) ??
-                                          "0",
-                                    ) ??
-                                    0.0;
+                                          0.0;
+                                }
 
                                 print("deposit as double: $amountDouble");
                               });

@@ -60,7 +60,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       checkAppUpdate();
 
       if (_isDisposed) return;
-      setLoginState();
       ref.read(homeProvider.notifier).getUserProfile();
       ref
           .read(homeProvider.notifier)
@@ -190,10 +189,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     _pageController.dispose();
     _isDisposed = true;
     super.dispose();
-  }
-
-  Future<void> setLoginState() async {
-    await LocalDatabase.instance.storeAutoLogin(autoLogin: true);
   }
 
   @override
@@ -477,7 +472,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
                     ConstPadding.sizeBoxWithHeight(height: 8),
 
-                    HomeQuickActions(
+                    Visibility(
+                      visible:
+                          mainStateWatchProvider.loadingState ==
+                              LoadingState.data &&
+                          mainStateWatchProvider
+                                  .getHomeFeedResponse
+                                  .payload !=
+                              null,
+                      child: HomeQuickActions(
                       onAddFunds: () async {
                         final isEmailVerified =
                             await LocalDatabase.instance.getIsEmailVerified() ??
@@ -796,6 +799,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       onMore: () {
                         _scaffoldKey.currentState!.openDrawer();
                       },
+                    ),
                     ),
 
                     /// Offers Carousel

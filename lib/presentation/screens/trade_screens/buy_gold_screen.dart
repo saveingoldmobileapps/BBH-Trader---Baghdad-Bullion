@@ -134,123 +134,166 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         ],
       ),
 
-      body: Form(
-        key: _keyForm,
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-
-                // Market / Target Price Selector
-                const SizedBox(height: 30),
-
-                // Gram Input Section
-                Text(
-                  AppLocalizations.of(context)!.amount,
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  "Enter the amount of gold in grams to trade",
-                  style: GoogleFonts.inter(color: Colors.grey, fontSize: 13),
-                ),
-                const SizedBox(height: 15),
-
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    IntrinsicWidth(
-                      child: TextFormField(
-                        controller: userInputController,
-                        focusNode: _focusNode,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                          signed: true,
-                        ),
-                        style: GoogleFonts.inter(
-                          color: Colors.white,
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: const InputDecoration(
-                          hintText: "1.00",
-                          hintStyle: TextStyle(color: Colors.white24),
-                          border: InputBorder.none,
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                        inputFormatters: [
-                          DecimalTextInputFormatter(decimalRange: 2),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      "grams",
-                      style: GoogleFonts.inter(
-                        color: Colors.white54,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-
-                Text(
-                  "≈ IQD $calculatedValue",
-                  style: GoogleFonts.inter(
-                    color: Colors.white70,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-
-                const SizedBox(height: 35),
-
-                // Current Market Price Display
-                _buildPriceCard(goldPriceState),
-
-                const SizedBox(height: 25),
-
-                // Conditional Target Price Input
-                if (isBuyAtPriceStatus) ...[
+      body: SingleChildScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: Form(
+          key: _keyForm,
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).unfocus(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
+        
+                  // Market / Target Price Selector
+                  const SizedBox(height: 30),
+        
+                  // Gram Input Section
                   Text(
-                    "Target Price (per gram)",
+                    AppLocalizations.of(context)!.amount,
                     style: GoogleFonts.inter(
                       color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  _buildTargetPriceInput(),
-                  const SizedBox(height: 10),
                   Text(
-                    "Your order will execute when the price reaches IQD ${buyAtPriceController.text.isEmpty ? '0.00' : buyAtPriceController.text}",
-                    style: GoogleFonts.inter(color: Colors.grey, fontSize: 12),
+                    "Enter the amount of gold in grams to trade",
+                    style: GoogleFonts.inter(color: Colors.grey, fontSize: 13),
                   ),
+                  const SizedBox(height: 15),
+        
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      IntrinsicWidth(
+                        child: TextFormField(
+                          controller: userInputController,
+                          focusNode: _focusNode,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                            signed: true,
+                          ),
+                          style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: const InputDecoration(
+                            hintText: "1.00",
+                            hintStyle: TextStyle(color: Colors.white24),
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          inputFormatters: [
+                            DecimalTextInputFormatter(decimalRange: 2),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        "grams",
+                        style: GoogleFonts.inter(
+                          color: Colors.white54,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+        
+                  Text(
+                    "≈ IQD $calculatedValue",
+                    style: GoogleFonts.inter(
+                      color: Colors.white70,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+        
+                  // Max grams you can buy (based on IQD balance)
+                  goldPriceState.when(
+                    data: (data) {
+                      final walletBalance = double.tryParse(
+                        mainStateWatchProvider
+                                .getHomeFeedResponse
+                                .payload
+                                ?.walletExists
+                                ?.moneyBalance
+                                ?.toString() ??
+                            '0',
+                      ) ?? 0.0;
+                      final pricePerGram = isBuyAtPriceStatus &&
+                              buyAtPriceController.text.isNotEmpty
+                          ? (double.tryParse(
+                                  buyAtPriceController.text.trim()) ??
+                              0.0)
+                          : data.oneGramBuyingPriceInIQD;
+                      final maxGrams = pricePerGram > 0
+                          ? (walletBalance / pricePerGram)
+                          : 0.0;
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          "${AppLocalizations.of(context)!.max_grams_note} ${maxGrams.toStringAsFixed(2)}",
+                          style: GoogleFonts.inter(
+                            color: Colors.white54,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      );
+                    },
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+        
+                  const SizedBox(height: 35),
+        
+                  // Current Market Price Display
+                  _buildPriceCard(goldPriceState),
+        
+                  const SizedBox(height: 25),
+        
+                  // Conditional Target Price Input
+                  if (isBuyAtPriceStatus) ...[
+                    Text(
+                      "Target Price (per gram)",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    _buildTargetPriceInput(),
+                    const SizedBox(height: 10),
+                    Text(
+                      "Your order will execute when the price reaches IQD ${buyAtPriceController.text.isEmpty ? '0.00' : buyAtPriceController.text}",
+                      style: GoogleFonts.inter(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
+        
+                  // const Spacer(),
+                  const SizedBox(height: 40),
+                  // Action Button with Full Logic
+                  Align(
+  alignment: Alignment.bottomCenter,
+  child: LoaderButton(
+    title: AppLocalizations.of(context)!.buy_gold,
+    isLoadingState: tradeStateWatchProvider.isButtonState,
+    onTap: () => _onTradeButtonTap(
+      mainStateWatchProvider,
+      tradeStateWatchProvider,
+    ),
+  ),
+),
+                  //const SizedBox(height: 40),
                 ],
-
-                const Spacer(),
-
-                // Action Button with Full Logic
-                LoaderButton(
-                  title: AppLocalizations.of(context)!.buy_gold,
-                  isLoadingState: tradeStateWatchProvider.isButtonState,
-                  onTap: () => _onTradeButtonTap(
-                    mainStateWatchProvider,
-                    tradeStateWatchProvider,
-                  ),
-                ),
-                const SizedBox(height: 40),
-              ],
+              ),
             ),
           ),
         ),

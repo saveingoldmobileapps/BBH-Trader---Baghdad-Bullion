@@ -121,25 +121,23 @@ class HomeFeedWallet extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.baseline,
                   textBaseline: TextBaseline.alphabetic,
                   children: [
-                    Expanded(
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          isHiddenBalance
-                              ? "*****"
-                              : CommonService.formatIQDForDisplay(
-                                  walletExists.moneyBalance,
-                                ),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 42,
-                            fontWeight: FontWeight.w600,
-                          ),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        isHiddenBalance
+                            ? "*****"
+                            : CommonService.formatIQDForDisplay(
+                                walletExists.moneyBalance,
+                              ),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 42,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 4),
                     const Text(
                       "IQD",
                       style: TextStyle(color: Colors.white54, fontSize: 16),

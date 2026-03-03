@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_client_sse/constants/sse_request_type_enum.dart';
 import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -16,11 +17,12 @@ import '../../../../core/common_service.dart';
 import '../../../../data/data_sources/network_sources/api_url.dart';
 import '../../../../data/models/SSEGetPriceResponse.dart';
 import '../../../../data/models/gold_price_model/CurrentGoldPriceModel.dart';
+import '../../../../main.dart';
 import '../../../feature_injection.dart';
+import '../../../widgets/pop_up_widget.dart';
 
 part 'sse_gold_price_provider.g.dart';
 
-/// State class for managing gold price data
 class SSEGoldPriceState {
   final CurrentGoldPriceModel currentGoldPriceModel;
   final SSEGetGoldPriceResponse getGoldPriceResponse;
@@ -28,118 +30,95 @@ class SSEGoldPriceState {
   final SuccessResponse successResponse;
   final LoadingState loadingState;
 
-  final double currentGoldPrice;
-  final bool isLoading;
-  final bool isButtonState;
-
   final double oneOunceDollarSellingPrice;
   final double oneOunceDollarBuyingPrice;
-
   final double lastLowSellingPrice;
   final double lastHighBuyingPrice;
 
   final double oneGramBuyingPriceInIQD;
   final double oneGramSellingPriceInIQD;
 
-  /// Constructor with optional and default values for state
+  final bool isLoading;
+
   SSEGoldPriceState({
     CurrentGoldPriceModel? currentGoldPriceModel,
+    SSEGetGoldPriceResponse? getGoldPriceResponse,
     ErrorResponse? errorResponse,
     SuccessResponse? successResponse,
-    SSEGetGoldPriceResponse? getGoldPriceResponse,
-    this.currentGoldPrice = 0.0,
-    this.isButtonState = false,
     this.oneGramBuyingPriceInIQD = 0.0,
     this.oneGramSellingPriceInIQD = 0.0,
     this.oneOunceDollarSellingPrice = 0.0,
     this.oneOunceDollarBuyingPrice = 0.0,
-    this.lastHighBuyingPrice = 0.0,
     this.lastLowSellingPrice = 0.0,
+    this.lastHighBuyingPrice = 0.0,
     this.loadingState = LoadingState.loading,
     this.isLoading = false,
   }) : currentGoldPriceModel = currentGoldPriceModel ?? CurrentGoldPriceModel(),
        getGoldPriceResponse = getGoldPriceResponse ?? SSEGetGoldPriceResponse(),
        errorResponse = errorResponse ?? ErrorResponse(),
        successResponse = successResponse ?? SuccessResponse();
-
-  /// Creates a copy of the current state with the option to override fields
-  SSEGoldPriceState copyWith({
-    CurrentGoldPriceModel? currentGoldPriceModel,
-    SSEGetGoldPriceResponse? getGoldPriceResponse,
-    ErrorResponse? errorResponse,
-    SuccessResponse? successResponse,
-    double? currentGoldPrice,
-    LoadingState? loadingState,
-    bool? isButtonState,
-    double? oneGramBuyingPriceInIQD,
-    double? oneGramSellingPriceInIQD,
-    double? oneOunceDollarSellingPrice,
-    double? oneOunceDollarBuyingPrice,
-    bool? isLoading,
-  }) {
-    return SSEGoldPriceState(
-      currentGoldPriceModel:
-          currentGoldPriceModel ?? this.currentGoldPriceModel,
-      getGoldPriceResponse: getGoldPriceResponse ?? this.getGoldPriceResponse,
-      errorResponse: errorResponse ?? this.errorResponse,
-      successResponse: successResponse ?? this.successResponse,
-      currentGoldPrice: currentGoldPrice ?? this.currentGoldPrice,
-      loadingState: loadingState ?? this.loadingState,
-      isButtonState: isButtonState ?? this.isButtonState,
-      oneGramBuyingPriceInIQD:
-          oneGramBuyingPriceInIQD ?? this.oneGramBuyingPriceInIQD,
-      oneGramSellingPriceInIQD:
-          oneGramSellingPriceInIQD ?? this.oneGramSellingPriceInIQD,
-      oneOunceDollarSellingPrice:
-          oneOunceDollarSellingPrice ?? this.oneOunceDollarSellingPrice,
-      oneOunceDollarBuyingPrice:
-          oneOunceDollarBuyingPrice ?? this.oneOunceDollarBuyingPrice,
-      lastLowSellingPrice: lastLowSellingPrice ?? lastLowSellingPrice,
-      lastHighBuyingPrice: lastHighBuyingPrice ?? lastHighBuyingPrice,
-      isLoading: isLoading ?? this.isLoading,
-    );
-  }
 }
 
-// Holds the current SSE subscription
-StreamSubscription<SSEModel>? _subscription;
+/// ---------------------------------------------------------------------------
+/// GLOBAL SSE CONTROL
+/// ---------------------------------------------------------------------------
 
-/// Riverpod provider for exposing a stream of SSEGoldPriceState
+StreamSubscription<SSEModel>? _subscription;
+Timer? _reconnectTimer;
+Timer? _heartbeatTimer;
+
+DateTime _lastEventTime = DateTime.now();
+bool _isConnecting = false;
+
+/// ---------------------------------------------------------------------------
+/// RIVERPOD PROVIDER
+/// ---------------------------------------------------------------------------
+
 @riverpod
 Stream<SSEGoldPriceState> goldPrice(GoldPriceRef ref) {
   final controller = StreamController<SSEGoldPriceState>();
-
-  // Start listening to the live SSE gold price streampss
-  _startLiveGoldPriceStream(
-    onData: (SSEGoldPriceState sseState) {
-      controller.add(sseState); // Add new state to stream
+  _startSSE(
+    onData: (state) {
+      if (!controller.isClosed) {
+        controller.add(state);
+      }
     },
     onError: (error) {
-      controller.addError(error); // Emit error if any
+      if (!controller.isClosed) {
+        controller.addError(error);
+      }
     },
   );
 
-  // Dispose handler to clean up when provider is no longer used
+  // _startSSE(
+  //   onData: controller.add,
+  //   onError: (error) => controller.addError(error),
+  // );
+
   ref.onDispose(() {
-    stopSSE(); // Cancel the subscription
-    controller.close(); // Close the stream controller
+    stopSSE();
+    controller.close();
   });
 
   return controller.stream;
 }
 
-/// Initializes and listens to the SSE stream for live gold price updates
-Future<void> _startLiveGoldPriceStream({
+/// ---------------------------------------------------------------------------
+/// SSE START
+/// ---------------------------------------------------------------------------
+bool maxDurationPopupShown = false;
+Future<void> _startSSE({
   required void Function(SSEGoldPriceState) onData,
   required void Function(dynamic error)? onError,
 }) async {
+  if (_isConnecting) return;
+  _isConnecting = true;
+  dynamic responseData;
   try {
-    // Check for actual internet connectivity
     final hasInternet = await InternetConnection().hasInternetAccess;
-
     if (!hasInternet) {
-      // Show the dialog
-      Toasts.getErrorToast(text: "No Internet Connection Available");
+      Toasts.getErrorToast(text: "No Internet Connection");
+      _scheduleReconnect(onData, onError);
       return;
     }
 
@@ -149,19 +128,33 @@ Future<void> _startLiveGoldPriceStream({
       "Authorization": "Bearer $token",
       "Accept": "text/event-stream",
       "Cache-Control": "no-cache",
+      "Connection": "keep-alive",
     };
 
     const IQD = 1309.550; // Conversion rate from USD to IQD
     const ounce = 31.10347; // Grams in a troy ounce
 
-    /// cache value for last valid selling/buying price
-    double lastValidSellingPx = 0.0;
-    double lastValidBuyingPx = 0.0;
+    double lastSelling = 0.0;
+    double lastBuying = 0.0;
+    double lastLow = 0.0;
+    double lastHigh = 0.0;
+    Future<void> showMaxDurationPopup() async {
+      final context = navigatorKey.currentContext;
+      if (context == null) return;
 
-    double lastValidLowSelling = 0.0;
-    double lastValidHighBuying = 0.0;
+      await genericPopUpWidget(
+        isLoadingState: false,
+        context: context,
+        heading: "Warning",
+        subtitle: "Your session has expired due to maximum duration.",
+        yesButtonTitle: "OK",
+        onYesPress: () async {
+          Navigator.pop(context);
+        },
+        onNoPress: () {},
+      );
+    }
 
-    // Subscribe to the server-sent events
     _subscription =
         SSEClient.subscribeToSSE(
           method: SSERequestType.GET,
@@ -169,148 +162,179 @@ Future<void> _startLiveGoldPriceStream({
           header: headers,
         ).listen(
           (event) {
+            final raw = event.data;
+            if (raw == null || raw.trim().isEmpty) {
+              return;
+            }
+            _lastEventTime = DateTime.now();
+
             try {
+              // final decoded = jsonDecode(event.data ?? "{}");
+              // responseData = jsonDecode(event.data ?? "{}");
+
+              // /// 🔴 HANDLE MAX DURATION EVENT
+              // if (decoded is Map &&
+              //     decoded["reason"] == "max_duration_reached") {
+              //   if (!maxDurationPopupShown) {
+              //     maxDurationPopupShown = true;
+
+              // stopSSE();
+
+              //     showMaxDurationPopup();
+              //   }
+              //   return;
+              // }
+              // if (decoded is! List) {
+              //   return;
+              // }
               final List<dynamic> jsonList = jsonDecode(event.data ?? "[]");
 
-              final getGoldPriceResponse = SSEGetGoldPriceResponse.fromJson(
-                jsonList,
+              final response = SSEGetGoldPriceResponse.fromJson(jsonList);
+
+              if (response.prices!.isEmpty) return;
+
+              double sellingPx = 0.0;
+              double buyingPx = 0.0;
+              double lowPx = 0.0;
+              double highPx = 0.0;
+
+              for (final p in response.prices!.reversed) {
+                if (p.mDEntryType == "Bid") {
+                  sellingPx = (p.mDSellingPx ?? 0).toDouble();
+                  lowPx = (p.lastLowSellingPrice ?? 0).toDouble();
+                }
+                if (p.mDEntryType == "Offer") {
+                  buyingPx = (p.mDBuyingPx ?? 0).toDouble();
+                  highPx = (p.lastHighBuyingPrice ?? 0).toDouble();
+                }
+                if (sellingPx != 0 && buyingPx != 0) break;
+              }
+
+              sellingPx = sellingPx == 0 ? lastSelling : sellingPx;
+              buyingPx = buyingPx == 0 ? lastBuying : buyingPx;
+              lowPx = lowPx == 0 ? lastLow : lowPx;
+              highPx = highPx == 0 ? lastHigh : highPx;
+
+              lastSelling = sellingPx;
+              lastBuying = buyingPx;
+              lastLow = lowPx;
+              lastHigh = highPx;
+
+              final state = SSEGoldPriceState(
+                oneOunceDollarSellingPrice: sellingPx,
+                oneOunceDollarBuyingPrice: buyingPx,
+                lastLowSellingPrice: CommonService.getOneGramPriceInIQD(
+                  ounceDollarPrice: lowPx,
+                  dirham: IQD,
+                  ounce: ounce,
+                ),
+                lastHighBuyingPrice: CommonService.getOneGramPriceInIQD(
+                  ounceDollarPrice: highPx,
+                  dirham: IQD,
+                  ounce: ounce,
+                ),
+                oneGramSellingPriceInIQD: CommonService.getOneGramPriceInIQD(
+                  ounceDollarPrice: sellingPx,
+                  dirham: IQD,
+                  ounce: ounce,
+                ),
+                oneGramBuyingPriceInIQD: CommonService.getOneGramPriceInIQD(
+                  ounceDollarPrice: buyingPx,
+                  dirham: IQD,
+                  ounce: ounce,
+                ),
+                getGoldPriceResponse: response,
               );
 
-              // Process only if data exists
-              if (getGoldPriceResponse.prices!.isNotEmpty) {
-                // if mDEntryType is == "Bid" pick selling price
-                // if mDEntryType is == "Offer" pick buying price
-
-                double sellingPx = 0.0;
-                double buyingPx = 0.0;
-                double lastHigh = 0.0;
-                double lastLow = 0.0;
-                // Loop through the entries in reverse to find the latest 'Bid' and 'Offer'
-                for (final priceEntry
-                    in getGoldPriceResponse.prices!.reversed) {
-                  if (sellingPx == 0.0 && priceEntry.mDEntryType == "Bid") {
-                    sellingPx = (priceEntry.mDSellingPx ?? 0).toDouble();
-                    lastLow = (priceEntry.lastLowSellingPrice ?? 0.0)
-                        .toDouble();
-                  } else if (buyingPx == 0.0 &&
-                      priceEntry.mDEntryType == "Offer") {
-                    buyingPx = (priceEntry.mDBuyingPx ?? 0).toDouble();
-                    lastHigh = (priceEntry.lastHighBuyingPrice ?? 0.0)
-                        .toDouble();
-                  }
-                  if (priceEntry.mDEntryType == "Bid") {
-                    sellingPx = (priceEntry.mDSellingPx ?? 0).toDouble();
-                    lastLow = (priceEntry.lastLowSellingPrice ?? 0.0)
-                        .toDouble();
-                  } else if (priceEntry.mDEntryType == "Offer") {
-                    buyingPx = (priceEntry.mDBuyingPx ?? 0).toDouble();
-                    lastHigh = (priceEntry.lastHighBuyingPrice ?? 0.0)
-                        .toDouble();
-                  }
-                  if (sellingPx != 0.0 && buyingPx != 0.0) break; // found both
-                }
-
-                //Fallback to cached values if current ones are 0.0
-                if (sellingPx == 0.0 && lastValidSellingPx != 0.0) {
-                  sellingPx = lastValidSellingPx;
-                } else if (sellingPx != 0.0) {
-                  lastValidSellingPx = sellingPx;
-                }
-
-                if (buyingPx == 0.0 && lastValidBuyingPx != 0.0) {
-                  buyingPx = lastValidBuyingPx;
-                } else if (buyingPx != 0.0) {
-                  lastValidBuyingPx = buyingPx;
-                }
-
-                //Fall back to cache values if current ones are 0.0
-                // Apply fallback for high/low prices
-                if (lastHigh == 0.0 && lastValidHighBuying != 0.0) {
-                  lastHigh = lastValidHighBuying;
-                } else if (lastHigh != 0.0) {
-                  lastValidHighBuying = lastHigh;
-                }
-
-                if (lastLow == 0.0 && lastValidLowSelling != 0.0) {
-                  lastLow = lastValidLowSelling;
-                } else if (lastLow != 0.0) {
-                  lastValidLowSelling = lastLow;
-                }
-
-                // Logging for observability
-                if (sellingPx == 0.0 || buyingPx == 0.0) {
-                  getLocator<Logger>().w(
-                    "⚠️ Missing price fallback: sellingPx=$sellingPx, buyingPx=$buyingPx",
-                  );
-                }
-                if (lastLow == 0.0 || lastHigh == 0.0) {
-                  getLocator<Logger>().w(
-                    "⚠️ Missing price fallback: sellingPx=$sellingPx, buyingPx=$buyingPx",
-                  );
-                }
-
-                // getLocator<Logger>().i(
-                //   "Live Prices Updated: Selling: [$sellingPx\$], Buying: [$buyingPx\$]",
-                // );
-
-                // Convert ounce USD price to IQD per gram
-                final oneGramSellingIQDPrice =
-                    CommonService.getOneGramPriceInIQD(
-                      ounceDollarPrice: sellingPx,
-                      dirham: IQD,
-                      ounce: ounce,
-                    );
-
-                final oneGramBuyingIQDPrice =
-                    CommonService.getOneGramPriceInIQD(
-                      ounceDollarPrice: buyingPx,
-                      dirham: IQD,
-                      ounce: ounce,
-                    );
-                final lastLowSellingPrice = CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: lastLow,
-                  dirham: IQD,
-                  ounce: ounce,
-                );
-
-                final lastHighBuyingPrice = CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: lastHigh,
-                  dirham: IQD,
-                  ounce: ounce,
-                );
-
-                // Build new state
-                final xState = SSEGoldPriceState(
-                  oneGramBuyingPriceInIQD: oneGramBuyingIQDPrice,
-                  oneGramSellingPriceInIQD: oneGramSellingIQDPrice,
-                  oneOunceDollarSellingPrice: sellingPx,
-                  oneOunceDollarBuyingPrice: buyingPx,
-                  lastLowSellingPrice: lastLowSellingPrice,
-                  lastHighBuyingPrice: lastHighBuyingPrice,
-                  getGoldPriceResponse: getGoldPriceResponse,
-                );
-                onData(xState); // Send updated state
-              } else {
-                getLocator<Logger>().w("Empty payload received from SSE.");
-              }
+              onData(state);
             } catch (e) {
-              getLocator<Logger>().e(" Failed to parse SSE data: $e");
+              getLocator<Logger>().e("SSE parse error: $e");
             }
           },
-          onError: (error) async {
-            getLocator<Logger>().e(" SSE Stream Error: $error");
+          onError: (e) {
+            getLocator<Logger>().e("SSE error: $e");
+            _scheduleReconnect(onData, onError);
           },
-          cancelOnError: true, // Automatically cancel on error
+          onDone: () {
+            getLocator<Logger>().w("SSE closed");
+            _scheduleReconnect(onData, onError);
+          },
+          cancelOnError: false,
         );
+
+    _startHeartbeat(onData, onError);
   } catch (e) {
-    getLocator<Logger>().e(" SSE Setup Failed: $e");
-    if (onError != null) onError(e);
+    getLocator<Logger>().e("SSE init failed: $e");
+    _scheduleReconnect(onData, onError);
+  } finally {
+    _isConnecting = false;
   }
 }
 
-/// Stops the SSE subscription and logs the cancellation
+/// ---------------------------------------------------------------------------
+/// HEARTBEAT
+/// ---------------------------------------------------------------------------
+
+void _startHeartbeat(
+  void Function(SSEGoldPriceState) onData,
+  void Function(dynamic error)? onError,
+) {
+  _heartbeatTimer?.cancel();
+
+  _heartbeatTimer = Timer.periodic(
+    const Duration(seconds: 1),
+    (_) {
+      final diff = DateTime.now().difference(_lastEventTime).inSeconds;
+      if (diff > 5) {
+        getLocator<Logger>().w("SSE heartbeat timeout");
+        stopSSE();
+        _scheduleReconnect(onData, onError);
+      }
+    },
+  );
+}
+
+/// ---------------------------------------------------------------------------
+/// RECONNECT
+/// ---------------------------------------------------------------------------
+
+void _scheduleReconnect(
+  void Function(SSEGoldPriceState) onData,
+  void Function(dynamic error)? onError,
+) {
+  if (_reconnectTimer?.isActive ?? false) return;
+
+  _reconnectTimer = Timer(
+    const Duration(seconds: 1),
+    () {
+      getLocator<Logger>().i("Reconnecting SSE...");
+      stopSSE();
+      _startSSE(onData: onData, onError: onError);
+    },
+  );
+}
+
+/// ---------------------------------------------------------------------------
+/// STOP
+/// ---------------------------------------------------------------------------
 void stopSSE() {
   _subscription?.cancel();
   _subscription = null;
-  getLocator<Logger>().i('SSE connection stopped');
+
+  _heartbeatTimer?.cancel();
+  _reconnectTimer?.cancel();
+
+  _isConnecting = false; // 🔥 prevents stuck state
+
+  getLocator<Logger>().i("SSE stopped");
 }
+
+// void stopSSE() {
+//   _subscription?.cancel();
+//   _subscription = null;
+
+//   _heartbeatTimer?.cancel();
+//   _reconnectTimer?.cancel();
+
+//   getLocator<Logger>().i("SSE stopped");
+// }

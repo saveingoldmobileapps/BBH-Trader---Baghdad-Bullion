@@ -114,11 +114,16 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
 
     final statusText = widget.kAllOrders.status ?? "Pending";
 
+    // String formattedDate = widget.kAllOrders.createdAt != null
+    //     ? DateFormat(
+    //         'MMM dd, yyyy  •  h:mm a',
+    //       ).format(DateTime.parse(widget.kAllOrders.createdAt!))
+    //     : "Dec 18, 2024  •  2:45 PM";
     String formattedDate = widget.kAllOrders.createdAt != null
-        ? DateFormat(
-            'MMM dd, yyyy  •  h:mm a',
-          ).format(DateTime.parse(widget.kAllOrders.createdAt!))
-        : "Dec 18, 2024  •  2:45 PM";
+    ? DateFormat('dd MMM yyyy, HH:mm').format(
+        DateTime.parse(widget.kAllOrders.createdAt!).toLocal(),
+      )
+    : "Dec 18, 2024  •  2:45 PM";
 
     return Scaffold(
       backgroundColor: AppColors.greyScale1000,

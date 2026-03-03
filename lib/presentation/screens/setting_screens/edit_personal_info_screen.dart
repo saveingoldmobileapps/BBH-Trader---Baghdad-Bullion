@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:saveingold_fzco/presentation/widgets/profile_image.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
 import '../../sharedProviders/providers/auth_provider.dart';
@@ -86,7 +87,7 @@ class _EditPersonalInfoScreenState
       currentIsoCode = userProfile.isoCode ?? "AE";
       dialCode = userProfile.dialCode ?? "+971";
       orignalIsoCode = userProfile.isoCode ?? "AE";
-      orignalIsoCode = userProfile.dialCode ?? "+971";
+      orignalDialCode = userProfile.dialCode ?? "+971";
       // Store original values for comparison
       _originalFirstName = firstNameController.text;
       _originalSurname = surnameController.text;
@@ -334,23 +335,30 @@ class _EditPersonalInfoScreenState
                           color: AppColors.whiteColor,
                         ).getAlign(),
 
-                        // DisplayImage(
-                        //   imagePath: mainStateWatchProvider
-                        //       .getUserProfileResponse
-                        //       .payload!
-                        //       .userProfile!
-                        //       .imageUrl!,
-                        //   onImageSelected: (file) {
-                        //     if (file != null) {
-                        //       debugPrint("Picked: ${file.path}");
-                        //       authStateReadProvider.uploadProfileImage(
-                        //         filePath: file.path,
-                        //         context: context,
-                        //       );
-                        //     }
-                        //   },
-                        //   isEditable: !isEditable ? false : true,
-                        // ),
+                        DisplayImage(
+                          imagePath: mainStateWatchProvider
+                                  .getUserProfileResponse
+                                  .payload
+                                  ?.userProfile
+                                  ?.imageUrl ??
+                              '',
+                          onImageSelected: (file) async {
+                            if (file != null) {
+                              debugPrint("Picked: ${file.path}");
+                              await authStateReadProvider.uploadProfileImage(
+                                filePath: file.path,
+                                context: context,
+                              );
+                              if (context.mounted) {
+                                await ref
+                                    .read(homeProvider.notifier)
+                                    .getUserProfile();
+                                setState(() {}); // Refresh to show new image
+                              }
+                            }
+                          },
+                          isEditable: true, // Always allow profile image change
+                        ),
                         ConstPadding.sizeBoxWithHeight(height: 16),
 
                         Directionality.of(context) == TextDirection.rtl
@@ -564,7 +572,7 @@ class _EditPersonalInfoScreenState
                               child: Row(
                                 children: [
                                   Image.asset(
-                                    "assets/png/iraq.png",
+                                    "packages/country_code_picker/flags/${currentIsoCode.toLowerCase()}.png",
                                     width: 24,
                                     errorBuilder: (c, e, s) => const Icon(
                                       Icons.flag,
@@ -572,9 +580,9 @@ class _EditPersonalInfoScreenState
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  const Text(
-                                    "+964",
-                                    style: TextStyle(
+                                  Text(
+                                    dialCode,
+                                    style: const TextStyle(
                                       color: AppColors.secondaryColor,
                                       fontSize: 16,
                                     ),

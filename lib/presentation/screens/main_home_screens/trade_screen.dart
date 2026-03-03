@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
 import '../../../data/data_sources/local_database/local_database.dart';
@@ -193,16 +194,34 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
 
               const SizedBox(height: 16),
 
-              // 4. Disclaimer Text
-              Center(
-                child: GetGenericText(
-                  text:
-                      "Disclaimer: Maximum purchase of 136.37000 Grams applies.",
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.grey4Color,
-                  textAlign: TextAlign.center,
-                ),
+              // 4. Max grams based on IQD balance
+              goldPriceState.when(
+                data: (data) {
+                  final walletBalance = double.tryParse(
+                    mainStateWatchProvider
+                            .getHomeFeedResponse
+                            .payload
+                            ?.walletExists
+                            ?.moneyBalance
+                            ?.toString() ??
+                        '0',
+                  ) ?? 0.0;
+                  final pricePerGram = data.oneGramBuyingPriceInIQD;
+                  final maxGrams =
+                      pricePerGram > 0 ? (walletBalance / pricePerGram) : 0.0;
+                  return Center(
+                    child: GetGenericText(
+                      text:
+                          "${AppLocalizations.of(context)!.max_grams_note} ${maxGrams.toStringAsFixed(2)}",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.grey4Color,
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                },
+                loading: () => const SizedBox.shrink(),
+                error: (_, __) => const SizedBox.shrink(),
               ),
             ],
           ),

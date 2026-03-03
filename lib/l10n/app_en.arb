@@ -437,6 +437,7 @@
   "nominee_id":"Please upload the Emirates Id of Your Nominee",
   "branch_name": "Branch Name",
   "no_branch_available": "No branches available.",
+  "no_collection_point_available": "No collection point available",
   "will_notify_via_email":"You will be notified via email once your order is ready for collection",
   "upload_req_doc":"Please upload required document",
   "enter_nom_name":"Please enter Nominee Name",
@@ -585,6 +586,26 @@
   "deal_manage_section": "Manage Deal",
   "deal_take_profit": "Take Profit",
   "deal_sell_at_price": "Sell at Price",
+  "deal_save_profit": "Save Profit",
+  "deal_save_profit_hint": "Enter value between bought at ({boughtAt}) and current price ({currentPrice})",
+  "@deal_save_profit_hint": {
+    "placeholders": {
+      "boughtAt": {"type": "String"},
+      "currentPrice": {"type": "String"}
+    }
+  },
+  "deal_take_profit_grams": "Grams (max {total})",
+  "@deal_take_profit_grams": {
+    "placeholders": {
+      "total": {"type": "String"}
+    }
+  },
+  "deal_grams_must_be_less_or_equal": "Amount must be less than or equal to {total} grams",
+  "@deal_grams_must_be_less_or_equal": {
+    "placeholders": {
+      "total": {"type": "String"}
+    }
+  },
   "deal_update_position_btn": "Update Deal Position",
   "deal_close_section": "Close Deal",
   "deal_amount_gram": "Amount Gram",

@@ -1,7 +1,11 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
+import 'package:saveingold_fzco/presentation/sharedProviders/providers/setting_provider/check_device_security.dart';
 import 'package:saveingold_fzco/presentation/widgets/button_widget.dart';
 
 import 'forgot_screens/forgot_password_screen.dart';
@@ -133,6 +137,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     isLoadingState: authStateWatch.isButtonState,
                     onTap: _handleLogin,
                   ),
+
+                  _buildBiometricLoginIfAvailable(),
 
                   const SizedBox(height: 25),
                   _buildDivider(),
@@ -391,6 +397,78 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           style: const TextStyle(color: Colors.white, fontSize: 16),
         ),
       ),
+    );
+  }
+
+  Widget _buildBiometricLoginIfAvailable() {
+    return FutureBuilder<List<dynamic>>(
+      future: Future.wait([
+        LocalDatabase.instance.areCredentialsSaved(),
+        Platform.isIOS
+            ? BiometricUtils.isFaceLockAvailable()
+            : BiometricUtils.isFingerprintAvailable(),
+      ]),
+      builder: (context, snapshot) {
+        final credentialsSaved = snapshot.data?[0] == true;
+        final biometricAvailable = snapshot.data?[1] == true;
+        if (snapshot.connectionState != ConnectionState.done ||
+            !credentialsSaved ||
+            !biometricAvailable) {
+          return const SizedBox.shrink();
+        }
+        final isIOS = Platform.isIOS;
+        return Padding(
+          padding: const EdgeInsets.only(top: 20),
+          child: Center(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () async {
+                  if (isIOS) {
+                    await ref
+                        .read(authProvider.notifier)
+                        .authenticateWithFaceUnlock(context: context);
+                  } else {
+                    await ref
+                        .read(authProvider.notifier)
+                        .authenticateWithFingerprint(context: context);
+                  }
+                },
+                borderRadius: BorderRadius.circular(28),
+                child: Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: const Color(0xFFC5A353),
+                      width: 2,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: SvgPicture.asset(
+                      isIOS
+                          ? "assets/svg/faceId_icon.svg"
+                          : "assets/svg/fingerprint_icon.svg",
+                      width: 28,
+                      height: 28,
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFFC5A353),
+                        BlendMode.srcIn,
+                      ),
+                      errorBuilder: (_, __, ___) => Icon(
+                        isIOS ? Icons.face : Icons.fingerprint,
+                        color: const Color(0xFFC5A353),
+                        size: 28,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

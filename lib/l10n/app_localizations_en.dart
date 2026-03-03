@@ -1180,6 +1180,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_branch_available => 'No branches available.';
 
   @override
+  String get no_collection_point_available => 'No collection point available';
+
+  @override
   String get will_notify_via_email =>
       'You will be notified via email once your order is ready for collection';
 
@@ -1522,6 +1525,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deal_sell_at_price => 'Sell at Price';
+
+  @override
+  String get deal_save_profit => 'Save Profit';
+
+  @override
+  String deal_save_profit_hint(String boughtAt, String currentPrice) {
+    return 'Enter value between bought at ($boughtAt) and current price ($currentPrice)';
+  }
+
+  @override
+  String deal_take_profit_grams(String total) {
+    return 'Grams (max $total)';
+  }
+
+  @override
+  String deal_grams_must_be_less_or_equal(String total) {
+    return 'Amount must be less than or equal to $total grams';
+  }
 
   @override
   String get deal_update_position_btn => 'Update Deal Position';

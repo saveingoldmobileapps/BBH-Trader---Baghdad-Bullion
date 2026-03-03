@@ -104,6 +104,17 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
     sizes!.initializeSize(context);
   }
 
+  void _resetDealsWhenQuantityChanges() {
+    if (_selectedPaymentMethod == "Metal" &&
+        (selectedDealsData.isNotEmpty || (selectedIds != null && selectedIds!.isNotEmpty))) {
+      setState(() {
+        selectedDealsData = [];
+        selectedIds = null;
+        selectedDealId = '';
+      });
+    }
+  }
+
   void _calculateTotal() {
     final goldPriceState = ref.watch(goldPriceProvider);
     final oneGramBuyingPriceInIQD =
@@ -266,6 +277,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                                 (current - 1)
                                                     .toInt()
                                                     .toString();
+                                            _resetDealsWhenQuantityChanges();
                                             _calculateTotal();
                                           }
                                         },
@@ -292,6 +304,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                               1;
                                           goldQuantityController.text =
                                               (current + 1).toInt().toString();
+                                          _resetDealsWhenQuantityChanges();
                                           _calculateTotal();
                                         },
                                         icon: const Icon(
@@ -370,14 +383,35 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                           fontSize: 16,
                         ),
                       ),
-                      Text(
-                        "IQD ${totalGrandGoldPayableCharges.toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+
+                              _selectedPaymentMethod == "Money"
+                                  ? GetGenericText(
+                                      text:
+                                          "${(totalGrandGoldPayableCharges - deliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
+                                      fontSize: sizes!.responsiveFont(
+                                        phoneVal: 18,
+                                        tabletVal: 20,
+                                      ), //20,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.grey6Color,
+                                    )
+                                  : GetGenericText(
+                                      text: "${(gramBalanceEqual).toStringAsFixed(2)} ${AppLocalizations.of(context)!.esouq_gram_balance}",
+                                      fontSize: sizes!.responsiveFont(
+                                        phoneVal: 16,
+                                        tabletVal: 20,
+                                      ), //20,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColors.grey6Color,
+                                    ),
+                      // Text(
+                      //   "IQD ${totalGrandGoldPayableCharges.toStringAsFixed(2)}",
+                      //   style: const TextStyle(
+                      //     color: Colors.white,
+                      //     fontSize: 20,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -461,30 +495,107 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
         ),
         if (_selectedPaymentMethod == "Metal") ...[
           const SizedBox(height: 16),
-          // Your existing SearchableWithCheckBox widget logic
-          SearchableWithCheckBox(
-            iconString: "assets/svg/arrow_down.svg",
-            title: AppLocalizations.of(context)!.gift_select_gram,
-            items:
-                (gramState.gramApiResponseModel.payload as List?)
-                    ?.where(
-                      (deal) =>
-                          deal.tradeType == 'Buy' &&
-                          deal.tradeStatus == 'Opened',
+          Builder(
+            builder: (context) {
+              final filteredDeals =
+                  (gramState.gramApiResponseModel.payload as List?)
+                      ?.where(
+                        (deal) =>
+                            deal.tradeType == 'Buy' &&
+                            deal.tradeStatus == 'Opened',
+                      )
+                      .toList() ??
+                  [];
+              final dealItems = List<String>.from(
+                filteredDeals.map(
+                  (deal) =>
+                      "${deal.dealId} - ${deal.tradeMetal!.toStringAsFixed(2)}g gold",
+                ),
+              );
+              // Pass full item strings (matching items) so dialog shows them as checked
+              final List<String> selectedItemStrings = selectedIds != null && selectedIds!.isNotEmpty
+                  ? List<String>.from(
+                      selectedIds!
+                          .map((id) {
+                            for (var d in filteredDeals) {
+                              if (d.dealId.toString() == id.toString()) {
+                                return "${d.dealId} - ${d.tradeMetal!.toStringAsFixed(2)}g gold";
+                              }
+                            }
+                            return null;
+                          })
+                          .whereType<String>(),
                     )
-                    .map<String>(
-                      (deal) =>
-                          "${deal.dealId} - ${deal.tradeMetal!.toStringAsFixed(2)}g gold",
-                    )
-                    .toList() ??
-                [],
-            label: AppLocalizations.of(context)!.gramDeal,
-            hint: AppLocalizations.of(context)!.plz_choose_deal,
-            gramBalanceEqual: gramBalanceEqual,
-            selectedItems:
-                selectedIds?.map((id) => id.toString()).toList() ?? [],
+                  : <String>[];
+              return SearchableWithCheckBox(
+                iconString: "assets/svg/arrow_down.svg",
+                title: AppLocalizations.of(context)!.gift_select_gram,
+                items: dealItems,
+                label: AppLocalizations.of(context)!.gramDeal,
+                hint: AppLocalizations.of(context)!.plz_choose_deal,
+                gramBalanceEqual: gramBalanceEqual,
+                selectedItems: selectedItemStrings,
             onChanged: (List<String> selectedList) {
-              // Your existing logic for updating selectedDealsData
+              if (selectedList.isEmpty) {
+                setState(() {
+                  selectedIds = null;
+                  selectedDealsData = [];
+                  selectedDealId = '';
+                });
+                return;
+              }
+              final filteredDeals =
+                  (gramState.gramApiResponseModel.payload as List?)
+                      ?.where(
+                        (deal) =>
+                            deal.tradeType == 'Buy' &&
+                            deal.tradeStatus == 'Opened',
+                      )
+                      .toList() ??
+                  [];
+              final quantity = gramBalanceEqual;
+              List<Map<String, dynamic>> newSelectedDeals = [];
+              double totalSelectedGrams = 0.0;
+              for (var item in selectedList) {
+                final dealId = item.split(" - ").first.trim();
+                dynamic deal;
+                for (var d in filteredDeals) {
+                  if (d.dealId.toString() == dealId) {
+                    deal = d;
+                    break;
+                  }
+                }
+                if (deal == null) continue;
+                final dealGrams = deal.tradeMetal ?? 0;
+                if (totalSelectedGrams + dealGrams > quantity) {
+                  final remainingGrams = quantity - totalSelectedGrams;
+                  if (remainingGrams > 0) {
+                    newSelectedDeals.add({
+                      "tradeId": deal.id,
+                      "dealId": deal.dealId,
+                      "amount": remainingGrams,
+                    });
+                    totalSelectedGrams += remainingGrams;
+                  }
+                  break;
+                } else {
+                  newSelectedDeals.add({
+                    "tradeId": deal.id,
+                    "dealId": deal.dealId,
+                    "amount": dealGrams,
+                  });
+                  totalSelectedGrams += dealGrams;
+                }
+              }
+              setState(() {
+                selectedIds =
+                    newSelectedDeals.map((d) => d["dealId"].toString()).toList();
+                selectedDealsData = newSelectedDeals;
+                selectedDealId =
+                    selectedIds!.isNotEmpty ? selectedIds!.first : '';
+              });
+            },
+          );
             },
           ),
         ],
@@ -519,6 +630,22 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
             (!isMoneyPayment && walletMetal < gramBalanceEqual))) {
       showInsufficientBalancePopup();
       return;
+    }
+
+    // Metal payment: user must re-select deals when quantity changes
+    if (!isMoneyPayment) {
+      final totalSelectedGrams = selectedDealsData.fold<double>(
+        0.0,
+        (sum, d) => sum + ((d["amount"] as num?)?.toDouble() ?? 0),
+      );
+      const epsilon = 0.001;
+      if (selectedDealsData.isEmpty ||
+          (totalSelectedGrams - gramBalanceEqual).abs() > epsilon) {
+        Toasts.getErrorToast(
+          text: AppLocalizations.of(context)!.plz_choose_deal,
+        );
+        return;
+      }
     }
 
     Navigator.push(

@@ -1174,6 +1174,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get no_branch_available => 'لا توجد فروع متاحة.';
 
   @override
+  String get no_collection_point_available => 'لا يوجد نقطة استلام متاحة';
+
+  @override
   String get will_notify_via_email =>
       'سيتم إشعارك عبر البريد الإلكتروني بمجرد أن يكون طلبك جاهزًا للاستلام';
 
@@ -1512,6 +1515,24 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get deal_sell_at_price => 'بيع بسعر';
+
+  @override
+  String get deal_save_profit => 'حفظ الربح';
+
+  @override
+  String deal_save_profit_hint(String boughtAt, String currentPrice) {
+    return 'أدخل قيمة بين سعر الشراء ($boughtAt) والسعر الحالي ($currentPrice)';
+  }
+
+  @override
+  String deal_take_profit_grams(String total) {
+    return 'غرامات (الحد الأقصى $total)';
+  }
+
+  @override
+  String deal_grams_must_be_less_or_equal(String total) {
+    return 'يجب أن تكون الكمية أقل من أو تساوي $total غرام';
+  }
 
   @override
   String get deal_update_position_btn => 'تحديث موقع الصفقة';

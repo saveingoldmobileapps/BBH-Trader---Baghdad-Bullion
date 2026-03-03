@@ -68,7 +68,7 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              // Order Summary Card
+              /// ✅ Order Summary Card
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(

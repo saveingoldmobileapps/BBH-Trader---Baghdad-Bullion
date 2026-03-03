@@ -137,13 +137,13 @@ class GetDrawerBar extends ConsumerWidget {
                       ),
 
                       // REQUEST LOAN (Placeholder for functionality)
-                      _buildMenuCard(
-                        context,
-                        title: "Request loan",
-                        subtitle: "Apply for a loan",
-                        icon: "assets/svg/bank.svg",
-                        onTap: () {},
-                      ),
+                      // _buildMenuCard(
+                      //   context,
+                      //   title: "Request loan",
+                      //   subtitle: "Apply for a loan",
+                      //   icon: "assets/svg/bank.svg",
+                      //   onTap: () {},
+                      // ),
 
                       // SUPPORT
                       _buildMenuCard(
@@ -158,7 +158,7 @@ class GetDrawerBar extends ConsumerWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      //const SizedBox(height: 10),
                       _buildMenuCard(
                         context,
                         title: l10n.settings,
@@ -172,7 +172,7 @@ class GetDrawerBar extends ConsumerWidget {
                         ),
                       ),
 
-                      const SizedBox(height: 10),
+                      //const SizedBox(height: 10),
 
                       // LOGOUT
                       _buildMenuCard(

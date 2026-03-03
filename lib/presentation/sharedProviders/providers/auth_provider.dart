@@ -239,15 +239,15 @@ class Auth extends _$Auth {
       );
 
       if (didAuthenticate) {
-        // Face authentication successful
-        // String? refreshToken = await LocalDatabase.instance.read(
-        //   key: Strings.userRefreshToken,
-        // );
-        // String? refreshToken = await SecureStorageService.instance
-        //     .getRefreshToken();
+        // Face authentication successful - use email or phone as login identifier
         String? email = await LocalDatabase.instance.read(
-          key: Strings.userPhoneNumber,
+          key: Strings.userEmail,
         );
+        if (email == null || email.isEmpty) {
+          email = await LocalDatabase.instance.read(
+            key: Strings.userPhoneNumber,
+          );
+        }
         String? password = await LocalDatabase.instance.read(
           key: Strings.userPassword,
         );
@@ -488,12 +488,15 @@ class Auth extends _$Auth {
       );
 
       if (didAuthenticate) {
-        // String? refreshToken = await LocalDatabase.instance.read(
-        //   key: Strings.userRefreshToken,
-        // );
+        // Use email or phone as login identifier
         String? email = await LocalDatabase.instance.read(
-          key: Strings.userPhoneNumber,
+          key: Strings.userEmail,
         );
+        if (email == null || email.isEmpty) {
+          email = await LocalDatabase.instance.read(
+            key: Strings.userPhoneNumber,
+          );
+        }
         String? password = await LocalDatabase.instance.read(
           key: Strings.userPassword,
         );
@@ -591,7 +594,7 @@ class Auth extends _$Auth {
               isEnable: true,
             );
             await LocalDatabase.instance.storeAutoLogin(
-              autoLogin: true,
+              autoLogin: false,
             );
             await LocalDatabase.instance.storeFingerEnable(
               isEnable: true,

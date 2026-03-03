@@ -646,6 +646,12 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                         context,
                                       )!.deal_zero_value_validation; //'Please enter an amount greater than zero';
                                     }
+                                    // Take profit deal: grams must be <= total
+                                    if (isTakeProfitTrade &&
+                                        widget.gramData.tradeMetal != null &&
+                                        amount > widget.gramData.tradeMetal!) {
+                                      return '${AppLocalizations.of(context)!.deal_amount_must_less} ${widget.gramData.tradeMetal}';
+                                    }
                                     return null;
                                   },
                                 ),
@@ -697,6 +703,25 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                     return;
                                   }
 
+                                  // Take profit deal: grams must be <= total
+                                  if (isGramAmountPrice &&
+                                      isTakeProfitTrade &&
+                                      widget.gramData.tradeMetal != null) {
+                                    final gramAmount = double.tryParse(
+                                      gramAmountController.text.trim(),
+                                    );
+                                    if (gramAmount != null &&
+                                        gramAmount >
+                                            widget.gramData.tradeMetal!) {
+                                      Toasts.getErrorToast(
+                                        text:
+                                            '${AppLocalizations.of(context)!.deal_amount_must_less} ${widget.gramData.tradeMetal}',
+                                        gravity: ToastGravity.TOP,
+                                      );
+                                      return;
+                                    }
+                                  }
+
                                   final double? editedPrice = double.tryParse(
                                     sellAtPriceController.text.trim(),
                                   );
@@ -718,7 +743,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   //       editedPrice < currentSellPrice) {
                                   //     Toasts.getErrorToast(
                                   //       text:
-                                  //           "Please enter a sell price greater than the current sell price (IQD ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
+                                  //           "Please enter a sell price greater than the current sell price (AED ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
                                   //       gravity: ToastGravity.TOP,
                                   //     );
                                   //     return;
@@ -763,27 +788,6 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                       return;
                                     }
                                   }
-                                  // if (isEditPrice &&
-                                  //     tradeStatus == "Pending" &&
-                                  //     tradeType == "Sell") {
-                                  //   final buyingPrice =
-                                  //       widget.gramData.buyingPrice;
-
-                                  //   if (editedPrice == null ||
-                                  //       //currentSellPrice == null ||
-                                  //       // editedPrice < currentSellPrice ||
-                                  //       (buyingPrice != 0 &&
-                                  //           editedPrice <= buyingPrice!)) {
-                                  //     Toasts.getErrorToast(
-                                  //       text:
-                                  //           "${AppLocalizations.of(context)!.deal_sell_greater_than_bought} ${buyingPrice?.toStringAsFixed(2) ?? "-"})",
-
-                                  //       // "Please enter a sell price greater than the bought at price (IQD ${buyingPrice?.toStringAsFixed(2) ?? "-"})",
-                                  //       gravity: ToastGravity.TOP,
-                                  //     );
-                                  //     return;
-                                  //   }
-                                  // }
 
                                   ////Newly code added for Gift opened order
                                   // NEW VALIDATION: Pending Sell with null buyingPrice - edited price should be >= current sell price
@@ -1095,6 +1099,39 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                         context,
                                       )!.deal_zero_value_validation; //'Please enter an amount greater than zero';
                                     }
+                                    // Price range validation (below field, not popup)
+                                    final sellingPrice = ref
+                                        .read(goldPriceProvider)
+                                        .value
+                                        ?.oneGramSellingPriceInIQD;
+                                    final buyingPrice =
+                                        widget.gramData.buyingPrice;
+                                    if (sellingPrice != null &&
+                                        buyingPrice != null) {
+                                      final roundedInput = double.parse(
+                                        (amount.toDouble())
+                                            .toStringAsFixed(2),
+                                      );
+                                      final roundedBuying = double.parse(
+                                        buyingPrice.toStringAsFixed(2),
+                                      );
+                                      final roundedSelling = double.parse(
+                                        sellingPrice.toStringAsFixed(2),
+                                      );
+                                      // Must be >= buying price
+                                      if (roundedInput < roundedBuying) {
+                                        return "${AppLocalizations.of(context)!.greater_or_equal_buy}${roundedBuying.toStringAsFixed(2)}).";
+                                      }
+                                      // Save profit: buy <= price <= sell (valid)
+                                      if (roundedInput >= roundedBuying &&
+                                          roundedInput <= roundedSelling) {
+                                        return null;
+                                      }
+                                      // Take profit: price >= sell (valid)
+                                      if (roundedInput >= roundedSelling) {
+                                        return null;
+                                      }
+                                    }
                                     return null;
                                   },
                                 ),
@@ -1110,159 +1147,34 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                               context,
                             )!.deal_update_position_btn, //"Update Deal Position",
                             onTap: () async {
-                              print("hello");
+                              // Validate form first (errors show below field)
+                              if (!(_formTakeProfitKey.currentState
+                                      ?.validate() ??
+                                  false)) {
+                                return;
+                              }
                               final sellingPrice = goldPriceStateWatchProvider
                                   .value
                                   ?.oneGramSellingPriceInIQD;
-                              final homeFeed = ref
-                                  .read(homeProvider)
-                                  .getHomeFeedResponse;
+                              if (sellingPrice == null) return;
 
-                              if (homeFeed.payload == null) {
-                                debugPrint("Payload is null");
-                              } else {
-                                debugPrint(
-                                  "sellAtLoss: ${homeFeed.payload!.sellAtLoss}",
-                                );
-                              }
-                              final bool canSellAtLoss =
-                                  ref
-                                      .read(homeProvider)
-                                      .getHomeFeedResponse
-                                      .payload!
-                                      .sellAtLoss ??
-                                  false;
-
-                              final String inputText = sellAtPriceController
-                                  .text
-                                  .trim();
-
-                              // Prevent if empty or invalid input
-                              if (inputText.isEmpty || sellingPrice == null) {
-                                Toasts.getErrorToast(
-                                  text: AppLocalizations.of(
-                                    context,
-                                  )!.deal_enter_valid_profit_price, //"Please enter a valid profit price.", //AppLocalizations.of(context)!.deal_enter_valid_profit_price,//
-                                  gravity: ToastGravity.TOP,
-                                );
-                                return;
-                              }
-
+                              final String inputText =
+                                  sellAtPriceController.text.trim();
                               final double userInput =
                                   double.tryParse(inputText) ?? 0.0;
-
-                              // Don't allow if not allowed to sell at loss AND price is below market
-                              // if (!canSellAtLoss && userInput < sellingPrice) {
-                              //   Toasts.getErrorToast(
-                              //     text:
-                              //         "Enter a price that is greater than or equal to the current selling price.",
-
-                              //     //"You can't close this deal at a loss.",
-                              //     gravity: ToastGravity.TOP,
-                              //   );
-                              //   return;
-                              // }
                               final buyingPrice = widget.gramData.buyingPrice;
+                              if (buyingPrice == null) return;
 
-                              double roundedInput = double.parse(
+                              final double roundedInput = double.parse(
                                 userInput.toStringAsFixed(2),
                               );
-                              double roundedBuying = double.parse(
-                                buyingPrice!.toStringAsFixed(2),
-                              );
-                              double roundedSelling = double.parse(
+                              final double roundedSelling = double.parse(
                                 sellingPrice.toStringAsFixed(2),
                               );
+                              final bool saveProfit =
+                                  roundedInput < roundedSelling;
 
-                              // if (!canSellAtLoss) {
-                              //   // find whichever is greater between buying and selling
-                              //   final double minRequiredPrice =
-                              //       roundedBuying > roundedSelling
-                              //       ? roundedBuying
-                              //       : roundedSelling;
-                              //   if (roundedInput < minRequiredPrice) {
-                              //     Toasts.getErrorToast(
-                              //       text:
-                              //           "${AppLocalizations.of(context)!.greater_or_equal_sell}${minRequiredPrice.toStringAsFixed(2)}).",
-                              //       gravity: ToastGravity.TOP,
-                              //     );
-                              //     return;
-                              //   }
-                              // } else {
-                              //   // can sell at loss = true  must be >= current selling price only
-                              //   if (roundedInput < roundedSelling) {
-                              //     Toasts.getErrorToast(
-                              //       text:
-                              //           "${"AppLocalizations.of(context)!.greater_or_equal_sell"}${roundedSelling.toStringAsFixed(2)}).",
-                              //       gravity: ToastGravity.TOP,
-                              //     );
-                              //     return;
-                              //   }
-                              // }
-                              if (!canSellAtLoss) {
-                                // find whichever is greater between buying and selling
-                                final double minRequiredPrice =
-                                    roundedBuying > roundedSelling
-                                    ? roundedBuying
-                                    : roundedSelling;
-
-                                if (roundedInput < minRequiredPrice) {
-                                  Toasts.getErrorToast(
-                                    text: roundedBuying > roundedSelling
-                                        ? "${AppLocalizations.of(context)!.greater_or_equal_buy}${minRequiredPrice.toStringAsFixed(2)})."
-                                        : "${AppLocalizations.of(context)!.greater_or_equal_sell}${minRequiredPrice.toStringAsFixed(2)}).",
-                                    gravity: ToastGravity.TOP,
-                                  );
-                                  return;
-                                }
-                              } else {
-                                // can sell at loss = true → must be >= current selling price only
-                                if (roundedInput < roundedSelling) {
-                                  Toasts.getErrorToast(
-                                    text:
-                                        "${AppLocalizations.of(context)!.greater_or_equal_sell}${roundedSelling.toStringAsFixed(2)}).",
-                                    gravity: ToastGravity.TOP,
-                                  );
-                                  return;
-                                }
-                              }
-
-                              if (!canSellAtLoss &&
-                                  roundedInput < roundedBuying) {
-                                Toasts.getErrorToast(
-                                  text:
-                                      // "${AppLocalizations.of(context)!.greater_or_equal_buy}${roundedBuying.toStringAsFixed(2)}).",
-                                      "Enter a price greater than or equal to the buy at price (${roundedBuying.toStringAsFixed(2)}).",
-                                  gravity: ToastGravity.TOP,
-                                );
-                                return;
-                              }
-
-                              //Newly code added for Gift opened order
-                              if (widget.gramData.tradeCategory == "Gift" &&
-                                  !canSellAtLoss &&
-                                  roundedInput < roundedSelling) {
-                                Toasts.getErrorToast(
-                                  text:
-                                      // "${AppLocalizations.of(context)!.greater_or_equal_sell}${roundedSelling.toStringAsFixed(2)}).",
-                                      "Enter a price greater than or equal to the current sell at price (${roundedSelling.toStringAsFixed(2)}).",
-                                  gravity: ToastGravity.TOP,
-                                );
-                                return;
-                              }
-
-                              // if (!canSellAtLoss && userInput <buyingPrice!) {
-                              //   Toasts.getErrorToast(
-                              //     text:
-                              //         "E a price that is greater than or equal to the buy at price (${buyingPrice.toStringAsFixed(2)}).",
-
-                              //     //"You can't close this deal at a loss.",
-                              //     gravity: ToastGravity.TOP,
-                              //   );
-                              //   return;
-                              // }
-
-                              // Proceed if form is valid
+                              // Proceed (validation done in form validator above)
                               if (_formTakeProfitKey.currentState?.validate() ??
                                   false) {
                                 _focusSellAtPriceNode.unfocus();
@@ -1276,14 +1188,38 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   "newTradeMoney: $newTradeMoney | sellAtProfit: $sellAtProfit | tradeMetal: ${widget.gramData.tradeMetal} | kSellingPrice: $kSellingPrice",
                                 );
 
+                                // final String confirmationMessage =
+                                //     roundedInput >= roundedSelling
+                                //     ? AppLocalizations.of(context)!.about_take_profit//"You are about to take profit at the selected price."
+                                //     : AppLocalizations.of(context)!.about_take_profit;//"You are about to save your profit at the selected price.";
+                                final num buyAt = num.parse(
+                                  (widget.gramData.buyingPrice ?? 0)
+                                      .toStringAsFixed(2),
+                                );
+
+                                final String confirmationMessage =
+                                    (roundedInput >= buyAt &&
+                                        roundedInput <= roundedSelling)
+                                    ? "You are about to save Profit"
+                                    // AppLocalizations.of(
+                                    //     context,
+                                    //   )!.about_save_profit
+                                    :  "You are about to take Profit";
+                                    // AppLocalizations.of(
+                                    //     context,
+                                    //   )!.about_take_profit;
+
+                                //if bool is true than show the user that you want to save profit insteady of you want to update deal
+
                                 await genericPopUpWidget(
                                   context: context,
                                   heading: AppLocalizations.of(
                                     context,
                                   )!.confirmation, //"Confirmation",
-                                  subtitle: AppLocalizations.of(
-                                    context,
-                                  )!.deal_update_confirm_message, //"Are you sure you want to update deal position?",
+                                  subtitle: confirmationMessage,
+                                  // AppLocalizations.of(
+                                  //   context,
+                                  // )!.deal_update_confirm_message, //"Are you sure you want to update deal position?",
                                   noButtonTitle: AppLocalizations.of(
                                     context,
                                   )!.no, //"No",
@@ -1308,6 +1244,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                           sellingPrice: double.parse(
                                             sellingPrice.toStringAsFixed(2),
                                           ),
+                                          saveProfit: saveProfit, // 👈 NEW FLAG
                                           context: context,
                                         )
                                         .then((onValue) {
@@ -1569,7 +1506,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                     text:
                                         "${AppLocalizations.of(context)!.deal_cant_close} ${kSellingPrice.toStringAsFixed(2)}) ${AppLocalizations.of(context)!.is_below_buy} ${buyingPrice.toStringAsFixed(2)}).",
 
-                                    // "You can't close this deal at a loss. Current price ${kSellingPrice.toStringAsFixed(2)}) is below your buying price (IQD ${buyingPrice.toStringAsFixed(2)}).",
+                                    // "You can't close this deal at a loss. Current price ${kSellingPrice.toStringAsFixed(2)}) is below your buying price (AED ${buyingPrice.toStringAsFixed(2)}).",
                                     gravity: ToastGravity.TOP,
                                   );
                                   return;
@@ -1587,7 +1524,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   subtitle: wouldBeLoss
                                       ? AppLocalizations.of(context)!
                                             .deal_about_to_close //"You're about to close this deal at a loss. Are you sure?"
-                                      : "${AppLocalizations.of(context)!.deal_sure_want_to_close} $tradeMetal${AppLocalizations.of(context)!.deal_g_of_deal}", //"Are you sure you want to close ${tradeMetal}g of this deal?",
+                                      : "${AppLocalizations.of(context)!.deal_sure_want_to_close} ${tradeMetal}${AppLocalizations.of(context)!.deal_g_of_deal}", //"Are you sure you want to close ${tradeMetal}g of this deal?",
                                   noButtonTitle: AppLocalizations.of(
                                     context,
                                   )!.cancel, //"Cancel",

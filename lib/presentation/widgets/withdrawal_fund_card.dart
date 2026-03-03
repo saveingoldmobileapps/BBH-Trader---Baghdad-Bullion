@@ -113,7 +113,7 @@ class WithdrawalFundCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     GetGenericText(
-                      text: AppLocalizations.of(context)!.bank_name,
+                      text: "", //AppLocalizations.of(context)!.bank_name,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                       color: AppColors.grey3Color,

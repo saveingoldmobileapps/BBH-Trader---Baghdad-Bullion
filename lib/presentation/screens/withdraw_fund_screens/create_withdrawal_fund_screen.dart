@@ -31,6 +31,7 @@ class _WithdrawFundScreenState
   final bankController = TextEditingController();
   final beneficiaryNameController = TextEditingController();
   final ibanAccountNumberController = TextEditingController();
+  bool _hasSubmitted = false;
   @override
   void initState() {
     super.initState();
@@ -192,12 +193,17 @@ class _WithdrawFundScreenState
           ),
           child: SafeArea(
             child: Form(
+
+                autovalidateMode: _hasSubmitted
+                    ? AutovalidateMode.onUserInteraction
+                    : AutovalidateMode.disabled,
               key: _formKey,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     ConstPadding.sizeBoxWithHeight(height: 24),
                     CommonTextFormField(
+
                       title: "title",
                       hintText: AppLocalizations.of(
                         context,
@@ -408,6 +414,7 @@ class _WithdrawFundScreenState
                       )!.withdrawBtn, //"Withdrawal",
                       isLoadingState: authStateWatchProvider.isButtonState,
                       onTap: () async {
+                        setState(() => _hasSubmitted = true);
                         final walletBalance =
                             double.tryParse(
                               mainStateWatchProvider

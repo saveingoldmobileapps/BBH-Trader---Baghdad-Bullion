@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,6 +14,7 @@ import 'package:saveingold_fzco/presentation/screens/auth_screens/email_verify_c
 import 'package:saveingold_fzco/presentation/screens/fund_screens/add_fund_screen.dart';
 import 'package:saveingold_fzco/presentation/screens/setting_screens/setting_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/trade_provider/trade_provider.dart';
+import 'package:saveingold_fzco/presentation/widgets/input_formater.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
 import '../../../l10n/app_localizations.dart';
@@ -190,8 +192,11 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                             contentPadding: EdgeInsets.zero,
                           ),
                           inputFormatters: [
-                            DecimalTextInputFormatter(decimalRange: 2),
-                          ],
+                            AmountInputFormatter(
+                              maxDigits: 4, 
+                              decimalRange: 2
+                            ),
+                          ]
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -520,7 +525,12 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         ),
       ),
       keyboardType: TextInputType.number,
-      inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
+      inputFormatters: [
+        AmountInputFormatter(
+          maxDigits: 6,
+          decimalRange: 2
+        ),
+      ]
     );
   }
 

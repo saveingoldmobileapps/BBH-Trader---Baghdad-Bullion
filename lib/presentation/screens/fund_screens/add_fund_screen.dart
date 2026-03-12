@@ -239,6 +239,14 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
               //   )!.dep_fee_instantNote, //"Instant Deposit, bank fees may apply.",
               //   iconString: "assets/svg/card_icon.svg",
               //   onTap: _showContactSupportPopup,
+              // onTap: () async {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => const CardPaymentFundAmountScreen(),
+              //       ),
+              //     );
+              //   },
               // ),
               // if (_showApplePay && applePayTrue) ...[
               //   ConstPadding.sizeBoxWithHeight(height: 12),

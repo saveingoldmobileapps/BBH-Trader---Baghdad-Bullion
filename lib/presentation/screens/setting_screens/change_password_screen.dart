@@ -19,6 +19,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   final confirmPasswordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  bool _hasSubmitted = false;
 
   @override
   void initState() {
@@ -78,6 +79,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
+              autovalidateMode: _hasSubmitted
+                  ? AutovalidateMode.onUserInteraction
+                  : AutovalidateMode.disabled,
               child: Column(
                 children: [
                   GetGenericText(
@@ -213,6 +217,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     tabletLandscapeVal: 74,
                     onTap: () async {
                       FocusScope.of(context).unfocus();
+                      setState(() => _hasSubmitted = true);
                       if (_formKey.currentState?.validate() ?? false) {
                         /// update password
                         await authStateReadProvider.updatePassword(

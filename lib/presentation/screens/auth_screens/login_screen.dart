@@ -401,22 +401,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Widget _buildBiometricLoginIfAvailable() {
+    final isIOS = Platform.isIOS;
     return FutureBuilder<List<dynamic>>(
       future: Future.wait([
         LocalDatabase.instance.areCredentialsSaved(),
-        Platform.isIOS
+        isIOS
             ? BiometricUtils.isFaceLockAvailable()
             : BiometricUtils.isFingerprintAvailable(),
+        isIOS
+            ? LocalDatabase.instance.getFaceEnable()
+            : LocalDatabase.instance.getFingerEnable(),
       ]),
       builder: (context, snapshot) {
         final credentialsSaved = snapshot.data?[0] == true;
         final biometricAvailable = snapshot.data?[1] == true;
+        final biometricEnabledInSettings = snapshot.data?[2] == true;
         if (snapshot.connectionState != ConnectionState.done ||
             !credentialsSaved ||
-            !biometricAvailable) {
+            !biometricAvailable ||
+            !biometricEnabledInSettings) {
           return const SizedBox.shrink();
         }
-        final isIOS = Platform.isIOS;
         return Padding(
           padding: const EdgeInsets.only(top: 20),
           child: Center(

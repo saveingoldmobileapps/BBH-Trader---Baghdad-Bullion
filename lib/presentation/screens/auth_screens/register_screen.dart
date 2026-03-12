@@ -38,6 +38,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   String? selectedAmount;
   double amountDouble = 0.0;
+  bool _hasSubmitted = false;
 
   final List<String> amountOptions = [
     "1m IQD",
@@ -107,6 +108,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: SingleChildScrollView(
               child: Form(
                 key: _formKey,
+                autovalidateMode: _hasSubmitted
+                    ? AutovalidateMode.onUserInteraction
+                    : AutovalidateMode.disabled,
                 child: Column(
                   children: [
                     ConstPadding.sizeBoxWithHeight(height: 20),
@@ -486,6 +490,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       isLoadingState: authStateWatchProvider.isButtonState,
                       onTap: () async {
                         print("Current iso=$_currentIsoCode");
+                        setState(() => _hasSubmitted = true);
                         if (_formKey.currentState?.validate() ?? false) {
                           // sendOtpForSignUp
                           /// user register

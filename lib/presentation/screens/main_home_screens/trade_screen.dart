@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
@@ -350,7 +349,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              "IQD ${NumberFormat("#,##0.00").format(price)} / oz",
+              "IQD ${CommonService.formatPriceCompact(price)} / oz",
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -378,7 +377,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
               ),
               const SizedBox(width: 4),
               Text(
-                "${isHigh ? "High" : "Low"} ${NumberFormat("#,##0.00").format(highLowPrice)}",
+                "${isHigh ? "High" : "Low"} ${CommonService.formatPriceCompact(highLowPrice)}",
                 style: TextStyle(
                   color: isHigh ? Colors.green : Colors.red,
                   fontSize: 12,

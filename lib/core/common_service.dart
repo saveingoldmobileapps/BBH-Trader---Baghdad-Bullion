@@ -91,6 +91,14 @@ class CommonService {
     return NumberFormat("#,##0", "en_US").format(amount);
   }
 
+  /// Format price for compact display (e.g. 2K, 3.5K, 1M) - for UI where full numbers are too big.
+  static String formatPriceCompact(num? value) {
+    final amount = (value ?? 0).toDouble();
+    if (amount == 0) return "0";
+    final compact = NumberFormat.compact(locale: "en_US").format(amount);
+    return compact.replaceAll('k', 'K').replaceAll('m', 'M').replaceAll('b', 'B');
+  }
+
   /// Format gram balance for display - handles large values with thousand separators.
   static String formatGramForDisplay(num? value) {
     final amount = (value ?? 0).toDouble();

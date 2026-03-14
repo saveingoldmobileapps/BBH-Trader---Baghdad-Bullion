@@ -575,6 +575,8 @@
 "invest_sell_order_filled": "تم تنفيذ أمر البيع",
 "invest_sell_order_submitted_success": "تم إرسال أمر البيع الخاص بك بنجاح للمعالجة.",
 "invest_order_placed": "تم إنشاء أمر الشراء",
+"iqd_currency": "دينار عراقي",
+"iqd_gram": "غرام",
 
 
 "insufficient_balance_message": "رصيدك (الدينار العراقي إماراتي {walletBalance}) أقل من المبلغ المطلوب (الدينار العراقي إماراتي {inputAmount}). يرجى إضافة الأموال.",

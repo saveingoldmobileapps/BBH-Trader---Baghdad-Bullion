@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart'; // For date formatting
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:saveingold_fzco/core/res_sizes/res.dart';
 import 'package:saveingold_fzco/core/theme/const_colors.dart';
 import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:saveingold_fzco/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
 
-class MyOrderCard extends StatelessWidget {
+class MyOrderCard extends ConsumerWidget {
   final KAllOrders kAllOrders;
   final VoidCallback onTap;
 
@@ -17,10 +21,12 @@ class MyOrderCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    // Format date if available, otherwise use a placeholder
+  Widget build(BuildContext context, WidgetRef ref) {
+    final esouqStateWatchProvider = ref.watch(esouqProvider);
+
     String formattedDate = kAllOrders.createdAt != null
-        ? DateFormat('dd MMM yyyy, HH:mm',
+        ? DateFormat(
+            'dd MMM yyyy, HH:mm',
           ).format(DateTime.parse(kAllOrders.createdAt!).toLocal())
         : "Dec 18, 2024  •  2:45 PM";
 
@@ -52,6 +58,7 @@ class MyOrderCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
+
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,6 +84,7 @@ class MyOrderCard extends StatelessWidget {
                     ],
                   ),
                 ),
+
                 statusCard(
                   status: kAllOrders.status ?? "Completed",
                   context: context,
@@ -95,7 +103,7 @@ class MyOrderCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GetGenericText(
-                  text: "1x", // Replace with actual qty if available
+                  text: kAllOrders.quantity.toString(),
                   fontSize: 14,
                   color: AppColors.grey6Color,
                   fontWeight: FontWeight.normal,
@@ -108,26 +116,36 @@ class MyOrderCard extends StatelessWidget {
                 ),
               ],
             ),
+
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Divider(color: Color(0xFF2C2C2E), thickness: 1),
             ),
 
-            /// --- Total Paid Footer ---
+            /// TOTAL PAID
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GetGenericText(
+                const GetGenericText(
                   text: "Total paid",
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),
+
                 GetGenericText(
-                  text: "IQD ${kAllOrders.grandTotal ?? '2,105,000.00'}",
+                  text:
+                      esouqStateWatchProvider
+                              .selectedOrder
+                              .payload
+                              ?.paymentMethod ==
+                          'Money'
+                      ? "${AppLocalizations.of(context)!.iqd_currency} ${kAllOrders.grandTotal}"
+                      // "IQD ${widget.kAllOrders.grandTotal ?? '0.00'}":"",
+                      : "${AppLocalizations.of(context)!.iqd_gram} ${kAllOrders.grandTotal}",
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.goldColor, // Gold text color
+                  color: AppColors.goldColor,
                 ),
               ],
             ),

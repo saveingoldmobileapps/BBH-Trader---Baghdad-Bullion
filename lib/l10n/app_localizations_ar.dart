@@ -1470,6 +1470,12 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get iqd_currency => 'دينار عراقي';
+
+  @override
+  String get iqd_gram => 'غرام';
+
+  @override
   String get invest_confirm_purchase_btn => 'تأكيد الشراء';
 
   @override

@@ -568,6 +568,8 @@
     }
   }
 },
+"iqd_currency": "IQD",
+"iqd_gram":"Gram",
 
   "invest_confirm_purchase_btn": "Confirm Purchase",
   "invest_add_funds_btn": "Add Funds",

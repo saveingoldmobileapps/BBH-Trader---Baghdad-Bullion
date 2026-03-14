@@ -1480,6 +1480,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get iqd_currency => 'IQD';
+
+  @override
+  String get iqd_gram => 'Gram';
+
+  @override
   String get invest_confirm_purchase_btn => 'Confirm Purchase';
 
   @override

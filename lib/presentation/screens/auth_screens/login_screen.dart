@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
+import 'package:saveingold_fzco/presentation/screens/auth_screens/register_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/setting_provider/check_device_security.dart';
 import 'package:saveingold_fzco/presentation/widgets/button_widget.dart';
@@ -124,11 +125,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
 
                   _buildInputSection(),
 
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
 
                   ButtonWidget(
                     title: _selectedType == LoginType.bank
@@ -140,9 +141,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                   _buildBiometricLoginIfAvailable(),
 
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 20),
                   _buildDivider(),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 20),
 
                   if (_selectedType != LoginType.phone)
                     _buildSecondaryButton(
@@ -154,16 +155,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       "Login with email",
                       () => setState(() => _selectedType = LoginType.email),
                     ),
-                  if (_selectedType != LoginType.bank)
-                    _buildSecondaryButton(
-                      "Login with bank",
-                      () => setState(() => _selectedType = LoginType.bank),
-                    ),
+                  // if (_selectedType != LoginType.bank)
+                  //   _buildSecondaryButton(
+                  //     "Login with bank",
+                  //     () => setState(() => _selectedType = LoginType.bank),
+                  //   ),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 5),
                   Center(
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const RegisterScreen(),
+            ),
+          );
+                      },
                       child: const Text(
                         "I'm new to BBH",
                         style: TextStyle(

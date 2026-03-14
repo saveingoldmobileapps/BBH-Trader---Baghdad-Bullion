@@ -2906,6 +2906,18 @@ abstract class AppLocalizations {
   /// **'Your balance (IQD {walletBalance}) is less than the required amount (IQD {inputAmount}). Please add funds.'**
   String insufficient_balance_message(String walletBalance, String inputAmount);
 
+  /// No description provided for @iqd_currency.
+  ///
+  /// In en, this message translates to:
+  /// **'IQD'**
+  String get iqd_currency;
+
+  /// No description provided for @iqd_gram.
+  ///
+  /// In en, this message translates to:
+  /// **'Gram'**
+  String get iqd_gram;
+
   /// No description provided for @invest_confirm_purchase_btn.
   ///
   /// In en, this message translates to:

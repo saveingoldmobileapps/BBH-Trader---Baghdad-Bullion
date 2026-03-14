@@ -120,10 +120,10 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
     //       ).format(DateTime.parse(widget.kAllOrders.createdAt!))
     //     : "Dec 18, 2024  •  2:45 PM";
     String formattedDate = widget.kAllOrders.createdAt != null
-    ? DateFormat('dd MMM yyyy, HH:mm').format(
-        DateTime.parse(widget.kAllOrders.createdAt!).toLocal(),
-      )
-    : "Dec 18, 2024  •  2:45 PM";
+        ? DateFormat('dd MMM yyyy, HH:mm').format(
+            DateTime.parse(widget.kAllOrders.createdAt!).toLocal(),
+          )
+        : "Dec 18, 2024  •  2:45 PM";
 
     return Scaffold(
       backgroundColor: AppColors.greyScale1000,
@@ -200,7 +200,15 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
                               ),
                               GetGenericText(
                                 text:
-                                    "IQD ${widget.kAllOrders.grandTotal ?? '0.00'}",
+                                    esouqStateWatchProvider
+                                            .selectedOrder
+                                            .payload!
+                                            .paymentMethod ==
+                                        'Money'
+                                    ? "${AppLocalizations.of(context)!.iqd_currency} ${widget.kAllOrders.grandTotal}"
+                                          // "IQD ${widget.kAllOrders.grandTotal ?? '0.00'}":"",
+                                         : "${AppLocalizations.of(context)!.iqd_gram} ${widget.kAllOrders.grandTotal}",
+                                    //: "",
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
                                 color: const Color(0xFFBBA473),

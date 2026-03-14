@@ -9,6 +9,7 @@ import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/gram_provider/gram_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/trade_provider/trade_provider.dart';
+import 'package:saveingold_fzco/presentation/widgets/input_formater.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
 import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
@@ -1073,10 +1074,13 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                     context,
                                   )!.deal_sell_at_price, //"Sell at Price",
                                   controller: sellAtPriceController,
-                                  inputFormatters: [
-                                    DecimalTextInputFormatter(decimalRange: 2),
-                                    //LengthLimitingTextInputFormatter(15),
-                                  ],
+                                  
+                          inputFormatters: [
+                            AmountInputFormatter(
+                              maxDigits: 6, 
+                              decimalRange: 2
+                            ),
+                          ],
                                   textInputType:
                                       TextInputType.numberWithOptions(
                                         signed: true,
@@ -1416,8 +1420,11 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   )!.deal_amount_gram, //"Amount Gram",
                                   controller: closeDealAmountGramController,
                                   inputFormatters: [
-                                    DecimalTextInputFormatter(decimalRange: 2),
-                                  ],
+                            AmountInputFormatter(
+                              maxDigits: 4, 
+                              decimalRange: 2
+                            ),
+                          ],
                                   textInputType:
                                       TextInputType.numberWithOptions(
                                         signed: true,

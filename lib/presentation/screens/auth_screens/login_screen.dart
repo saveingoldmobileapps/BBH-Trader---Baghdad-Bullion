@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/register_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
@@ -51,6 +52,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final passwordController = TextEditingController();
 
   bool _isPasswordVisible = false;
+  bool _hasSubmitted = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -102,6 +104,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Form(
               key: _formKey,
+              autovalidateMode: _hasSubmitted
+                  ? AutovalidateMode.onUserInteraction
+                  : AutovalidateMode.disabled,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -206,6 +211,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: phoneController,
                     hint: "Phone number",
                     isNumeric: true,
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please enter phone number';
+                      }
+                      final digitsOnly = value.replaceAll(RegExp(r'[^0-9]'), '');
+                      if (digitsOnly.length < 9) {
+                        return 'Please enter a valid phone number';
+                      }
+                      return null;
+                    },
                   ),
                 ),
               ],
@@ -216,6 +231,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               hint: "**********",
               label: "Password",
               isPassword: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter password';
+                }
+                return null;
+              },
             ),
             _buildForgotPassword(),
           ],
@@ -228,6 +249,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               controller: emailController,
               hint: "Enter your email",
               label: "Email",
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter email';
+                }
+                if (!value.trim().validateEmail()) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20),
             _buildTextField(
@@ -235,6 +265,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               hint: "**********",
               label: "Password",
               isPassword: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter password';
+                }
+                return null;
+              },
             ),
             _buildForgotPassword(),
           ],
@@ -248,6 +284,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               hint: "Enter your user ID",
               label: "User ID",
               showWarning: true,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your user ID';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20),
             _buildTextField(
@@ -255,6 +297,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               hint: "**********",
               label: "Password",
               isPassword: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter password';
+                }
+                return null;
+              },
             ),
             _buildForgotPassword(),
           ],
@@ -271,6 +319,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     bool isPassword = false,
     bool isNumeric = false,
     bool showWarning = false,
+    String? Function(String?)? validator,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -283,6 +332,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         TextFormField(
           controller: controller,
           obscureText: isPassword && !_isPasswordVisible,
+          validator: validator,
           keyboardType: isNumeric
               ? TextInputType.number
               : TextInputType.emailAddress,
@@ -315,6 +365,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Color(0xFFC5A353)),
             ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            errorStyle: const TextStyle(color: Colors.redAccent),
           ),
         ),
       ],
@@ -510,6 +569,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _handleLogin() async {
+    setState(() => _hasSubmitted = true);
     if (_formKey.currentState?.validate() ?? false) {
       String loginIdentifier;
 

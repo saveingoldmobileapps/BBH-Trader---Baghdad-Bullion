@@ -40,6 +40,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
   final _focusNode = FocusNode();
   final _focusBuyAtPrice = FocusNode();
   Timer? _debounce;
+  bool _isValidAmount = false;
 
   @override
   void initState() {
@@ -114,13 +115,14 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         leading: IconButton(
-    icon: const Icon(
-      Icons.arrow_back,
-      color: Colors.white,
-    ),
-    onPressed: () {
-      Navigator.pop(context);
-    },),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         backgroundColor: const Color(0xff171919),
         elevation: 0,
         title: Text(
@@ -184,19 +186,24 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                             fontSize: 48,
                             fontWeight: FontWeight.bold,
                           ),
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: "1.00",
-                            hintStyle: TextStyle(color: Colors.white24),
+                            hintStyle: const TextStyle(color: Colors.white24),
                             border: InputBorder.none,
                             isDense: true,
                             contentPadding: EdgeInsets.zero,
+                            //errorText: _isValidAmount ? null : 'Amount must be greater than zero', // 👈 Show error if invalid
                           ),
                           inputFormatters: [
-                            AmountInputFormatter(
-                              maxDigits: 4, 
-                              decimalRange: 2
-                            ),
-                          ]
+                            AmountInputFormatter(maxDigits: 4, decimalRange: 2),
+                          ],
+                          onChanged: (value) {
+                            // Validate on each change
+                            final numValue = double.tryParse(value) ?? 0;
+                            setState(() {
+                              _isValidAmount = numValue > 0 && value.isNotEmpty;
+                            });
+                          },
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -209,7 +216,6 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                       ),
                     ],
                   ),
-        
                   Text(
                     "≈ IQD $calculatedValue",
                     style: GoogleFonts.inter(
@@ -218,24 +224,28 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-        
+
                   // Max grams you can buy (based on IQD balance)
                   goldPriceState.when(
                     data: (data) {
-                      final walletBalance = double.tryParse(
-                        mainStateWatchProvider
-                                .getHomeFeedResponse
-                                .payload
-                                ?.walletExists
-                                ?.moneyBalance
-                                ?.toString() ??
-                            '0',
-                      ) ?? 0.0;
-                      final pricePerGram = isBuyAtPriceStatus &&
+                      final walletBalance =
+                          double.tryParse(
+                            mainStateWatchProvider
+                                    .getHomeFeedResponse
+                                    .payload
+                                    ?.walletExists
+                                    ?.moneyBalance
+                                    ?.toString() ??
+                                '0',
+                          ) ??
+                          0.0;
+                      final pricePerGram =
+                          isBuyAtPriceStatus &&
                               buyAtPriceController.text.isNotEmpty
                           ? (double.tryParse(
-                                  buyAtPriceController.text.trim()) ??
-                              0.0)
+                                  buyAtPriceController.text.trim(),
+                                ) ??
+                                0.0)
                           : data.oneGramBuyingPriceInIQD;
                       final maxGrams = pricePerGram > 0
                           ? (walletBalance / pricePerGram)
@@ -255,14 +265,14 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     loading: () => const SizedBox.shrink(),
                     error: (_, __) => const SizedBox.shrink(),
                   ),
-        
+
                   const SizedBox(height: 35),
-        
+
                   // Current Market Price Display
                   _buildPriceCard(goldPriceState),
-        
+
                   const SizedBox(height: 25),
-        
+
                   // Conditional Target Price Input
                   if (isBuyAtPriceStatus) ...[
                     Text(
@@ -278,24 +288,34 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     const SizedBox(height: 10),
                     Text(
                       "Your order will execute when the price reaches IQD ${buyAtPriceController.text.isEmpty ? '0.00' : buyAtPriceController.text}",
-                      style: GoogleFonts.inter(color: Colors.grey, fontSize: 12),
+                      style: GoogleFonts.inter(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
                     ),
                   ],
-        
+
                   // const Spacer(),
                   const SizedBox(height: 40),
-                  // Action Button with Full Logic
                   Align(
-  alignment: Alignment.bottomCenter,
-  child: LoaderButton(
-    title: AppLocalizations.of(context)!.buy_gold,
-    isLoadingState: tradeStateWatchProvider.isButtonState,
-    onTap: () => _onTradeButtonTap(
-      mainStateWatchProvider,
-      tradeStateWatchProvider,
-    ),
-  ),
-),
+                    alignment: Alignment.bottomCenter,
+                    child: AbsorbPointer(
+                      absorbing: !_isValidAmount, // 👈 Absorb taps when invalid
+                      child: Opacity(
+                        opacity: _isValidAmount
+                            ? 1.0
+                            : 0.5, // 👈 Visually show disabled state
+                        child: LoaderButton(
+                          title: AppLocalizations.of(context)!.buy_gold,
+                          isLoadingState: tradeStateWatchProvider.isButtonState,
+                          onTap: () => _onTradeButtonTap(
+                            mainStateWatchProvider,
+                            tradeStateWatchProvider,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   //const SizedBox(height: 40),
                 ],
               ),
@@ -526,11 +546,8 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
-        AmountInputFormatter(
-          maxDigits: 6,
-          decimalRange: 2
-        ),
-      ]
+        AmountInputFormatter(maxDigits: 6, decimalRange: 2),
+      ],
     );
   }
 

@@ -41,11 +41,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   bool _hasSubmitted = false;
 
   final List<String> amountOptions = [
-    "1m IQD",
-    "2m IQD",
-    "3m IQD",
-    "4m IQD",
-    "5m IQD",
+    "1M IQD",
+    "2M IQD",
+    "3M IQD",
+    "4M IQD",
+    "5M IQD",
   ];
 
   @override
@@ -433,6 +433,40 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             items: amountOptions,
                             value: selectedAmount,
                             hineClr: AppColors.whiteColor,
+                            // onChanged: (value) {
+                            //   setState(() {
+                            //     selectedAmount = value;
+                            //     print(
+                            //       "Raw value from dropdown: $value (${value.runtimeType})",
+                            //     );
+
+                            //     // Parse "1m IQD" -> 1000000, "5m IQD" -> 5000000, etc.
+                            //     // "m" is for display in UI; pass real amount to API
+                            //     final raw = value?.toString().trim() ?? "";
+                            //     final lower = raw.toLowerCase();
+                            //     if (lower.contains('m')) {
+                            //       // Extract number before 'm' (e.g. "5m IQD" -> 5)
+                            //       // final match = RegExp(r'(\d+(?:\.\d+)?)\s*m')
+                            //       //     .firstMatch(lower);
+
+                            //       final match = RegExp(r'(\d+(?:\.\d+)?)\s*[mM]')
+                            //       .firstMatch(raw);
+                            //       final n = match != null
+                            //           ? (double.tryParse(match.group(1) ?? '') ?? 0)
+                            //           : 0;
+                            //       amountDouble = n * 1000000;
+                            //     } else {
+                            //       amountDouble =
+                            //           double.tryParse(
+                            //                 raw.replaceAll(
+                            //                     RegExp(r'[^0-9.]'), ''),
+                            //               ) ??
+                            //               0.0;
+                            //     }
+
+                            //     print("deposit as double: $amountDouble");
+                            //   });
+                            // },
                             onChanged: (value) {
                               setState(() {
                                 selectedAmount = value;
@@ -440,24 +474,43 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   "Raw value from dropdown: $value (${value.runtimeType})",
                                 );
 
-                                // Parse "1m" -> 1000000, "2m" -> 2000000, etc.
+                                // Parse "1M IQD" -> 1000000, "5M IQD" -> 5000000, etc.
                                 final raw = value?.toString().trim() ?? "";
-                                if (raw.toLowerCase().endsWith('m')) {
-                                  final numStr = raw
-                                      .substring(0, raw.length - 1)
-                                      .replaceAll(RegExp(r'[^0-9.]'), '');
-                                  final n = double.tryParse(numStr) ?? 0;
+
+                                // Check for Million (M or m) - using case-insensitive flag
+                                if (RegExp(
+                                  r'm',
+                                  caseSensitive: false,
+                                ).hasMatch(raw)) {
+                                  // Extract number before 'M' (e.g. "5M IQD" -> 5)
+                                  final match = RegExp(
+                                    r'(\d+(?:\.\d+)?)\s*[mM]',
+                                  ).firstMatch(raw);
+                                  final n = match != null
+                                      ? (double.tryParse(
+                                              match.group(1) ?? '',
+                                            ) ??
+                                            0)
+                                      : 0;
                                   amountDouble = n * 1000000;
+                                  print(
+                                    "Parsed as Million: $n * 1,000,000 = $amountDouble",
+                                  );
                                 } else {
+                                  // Fallback to plain number
                                   amountDouble =
                                       double.tryParse(
-                                            raw.replaceAll(
-                                                RegExp(r'[^0-9.]'), ''),
-                                          ) ??
-                                          0.0;
+                                        raw.replaceAll(RegExp(r'[^0-9.]'), ''),
+                                      ) ??
+                                      0.0;
+                                  print(
+                                    "Parsed as plain number: $amountDouble",
+                                  );
                                 }
 
-                                print("deposit as double: $amountDouble");
+                                print(
+                                  "Final deposit amount for API: $amountDouble",
+                                );
                               });
                             },
 
@@ -469,18 +522,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                 : null,
                           )
                         : SizedBox.shrink(),
-                    ConstPadding.sizeBoxWithHeight(height: 10),
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.password_hint,
-                      // "Combine uppercase/lowercase letters, numbers and special characters.",
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.neutral90,
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 14,
-                        tabletVal: 16,
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 10),
+                    // ConstPadding.sizeBoxWithHeight(height: 10),
+                    // GetGenericText(
+                    //   text: AppLocalizations.of(context)!.password_hint,
+                    //   // "Combine uppercase/lowercase letters, numbers and special characters.",
+                    //   fontWeight: FontWeight.w400,
+                    //   color: AppColors.neutral90,
+                    //   fontSize: sizes!.responsiveFont(
+                    //     phoneVal: 14,
+                    //     tabletVal: 16,
+                    //   ),
+                    // ),
+                    ConstPadding.sizeBoxWithHeight(height: 20),
 
                     ButtonWidget(
                       title: AppLocalizations.of(

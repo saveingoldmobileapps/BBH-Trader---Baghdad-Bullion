@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/fund_screens/add_fund_screen.dart';
@@ -48,6 +49,9 @@ class _WithdrawFundScreenState
           .read(homeProvider.notifier)
           .getHomeFeed(context: context, showLoading: true);
       ref.read(withdrawProvider.notifier).fetchAllCards(context: context);
+      ref
+          .read(withdrawProvider.notifier)
+          .fetchWithdrawalFundsRequests(context: context);
     });
   }
 
@@ -131,6 +135,15 @@ class _WithdrawFundScreenState
   /// submit withdraw request
   Future<void> _submitWithdrawRequest() async {
     if (_formKey.currentState?.validate() ?? false) {
+      // Prevent new withdrawal when one is already pending
+      if (ref.read(withdrawProvider.notifier).hasPendingWithdrawal()) {
+        Toasts.getErrorToast(
+          gravity: ToastGravity.TOP,
+          text: AppLocalizations.of(context)!.withdraw_pending_block,
+        );
+        return;
+      }
+
       // Remove focus to close the keyboard
       FocusScope.of(context).unfocus();
       final Map<String, dynamic> withdrawRequestJson = {

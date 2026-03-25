@@ -1238,6 +1238,12 @@ abstract class AppLocalizations {
   /// **'Update Password'**
   String get update_password_title;
 
+  /// No description provided for @change_password_confirm_msg.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to change your password? You will need to use the new password for your next login.'**
+  String get change_password_confirm_msg;
+
   /// No description provided for @current_password.
   ///
   /// In en, this message translates to:
@@ -1733,7 +1739,7 @@ abstract class AppLocalizations {
   /// No description provided for @dep_only_direct_msg.
   ///
   /// In en, this message translates to:
-  /// **'Only direct transfer is available. For other payment methods, please contact us:\n\nPhone: +971504971269\nEmail: info@saveingold.ae'**
+  /// **'Only direct transfer is available. For other payment methods, please contact us:\n\nPhone: +971524378778\nEmail: mobileapp@baghdadbullionhouse.com'**
   String get dep_only_direct_msg;
 
   /// No description provided for @dep_amount_title.
@@ -2047,6 +2053,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to cancel this withdrawal request?'**
   String get sure_to_cancel_withdraw;
+
+  /// No description provided for @withdraw_pending_block.
+  ///
+  /// In en, this message translates to:
+  /// **'You have a pending withdrawal request. Please wait for it to be processed or cancel it before creating a new one.'**
+  String get withdraw_pending_block;
 
   /// No description provided for @sure_want_to_delete_account_detail.
   ///

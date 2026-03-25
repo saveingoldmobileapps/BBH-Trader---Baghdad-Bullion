@@ -709,6 +709,7 @@ Future<void> showConfirmTradeDialog({
                           ),
                         ],
                       ),
+                     isLimitOrder? Divider(color: Colors.white,height: 2,):SizedBox(),
                       // 2. Visual Timer Badge
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -734,7 +735,8 @@ Future<void> showConfirmTradeDialog({
                   ),
 
                   const SizedBox(height: 14),
-
+                  isLimitOrder?Divider(color: Colors.white.withOpacity(0.2), height: 1):SizedBox(),
+                  isLimitOrder?const SizedBox(height: 14):SizedBox(),
                   /// Badge
                   if (isLimitOrder)
                     Container(
@@ -764,9 +766,17 @@ Future<void> showConfirmTradeDialog({
 
                   /// Details
                   _tradeDetailRow("Amount", "$amountGrams grams"),
+                  isLimitOrder?const SizedBox(height: 14):SizedBox(),
+                  isLimitOrder?Divider(color: Colors.white.withOpacity(0.2), height: 1):SizedBox(),
+                  isLimitOrder?const SizedBox(height: 14):SizedBox(),
                   if (isLimitOrder)
                     _tradeDetailRow("Target Price", "IQD $targetPrice / gram"),
+                   isLimitOrder? const SizedBox(height: 14):SizedBox(),
+                   isLimitOrder? Divider(color: Colors.white.withOpacity(0.2), height: 1):SizedBox(),
+                   isLimitOrder? const SizedBox(height: 14):SizedBox(),
                   _tradeDetailRow("Est. Total Cost", "IQD $totalCost"),
+                  isLimitOrder?const SizedBox(height: 14):SizedBox(),
+                  isLimitOrder? Divider(color: Colors.white.withOpacity(0.2), height: 1):SizedBox(),
 
                   const SizedBox(height: 14),
 
@@ -796,20 +806,24 @@ Future<void> showConfirmTradeDialog({
                   Row(
                     children: [
                       Expanded(
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Color(0xff3c3e3e)),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                        
+                        child: SizedBox(
+                          height: 48,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(color: Color(0xff3c3e3e)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
                             ),
-                          ),
-                          onPressed: () {
-                            timer?.cancel();
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            "Cancel",
-                            style: TextStyle(color: Colors.white70),
+                            onPressed: () {
+                              timer?.cancel();
+                              Navigator.pop(context);
+                            },
+                            child: const Text(
+                              "Cancel",
+                              style: TextStyle(color: Colors.white70),
+                            ),
                           ),
                         ),
                       ),

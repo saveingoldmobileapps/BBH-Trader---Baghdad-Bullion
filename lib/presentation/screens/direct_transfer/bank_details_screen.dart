@@ -396,7 +396,7 @@ class _BankDetailsScreenState extends ConsumerState<BankDetailsScreen> {
 
                         /// launch whatsapp
                         await CommonService.openWhatsappUrl(
-                          phoneNumber: "+971504971269",
+                          phoneNumber: "+97524378778",
                           message: message,
                         );
                       },
@@ -462,7 +462,7 @@ class _BankDetailsScreenState extends ConsumerState<BankDetailsScreen> {
                         //"Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this email. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.";
                         // Send via email
                         await CommonService.openEmailApp(
-                          emailAddress: "info@saveingold.ae",
+                          emailAddress: "mobileapp@baghdadbullionhouse.com",
                           subject: AppLocalizations.of(
                             context,
                           )!.email_url_title, //"Direct Bank Transfer Payment Receipt",

@@ -604,6 +604,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get update_password_title => 'Update Password';
 
   @override
+  String get change_password_confirm_msg =>
+      'Are you sure you want to change your password? You will need to use the new password for your next login.';
+
+  @override
   String get current_password => 'Enter Current Password';
 
   @override
@@ -858,7 +862,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dep_only_direct_msg =>
-      'Only direct transfer is available. For other payment methods, please contact us:\n\nPhone: +971504971269\nEmail: info@saveingold.ae';
+      'Only direct transfer is available. For other payment methods, please contact us:\n\nPhone: +971524378778\nEmail: mobileapp@baghdadbullionhouse.com';
 
   @override
   String get dep_amount_title => 'Deposit Amount';
@@ -1021,6 +1025,10 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get sure_to_cancel_withdraw =>
       'Are you sure you want to cancel this withdrawal request?';
+
+  @override
+  String get withdraw_pending_block =>
+      'You have a pending withdrawal request. Please wait for it to be processed or cancel it before creating a new one.';
 
   @override
   String get sure_want_to_delete_account_detail =>

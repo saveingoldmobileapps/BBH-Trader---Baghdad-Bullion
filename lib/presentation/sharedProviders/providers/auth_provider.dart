@@ -1838,6 +1838,7 @@ class Auth extends _$Auth {
             serverResponse.resultData,
           );
 
+          setButtonState(false);
           Toasts.getSuccessToast(
             gravity: ToastGravity.TOP,
             text: "${successResponse.payload?.message.toString()}",
@@ -1851,11 +1852,11 @@ class Auth extends _$Auth {
             MaterialPageRoute(builder: (context) => const LoginScreen()),
             ((route) => false),
           );
-          setButtonState(false);
 
           break;
 
         case ServerResponseType.error:
+          setButtonState(false);
           ErrorResponse errorResponse = ErrorResponse.fromJson(
             serverResponse.resultData,
           );
@@ -1870,7 +1871,12 @@ class Auth extends _$Auth {
           break;
 
         case ServerResponseType.exception:
+          setButtonState(false);
           getLocator<Logger>().e("Exception: ${serverResponse.resultData}");
+          Toasts.getErrorToast(
+            gravity: ToastGravity.TOP,
+            text: "Something went wrong. Please try again.",
+          );
           break;
       }
     } catch (e, stackTrace) {

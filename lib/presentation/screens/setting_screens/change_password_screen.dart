@@ -122,6 +122,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     )!.current_password, //"Enter Current Password",
                     controller: currentPasswordController,
                     textInputType: TextInputType.text,
+                    obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(
@@ -154,6 +155,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     )!.new_password, //"New Password",
                     controller: newPasswordController,
                     textInputType: TextInputType.text,
+                    obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(
@@ -190,6 +192,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     )!.confirm_password, //"Confirm Password",
                     controller: confirmPasswordController,
                     textInputType: TextInputType.text,
+                    obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(
@@ -219,11 +222,26 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                       FocusScope.of(context).unfocus();
                       setState(() => _hasSubmitted = true);
                       if (_formKey.currentState?.validate() ?? false) {
-                        /// update password
-                        await authStateReadProvider.updatePassword(
+                        /// show confirmation before changing password
+                        await genericPopUpWidget(
                           context: context,
-                          currentPassword: currentPasswordController.text,
-                          newPassword: newPasswordController.text,
+                          heading: AppLocalizations.of(context)!.confirmation,
+                          subtitle: AppLocalizations.of(context)!
+                              .change_password_confirm_msg,
+                          noButtonTitle: AppLocalizations.of(context)!.cancel,
+                          yesButtonTitle: AppLocalizations.of(context)!
+                              .update_password_title,
+                          isLoadingState: false,
+                          onNoPress: () => Navigator.pop(context),
+                          onYesPress: () async {
+                            Navigator.pop(context);
+                            await authStateReadProvider.updatePassword(
+                              context: context,
+                              currentPassword:
+                                  currentPasswordController.text,
+                              newPassword: newPasswordController.text,
+                            );
+                          },
                         );
                       }
                     },

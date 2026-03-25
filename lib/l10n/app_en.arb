@@ -230,6 +230,7 @@
 
   "@UpdatePasswordScreen": {},
   "update_password_title": "Update Password",
+  "change_password_confirm_msg": "Are you sure you want to change your password? You will need to use the new password for your next login.",
   "current_password": "Enter Current Password",
   "new_password": "New Password",
   "confirm_new_password": "Confirm Password",
@@ -320,7 +321,7 @@
   "dep_method_google": "Google Pay",
   "dep_fee_instantNote": "Instant Deposit, bank fees apply.",
   "dep_only_direct_title": "Contact Support",
-  "dep_only_direct_msg": "Only direct transfer is available. For other payment methods, please contact us:\n\nPhone: +971504971269\nEmail: info@saveingold.ae",
+  "dep_only_direct_msg": "Only direct transfer is available. For other payment methods, please contact us:\n\nPhone: +971524378778\nEmail: mobileapp@baghdadbullionhouse.com",
   "dep_amount_title": "Deposit Amount",
   "dep_min_amount_note": "Minimum deposit amount is IQD 100, charges will apply",
   "dep_dt_intro_title": "Direct Transfer",
@@ -376,6 +377,7 @@
   "failed_to_create_card":"Failed to update card",
   "failed_to_update_card":"Failed to create card",
   "sure_to_cancel_withdraw":"Are you sure you want to cancel this withdrawal request?",
+  "withdraw_pending_block": "You have a pending withdrawal request. Please wait for it to be processed or cancel it before creating a new one.",
   "sure_want_to_delete_account_detail": "Are you sure you want to delete your saved bank account details?",
   "gram_price_script": "Gram Price 1",
 

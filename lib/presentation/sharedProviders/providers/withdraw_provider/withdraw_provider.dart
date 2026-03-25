@@ -44,11 +44,22 @@ class Withdraw extends _$Withdraw {
     state = state.copyWith(cardLoadingState: loadingState);
   }
 
+  /// Returns true if user has any withdrawal request with Pending status
+  bool hasPendingWithdrawal() {
+    final withdrawals =
+        state.getAllWithdrawalFundsResponse.payload?.kAllWithdraws ?? [];
+    return withdrawals
+        .any((w) => w.status?.toLowerCase() == 'pending');
+  }
+
   /// create withdraw request
   Future<void> createWithdrawRequest({
     required Map<String, dynamic> json,
     required BuildContext context,
   }) async {
+    // Prevent multiple concurrent withdrawal requests
+    if (state.isLoading) return;
+
     try {
       state = state.copyWith(isLoading: true);
 

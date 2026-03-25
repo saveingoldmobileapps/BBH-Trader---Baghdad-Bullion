@@ -240,6 +240,7 @@
 
   "@UpdatePasswordScreen": {},
   "update_password_title": "تحديث كلمة المرور",
+  "change_password_confirm_msg": "هل أنت متأكد من تغيير كلمة المرور؟ ستحتاج إلى استخدام كلمة المرور الجديدة لتسجيل الدخول التالي.",
   "current_password": "أدخل كلمة المرور الحالية",
   "new_password": "كلمة المرور الجديدة",
   "confirm_new_password": "تأكيد كلمة المرور",
@@ -327,7 +328,7 @@
   "dep_method_google": "Google Pay",
   "dep_fee_instantNote": "إيداع فوري، تطبق رسوم البنك.",
   "dep_only_direct_title": "تواصل مع الدعم",
-  "dep_only_direct_msg": "التحويل المباشر متاح فقط. لطرق الدفع الأخرى، يرجى التواصل معنا:\n\nالهاتف: +971504971269\nالبريد الإلكتروني: info@saveingold.ae",
+  "dep_only_direct_msg": "التحويل المباشر متاح فقط. لطرق الدفع الأخرى، يرجى التواصل معنا:\n\nالهاتف: +971524378778\nالبريد الإلكتروني: mobileapp@baghdadbullionhouse.com",
   "dep_amount_title": "مبلغ الإيداع",
   "dep_min_amount_note": "الحد الأدنى للإيداع هو 100 الدينار العراقي، تطبق رسوم",
   "dep_dt_intro_title": "التحويل المباشر",
@@ -388,6 +389,7 @@
 
   "failed_to_create_card": "فشل في إنشاء البطاقة",
   "sure_to_cancel_withdraw": "هل أنت متأكد أنك تريد إلغاء طلب السحب هذا؟",
+  "withdraw_pending_block": "لديك طلب سحب قيد الانتظار. يرجى انتظار معالجته أو إلغاؤه قبل إنشاء طلب جديد.",
   "sure_want_to_delete_account_detail": "هل أنت متأكد أنك تريد حذف تفاصيل الحساب البنكي المحفوظة؟.",
 
 

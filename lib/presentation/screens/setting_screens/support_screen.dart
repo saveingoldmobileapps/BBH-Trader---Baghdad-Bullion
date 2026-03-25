@@ -113,7 +113,8 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           GestureDetector(
                             onTap: () async {
                               await CommonService.openEmailApp(
-                                emailAddress: "info@saveingold.ae",
+                                emailAddress: "mobileapp@baghdadbullionhouse.com"
+
                               );
                             },
                             child: GetGenericText(
@@ -176,7 +177,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           GestureDetector(
                             onTap: () async {
                               await CommonService.openEmailApp(
-                                emailAddress: "info@saveingold.ae",
+                                emailAddress: "mobileapp@baghdadbullionhouse.com",
                               );
                             },
                             child: GetGenericText(
@@ -248,7 +249,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           GestureDetector(
                             onTap: () async {
                               await CommonService.openCallingUrl(
-                                phoneNumber: "+971504971269",
+                                phoneNumber: "+971524378778",
                               );
                             },
                             child: GetGenericText(
@@ -311,7 +312,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           GestureDetector(
                             onTap: () async {
                               await CommonService.openCallingUrl(
-                                phoneNumber: "+971504971269",
+                                phoneNumber: "+971524378778",
                               );
                             },
                             child: GetGenericText(
@@ -386,7 +387,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           GestureDetector(
                             onTap: () async {
                               await CommonService.openWhatsappUrl(
-                                phoneNumber: "+971504971269",
+                                phoneNumber: "+971524378778",
                                 message:
                                     "Hello, I need an assistance from Baghdad Bullion House Team",
                               );
@@ -453,7 +454,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           GestureDetector(
                             onTap: () async {
                               await CommonService.openWhatsappUrl(
-                                phoneNumber: "+971504971269",
+                                phoneNumber: "+971524378778",
                                 message:
                                     "Hello, I need an assistance from Baghdad Bullion House Team",
                               );

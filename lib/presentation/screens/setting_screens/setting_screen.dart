@@ -156,295 +156,303 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
           color: AppColors.greyScale1000,
         ),
         child: SafeArea(
+          bottom: true,
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                ConstPadding.sizeBoxWithHeight(height: 12),
-                BuildSettingCard(
-                  title: AppLocalizations.of(
-                    context,
-                  )!
-                      .personalInfo_title, //"Personal Information",
-                  subtitle: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_personal_info_desc, //"Manage your personal details and preferences.",
-                  iconString: "assets/svg/user_icon.svg",
-                  onTap: () async {
-                    final isDemo =
-                        await LocalDatabase.instance.getIsDemo() ?? false;
 
-                    // if (isDemo) {
-                    //   if (!context.mounted) return;
-                    //   await genericPopUpWidget(
-                    //     isLoadingState: false,
-                    //     context: context,
-                    //     heading: AppLocalizations.of(context)!.upgrade_real_account_title,
-                    //         //"Upgrade to Real Account", //"Real Account Required",
-                    //     subtitle: AppLocalizations.of(context)!.upgrade_real_account_msg,
-                    //     // "This feature requires a verified real account. "
-                    //     // "Please convert your demo account to a real account to access all features.",
-                    //     noButtonTitle: AppLocalizations.of(context)!.upgrade_real_account_later,//"Not Now",
-                    //     yesButtonTitle: AppLocalizations.of(context)!.upgrade_real_account_now, //"Upgrade Now",
-                    //     onNoPress: () async {
-                    //       Navigator.pop(context);
-                    //     },
-                    //     onYesPress: () async {
-                    //       // All verifications passed
-
-                    //       Navigator.pop(context);
-                    //       Navigator.push(
-                    //         context,
-                    //         MaterialPageRoute(
-                    //           builder: (context) => const SettingScreen(),
-                    //         ),
-                    //       );
-                    //     },
-                    //   );
-                    //   return;
-                    // }
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditPersonalInfoScreen(),
-                      ),
-                    );
-                  },
-                  isSecondIcon: false,
-                ),
-                // _isRealAccount ? SizedBox.shrink() :
-                _buildDivider(),
-                BuildSettingCard(
-                  title: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_language, //"Language Settings",
-                  subtitle: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_language_desc, //"Select your preferred language for the app.",
-                  iconString: "assets/svg/lang_icon.svg",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LanguageScreen(),
-                      ),
-                    );
-                  },
-                  isSecondIcon: false,
-                ),
-                _isRealAccount ? SizedBox.shrink() : _buildDivider(),
-                _isRealAccount
-                    ? SizedBox.shrink()
-                    : SwitchAccountCard(
-                        title: AppLocalizations.of(
-                          context,
-                        )!
-                            .settings_switch, //"Switch",
-                        subtitle: AppLocalizations.of(
-                          context,
-                        )!
-                            .settings_switch_desc, //"Switch Demo user to Real",
-                        iconString: "assets/svg/user_icon.svg",
-                        isSecondIcon: true,
-                        initialSwitchValue: _isRealAccount,
-                        onTap: () {
-                          debugPrint("Switch card tapped");
-                        },
-                        onToggleChanged: _onToggleChanged,
-                      ),
-                if (!Platform.isAndroid) _buildDivider(),
-                if (Platform.isIOS)
-                  BuildSettingCard(
-                    title: AppLocalizations.of(context)!.faceid_enable,//"Enable Face ID",
-                    subtitle: AppLocalizations.of(context)!.faceid_desc,//"Use Face ID for quick and secure access.",
-                    iconString: "assets/svg/faceId_icon.svg",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const FaceIDScreen(),
-                        ),
-                      );
-                    },
-                    isSecondIcon: true,
-                  ),
-                  if (!Platform.isIOS) _buildDivider(),
-                //if (CommonService.hasFingerHardWare == true) 
-                //_buildDivider(),
-                // if (CommonService.hasFingerHardWare == true)
-                  if (Platform.isAndroid)
+    physics: const BouncingScrollPhysics(),
+            child: Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewPadding.bottom + 20,),
+              child: Column(
+                children: [
+                  ConstPadding.sizeBoxWithHeight(height: 12),
                   BuildSettingCard(
                     title: AppLocalizations.of(
                       context,
                     )!
-                        .settings_biometric, //"Enable Biometric Login",
+                        .personalInfo_title, //"Personal Information",
                     subtitle: AppLocalizations.of(
                       context,
                     )!
-                        .settings_biometric_desc, //"Log in securely using Touch ID or fingerprint."
-                    iconString: "assets/svg/fingerprint_icon.svg",
+                        .settings_personal_info_desc, //"Manage your personal details and preferences.",
+                    iconString: "assets/svg/user_icon.svg",
+                    onTap: () async {
+                      final isDemo =
+                          await LocalDatabase.instance.getIsDemo() ?? false;
+              
+                      // if (isDemo) {
+                      //   if (!context.mounted) return;
+                      //   await genericPopUpWidget(
+                      //     isLoadingState: false,
+                      //     context: context,
+                      //     heading: AppLocalizations.of(context)!.upgrade_real_account_title,
+                      //         //"Upgrade to Real Account", //"Real Account Required",
+                      //     subtitle: AppLocalizations.of(context)!.upgrade_real_account_msg,
+                      //     // "This feature requires a verified real account. "
+                      //     // "Please convert your demo account to a real account to access all features.",
+                      //     noButtonTitle: AppLocalizations.of(context)!.upgrade_real_account_later,//"Not Now",
+                      //     yesButtonTitle: AppLocalizations.of(context)!.upgrade_real_account_now, //"Upgrade Now",
+                      //     onNoPress: () async {
+                      //       Navigator.pop(context);
+                      //     },
+                      //     onYesPress: () async {
+                      //       // All verifications passed
+              
+                      //       Navigator.pop(context);
+                      //       Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //           builder: (context) => const SettingScreen(),
+                      //         ),
+                      //       );
+                      //     },
+                      //   );
+                      //   return;
+                      // }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditPersonalInfoScreen(),
+                        ),
+                      );
+                    },
+                    isSecondIcon: false,
+                  ),
+                  // _isRealAccount ? SizedBox.shrink() :
+                  _buildDivider(),
+                  BuildSettingCard(
+                    title: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_language, //"Language Settings",
+                    subtitle: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_language_desc, //"Select your preferred language for the app.",
+                    iconString: "assets/svg/lang_icon.svg",
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const BiometricScreen(),
+                          builder: (context) => const LanguageScreen(),
                         ),
                       );
                     },
-                    isSecondIcon: true,
+                    isSecondIcon: false,
                   ),
-                _buildDivider(),
-                BuildSettingCard(
-                  title: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_timezone, //"Timezone",
-                  subtitle: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_timezone_desc, //"Adjust your timezone to match your location.",
-                  iconString: "assets/svg/timezone_icon.svg",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TimezoneScreen(),
-                      ),
-                    );
-                  },
-                  isSecondIcon: false,
-                ),
-                _buildDivider(),
-                BuildSettingCard(
-                  title: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_password, //"Password Settings",
-                  subtitle: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_password_desc, //"Update or change your account password.",
-                  iconString: "assets/svg/password_icon.svg",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ChangePasswordScreen(),
-                      ),
-                    );
-                  },
-                  isSecondIcon: false,
-                ),
-                _buildDivider(),
-                BuildSettingCard(
-                  title: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_delete, //"Delete Account",
-                  subtitle: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_delete_desc, //"Delete your account",
-                  iconString: "assets/svg/user_icon.svg",
-                  onTap: () async {
-                    await genericPopUpWidget(
-                      context: context,
-                      heading: AppLocalizations.of(
-                        context,
-                      )!
-                          .settings_delete, //"Delete Account",
-                      // subtitle: //AppLocalizations.of(context)!.settings_delete,
-                      //     "Warning: Deleting your account is permanent. All of your data will be permanently erased and cannot be restored. Are you sure you want to continue?",
-                      // noButtonTitle: "Cancel",
-                      // yesButtonTitle: "Delete Account",
-                      subtitle: //AppLocalizations.of(context)!.settings_delete,
-                          AppLocalizations.of(
-                        context,
-                      )!
-                              .delete_account_warning,
-                      noButtonTitle: AppLocalizations.of(context)!.cancel,
-                      yesButtonTitle: AppLocalizations.of(
-                        context,
-                      )!
-                          .delete_account_title,
-                      isLoadingState: ref.watch(authProvider).isButtonState,
-                      onNoPress: () {
-                        Navigator.pop(context);
+                  _isRealAccount ? SizedBox.shrink() : _buildDivider(),
+                  _isRealAccount
+                      ? SizedBox.shrink()
+                      : SwitchAccountCard(
+                          title: AppLocalizations.of(
+                            context,
+                          )!
+                              .settings_switch, //"Switch",
+                          subtitle: AppLocalizations.of(
+                            context,
+                          )!
+                              .settings_switch_desc, //"Switch Demo user to Real",
+                          iconString: "assets/svg/user_icon.svg",
+                          isSecondIcon: true,
+                          initialSwitchValue: _isRealAccount,
+                          onTap: () {
+                            debugPrint("Switch card tapped");
+                          },
+                          onToggleChanged: _onToggleChanged,
+                        ),
+                  if (!Platform.isAndroid) _buildDivider(),
+                  if (Platform.isIOS)
+                    BuildSettingCard(
+                      title: AppLocalizations.of(context)!.faceid_enable,//"Enable Face ID",
+                      subtitle: AppLocalizations.of(context)!.faceid_desc,//"Use Face ID for quick and secure access.",
+                      iconString: "assets/svg/faceId_icon.svg",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const FaceIDScreen(),
+                          ),
+                        );
                       },
-                      onYesPress: () async {
-                        /// delete user account
-                        await ref.read(authProvider.notifier).deleteUserAccount(
-                              context: context,
-                            );
-                        await LocalDatabase.instance.clearAllUserData();
-                      },
-                    );
-                  },
-                  isSecondIcon: false,
-                ),
-                _buildDivider(),
-                BuildSettingCard(
-                  title: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_logout, //"Logout",
-                  subtitle: AppLocalizations.of(
-                    context,
-                  )!
-                      .settings_logout_desc, //"Sign out of your account securely.",
-                  iconString: "assets/svg/logout_color_icon.svg",
-                  onTap: () async {
-                    final userId = await LocalDatabase.instance
-                        .getUserId(); // pre-fetch here
-
-                    if (!context.mounted) return;
-
-                    await genericPopUpWidget(
-                      context: context,
-                      heading: AppLocalizations.of(
+                      isSecondIcon: true,
+                    ),
+                    if (!Platform.isIOS) _buildDivider(),
+                  //if (CommonService.hasFingerHardWare == true) 
+                  //_buildDivider(),
+                  // if (CommonService.hasFingerHardWare == true)
+                    if (Platform.isAndroid)
+                    BuildSettingCard(
+                      title: AppLocalizations.of(
                         context,
                       )!
-                          .logout_popup_title, //"Are you sure you want to logout?",
+                          .settings_biometric, //"Enable Biometric Login",
                       subtitle: AppLocalizations.of(
                         context,
                       )!
-                          .logout_popup_desc, //"You will be logged out of your account.",
-                      noButtonTitle: AppLocalizations.of(
-                        context,
-                      )!
-                          .logout_no, //"NO",
-                      yesButtonTitle: AppLocalizations.of(
-                        context,
-                      )!
-                          .logout_yes, //"YES",
-                      isLoadingState: false,
-                      onNoPress: () {
-                        Navigator.pop(context);
-                      },
-                      onYesPress: () async {
-                        await authStateReadProvider.logoutUser(
-                          context: context,
-                          userId: userId!,
+                          .settings_biometric_desc, //"Log in securely using Touch ID or fingerprint."
+                      iconString: "assets/svg/fingerprint_icon.svg",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const BiometricScreen(),
+                          ),
                         );
                       },
-                    );
-                  },
-                  isSecondIcon: false,
-                ),
-                _buildDivider(),
-
-                GetGenericText(
-                  text:
-                      "Version $appVersion-${environment == "production" ? "live" : "staging"}",
-                  // "v1.0.0-${environment == "production" ? "live" : "staging"}",
-                  fontSize: sizes!.responsiveFont(phoneVal: 11, tabletVal: 13),
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.grey3Color,
-                ),
-              ],
-            ).get16HorizontalPadding(),
+                      isSecondIcon: true,
+                    ),
+                  _buildDivider(),
+                  BuildSettingCard(
+                    title: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_timezone, //"Timezone",
+                    subtitle: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_timezone_desc, //"Adjust your timezone to match your location.",
+                    iconString: "assets/svg/timezone_icon.svg",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TimezoneScreen(),
+                        ),
+                      );
+                    },
+                    isSecondIcon: false,
+                  ),
+                  _buildDivider(),
+                  BuildSettingCard(
+                    title: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_password, //"Password Settings",
+                    subtitle: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_password_desc, //"Update or change your account password.",
+                    iconString: "assets/svg/password_icon.svg",
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ChangePasswordScreen(),
+                        ),
+                      );
+                    },
+                    isSecondIcon: false,
+                  ),
+                  _buildDivider(),
+                  BuildSettingCard(
+                    title: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_delete, //"Delete Account",
+                    subtitle: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_delete_desc, //"Delete your account",
+                    iconString: "assets/svg/user_icon.svg",
+                    onTap: () async {
+                      await genericPopUpWidget(
+                        context: context,
+                        heading: AppLocalizations.of(
+                          context,
+                        )!
+                            .settings_delete, //"Delete Account",
+                        // subtitle: //AppLocalizations.of(context)!.settings_delete,
+                        //     "Warning: Deleting your account is permanent. All of your data will be permanently erased and cannot be restored. Are you sure you want to continue?",
+                        // noButtonTitle: "Cancel",
+                        // yesButtonTitle: "Delete Account",
+                        subtitle: //AppLocalizations.of(context)!.settings_delete,
+                            AppLocalizations.of(
+                          context,
+                        )!
+                                .delete_account_warning,
+                        noButtonTitle: AppLocalizations.of(context)!.cancel,
+                        yesButtonTitle: AppLocalizations.of(
+                          context,
+                        )!
+                            .delete_account_title,
+                        isLoadingState: ref.watch(authProvider).isButtonState,
+                        onNoPress: () {
+                          Navigator.pop(context);
+                        },
+                        onYesPress: () async {
+                          /// delete user account
+                          await ref.read(authProvider.notifier).deleteUserAccount(
+                                context: context,
+                              );
+                          await LocalDatabase.instance.clearAllUserData();
+                        },
+                      );
+                    },
+                    isSecondIcon: false,
+                  ),
+                  _buildDivider(),
+                  BuildSettingCard(
+                    title: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_logout, //"Logout",
+                    subtitle: AppLocalizations.of(
+                      context,
+                    )!
+                        .settings_logout_desc, //"Sign out of your account securely.",
+                    iconString: "assets/svg/logout_color_icon.svg",
+                    onTap: () async {
+                      final userId = await LocalDatabase.instance
+                          .getUserId(); // pre-fetch here
+              
+                      if (!context.mounted) return;
+              
+                      await genericPopUpWidget(
+                        context: context,
+                        heading: AppLocalizations.of(
+                          context,
+                        )!
+                            .logout_popup_title, //"Are you sure you want to logout?",
+                        subtitle: AppLocalizations.of(
+                          context,
+                        )!
+                            .logout_popup_desc, //"You will be logged out of your account.",
+                        noButtonTitle: AppLocalizations.of(
+                          context,
+                        )!
+                            .logout_no, //"NO",
+                        yesButtonTitle: AppLocalizations.of(
+                          context,
+                        )!
+                            .logout_yes, //"YES",
+                        isLoadingState: false,
+                        onNoPress: () {
+                          Navigator.pop(context);
+                        },
+                        onYesPress: () async {
+                          await authStateReadProvider.logoutUser(
+                            context: context,
+                            userId: userId!,
+                          );
+                        },
+                      );
+                    },
+                    isSecondIcon: false,
+                  ),
+                  _buildDivider(),
+              
+                  GetGenericText(
+                    text:
+                        "Version $appVersion-${environment == "production" ? "live" : "staging"}",
+                    // "v1.0.0-${environment == "production" ? "live" : "staging"}",
+                    fontSize: sizes!.responsiveFont(phoneVal: 11, tabletVal: 13),
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.grey3Color,
+                  ),
+                  ConstPadding.sizeBoxWithHeight(height: sizes!.heightRatio * 100),
+                ],
+              ).get16HorizontalPadding(),
+            ),
           ),
         ),
       ),

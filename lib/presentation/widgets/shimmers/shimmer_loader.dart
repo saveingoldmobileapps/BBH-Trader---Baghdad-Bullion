@@ -12,9 +12,10 @@ class ShimmerLoader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Container(
+      color: Colors.transparent,
       child: Shimmer.fromColors(
-        baseColor: Color(0xFF333333),
+        baseColor: const Color(0xFF333333),
         highlightColor: const Color(0xFFBBA473),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -22,7 +23,7 @@ class ShimmerLoader extends StatelessWidget {
             for (int i = 0; i < loop; i++) ...[
               ConstPadding.sizeBoxWithHeight(height: 8),
               Container(
-                width: sizes!.isPhone? sizes!.widthRatio * 318:sizes!.width,
+                width: sizes!.isPhone ? sizes!.widthRatio * 318 : sizes!.width,
                 height: sizes!.heightRatio * 60,
                 decoration: const BoxDecoration(
                   color: Color(0xFFBBA473),

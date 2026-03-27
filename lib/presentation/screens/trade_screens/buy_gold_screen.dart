@@ -717,7 +717,9 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       context: context,
       isLimitOrder: isBuyAtPriceStatus,
       amountGrams: userInputController.text.trim(),
-      targetPrice: buyAtPriceController.text,
+      targetPrice: isBuyAtPriceStatus
+          ? buyAtPriceController.text
+          : buyingPriceInOneGram.toStringAsFixed(2),
       totalCost: calculatedValue,
       onConfirm: () async {
         await ref

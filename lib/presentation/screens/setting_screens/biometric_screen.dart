@@ -130,6 +130,9 @@ class _ChangePasswordScreenState extends ConsumerState<BiometricScreen> {
                                 await LocalDatabase.instance.storeFingerEnable(
                                   isEnable: false,
                                 );
+                                await LocalDatabase.instance.storeFaceEnable(
+                                  isEnable: false,
+                                );
                               }
                             },
                           ),
@@ -161,6 +164,9 @@ class _ChangePasswordScreenState extends ConsumerState<BiometricScreen> {
                             Navigator.pop(context);
                             setState(() => isFaceID = false);
                             await LocalDatabase.instance.storeFingerEnable(
+                              isEnable: false,
+                            );
+                            await LocalDatabase.instance.storeFaceEnable(
                               isEnable: false,
                             );
                           },

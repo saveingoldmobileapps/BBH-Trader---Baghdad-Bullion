@@ -6,37 +6,47 @@ class ButtonWidget extends StatelessWidget {
     super.key,
     required this.title,
     required this.isLoadingState,
-    required this.onTap,
+    this.onTap,
+    this.enabled = true,
   });
 
   final String title;
   final bool isLoadingState;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
+    final bool isButtonEnabled = enabled && onTap != null;
+
     return Material(
-      color:
-          Colors.transparent, // Keep background transparent for custom gradient
+      color: Colors.transparent,
       child: Ink(
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment(1.00, 0.01),
-            end: Alignment(-1, -0.01),
-            colors: [
-              Color(0xFF74540E),
-              Color(0xFFB19454),
-            ],
-          ),
+          gradient: isButtonEnabled
+              ? const LinearGradient(
+                  begin: Alignment(1.00, 0.01),
+                  end: Alignment(-1, -0.01),
+                  colors: [
+                    Color(0xFF74540E),
+                    Color(0xFFB19454),
+                  ],
+                )
+              : LinearGradient(
+                  begin: const Alignment(1.00, 0.01),
+                  end: const Alignment(-1, -0.01),
+                  colors: [
+                    Colors.grey.withValues(alpha: 0.6),
+                    Colors.grey.withValues(alpha: 0.4),
+                  ],
+                ),
           borderRadius: BorderRadius.circular(10),
         ),
         child: InkWell(
-          onTap: onTap,
+          onTap: isButtonEnabled ? onTap : null,
           borderRadius: BorderRadius.circular(10),
           splashColor: Colors.grey.withValues(alpha: 0.3),
-          // Light grey ripple
           highlightColor: Colors.grey.withValues(alpha: 0.15),
-          // Tap down highlight
           child: Container(
             height: sizes!.responsiveLandscapeHeight(
               phoneVal: 56,

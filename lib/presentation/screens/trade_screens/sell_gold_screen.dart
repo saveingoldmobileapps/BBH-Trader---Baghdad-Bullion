@@ -404,27 +404,17 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                     debugPrint("inputAmount: $inputAmount");
 
                     // Confirmation popup
-                    await genericPopUpWidget(
+                    await showConfirmTradeDialog(
                       context: context,
-                      heading: "Confirmation",
-                      subtitle: isSellAtProfitStatus
-                          ? "Do you want to place this pending sell order?"
-                          : "Do you want to sell ${userInputController.text.trim()} gram${userInputController.text == '1' ? '' : 's'} of gold now?",
-                      noButtonTitle: "Cancel",
-                      yesButtonTitle: isSellAtProfitStatus
-                          ? "Place Order"
-                          : "Confirm Sale",
-                      isLoadingState: tradeStateWatchProvider.isButtonState,
-                      onNoPress: () async {
-                        Navigator.pop(context);
-                        _focusNode.unfocus();
-                        _focusSellAtPrice.unfocus();
-                      },
-                      onYesPress: () async {
-                        Navigator.pop(context);
-                        _focusNode.unfocus();
-                        _focusSellAtPrice.unfocus();
-
+                      isLimitOrder: isSellAtProfitStatus,
+                      amountGrams: userInputController.text.trim(),
+                      targetPrice: isSellAtProfitStatus
+                          ? sellAtProfitController.text.trim()
+                          : sellingPriceInOneGram.toStringAsFixed(2),
+                      totalCost: calculatedValue,
+                      title: "Confirm Sale",
+                      confirmButtonText: "Place Order",
+                      onConfirm: () async {
                         if (!context.mounted) return;
                         await ref
                             .read(tradeProvider.notifier)
@@ -446,7 +436,6 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                             )
                             .then((onValue) {
                               if (!context.mounted) return;
-                              inputAmount = 0.0;
                               userInputController.clear();
                               sellAtProfitController.clear();
                               calculatedValue = '0.000';
@@ -530,26 +519,15 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                     debugPrint("inputAmount: $inputAmount");
 
                     // Confirmation popup
-                    await genericPopUpWidget(
+                    await showConfirmTradeDialog(
                       context: context,
-                      heading: "Confirmation",
-                      subtitle: isSellAtProfitStatus
-                          ? "Do you want to place this pending sell order?"
-                          : "Do you want to sell ${userInputController.text} gram${userInputController.text == '1' ? '' : 's'} of gold now?",
-                      noButtonTitle: "Cancel",
-                      yesButtonTitle: isSellAtProfitStatus
-                          ? "Place Order"
-                          : "Confirm Sale",
-                      isLoadingState: tradeStateWatchProvider.isButtonState,
-                      onNoPress: () async {
-                        Navigator.pop(context);
-                        _focusNode.unfocus();
-                        _focusSellAtPrice.unfocus();
-                      },
-                      onYesPress: () async {
-                        Navigator.pop(context);
-                        _focusNode.unfocus();
-                        _focusSellAtPrice.unfocus();
+                      isLimitOrder: isSellAtProfitStatus,
+                      amountGrams: userInputController.text,
+                      targetPrice: sellingPriceInOneGram.toStringAsFixed(2),
+                      totalCost: calculatedValue,
+                      title: "Confirm Sale",
+                      confirmButtonText: "Confirm Sale",
+                      onConfirm: () async {
                         if (!context.mounted) return;
                         await ref
                             .read(tradeProvider.notifier)
@@ -571,7 +549,6 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                             )
                             .then((onValue) {
                               if (!context.mounted) return;
-                              inputAmount = 0.0;
                               userInputController.clear();
                               sellAtProfitController.clear();
                               sellAtProfitController.clear();

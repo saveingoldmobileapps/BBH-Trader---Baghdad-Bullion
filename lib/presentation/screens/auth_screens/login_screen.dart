@@ -67,12 +67,30 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     CountryCode(code: "AE", dialCode: "+971", flag: "assets/svg/ae_flag.svg"),
   ];
 
+  late final ValueNotifier<bool> _isFormValidNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _isFormValidNotifier = ValueNotifier<bool>(_isFormValid());
+
+    void updateValidity() {
+      _isFormValidNotifier.value = _isFormValid();
+    }
+
+    phoneController.addListener(updateValidity);
+    emailController.addListener(updateValidity);
+    bankIdController.addListener(updateValidity);
+    passwordController.addListener(updateValidity);
+  }
+
   @override
   void dispose() {
     phoneController.dispose();
     emailController.dispose();
     bankIdController.dispose();
     passwordController.dispose();
+    _isFormValidNotifier.dispose();
     super.dispose();
   }
 
@@ -82,6 +100,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF0F0F0F),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -91,106 +110,124 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/png/bg_start.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: SafeArea(
-          top: false,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Form(
-              key: _formKey,
-              autovalidateMode: _hasSubmitted
-                  ? AutovalidateMode.onUserInteraction
-                  : AutovalidateMode.disabled,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: MediaQuery.of(context).padding.top + 60),
-
-                  Text(
-                    _selectedType == LoginType.bank
-                        ? "Bank login"
-                        : "Welcome back",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _getSubtitleText(),
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.6),
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  _buildInputSection(),
-
-                  const SizedBox(height: 20),
-
-                  ButtonWidget(
-                    title: _selectedType == LoginType.bank
-                        ? "Login"
-                        : "Continue",
-                    isLoadingState: authStateWatch.isButtonState,
-                    onTap: _handleLogin,
-                  ),
-
-                  _buildBiometricLoginIfAvailable(),
-
-                  const SizedBox(height: 20),
-                  _buildDivider(),
-                  const SizedBox(height: 20),
-
-                  if (_selectedType != LoginType.phone)
-                    _buildSecondaryButton(
-                      "Login with phone",
-                      () => setState(() => _selectedType = LoginType.phone),
-                    ),
-                  if (_selectedType != LoginType.email)
-                    _buildSecondaryButton(
-                      "Login with email",
-                      () => setState(() => _selectedType = LoginType.email),
-                    ),
-                  // if (_selectedType != LoginType.bank)
-                  //   _buildSecondaryButton(
-                  //     "Login with bank",
-                  //     () => setState(() => _selectedType = LoginType.bank),
-                  //   ),
-
-                  const SizedBox(height: 5),
-                  Center(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const RegisterScreen(),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'assets/png/bg_start.png',
+              fit: BoxFit.cover,
             ),
-          );
+          ),
+          SafeArea(
+            top: false,
+            bottom: false,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Form(
+                key: _formKey,
+                autovalidateMode: _hasSubmitted
+                    ? AutovalidateMode.onUserInteraction
+                    : AutovalidateMode.disabled,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).padding.top + 60),
+
+                    Text(
+                      _selectedType == LoginType.bank
+                          ? "Bank login"
+                          : "Welcome back",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _getSubtitleText(),
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.6),
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    _buildInputSection(),
+
+                    const SizedBox(height: 20),
+
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _isFormValidNotifier,
+                      builder: (context, isValid, child) {
+                        return ButtonWidget(
+                          title: _selectedType == LoginType.bank
+                              ? "Login"
+                              : "Continue",
+                          isLoadingState: authStateWatch.isButtonState,
+                          enabled: isValid,
+                          onTap: _handleLogin,
+                        );
                       },
-                      child: const Text(
-                        "I'm new to BBH",
-                        style: TextStyle(
-                          color: Color(0xFFC5A353),
-                          fontSize: 16,
+                    ),
+
+                    _buildBiometricLoginIfAvailable(),
+
+                    const SizedBox(height: 20),
+                    _buildDivider(),
+                    const SizedBox(height: 20),
+
+                    if (_selectedType != LoginType.phone)
+                      _buildSecondaryButton(
+                        "Login with phone",
+                        () {
+                          setState(() => _selectedType = LoginType.phone);
+                          _isFormValidNotifier.value = _isFormValid();
+                        },
+                      ),
+                    if (_selectedType != LoginType.email)
+                      _buildSecondaryButton(
+                        "Login with email",
+                        () {
+                          setState(() => _selectedType = LoginType.email);
+                          _isFormValidNotifier.value = _isFormValid();
+                        },
+                      ),
+
+                    // if (_selectedType != LoginType.bank)
+                    //   _buildSecondaryButton(
+                    //     "Login with bank",
+                    //     () => setState(() => _selectedType = LoginType.bank),
+                    //   ),
+                    const SizedBox(height: 5),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "I'm new to BBH",
+                          style: TextStyle(
+                            color: Color(0xFFC5A353),
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: MediaQuery.of(context).viewInsets.bottom + 20,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -565,6 +602,24 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         return "Enter your email to login";
       case LoginType.phone:
         return "Enter your phone number to login";
+    }
+  }
+
+  bool _isFormValid() {
+    final password = passwordController.text.trim();
+    if (password.isEmpty) return false;
+
+    switch (_selectedType) {
+      case LoginType.phone:
+        final phone = phoneController.text.trim();
+        final digitsOnly = phone.replaceAll(RegExp(r'[^0-9]'), '');
+        return digitsOnly.length >= 9;
+      case LoginType.email:
+        final email = emailController.text.trim();
+        return email.validateEmail();
+      case LoginType.bank:
+        final bankId = bankIdController.text.trim();
+        return bankId.isNotEmpty;
     }
   }
 

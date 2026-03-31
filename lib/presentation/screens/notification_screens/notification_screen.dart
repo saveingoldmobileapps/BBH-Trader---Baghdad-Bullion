@@ -51,18 +51,31 @@ class _NotificationScreenState extends ConsumerState<NotificationScreen> {
     }
 
     /// Match price (e.g. 544.23 AED, AED 544.23)
+    // final priceRegex = RegExp(
+    //   r'(AED|IQD)\s*(\d+(\.\d+)?)|(\d+(\.\d+)?)\s*(AED|IQD)',
+    //   caseSensitive: false,
+    // );
+    // final priceMatch = priceRegex.firstMatch(message);
+    // if (priceMatch != null) {
+    //   final currency = priceMatch.group(1) ?? priceMatch.group(6);
+    //   final amount = priceMatch.group(2) ?? priceMatch.group(4);
+    //   if (currency != null && amount != null) {
+    //     chips.add("$currency $amount");
+    //   }
+    // }
     final priceRegex = RegExp(
-      r'(AED|IQD)\s*(\d+(\.\d+)?)|(\d+(\.\d+)?)\s*(AED|IQD)',
-      caseSensitive: false,
-    );
-    final priceMatch = priceRegex.firstMatch(message);
-    if (priceMatch != null) {
-      final currency = priceMatch.group(1) ?? priceMatch.group(6);
-      final amount = priceMatch.group(2) ?? priceMatch.group(4);
-      if (currency != null && amount != null) {
-        chips.add("$currency $amount");
-      }
-    }
+  r'(AED|IQD)\s*(\d+(\.\d+)?)|(\d+(\.\d+)?)\s*(AED|IQD)',
+  caseSensitive: false,
+);
+
+final priceMatch = priceRegex.firstMatch(message);
+
+if (priceMatch != null) {
+  final amount = priceMatch.group(2) ?? priceMatch.group(4);
+  if (amount != null) {
+    chips.add("IQD $amount"); // 🔥 Force IQD
+  }
+}
 
     return chips;
   }

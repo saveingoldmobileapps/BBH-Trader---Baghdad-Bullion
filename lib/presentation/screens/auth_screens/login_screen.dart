@@ -57,13 +57,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
 
   CountryCode _selectedCountry = CountryCode(
-    code: "IR",
-    dialCode: "+98",
-    flag: "assets/svg/iran.png",
+    code: "IQ",
+    dialCode: "+964",
+    flag: "assets/svg/iraq.svg",
   );
 
   final List<CountryCode> _countries = [
-    CountryCode(code: "IR", dialCode: "+964", flag: "assets/svg/iraq.svg"),
+    CountryCode(code: "IQ", dialCode: "+964", flag: "assets/svg/iraq.svg"),
     CountryCode(code: "AE", dialCode: "+971", flag: "assets/svg/ae_flag.svg"),
   ];
 
@@ -252,7 +252,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       if (value == null || value.trim().isEmpty) {
                         return 'Please enter phone number';
                       }
-                      final digitsOnly = value.replaceAll(RegExp(r'[^0-9]'), '');
+                      final digitsOnly = value.replaceAll(
+                        RegExp(r'[^0-9]'),
+                        '',
+                      );
                       if (digitsOnly.length < 9) {
                         return 'Please enter a valid phone number';
                       }

@@ -304,6 +304,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             _buildPriceRow(
               label: "Buying at",
               price: data.oneGramBuyingPriceInIQD,
+              ouncePrice: data.oneOunceBuyingPriceInIQD,
               highLowPrice: data.lastHighBuyingPrice,
               isHigh: true,
             ),
@@ -313,6 +314,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             _buildPriceRow(
               label: "Selling at",
               price: data.oneGramSellingPriceInIQD,
+              ouncePrice: data.oneOunceSellingPriceInIQD,
               highLowPrice: data.lastLowSellingPrice,
               isHigh: false,
             ),
@@ -334,11 +336,13 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
   Widget _buildPriceRow({
     required String label,
     required double price,
+    required double ouncePrice,
     required double highLowPrice,
     required bool isHigh,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,11 +353,20 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              "IQD ${CommonService.formatPriceCompact(price)} / oz",
+              "IQD ${CommonService.formatPriceCompact(price)} / gram",
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              "Ounce: IQD ${CommonService.formatPriceCompact(ouncePrice)}",
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.5),
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ],

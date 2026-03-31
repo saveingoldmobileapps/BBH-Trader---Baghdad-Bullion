@@ -18,6 +18,8 @@ class HomeFeedWallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final amount = walletExists.moneyBalance ?? 0;
+    final isMillion = amount.abs() >= 1000000;
     return Container(
       width: sizes!.isPhone ? sizes!.widthRatio * 360 : sizes!.width,
       clipBehavior: Clip.antiAlias,
@@ -91,9 +93,9 @@ class HomeFeedWallet extends StatelessWidget {
                             : CommonService.formatGramForDisplay(
                                 walletExists.metalBalance,
                               ),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 42,
+                          fontSize: isMillion ? 22 : 42,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -127,15 +129,27 @@ class HomeFeedWallet extends StatelessWidget {
                       child: Text(
                         isHiddenBalance
                             ? "*****"
-                            : CommonService.formatIQDForDisplay(
-                                walletExists.moneyBalance,
-                              ),
-                        style: const TextStyle(
+                            : CommonService.formatIQDForDisplay(amount),
+                        style: TextStyle(
                           color: Colors.white,
-                          fontSize: 42,
+                          fontSize: isMillion
+                              ? 22
+                              : 42, // 👈 reduce size for millions
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+                      // Text(
+                      //   isHiddenBalance
+                      //       ? "*****"
+                      //       : CommonService.formatIQDForDisplay(
+                      //           walletExists.moneyBalance,
+                      //         ),
+                      //   style: const TextStyle(
+                      //     color: Colors.white,
+                      //     fontSize: 42,
+                      //     fontWeight: FontWeight.w600,
+                      //   ),
+                      // ),
                     ),
                     const SizedBox(width: 4),
                     const Text(

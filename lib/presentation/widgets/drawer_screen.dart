@@ -184,8 +184,12 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
 
                         _settingTile(
                           icon: "assets/svg/lock.svg",
-                          title: "Passcode Settings",
-                          subtitle: "Update or change your account passcode",
+                          title: AppLocalizations.of(
+                            context,
+                          )!.settings_password,
+                          subtitle: AppLocalizations.of(
+                            context,
+                          )!.settings_password_desc,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -198,8 +202,10 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
 
                         _settingTile(
                           icon: "assets/svg/profile_delete.svg",
-                          title: "Delete Account",
-                          subtitle: "Delete your account and all its data",
+                          title: AppLocalizations.of(context)!.settings_delete,
+                          subtitle: AppLocalizations.of(
+                            context,
+                          )!.settings_delete_desc,
                           isDanger: true,
                           onTap: () async {
                             await genericPopUpWidget(

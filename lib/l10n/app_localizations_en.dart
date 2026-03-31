@@ -453,7 +453,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get email_us_desc =>
-      'Need instant help? Start an Email Us with our team, available 24/7!';
+      'Need instant help? Start an Email Us with our team, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).';
 
   @override
   String get email_now => 'Email Now';
@@ -463,7 +463,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get call_us_desc =>
-      'Speak directly with one of our support representatives, available Monday to Saturday, 10:00 AM - 6:00 PM (UAE Time).';
+      'Speak directly with one of our support representatives, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).';
 
   @override
   String get call_now => 'Call Now';
@@ -473,7 +473,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get whatsapp_desc =>
-      'Message us on WhatsApp for quick and easy support, available 24/7.';
+      'Message us on WhatsApp for quick and easy support, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).';
 
   @override
   String get message_on_whatsapp => 'Message on Whatsapp';
@@ -576,14 +576,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get request_sent => 'The OTP sent successfully';
 
   @override
-  String get delete_account_title => 'Delete Account';
+  String get delete_account_title => 'Disable Account';
 
   @override
   String get delete_account_warning =>
-      'Warning: Deleting your account is permanent. All of your data will be permanently erased and cannot be restored. Are you sure you want to continue?';
+      'Warning: Disabling your account will restrict access. You can contact our support team to re-enable it. Are you sure you want to proceed?';
 
   @override
-  String get delete_account_btn => 'Delete Account';
+  String get delete_account_btn => 'Disable Account';
 
   @override
   String get delete_account_cancel => 'Cancel';
@@ -1764,10 +1764,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Update or change your account password.';
 
   @override
-  String get settings_delete => 'Delete Account';
+  String get settings_delete => 'Disable Account';
 
   @override
-  String get settings_delete_desc => 'Delete your account';
+  String get settings_delete_desc => 'Disable your account';
 
   @override
   String get settings_logout => 'Logout';

@@ -38,6 +38,9 @@ class SSEGoldPriceState {
   final double oneGramBuyingPriceInIQD;
   final double oneGramSellingPriceInIQD;
 
+  final double oneOunceBuyingPriceInIQD;
+  final double oneOunceSellingPriceInIQD;
+
   final bool isLoading;
 
   SSEGoldPriceState({
@@ -47,6 +50,8 @@ class SSEGoldPriceState {
     SuccessResponse? successResponse,
     this.oneGramBuyingPriceInIQD = 0.0,
     this.oneGramSellingPriceInIQD = 0.0,
+    this.oneOunceBuyingPriceInIQD = 0.0,
+    this.oneOunceSellingPriceInIQD = 0.0,
     this.oneOunceDollarSellingPrice = 0.0,
     this.oneOunceDollarBuyingPrice = 0.0,
     this.lastLowSellingPrice = 0.0,
@@ -243,6 +248,8 @@ Future<void> _startSSE({
                   dirham: IQD,
                   ounce: ounce,
                 ),
+                oneOunceBuyingPriceInIQD: buyingPx * IQD,
+                oneOunceSellingPriceInIQD: sellingPx * IQD,
                 getGoldPriceResponse: response,
               );
 

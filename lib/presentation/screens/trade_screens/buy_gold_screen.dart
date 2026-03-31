@@ -389,13 +389,27 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
               ),
               const SizedBox(height: 4),
               goldPriceState.when(
-                data: (data) => Text(
-                  "IQD ${data.oneGramBuyingPriceInIQD.toStringAsFixed(2)} / gram",
-                  style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
+                data: (data) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "IQD ${data.oneGramBuyingPriceInIQD.toStringAsFixed(2)} / gram",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      "Ounce: IQD ${CommonService.formatPriceCompact(data.oneOunceBuyingPriceInIQD)}",
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.5),
+                        fontSize: 11,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
                 ),
                 loading: () => const SizedBox(
                   height: 15,

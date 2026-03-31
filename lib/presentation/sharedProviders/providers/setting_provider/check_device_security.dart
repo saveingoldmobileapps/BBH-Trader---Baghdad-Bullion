@@ -147,7 +147,7 @@ class BiometricUtils {
     return false;
   }
 
-  // Entry point to ensure biometric or passcode is ready
+  // Entry point to ensure biometric or password is ready
   static Future<bool> checkAndEnableBiometric(BuildContext context) async {
     final bool ready = await _isBiometricReady();
     if (ready) {

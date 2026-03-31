@@ -87,7 +87,7 @@ class AmountTextFormField extends StatelessWidget {
             padding: const EdgeInsets.all(10.0),
             child: SizedBox(
               child: SvgPicture.asset(
-                "assets/svg/ae_flag.svg",
+                "assets/svg/iraq.svg",
                 height: sizes!.heightRatio * 18,
                 width: sizes!.widthRatio * 18,
               ),

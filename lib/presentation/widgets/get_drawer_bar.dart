@@ -167,7 +167,7 @@ class GetDrawerBar extends ConsumerWidget {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>  DrawerScreen(),
+                            builder: (context) => const DrawerScreen(),
                           ),
                         ),
                       ),

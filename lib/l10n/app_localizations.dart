@@ -953,7 +953,7 @@ abstract class AppLocalizations {
   /// No description provided for @email_us_desc.
   ///
   /// In en, this message translates to:
-  /// **'Need instant help? Start an Email Us with our team, available 24/7!'**
+  /// **'Need instant help? Start an Email Us with our team, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).'**
   String get email_us_desc;
 
   /// No description provided for @email_now.
@@ -971,7 +971,7 @@ abstract class AppLocalizations {
   /// No description provided for @call_us_desc.
   ///
   /// In en, this message translates to:
-  /// **'Speak directly with one of our support representatives, available Monday to Saturday, 10:00 AM - 6:00 PM (UAE Time).'**
+  /// **'Speak directly with one of our support representatives, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).'**
   String get call_us_desc;
 
   /// No description provided for @call_now.
@@ -989,7 +989,7 @@ abstract class AppLocalizations {
   /// No description provided for @whatsapp_desc.
   ///
   /// In en, this message translates to:
-  /// **'Message us on WhatsApp for quick and easy support, available 24/7.'**
+  /// **'Message us on WhatsApp for quick and easy support, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).'**
   String get whatsapp_desc;
 
   /// No description provided for @message_on_whatsapp.
@@ -1187,19 +1187,19 @@ abstract class AppLocalizations {
   /// No description provided for @delete_account_title.
   ///
   /// In en, this message translates to:
-  /// **'Delete Account'**
+  /// **'Disable Account'**
   String get delete_account_title;
 
   /// No description provided for @delete_account_warning.
   ///
   /// In en, this message translates to:
-  /// **'Warning: Deleting your account is permanent. All of your data will be permanently erased and cannot be restored. Are you sure you want to continue?'**
+  /// **'Warning: Disabling your account will restrict access. You can contact our support team to re-enable it. Are you sure you want to proceed?'**
   String get delete_account_warning;
 
   /// No description provided for @delete_account_btn.
   ///
   /// In en, this message translates to:
-  /// **'Delete Account'**
+  /// **'Disable Account'**
   String get delete_account_btn;
 
   /// No description provided for @delete_account_cancel.
@@ -3425,13 +3425,13 @@ abstract class AppLocalizations {
   /// No description provided for @settings_delete.
   ///
   /// In en, this message translates to:
-  /// **'Delete Account'**
+  /// **'Disable Account'**
   String get settings_delete;
 
   /// No description provided for @settings_delete_desc.
   ///
   /// In en, this message translates to:
-  /// **'Delete your account'**
+  /// **'Disable your account'**
   String get settings_delete_desc;
 
   /// No description provided for @settings_logout.

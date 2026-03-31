@@ -649,6 +649,9 @@ Future<void> showConfirmTradeDialog({
   required String targetPrice,
   required String totalCost,
   required Future<void> Function() onConfirm,
+  String title = "Confirm Trade",
+  String subtitle = "Review your order details",
+  String confirmButtonText = "Confirm Trade",
 }) async {
   Timer? timer;
   int remainingSeconds = 5; // 👈 5-second countdown
@@ -675,80 +678,107 @@ Future<void> showConfirmTradeDialog({
             backgroundColor: Colors.transparent,
             insetPadding: const EdgeInsets.symmetric(horizontal: 20),
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: const Color(0xFF1C1E1E),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white10),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// Header with Countdown
+                  /// Header (Title, Subtitle, Close & Timer)
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: GoogleFonts.inter(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              subtitle,
+                              style: GoogleFonts.inter(
+                                color: const Color(0xFF8E8E93),
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
                         children: [
-                          Text(
-                            "Confirm Trade",
-                            style: GoogleFonts.inter(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                          // Timer Badge
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: remainingSeconds <= 2
+                                  ? Colors.red.withOpacity(0.2)
+                                  : const Color(0xFFBBA473).withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: remainingSeconds <= 2
+                                    ? Colors.red
+                                    : const Color(0xFFBBA473),
+                                width: 1,
+                              ),
+                            ),
+                            child: Text(
+                              "00:0${remainingSeconds}s",
+                              style: GoogleFonts.inter(
+                                color: remainingSeconds <= 2
+                                    ? Colors.red
+                                    : const Color(0xFFBBA473),
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "Review your order details",
-                            style: GoogleFonts.inter(
+                          const SizedBox(width: 12),
+                          // Close Button
+                          GestureDetector(
+                            onTap: () {
+                              timer?.cancel();
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(
+                              Icons.close,
                               color: Colors.white54,
-                              fontSize: 12,
+                              size: 20,
                             ),
                           ),
                         ],
                       ),
-                     isLimitOrder? Divider(color: Colors.white,height: 2,):SizedBox(),
-                      // 2. Visual Timer Badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: remainingSeconds <= 2
-                              ? Colors.redAccent
-                              : const Color(0xFFBBA473),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          "00:0${remainingSeconds}s",
-                          style: GoogleFonts.inter(
-                            color: Colors.black,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
 
-                  const SizedBox(height: 14),
-                  isLimitOrder?Divider(color: Colors.white.withOpacity(0.2), height: 1):SizedBox(),
-                  isLimitOrder?const SizedBox(height: 14):SizedBox(),
+                  const SizedBox(height: 20),
+
                   /// Badge
-                  if (isLimitOrder)
+                  if (isLimitOrder) ...[
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFBBA473).withOpacity(0.15),
+                        color: const Color(0xFFBBA473).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(6),
                         border: Border.all(
-                          color: const Color(0xFFBBA473),
+                          color: const Color(0xFFBBA473).withOpacity(0.5),
                           width: 1,
                         ),
                       ),
@@ -761,108 +791,101 @@ Future<void> showConfirmTradeDialog({
                         ),
                       ),
                     ),
+                    const SizedBox(height: 20),
+                  ],
 
-                  const SizedBox(height: 18),
-
-                  /// Details
+                  /// Details Section
                   _tradeDetailRow("Amount", "$amountGrams grams"),
-                  isLimitOrder?const SizedBox(height: 14):SizedBox(),
-                  isLimitOrder?Divider(color: Colors.white.withOpacity(0.2), height: 1):SizedBox(),
-                  isLimitOrder?const SizedBox(height: 14):SizedBox(),
-                  if (isLimitOrder)
+                  const SizedBox(height: 12),
+                  const Divider(color: Colors.white10, height: 1),
+                  const SizedBox(height: 12),
+                  if (isLimitOrder) ...[
                     _tradeDetailRow("Target Price", "IQD $targetPrice / gram"),
-                   isLimitOrder? const SizedBox(height: 14):SizedBox(),
-                   isLimitOrder? Divider(color: Colors.white.withOpacity(0.2), height: 1):SizedBox(),
-                   isLimitOrder? const SizedBox(height: 14):SizedBox(),
+                    const SizedBox(height: 12),
+                    const Divider(color: Colors.white10, height: 1),
+                    const SizedBox(height: 12),
+                  ],
                   _tradeDetailRow("Est. Total Cost", "IQD $totalCost"),
-                  isLimitOrder?const SizedBox(height: 14):SizedBox(),
-                  isLimitOrder? Divider(color: Colors.white.withOpacity(0.2), height: 1):SizedBox(),
 
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 24),
 
                   /// Info box
-                  if (isLimitOrder)
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: const Color(0xff353030),
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.12),
-                        ),
-                      ),
-                      child: Text(
-                        "Your order will execute when gold reaches IQD $targetPrice. Price validity expires in $remainingSeconds seconds.",
-                        style: GoogleFonts.inter(
-                          color: Colors.white60,
-                          fontSize: 11,
-                        ),
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF141414),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      isLimitOrder
+                          ? "Your order will be executed when the gold price reaches IQD $targetPrice per gram. You'll be notified when this happens."
+                          : "Your trade will be executed immediately at the current market price of IQD ${targetPrice}. Ensure you have sufficient balance.",
+                      style: GoogleFonts.inter(
+                        color: const Color(0xFF8E8E93),
+                        fontSize: 12,
+                        height: 1.4,
                       ),
                     ),
+                  ),
 
-                  const SizedBox(height: 22),
+                  const SizedBox(height: 24),
 
                   /// Buttons
                   Row(
                     children: [
                       Expanded(
-                        
-                        child: SizedBox(
-                          height: 48,
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xff3c3e3e)),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+                        child: GestureDetector(
+                          onTap: () {
+                            timer?.cancel();
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF333333),
+                              borderRadius: BorderRadius.circular(12),
                             ),
-                            onPressed: () {
-                              timer?.cancel();
-                              Navigator.pop(context);
-                            },
-                            child: const Text(
-                              "Cancel",
-                              style: TextStyle(color: Colors.white70),
+                            child: Center(
+                              child: Text(
+                                "Cancel",
+                                style: GoogleFonts.inter(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: SizedBox(
-                          height: 48,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              timer?.cancel(); // 👈 Stop timer on confirm
-                              Navigator.pop(context);
-                              await onConfirm();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: EdgeInsets.zero,
-                              backgroundColor: Colors.transparent,
-                              shadowColor: Colors.transparent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                        child: GestureDetector(
+                          onTap: () async {
+                            timer?.cancel();
+                            Navigator.pop(context);
+                            await onConfirm();
+                          },
+                          child: Container(
+                            height: 48,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              gradient: const LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: [
+                                  AppColors.goldColor,
+                                  AppColors.goldDarkColor,
+                                  AppColors.goldColor,
+                                ],
+                                stops: [0.0, 0.6, 1.0],
                               ),
                             ),
-                            child: Ink(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xff917330),
-                                    Color(0xFF73530d),
-                                    Color(0xff917330),
-                                  ],
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "Confirm Trade",
-                                  style: GoogleFonts.inter(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                            child: Center(
+                              child: Text(
+                                confirmButtonText,
+                                style: GoogleFonts.inter(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -882,28 +905,26 @@ Future<void> showConfirmTradeDialog({
 }
 
 Widget _tradeDetailRow(String title, String value) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 6),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: GoogleFonts.inter(
-            color: Colors.white54,
-            fontSize: 13,
-          ),
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        title,
+        style: GoogleFonts.inter(
+          color: const Color(0xFF8E8E93),
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
         ),
-        Text(
-          value,
-          style: GoogleFonts.inter(
-            color: Colors.white,
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-          ),
+      ),
+      Text(
+        value,
+        style: GoogleFonts.inter(
+          color: Colors.white,
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }
 

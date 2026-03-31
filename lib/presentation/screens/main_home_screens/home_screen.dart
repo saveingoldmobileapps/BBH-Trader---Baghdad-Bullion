@@ -198,6 +198,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: AppColors.greyScale1000,
       extendBodyBehindAppBar: true,
       drawer: GetDrawerBar(
         onTap: () => _scaffoldKey.currentState!.openEndDrawer(),

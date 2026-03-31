@@ -45,7 +45,7 @@ extension LanguageListExtension on LanguageList {
       case LanguageList.english:
         return "assets/svg/uk_icon.svg";
       case LanguageList.arabic:
-        return "assets/svg/ae_icon.svg";
+        return "assets/svg/iraq.svg";
       // case LanguageList.russian:
       //   return "assets/svg/ru_icon.svg";
       // case LanguageList.hindi:
@@ -145,8 +145,9 @@ class Language extends _$Language {
   // }
 
   Future<void> toggleLanguage(BuildContext context) async {
-    final newLang =
-        state.languageCode == 'en' ? LanguageList.arabic : LanguageList.english;
+    final newLang = state.languageCode == 'en'
+        ? LanguageList.arabic
+        : LanguageList.english;
 
     // Save locally
     state = state.copyWith(
@@ -163,7 +164,11 @@ class Language extends _$Language {
     //     .write(key: Strings.kLanguageCode, value: newLang.localeCode);
     // await LocalDatabase.instance.read(key: Strings.kLanguageCode);
     // Call API to update server
-    updateLanguage(language: newLang.localeCode, context: context, isDashboard: true);
+    updateLanguage(
+      language: newLang.localeCode,
+      context: context,
+      isDashboard: true,
+    );
   }
 
   // set user language
@@ -171,13 +176,16 @@ class Language extends _$Language {
     state = state.copyWith(languageCode: code);
     CommonService.lang = code;
     await LocalDatabase.instance.write(key: Strings.kLanguageCode, value: code);
-    String savedcode =    await LocalDatabase.instance.read(key: Strings.kLanguageCode);
+    String savedcode = await LocalDatabase.instance.read(
+      key: Strings.kLanguageCode,
+    );
   }
 
   Future<void> updateLanguage({
     required String language,
     required BuildContext context,
-      required bool isDashboard}) async {
+    required bool isDashboard,
+  }) async {
     try {
       if (isDashboard) {
         setLanguage(code: language);

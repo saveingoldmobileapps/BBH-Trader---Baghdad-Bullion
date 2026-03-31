@@ -39,28 +39,10 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
         foregroundColor: Colors.white,
         centerTitle: false,
         titleSpacing: 0,
-        // title: GetGenericText(
-        //   text: AppLocalizations.of(context)!.biometric_title,
-        //   fontSize: sizes!.responsiveFont(phoneVal: 20, tabletVal: 24),
-        //   fontWeight: FontWeight.w400,
-        //   color: AppColors.grey6Color,
-        // ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Back Button
-          // Padding(
-          //   padding: const EdgeInsets.all(16),
-          //   child: GestureDetector(
-          //     onTap: () => Navigator.pop(context),
-          //     child: const Icon(
-          //       Icons.arrow_back_ios_new,
-          //       color: Colors.white,
-          //     ),
-          //   ),
-          // ),
-
           /// Profile Header
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -74,7 +56,7 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                     return SquircleProfileImage(
                       imagePath: imagePath,
                       size: 80,
-                      radius: 20, // 🔥 matches your example image
+                      radius: 20,
                     );
                   },
                 ),
@@ -146,139 +128,162 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
 
           const SizedBox(height: 24),
 
-          /// Menu Items
+          /// Menu Items with proper scrolling
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _settingTile(
-                  icon: "assets/svg/profile.svg",
-                  title: "Personal Information",
-                  subtitle: "Manage your personal details",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => EditPersonalInfoScreen(),
-                      ),
-                    );
-                  },
-                ),
-
-                _settingTile(
-                  icon: "assets/svg/language_circle.svg",
-                  title: "Language Settings",
-                  subtitle: "Select your preferred language",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const LanguageScreen(),
-                      ),
-                    );
-                  },
-                ),
-
-                if (Platform.isAndroid)
-                  _settingTile(
-                    icon: "assets/svg/finger_scan.svg",
-                    title: "Enable Biometric Login",
-                    subtitle: "Login securely using Touch ID or fingerprint",
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const BiometricScreen(),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        _settingTile(
+                          icon: "assets/svg/profile.svg",
+                          title: "Personal Information",
+                          subtitle: "Manage your personal details",
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => EditPersonalInfoScreen(),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+
+                        _settingTile(
+                          icon: "assets/svg/language_circle.svg",
+                          title: "Language Settings",
+                          subtitle: "Select your preferred language",
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const LanguageScreen(),
+                              ),
+                            );
+                          },
+                        ),
+
+                        if (Platform.isAndroid)
+                          _settingTile(
+                            icon: "assets/svg/finger_scan.svg",
+                            title: "Enable Biometric Login",
+                            subtitle:
+                                "Login securely using Touch ID or fingerprint",
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const BiometricScreen(),
+                                ),
+                              );
+                            },
+                          ),
+
+                        _settingTile(
+                          icon: "assets/svg/lock.svg",
+                          title: AppLocalizations.of(
+                            context,
+                          )!.settings_password,
+                          subtitle: AppLocalizations.of(
+                            context,
+                          )!.settings_password_desc,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ChangePasswordScreen(),
+                              ),
+                            );
+                          },
+                        ),
+
+                        _settingTile(
+                          icon: "assets/svg/profile_delete.svg",
+                          title: AppLocalizations.of(context)!.settings_delete,
+                          subtitle: AppLocalizations.of(
+                            context,
+                          )!.settings_delete_desc,
+                          isDanger: true,
+                          onTap: () async {
+                            await genericPopUpWidget(
+                              context: context,
+                              heading: AppLocalizations.of(
+                                context,
+                              )!.settings_delete,
+                              subtitle: AppLocalizations.of(
+                                context,
+                              )!.delete_account_warning,
+                              noButtonTitle: AppLocalizations.of(
+                                context,
+                              )!.cancel,
+                              yesButtonTitle: AppLocalizations.of(
+                                context,
+                              )!.delete_account_title,
+                              isLoadingState: ref
+                                  .watch(authProvider)
+                                  .isButtonState,
+                              onNoPress: () {
+                                Navigator.pop(context);
+                              },
+                              onYesPress: () async {
+                                await ref
+                                    .read(authProvider.notifier)
+                                    .deleteUserAccount(context: context);
+
+                                await LocalDatabase.instance.clearAllUserData();
+                              },
+                            );
+                          },
+                        ),
+
+                        _settingTile(
+                          icon: "assets/svg/logout.svg",
+                          title: "Logout",
+                          subtitle: "Log out of your account",
+                          isDanger: true,
+                          onTap: () async {
+                            final userId = await LocalDatabase.instance
+                                .getUserId();
+
+                            if (!context.mounted) return;
+                            await genericPopUpWidget(
+                              context: context,
+                              heading: AppLocalizations.of(
+                                context,
+                              )!.logout_popup_title,
+                              subtitle: AppLocalizations.of(
+                                context,
+                              )!.logout_popup_desc,
+                              noButtonTitle: AppLocalizations.of(
+                                context,
+                              )!.logout_no,
+                              yesButtonTitle: AppLocalizations.of(
+                                context,
+                              )!.logout_yes,
+                              isLoadingState: false,
+                              onNoPress: () {
+                                Navigator.pop(context);
+                              },
+                              onYesPress: () async {
+                                await authStateReadProvider.logoutUser(
+                                  context: context,
+                                  userId: userId!,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
 
-                _settingTile(
-                  icon: "assets/svg/lock.svg",
-                  title: "Passcode Settings",
-                  subtitle: "Update or change your account passcode",
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const ChangePasswordScreen(),
-                      ),
-                    );
-                  },
-                ),
-
-                _settingTile(
-                  icon: "assets/svg/profile_delete.svg",
-                  title: "Delete Account",
-                  subtitle: "Delete your account and all its data",
-                  isDanger: true,
-                  onTap: () async {
-                    await genericPopUpWidget(
-                      context: context,
-                      heading: AppLocalizations.of(
-                        context,
-                      )!.settings_delete,
-                      subtitle: AppLocalizations.of(
-                        context,
-                      )!.delete_account_warning,
-                      noButtonTitle: AppLocalizations.of(context)!.cancel,
-                      yesButtonTitle: AppLocalizations.of(
-                        context,
-                      )!.delete_account_title,
-                      isLoadingState: ref.watch(authProvider).isButtonState,
-                      onNoPress: () {
-                        Navigator.pop(context);
-                      },
-                      onYesPress: () async {
-                        await ref
-                            .read(authProvider.notifier)
-                            .deleteUserAccount(context: context);
-
-                        await LocalDatabase.instance.clearAllUserData();
-                      },
-                    );
-                  },
-                ),
-
-                _settingTile(
-                  icon: "assets/svg/logout.svg",
-                  title: "Logout",
-                  subtitle: "Log out of your account",
-                  isDanger: true,
-                  onTap: () async {
-                    final userId = await LocalDatabase.instance
-                        .getUserId(); // pre-fetch here
-
-                    if (!context.mounted) return;
-                    await genericPopUpWidget(
-                      context: context,
-                      heading: AppLocalizations.of(
-                        context,
-                      )!.logout_popup_title, //"Are you sure you want to logout?",
-                      subtitle: AppLocalizations.of(
-                        context,
-                      )!.logout_popup_desc, //"You will be logged out of your account.",
-                      noButtonTitle: AppLocalizations.of(
-                        context,
-                      )!.logout_no, //"NO",
-                      yesButtonTitle: AppLocalizations.of(
-                        context,
-                      )!.logout_yes, //"YES",
-                      isLoadingState: false,
-                      onNoPress: () {
-                        Navigator.pop(context);
-                      },
-                      onYesPress: () async {
-                        await authStateReadProvider.logoutUser(
-                          context: context,
-                          userId: userId!,
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
+                  /// Bottom spacing for proper scrolling
+                  SizedBox(height: MediaQuery.of(context).padding.bottom + 20),
+                ],
+              ),
             ),
           ),
         ],
@@ -286,7 +291,7 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
     );
   }
 
-  /// Single Setting Card (UNCHANGED)
+  /// Single Setting Card
   Widget _settingTile({
     required String icon,
     required String title,

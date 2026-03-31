@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
 import 'package:saveingold_fzco/presentation/widgets/no_data_widget.dart';
@@ -96,10 +97,17 @@ class _WithdrawalFundScreenState extends ConsumerState<WithdrawalFundScreen> {
           size: 32,
         ),
         onPressed: () {
+          if (ref.read(withdrawProvider.notifier).hasPendingWithdrawal()) {
+            Toasts.getErrorToast(
+              gravity: ToastGravity.TOP,
+              text: AppLocalizations.of(context)!.withdraw_pending_block,
+            );
+            return;
+          }
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => CreateWithdrawalFundScreen(
+              builder: (context) => const CreateWithdrawalFundScreen(
                 // bankDetailsList: _bankDetailsList,
               ),
             ),
@@ -221,7 +229,9 @@ class _WithdrawalFundScreenState extends ConsumerState<WithdrawalFundScreen> {
                                 return false;
                               },
                               child: WithdrawalFundCard(
-                                rtl: Directionality.of(context) == TextDirection.rtl,
+                                rtl:
+                                    Directionality.of(context) ==
+                                    TextDirection.rtl,
                                 kAllWithdraw: data,
                               ).get6VerticalPadding(),
                             );

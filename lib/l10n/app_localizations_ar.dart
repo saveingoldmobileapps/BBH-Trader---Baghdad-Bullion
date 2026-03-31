@@ -449,7 +449,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get email_us_desc =>
-      'تحتاج مساعدة فورية؟ ابدأ بمراسلتنا عبر البريد، متاح على مدار الساعة!';
+      'هل تحتاج إلى مساعدة فورية؟ ابدأ بالتواصل معنا عبر البريد الإلكتروني مع فريقنا، المتاحين من السبت إلى الخميس من الساعة 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق).';
 
   @override
   String get email_now => 'راسل الآن';
@@ -459,7 +459,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get call_us_desc =>
-      'تحدث مباشرة مع أحد ممثلي الدعم لدينا، متاح من الاثنين إلى السبت، من الساعة 10:00 صباحًا حتى 6:00 مساءً (توقيت الإمارات).';
+      'تحدث مباشرة مع أحد ممثلي الدعم لدينا، المتاحين من السبت إلى الخميس من الساعة 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق).';
 
   @override
   String get call_now => 'اتصل الآن';
@@ -469,7 +469,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get whatsapp_desc =>
-      'راسلنا عبر واتساب للحصول على دعم سريع وسهل، متاح على مدار الساعة.';
+      'راسلنا عبر واتساب للحصول على دعم سريع وسهل، المتاح من السبت إلى الخميس من الساعة 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق).';
 
   @override
   String get message_on_whatsapp => 'أرسل رسالة على واتساب';
@@ -573,14 +573,14 @@ class AppLocalizationsAr extends AppLocalizations {
   String get request_sent => 'تم إرسال رمز التحقق بنجاح';
 
   @override
-  String get delete_account_title => 'حذف الحساب';
+  String get delete_account_title => 'تعطيل الحساب';
 
   @override
   String get delete_account_warning =>
-      'تنبيه: حذف الحساب إجراء دائم. سيتم مسح جميع بياناتك بشكل نهائي ولا يمكن استعادتها. هل أنت متأكد أنك تريد المتابعة؟';
+      'تنبيه: سيؤدي تعطيل حسابك إلى تقييد الوصول. يمكنك التواصل مع فريق الدعم لدينا لإعادة تفعيله. هل أنت متأكد من المتابعة؟';
 
   @override
-  String get delete_account_btn => 'حذف الحساب';
+  String get delete_account_btn => 'تعطيل الحساب';
 
   @override
   String get delete_account_cancel => 'إلغاء';
@@ -1749,10 +1749,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get settings_password_desc => 'تحديث أو تغيير كلمة المرور الخاصة بك.';
 
   @override
-  String get settings_delete => 'حذف الحساب';
+  String get settings_delete => 'تعطيل الحساب';
 
   @override
-  String get settings_delete_desc => 'حذف حسابك';
+  String get settings_delete_desc => 'تعطيل حسابك';
 
   @override
   String get settings_logout => 'تسجيل الخروج';

@@ -876,38 +876,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                       .newsUpdates!
                                       .isEmpty)
                               ? Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        height: sizes!.heightRatio * 30,
-                                        width: sizes!.widthRatio * 30,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            6,
-                                          ),
-                                          color: AppColors.primaryGold500,
-                                        ),
-                                        child: Icon(
-                                          Icons.cancel_outlined,
-                                          color: AppColors.whiteColor,
-                                          size: 16,
-                                        ),
-                                      ),
-                                      GetGenericText(
-                                        text: AppLocalizations.of(
-                                          context,
-                                        )!.oops_no_news,
-                                        fontSize: sizes!.responsiveFont(
-                                          phoneVal: 14,
-                                          tabletVal: 16,
-                                        ),
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColors.grey6Color,
-                                      ),
-                                    ],
-                                  ),
-                                )
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Container(
+        height: sizes!.heightRatio * 50, // larger icon container
+        width: sizes!.heightRatio * 50,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: AppColors.primaryGold500.withOpacity(0.1), // subtle background
+        ),
+        child: Icon(
+          Icons.cancel_outlined,
+          color: AppColors.primaryGold500,
+          size: 36, // bigger icon
+        ),
+      ),
+      SizedBox(height: sizes!.heightRatio * 16), // proper spacing
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: sizes!.widthRatio * 20),
+        child: Text(
+          AppLocalizations.of(context)!.oops_no_news,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: sizes!.responsiveFont(phoneVal: 16, tabletVal: 18),
+            fontWeight: FontWeight.bold,
+            color: AppColors.grey6Color,
+          ),
+        ),
+      ),
+      SizedBox(height: sizes!.heightRatio * 8),
+      
+    ],
+  ),
+)
                               : SizedBox(
                                   child: ListView.builder(
                                     itemCount:

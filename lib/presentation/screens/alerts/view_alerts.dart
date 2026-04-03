@@ -75,8 +75,8 @@ class _ActiveAlertsScreenState extends ConsumerState<ActiveAlertsScreen> {
           : alerts.isEmpty
           ? Center(
               child: NoDataWidget(
-                title: "No Data",
-                description: "No active alerts found.",
+                title: "No active alert available at the moment.",
+                description: "",
               ),
             )
           : ListView.builder(

@@ -118,7 +118,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                             ),
                             fontWeight: FontWeight.w400,
                             color: AppColors.grey3Color,
-                            lines: 3, // <- limit to 3 lines
+                            lines: 4, // <- limit to 3 lines
                           ),
                           ConstPadding.sizeBoxWithHeight(height: 4),
                           GestureDetector(
@@ -174,16 +174,6 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                             color: AppColors.grey5Color,
                           ),
                           ConstPadding.sizeBoxWithHeight(height: 4),
-                          // GetGenericText(
-                          //   text: AppLocalizations.of(context)!.email_us_desc,
-                          //   //"Need instant help? Start an Email Us with our team, available 24/7!",
-                          //   fontSize: sizes!.responsiveFont(
-                          //     phoneVal: 14,
-                          //     tabletVal: 16,
-                          //   ),
-                          //   fontWeight: FontWeight.w400,
-                          //   color: AppColors.grey3Color,
-                          // ),
                           GetGenericText(
                             text: AppLocalizations.of(context)!.email_us_desc,
                             fontSize: sizes!.responsiveFont(
@@ -192,7 +182,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                             ),
                             fontWeight: FontWeight.w400,
                             color: AppColors.grey3Color,
-                            lines: 3, // <- limit to 3 lines
+                            lines: 4, // <- limit to 3 lines
                           ),
                           ConstPadding.sizeBoxWithHeight(height: 4),
                           GestureDetector(
@@ -409,7 +399,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           GestureDetector(
                             onTap: () async {
                               await CommonService.openWhatsappUrl(
-                                phoneNumber: "+971524378778",
+                                phoneNumber: "+9647708015596",
                                 message:
                                     "Hello, I need an assistance from Baghdad Bullion House Team",
                               );
@@ -476,7 +466,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           GestureDetector(
                             onTap: () async {
                               await CommonService.openWhatsappUrl(
-                                phoneNumber: "+971524378778",
+                                phoneNumber: "+9647708015596",
                                 message:
                                     "Hello, I need an assistance from Baghdad Bullion House Team",
                               );

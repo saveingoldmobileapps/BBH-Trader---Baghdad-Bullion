@@ -240,10 +240,12 @@ class _WithdrawalFundScreenState extends ConsumerState<WithdrawalFundScreen> {
                       : withdrawState.loadingState ==
                             LoadingWithdrawalState.error
                       ? NoDataWidget(
-                          title: AppLocalizations.of(
-                            context,
-                          )!.empty_no_data, //"No Data To Show",
-                          description: "",
+                        title: "No withdraw requst found at the moment.",
+                        description: "",
+                          // title: AppLocalizations.of(
+                          //   context,
+                          // )!.empty_no_data, //"No Data To Show",
+                          // description: "",
                         )
                       : const ShimmerLoader(loop: 4),
                 ),

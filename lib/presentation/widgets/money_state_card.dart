@@ -54,7 +54,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
                     : (item.transactionType ?? l10n.not_available),
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -196,4 +196,5 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
         return AppLocalizations.of(context)!.not_available;
     }
   }
+
 }

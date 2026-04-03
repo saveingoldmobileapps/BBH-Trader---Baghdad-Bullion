@@ -408,7 +408,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                     title: AppLocalizations.of(context)!.inStoreCollection,
                     detail: AppLocalizations.of(
                       context,
-                    )!.in_store_collection_detail,
+                    )!.in_store,
                   ),
                   const SizedBox(height: 32),
 

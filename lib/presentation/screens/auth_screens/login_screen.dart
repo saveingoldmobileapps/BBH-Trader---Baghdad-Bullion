@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
+import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/widgets/no_copy_paste_format.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/register_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/setting_provider/check_device_security.dart';
@@ -370,53 +371,53 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Text(label, style: const TextStyle(color: Colors.white)),
           ),
         TextFormField(
-          controller: controller,
-          obscureText: isPassword && !_isPasswordVisible,
-          validator: validator,
-          keyboardType: isNumeric
-              ? TextInputType.number
-              : TextInputType.emailAddress,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white54),
-            suffixIcon: showWarning
-                ? const Icon(Icons.error_outline, color: Colors.white54)
-                : isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility_off
-                          : Icons.visibility,
-                      color: Colors.white54,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )
-                : null,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.white),
+  controller: controller,
+  obscureText: isPassword && !_isPasswordVisible,
+  enableInteractiveSelection: !isPassword, // disables copy/paste for passwords
+  validator: validator,
+  keyboardType: isNumeric
+      ? TextInputType.number
+      : TextInputType.text, // password is text type
+  style: const TextStyle(color: Colors.white),
+  decoration: InputDecoration(
+    hintText: hint,
+    hintStyle: const TextStyle(color: Colors.white54),
+    suffixIcon: isPassword
+        ? IconButton(
+            icon: Icon(
+              _isPasswordVisible ?  Icons.visibility: Icons.visibility_off ,
+              color: Colors.white54,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFC5A353)),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red),
-            ),
-            errorStyle: const TextStyle(color: Colors.redAccent),
-          ),
-        ),
-      ],
+            onPressed: () {
+              setState(() {
+                _isPasswordVisible = !_isPasswordVisible;
+              });
+            },
+          )
+        : showWarning
+            ? const Icon(Icons.error_outline, color: Colors.white54)
+            : null,
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: Colors.white),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: Color(0xFFC5A353)),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: Colors.red),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12),
+      borderSide: const BorderSide(color: Colors.red),
+    ),
+    errorStyle: const TextStyle(color: Colors.redAccent),
+  ),
+  // optional extra security: block pasting entirely
+  inputFormatters: isPassword ? [NoPasteTextFormatter()] : [],
+),],
     );
   }
 

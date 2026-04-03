@@ -389,7 +389,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get see_all => 'See all';
 
   @override
-  String get oops_no_news => 'Oops! No news available';
+  String get oops_no_news =>
+      'No news available at the moment. Please check back later.';
 
   @override
   String get news => 'News';
@@ -446,6 +447,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get e_souq => 'Esouq';
 
   @override
+  String get no_esouq_product =>
+      'No E-Souq products are available at the moment.';
+
+  @override
   String get customer_support_title => 'Customer Support';
 
   @override
@@ -453,30 +458,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get email_us_desc =>
-      'Need instant help? Start an Email Us with our team, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).';
+      'Need instant help? Start an Email Us with our team. Customer support is available Saturday–Thursday from 09:00 to 23:00, and Friday from 15:00 to 23:00 (Iraq Time)';
 
   @override
-  String get email_now => 'Email Now';
+  String get email_now => 'Email Us Now';
 
   @override
-  String get call_us_title => 'Call Us';
+  String get call_us_title => 'Call Now';
 
   @override
   String get call_us_desc =>
-      'Speak directly with one of our support representatives, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).';
+      'Speak directly with one of our support representatives. Customer support is available Saturday–Thursday from 09:00 to 23:00, and Friday from 15:00 to 23:00 (Iraq Time)';
 
   @override
-  String get call_now => 'Call Now';
+  String get call_now => 'Call Us Now';
 
   @override
-  String get whatsapp_title => 'Whatsapp';
+  String get whatsapp_title => 'WhatsApp';
 
   @override
   String get whatsapp_desc =>
-      'Message us on WhatsApp for quick and easy support, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).';
+      'Message us on WhatsApp for quick and easy support. Customer Support is available Saturday–Thursday from 09:00 to 23:00, and Friday from 15:00 to 23:00 (Iraq Time)';
 
   @override
-  String get message_on_whatsapp => 'Message on Whatsapp';
+  String get message_on_whatsapp => 'Message Us on WhatsApp';
 
   @override
   String get whatsapp_inbox =>
@@ -1239,7 +1244,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get in_store =>
-      'In-store pickup is available for all products. Pickups are available Monday to Friday, 11:00 AM to 6:00 PM (Timezone, Gulf Standard Time). An email confirmation will be sent to you when your order is ready for pickup';
+      'In-store pickup is available for all products. Pickups are available Saturday to Thursday, 09:00 – 23:00 and Friday 15:00 – 23:00 (Iraq Time). An email confirmation will be sent to you when your order is ready for pickup.';
 
   @override
   String get no_gram_deal_available => 'No gram deals available';
@@ -1535,7 +1540,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deal_manage_section => 'Manage Deal';
 
   @override
-  String get deal_take_profit => 'Take Profit';
+  String get deal_take_profit => 'Limit Order';
 
   @override
   String get deal_sell_at_price => 'Sell at Price';
@@ -1562,7 +1567,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deal_update_position_btn => 'Update Deal Position';
 
   @override
-  String get deal_close_section => 'Close Deal';
+  String get deal_close_section => 'Sell at Market';
 
   @override
   String get deal_amount_gram => 'Amount Gram';
@@ -1625,13 +1630,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get grams_card_invest_status => 'Invest Status:';
 
   @override
-  String get grams_card_opened => 'Opened';
+  String get grams_card_opened => 'Filled';
 
   @override
   String get grams_card_date_label => 'Date:';
 
   @override
   String get gram_bar_nmbr => 'Bar Number :';
+
+  @override
+  String get gram_status => 'Status';
+
+  @override
+  String get gram_target_price => 'Target Price';
+
+  @override
+  String get gram_current_price => 'Current price';
 
   @override
   String get invest_buy_at_price_update_success =>
@@ -1699,6 +1713,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get empty_no_data => 'No Data To Show';
+
+  @override
+  String get order_no_data_to_show =>
+      'You don’t have any active or past orders yet.';
 
   @override
   String get empty_email_not_verified => 'Your email is not verified';
@@ -2384,7 +2402,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shipping_fees_detail =>
-      'We offer shipping at the following rates:\nNext day delivery from ';
+      'We offer shipping at the following rates:\nNext day delivery from';
 
   @override
   String get delivery_identified_person => 'Delivery to Identified Person:';

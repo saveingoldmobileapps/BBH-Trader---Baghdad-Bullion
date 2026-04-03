@@ -130,12 +130,14 @@ if (priceMatch != null) {
                       : notificationState.notifications.isEmpty
                       ? Center(
                           child: NoDataWidget(
-                            title: AppLocalizations.of(
-                              context,
-                            )!.empty_no_data, //"No Data To Show",
-                            description: AppLocalizations.of(
-                              context,
-                            )!.no_notification, //"No Notification found",
+                            title: "No notification at the moment",
+                            // AppLocalizations.of(
+                            //   context,
+                            // )!.empty_no_data, //"No Data To Show",
+                            description: ""
+                            // AppLocalizations.of(
+                            //   context,
+                            // )!.no_notification, //"No Notification found",
                           ),
                         )
                       : ListView.builder(

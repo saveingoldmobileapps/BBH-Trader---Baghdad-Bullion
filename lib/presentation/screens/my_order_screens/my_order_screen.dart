@@ -119,7 +119,7 @@ class _MyOrderScreenState extends ConsumerState<MyOrdersScreen> {
                       ? NoDataWidget(
                           title: AppLocalizations.of(
                             context,
-                          )!.empty_no_data, //"No Data To Show",
+                          )!.order_no_data_to_show, //"No Data To Show",
                           description: "",
                         )
                       : ListView.builder(

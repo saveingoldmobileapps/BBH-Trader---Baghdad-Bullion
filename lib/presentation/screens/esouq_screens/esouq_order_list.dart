@@ -109,7 +109,7 @@ class _OrderListScreenState extends ConsumerState<OrderListScreen> {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: NoDataWidget(
-                title: AppLocalizations.of(context)!.empty_no_data,
+                title: AppLocalizations.of(context)!.order_no_data_to_show,
                 description: AppLocalizations.of(context)!.no_order_available,
               ),
             );

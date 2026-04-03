@@ -85,6 +85,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     controller: newPasswordController,
                     isCapitalizationEnabled: false,
                     textInputType: TextInputType.text,
+                    disableCopyPaste: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(context)!.val_enter_new_password;//"Please enter new password";
@@ -103,6 +104,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     controller: confirmPasswordController,
                     textInputType: TextInputType.text,
                     isCapitalizationEnabled: false,
+                    disableCopyPaste: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return AppLocalizations.of(context)!.val_enter_confirm_password;//"Please enter confirm password";

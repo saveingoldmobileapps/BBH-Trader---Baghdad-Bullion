@@ -170,7 +170,7 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                       ? const Center(child: ShimmerLoader(loop: 6))
                       : esouqState.products.isEmpty
                       ? NoDataWidget(
-                          title: AppLocalizations.of(context)!.empty_no_data,
+                          title: AppLocalizations.of(context)!.no_esouq_product,
                           description: '',
                         )
                       : GridView.builder(

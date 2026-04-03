@@ -827,7 +827,7 @@ abstract class AppLocalizations {
   /// No description provided for @oops_no_news.
   ///
   /// In en, this message translates to:
-  /// **'Oops! No news available'**
+  /// **'No news available at the moment. Please check back later.'**
   String get oops_no_news;
 
   /// No description provided for @news.
@@ -938,6 +938,12 @@ abstract class AppLocalizations {
   /// **'Esouq'**
   String get e_souq;
 
+  /// No description provided for @no_esouq_product.
+  ///
+  /// In en, this message translates to:
+  /// **'No E-Souq products are available at the moment.'**
+  String get no_esouq_product;
+
   /// No description provided for @customer_support_title.
   ///
   /// In en, this message translates to:
@@ -953,49 +959,49 @@ abstract class AppLocalizations {
   /// No description provided for @email_us_desc.
   ///
   /// In en, this message translates to:
-  /// **'Need instant help? Start an Email Us with our team, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).'**
+  /// **'Need instant help? Start an Email Us with our team. Customer support is available Saturday–Thursday from 09:00 to 23:00, and Friday from 15:00 to 23:00 (Iraq Time)'**
   String get email_us_desc;
 
   /// No description provided for @email_now.
   ///
   /// In en, this message translates to:
-  /// **'Email Now'**
+  /// **'Email Us Now'**
   String get email_now;
 
   /// No description provided for @call_us_title.
   ///
   /// In en, this message translates to:
-  /// **'Call Us'**
+  /// **'Call Now'**
   String get call_us_title;
 
   /// No description provided for @call_us_desc.
   ///
   /// In en, this message translates to:
-  /// **'Speak directly with one of our support representatives, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).'**
+  /// **'Speak directly with one of our support representatives. Customer support is available Saturday–Thursday from 09:00 to 23:00, and Friday from 15:00 to 23:00 (Iraq Time)'**
   String get call_us_desc;
 
   /// No description provided for @call_now.
   ///
   /// In en, this message translates to:
-  /// **'Call Now'**
+  /// **'Call Us Now'**
   String get call_now;
 
   /// No description provided for @whatsapp_title.
   ///
   /// In en, this message translates to:
-  /// **'Whatsapp'**
+  /// **'WhatsApp'**
   String get whatsapp_title;
 
   /// No description provided for @whatsapp_desc.
   ///
   /// In en, this message translates to:
-  /// **'Message us on WhatsApp for quick and easy support, available Saturday to Thursday, 09:00 – 23:00, Friday 15:00 – 2300 (Iraq Time).'**
+  /// **'Message us on WhatsApp for quick and easy support. Customer Support is available Saturday–Thursday from 09:00 to 23:00, and Friday from 15:00 to 23:00 (Iraq Time)'**
   String get whatsapp_desc;
 
   /// No description provided for @message_on_whatsapp.
   ///
   /// In en, this message translates to:
-  /// **'Message on Whatsapp'**
+  /// **'Message Us on WhatsApp'**
   String get message_on_whatsapp;
 
   /// No description provided for @whatsapp_inbox.
@@ -2471,7 +2477,7 @@ abstract class AppLocalizations {
   /// No description provided for @in_store.
   ///
   /// In en, this message translates to:
-  /// **'In-store pickup is available for all products. Pickups are available \'Monday to Friday, 11:00 AM to 6:00 PM\' (Timezone, Gulf Standard Time). An email confirmation will be sent to you when your order is ready for pickup'**
+  /// **'In-store pickup is available for all products. Pickups are available Saturday to Thursday, 09:00 – 23:00 and Friday 15:00 – 23:00 (Iraq Time). An email confirmation will be sent to you when your order is ready for pickup.'**
   String get in_store;
 
   /// No description provided for @no_gram_deal_available.
@@ -3011,7 +3017,7 @@ abstract class AppLocalizations {
   /// No description provided for @deal_take_profit.
   ///
   /// In en, this message translates to:
-  /// **'Take Profit'**
+  /// **'Limit Order'**
   String get deal_take_profit;
 
   /// No description provided for @deal_sell_at_price.
@@ -3053,7 +3059,7 @@ abstract class AppLocalizations {
   /// No description provided for @deal_close_section.
   ///
   /// In en, this message translates to:
-  /// **'Close Deal'**
+  /// **'Sell at Market'**
   String get deal_close_section;
 
   /// No description provided for @deal_amount_gram.
@@ -3167,7 +3173,7 @@ abstract class AppLocalizations {
   /// No description provided for @grams_card_opened.
   ///
   /// In en, this message translates to:
-  /// **'Opened'**
+  /// **'Filled'**
   String get grams_card_opened;
 
   /// No description provided for @grams_card_date_label.
@@ -3181,6 +3187,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Bar Number :'**
   String get gram_bar_nmbr;
+
+  /// No description provided for @gram_status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get gram_status;
+
+  /// No description provided for @gram_target_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Price'**
+  String get gram_target_price;
+
+  /// No description provided for @gram_current_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Current price'**
+  String get gram_current_price;
 
   /// No description provided for @invest_buy_at_price_update_success.
   ///
@@ -3307,6 +3331,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No Data To Show'**
   String get empty_no_data;
+
+  /// No description provided for @order_no_data_to_show.
+  ///
+  /// In en, this message translates to:
+  /// **'You don’t have any active or past orders yet.'**
+  String get order_no_data_to_show;
 
   /// No description provided for @empty_email_not_verified.
   ///
@@ -4589,7 +4619,7 @@ abstract class AppLocalizations {
   /// No description provided for @shipping_fees_detail.
   ///
   /// In en, this message translates to:
-  /// **'We offer shipping at the following rates:\nNext day delivery from '**
+  /// **'We offer shipping at the following rates:\nNext day delivery from'**
   String get shipping_fees_detail;
 
   /// No description provided for @delivery_identified_person.

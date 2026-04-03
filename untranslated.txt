@@ -2,6 +2,6 @@
   "ar": [
     "bank_charge_message",
     "failed_to_update_card",
-    "in_store"
+    "in_store_collection_detail"
   ]
 }

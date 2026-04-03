@@ -370,7 +370,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         context,
                       )!.password, //"Password",
                       controller: passwordController,
-                      textInputType: TextInputType.text,
+                      textInputType: TextInputType.text, 
+                      disableCopyPaste: true,
 
                       isCapitalizationEnabled: false,
                       validator: (value) {
@@ -398,6 +399,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       obscureText: true,
                       controller: confirmPasswordController,
                       textInputType: TextInputType.text,
+                      disableCopyPaste: true,
 
                       isCapitalizationEnabled: false,
                       validator: (value) {

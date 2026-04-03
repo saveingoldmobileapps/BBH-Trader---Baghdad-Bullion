@@ -136,7 +136,7 @@ Future<void> _startSSE({
       "Connection": "keep-alive",
     };
 
-    const IQD = 1309.550; // Conversion rate from USD to IQD
+    const IQD = 1550.000; // Conversion rate from USD to IQD
     const ounce = 31.10347; // Grams in a troy ounce
 
     double lastSelling = 0.0;

@@ -106,7 +106,8 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
             ),
             const SizedBox(height: 10),
             _detailRow(
-              "Current price",
+              AppLocalizations.of(context)!.gram_current_price,
+              //"Current price",
               "IQD ${goldPriceState.value?.oneGramSellingPriceInIQD.toStringAsFixed(2) ?? '0.00'}",
             ),
             const SizedBox(height: 10),
@@ -116,7 +117,8 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: _detailRow(
-                  "Target price",
+                  AppLocalizations.of(context)!.gram_target_price,
+                  //"Target price",
                   "IQD ${item.buyAtPrice?.toStringAsFixed(2) ?? '0.00'}",
                 ),
               ),
@@ -125,8 +127,9 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Status",
+                 Text(
+                  AppLocalizations.of(context)!.gram_status,
+                  //"Status",
                   style: TextStyle(color: Colors.white54, fontSize: 14),
                 ),
                 Container(
@@ -141,13 +144,23 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                     ),
                   ),
                   child: Text(
-                    item.tradeStatus ?? "Opened",
+                    (item.tradeStatus == "Opened")
+                        ? AppLocalizations.of(context)!.grams_card_opened
+                        : (item.tradeStatus ?? ""),
                     style: const TextStyle(
                       color: Color(0xFFBBA473),
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
+                  // Text(
+                  //   item.tradeStatus ?? "Opened",
+                  //   style: const TextStyle(
+                  //     color: Color(0xFFBBA473),
+                  //     fontSize: 12,
+                  //     fontWeight: FontWeight.w500,
+                  //   ),
+                  // ),
                 ),
               ],
             ),

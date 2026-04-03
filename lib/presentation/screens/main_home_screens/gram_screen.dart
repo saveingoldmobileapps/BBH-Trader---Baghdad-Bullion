@@ -279,10 +279,12 @@ class _GramScreenState extends ConsumerState<GramScreen> {
         provider.gramApiResponseModel.payload!.isEmpty) {
       return ListView(
         children: [
-          SizedBox(height: sizes!.height * 0.15),
+          //SizedBox(height: sizes!.height * 0.15),
           NoDataWidget(
-            title: AppLocalizations.of(context)!.empty_no_data,
-            description: AppLocalizations.of(context)!.empty_no_gram_balance,
+            title: "You don't have any filled or opened deals at the moment.",
+            description: "",
+            // title: AppLocalizations.of(context)!.empty_no_data,
+            // description: AppLocalizations.of(context)!.empty_no_gram_balance,
           ),
         ],
       );

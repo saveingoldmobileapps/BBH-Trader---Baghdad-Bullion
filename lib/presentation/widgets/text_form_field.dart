@@ -19,6 +19,7 @@ class CommonTextFormField extends StatefulWidget {
   final bool obscureText;
   final Widget? suffixIcon;
   final bool isCapitalizationEnabled;
+  final bool disableCopyPaste; // new optional param
 
   const CommonTextFormField({
     super.key,
@@ -37,6 +38,7 @@ class CommonTextFormField extends StatefulWidget {
     this.obscureText = false,
     this.suffixIcon,
     this.isCapitalizationEnabled = true,
+    this.disableCopyPaste = false, // default false
   });
 
   @override
@@ -54,7 +56,7 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
 
   OutlineInputBorder _border(Color color) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12), // ✅ radius 12
+      borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: color),
     );
   }
@@ -77,6 +79,10 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
         onChanged: widget.onChanged,
         readOnly: widget.readOnly,
         obscureText: widget.obscureText ? _obscureText : false,
+        enableInteractiveSelection: !widget.disableCopyPaste, // disable copy/paste if true
+        toolbarOptions: widget.disableCopyPaste
+            ? const ToolbarOptions(copy: false, cut: false, paste: false, selectAll: false)
+            : const ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
         style: TextStyle(
           color: AppColors.secondaryColor,
           fontSize: 16,

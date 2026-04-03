@@ -385,7 +385,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get see_all => 'عرض الكل';
 
   @override
-  String get oops_no_news => 'عذرًا! لا توجد أخبار متاحة';
+  String get oops_no_news => 'لا توجد أخبار متاحة حالياً. يرجى العودة لاحقاً.';
 
   @override
   String get news => 'الأخبار';
@@ -442,37 +442,40 @@ class AppLocalizationsAr extends AppLocalizations {
   String get e_souq => 'إي-سوق';
 
   @override
+  String get no_esouq_product => 'لا توجد منتجات E-Souq متاحة حالياً.';
+
+  @override
   String get customer_support_title => 'دعم العملاء';
 
   @override
-  String get email_us_title => 'راسلنا عبر البريد';
+  String get email_us_title => 'راسلنا عبر البريد الإلكتروني';
 
   @override
   String get email_us_desc =>
-      'هل تحتاج إلى مساعدة فورية؟ ابدأ بالتواصل معنا عبر البريد الإلكتروني مع فريقنا، المتاحين من السبت إلى الخميس من الساعة 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق).';
+      'هل تحتاج إلى مساعدة فورية؟ تواصل معنا عبر البريد الإلكتروني. خدمة دعم العملاء متاحة من السبت إلى الخميس من 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق).';
 
   @override
-  String get email_now => 'راسل الآن';
+  String get email_now => 'راسلنا الآن';
 
   @override
-  String get call_us_title => 'اتصل بنا';
+  String get call_us_title => 'اتصل الآن';
 
   @override
   String get call_us_desc =>
-      'تحدث مباشرة مع أحد ممثلي الدعم لدينا، المتاحين من السبت إلى الخميس من الساعة 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق).';
+      'تحدث مباشرة مع أحد ممثلي خدمة الدعم لدينا. خدمة دعم العملاء متاحة من السبت إلى الخميس من 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق).';
 
   @override
-  String get call_now => 'اتصل الآن';
+  String get call_now => 'اتصل بنا الآن';
 
   @override
   String get whatsapp_title => 'واتساب';
 
   @override
   String get whatsapp_desc =>
-      'راسلنا عبر واتساب للحصول على دعم سريع وسهل، المتاح من السبت إلى الخميس من الساعة 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق).';
+      'راسلنا عبر واتساب للحصول على دعم سريع وسهل. خدمة دعم العملاء متاحة من السبت إلى الخميس من 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق).';
 
   @override
-  String get message_on_whatsapp => 'أرسل رسالة على واتساب';
+  String get message_on_whatsapp => 'راسلنا على واتساب';
 
   @override
   String get whatsapp_inbox =>
@@ -1232,7 +1235,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get in_store =>
-      'In-store pickup is available for all products. Pickups are available Monday to Friday, 11:00 AM to 6:00 PM (Timezone, Gulf Standard Time). An email confirmation will be sent to you when your order is ready for pickup';
+      'خدمة الاستلام من المتجر متاحة لجميع المنتجات. أوقات الاستلام من السبت إلى الخميس من 09:00 إلى 23:00، ويوم الجمعة من 15:00 إلى 23:00 (بتوقيت العراق). سيتم إرسال تأكيد عبر البريد الإلكتروني عند جاهزية طلبك للاستلام.';
 
   @override
   String get no_gram_deal_available => 'لا توجد صفقات غرام متاحة';
@@ -1525,7 +1528,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deal_manage_section => 'إدارة الصفقة';
 
   @override
-  String get deal_take_profit => 'حصد الأرباح';
+  String get deal_take_profit => 'أمر محدد';
 
   @override
   String get deal_sell_at_price => 'بيع بسعر';
@@ -1552,7 +1555,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get deal_update_position_btn => 'تحديث موقع الصفقة';
 
   @override
-  String get deal_close_section => 'إغلاق الصفقة';
+  String get deal_close_section => 'بيع بسعر السوق';
 
   @override
   String get deal_amount_gram => 'كمية بالغرام';
@@ -1615,13 +1618,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get grams_card_invest_status => 'حالة الاستثمار:';
 
   @override
-  String get grams_card_opened => 'مفتوح';
+  String get grams_card_opened => 'معبأة';
 
   @override
   String get grams_card_date_label => 'التاريخ:';
 
   @override
   String get gram_bar_nmbr => 'رقم السبيكة :';
+
+  @override
+  String get gram_status => 'الحالة';
+
+  @override
+  String get gram_target_price => 'السعر المستهدف';
+
+  @override
+  String get gram_current_price => 'السعر الحالي';
 
   @override
   String get invest_buy_at_price_update_success =>
@@ -1688,6 +1700,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get empty_no_data => 'لا توجد بيانات للعرض';
+
+  @override
+  String get order_no_data_to_show =>
+      'ليس لديك أي طلبات حالية أو سابقة حتى الآن.';
 
   @override
   String get empty_email_not_verified => 'بريدك الإلكتروني غير مُحقق';
@@ -2359,7 +2375,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get in_store_collection_detail =>
-      'يتوفر الاستلام من المتجر لجميع المنتجات. يمكن استلام الطلبات من الإثنين إلى الجمعة من الساعة 11:00 صباحًا حتى 6:00 مساءً (بتوقيت الخليج القياسي). سيتم إرسال رسالة تأكيد عبر البريد الإلكتروني عند جاهزية طلبك للاستلام.';
+      'In-store pickup is available for all products. Pickups are available Monday to Friday, 11:00 AM to 6:00 PM (Timezone, Gulf Standard Time). An email confirmation will be sent to you when your order is ready for pickup.';
 
   @override
   String get shipping_fees => 'رسوم الشحن';

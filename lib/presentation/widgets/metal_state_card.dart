@@ -190,26 +190,51 @@ class _MetalStatementCardState extends State<MetalStatementCard>
       ),
     );
   }
-
   Widget _buildStatusChip(BuildContext context, String? status) {
-    final bool isOpened = status?.toLowerCase() == "opened";
+  final bool isOpened = status?.toLowerCase() == "opened";
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: isOpened ? const Color(0xFFBBA473) : Colors.white24,
-        ),
+  final displayText = isOpened
+      ? AppLocalizations.of(context)!.grams_card_opened//"FILLED"
+      : (status?.toUpperCase() ?? "N/A");
+
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(8),
+      border: Border.all(
+        color: isOpened ? const Color(0xFFBBA473) : Colors.white24,
       ),
-      child: Text(
-        status?.toUpperCase() ?? "N/A",
-        style: TextStyle(
-          color: isOpened ? const Color(0xFFBBA473) : Colors.white54,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
+    ),
+    child: Text(
+      displayText,
+      style: TextStyle(
+        color: isOpened ? const Color(0xFFBBA473) : Colors.white54,
+        fontSize: 10,
+        fontWeight: FontWeight.bold,
       ),
-    );
-  }
+    ),
+  );
+}
+
+  // Widget _buildStatusChip(BuildContext context, String? status) {
+  //   final bool isOpened = status?.toLowerCase() == "opened";
+
+  //   return Container(
+  //     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(8),
+  //       border: Border.all(
+  //         color: isOpened ? const Color(0xFFBBA473) : Colors.white24,
+  //       ),
+  //     ),
+  //     child: Text(
+  //       status?.toUpperCase() ?? "N/A",
+  //       style: TextStyle(
+  //         color: isOpened ? const Color(0xFFBBA473) : Colors.white54,
+  //         fontSize: 10,
+  //         fontWeight: FontWeight.bold,
+  //       ),
+  //     ),
+  //   );
+  // }
 }

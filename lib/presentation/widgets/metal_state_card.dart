@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/data/models/history_model/GetMetalStatementsResponse.dart';
+import 'package:saveingold_fzco/data/models/home_models/GetHomeFeedResponse.dart';
 
 import '../../l10n/app_localizations.dart';
 
@@ -26,6 +27,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return AnimatedSize(
       duration: const Duration(milliseconds: 250),
       curve: Curves.easeInOut,
@@ -66,8 +68,8 @@ class _MetalStatementCardState extends State<MetalStatementCard>
                 _buildDetailRow(
                   AppLocalizations.of(context)!.transactionType,
                   widget.rtl
-                      ? (widget.statement.paymentModelInArabic ?? 'N/A')
-                      : (widget.statement.paymentModel ?? 'N/A'),
+                      ? (widget.statement.paymentModelInArabic ?? AppLocalizations.of(context)!.not_available)
+                      : (widget.statement.paymentModel ?? AppLocalizations.of(context)!.not_available),
                 ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.grams_card_date_label,
@@ -93,7 +95,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        isExpanded ? "See Less" : "See Details",
+                        isExpanded ? l10n.see_less : l10n.see_details,
                         style: const TextStyle(
                           color: Color(0xFFBBA473),
                           fontWeight: FontWeight.w500,
@@ -143,7 +145,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
     }
 
     return Text(
-      "$title: ${quantity.toStringAsFixed(2)}${AppLocalizations.of(context)!.metal_g} Gold",
+      "$title: ${quantity.toStringAsFixed(2)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
       style: const TextStyle(
         color: Colors.white,
         fontSize: 18,
@@ -163,8 +165,8 @@ class _MetalStatementCardState extends State<MetalStatementCard>
         : widget.statement.buyingPrice;
 
     return _buildDetailRow(
-      "$label at",
-      "IQD ${price?.toStringAsFixed(2) ?? '0.00'}/g",
+      "$label ${AppLocalizations.of(context)!.at}",
+      "${AppLocalizations.of(context)!.idq} ${price?.toStringAsFixed(2) ?? '0.00'} ${AppLocalizations.of(context)!.g_}",
     );
   }
 
@@ -195,7 +197,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
   final displayText = isOpened
       ? AppLocalizations.of(context)!.grams_card_opened//"FILLED"
-      : (status?.toUpperCase() ?? "N/A");
+      : (status?.toUpperCase() ?? AppLocalizations.of(context)!.not_available);
 
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

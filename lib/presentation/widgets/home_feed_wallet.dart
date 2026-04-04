@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/models/home_models/GetHomeFeedResponse.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 
 class HomeFeedWallet extends StatelessWidget {
   final bool isHiddenBalance;
@@ -18,6 +19,7 @@ class HomeFeedWallet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final amount = walletExists.moneyBalance ?? 0;
     final isMillion = amount.abs() >= 1000000;
     return Container(
@@ -75,9 +77,9 @@ class HomeFeedWallet extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Gold Section
-                const Text(
-                  "Gold",
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                Text(
+                  l10n.gold,
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -101,9 +103,12 @@ class HomeFeedWallet extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Text(
-                      "Grams",
-                      style: TextStyle(color: Colors.white54, fontSize: 16),
+                    Text(
+                      l10n.gramsTab,
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),
@@ -114,9 +119,9 @@ class HomeFeedWallet extends StatelessWidget {
                 ),
 
                 // Funds Section
-                const Text(
-                  "Funds",
-                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                Text(
+                  l10n.home_wallet_funds_label,
+                  style: const TextStyle(color: Colors.white70, fontSize: 14),
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -152,9 +157,12 @@ class HomeFeedWallet extends StatelessWidget {
                       // ),
                     ),
                     const SizedBox(width: 4),
-                    const Text(
-                      "IQD",
-                      style: TextStyle(color: Colors.white54, fontSize: 16),
+                    Text(
+                      l10n.idq,
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 16,
+                      ),
                     ),
                   ],
                 ),

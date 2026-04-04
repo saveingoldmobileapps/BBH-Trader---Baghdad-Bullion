@@ -54,6 +54,7 @@ class _MetalStatementScreenState extends ConsumerState<MetalStatementScreen> {
   Widget build(BuildContext context) {
     /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
+    final l10n = AppLocalizations.of(context)!;
     final historyState = ref.watch(historyProvider);
 
     return Column(
@@ -150,8 +151,7 @@ class _MetalStatementScreenState extends ConsumerState<MetalStatementScreen> {
             ? (historyState.getMetalStatementsResponse.payload == null ||
                       historyState.metalStatements.isEmpty)
                   ? NoDataWidget(
-                      
-                    title: "You don't have any Metal history at the moment.",
+                    title: l10n.history_no_metal,
                     description: "",
                       //"Please create new metal statement or try again later",
                     ).get20VerticalPadding()
@@ -196,7 +196,7 @@ class _MetalStatementScreenState extends ConsumerState<MetalStatementScreen> {
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
                   child: NoDataWidget(
-                    title: "You don't have any Metal history at the moment.",
+                    title: l10n.history_no_metal,
                     description: "",
                     // title: AppLocalizations.of(
                     //   context,

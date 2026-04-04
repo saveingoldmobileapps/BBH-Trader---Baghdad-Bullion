@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 
 class HomeQuickActions extends StatelessWidget {
   final VoidCallback onAddFunds;
@@ -15,6 +16,7 @@ class HomeQuickActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
@@ -24,20 +26,20 @@ class HomeQuickActions extends StatelessWidget {
             context,
             iconPath:
                 "assets/svg/money_add.svg", // Replace with your actual path
-            label: "Add funds",
+            label: l10n.add_funds,
             onTap: onAddFunds,
           ),
           _buildActionItem(
             context,
             iconPath:
                 "assets/svg/withdraw_icon.svg", // Replace with your actual path
-            label: "Widthraw", // Kept spelling from your image
+            label: l10n.quick_action_withdraw,
             onTap: onWithdraw,
           ),
           _buildActionItem(
             context,
             iconPath: "assets/svg/more.svg", // Replace with your actual path
-            label: "More",
+            label: l10n.more,
             onTap: onMore,
           ),
         ],

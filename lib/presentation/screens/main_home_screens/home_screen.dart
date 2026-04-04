@@ -290,7 +290,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   children: [
                     Expanded(
                       child: Text(
-                        "Search here",
+                        AppLocalizations.of(context)!.gift_search_here,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontSize: 14,

@@ -140,6 +140,36 @@ abstract class AppLocalizations {
   /// **'Get Started'**
   String get getStarted;
 
+  /// No description provided for @your_gold.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Gold\nYour Wealth.'**
+  String get your_gold;
+
+  /// No description provided for @new_to_bbh.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'\'m new to BBH'**
+  String get new_to_bbh;
+
+  /// No description provided for @exiting_to_bbh.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'\'m an existing user'**
+  String get exiting_to_bbh;
+
+  /// No description provided for @eng_title.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get eng_title;
+
+  /// No description provided for @arabic_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get arabic_title;
+
   /// No description provided for @app_lang.
   ///
   /// In en, this message translates to:
@@ -205,6 +235,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Account'**
   String get create_account;
+
+  /// No description provided for @enter_phone_to_login.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone number to login'**
+  String get enter_phone_to_login;
+
+  /// No description provided for @enter_email_to_login.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to login'**
+  String get enter_email_to_login;
+
+  /// No description provided for @enter_bank_to_login.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your banking details to login with your bank'**
+  String get enter_bank_to_login;
+
+  /// No description provided for @login_with_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with phone'**
+  String get login_with_phone;
+
+  /// No description provided for @login_with_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with email'**
+  String get login_with_email;
+
+  /// No description provided for @login_or.
+  ///
+  /// In en, this message translates to:
+  /// **'OR'**
+  String get login_or;
 
   /// No description provided for @forgotPassword_title.
   ///
@@ -698,6 +764,30 @@ abstract class AppLocalizations {
   /// **'Please enter email or phone number'**
   String get please_enter_email_or_phone;
 
+  /// No description provided for @enter_email_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email'**
+  String get enter_email_hint;
+
+  /// No description provided for @login_email_Labe.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get login_email_Labe;
+
+  /// No description provided for @login_email_validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter email'**
+  String get login_email_validation;
+
+  /// No description provided for @please_valid_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get please_valid_email;
+
   /// No description provided for @please_enter_first_name.
   ///
   /// In en, this message translates to:
@@ -751,6 +841,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password do not match, Please re-enter confirm paswword.'**
   String get confirm_pwd;
+
+  /// No description provided for @plz_enter_valid_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid phone number'**
+  String get plz_enter_valid_phone;
 
   /// No description provided for @agreement_prefix.
   ///
@@ -4130,6 +4226,12 @@ abstract class AppLocalizations {
   /// **'g Gold'**
   String get g_Gold;
 
+  /// No description provided for @profit_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Profit'**
+  String get profit_title;
+
   /// No description provided for @trade_order_message.
   ///
   /// In en, this message translates to:
@@ -4415,7 +4517,7 @@ abstract class AppLocalizations {
   /// No description provided for @target_price.
   ///
   /// In en, this message translates to:
-  /// **'Target Price'**
+  /// **'Target price'**
   String get target_price;
 
   /// No description provided for @enter_price.
@@ -4519,6 +4621,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'IQD'**
   String get idq;
+
+  /// No description provided for @at.
+  ///
+  /// In en, this message translates to:
+  /// **'at'**
+  String get at;
+
+  /// No description provided for @g_.
+  ///
+  /// In en, this message translates to:
+  /// **'/g'**
+  String get g_;
 
   /// No description provided for @rejected.
   ///
@@ -5143,6 +5257,384 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Name Mismatch'**
   String get nam_mismatch;
+
+  /// No description provided for @trade_gold.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade Gold'**
+  String get trade_gold;
+
+  /// No description provided for @current_market_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Market Price'**
+  String get current_market_price;
+
+  /// No description provided for @buying_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Buying at'**
+  String get buying_at;
+
+  /// No description provided for @selling_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Selling at'**
+  String get selling_at;
+
+  /// No description provided for @error_loading_prices.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading prices'**
+  String get error_loading_prices;
+
+  /// No description provided for @price_iqd_per_gram.
+  ///
+  /// In en, this message translates to:
+  /// **'IQD {price} / gram'**
+  String price_iqd_per_gram(String price);
+
+  /// No description provided for @ounce_price_iqd.
+  ///
+  /// In en, this message translates to:
+  /// **'Ounce: IQD {price}'**
+  String ounce_price_iqd(String price);
+
+  /// No description provided for @high_price_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'High {price}'**
+  String high_price_badge(String price);
+
+  /// No description provided for @low_price_badge.
+  ///
+  /// In en, this message translates to:
+  /// **'Low {price}'**
+  String low_price_badge(String price);
+
+  /// No description provided for @gram_unit_plural.
+  ///
+  /// In en, this message translates to:
+  /// **'gram(s)'**
+  String get gram_unit_plural;
+
+  /// No description provided for @current_trade_deals.
+  ///
+  /// In en, this message translates to:
+  /// **'Current trade deals'**
+  String get current_trade_deals;
+
+  /// No description provided for @gram_no_filled_deals.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'\'t have any filled or opened deals at the moment.'**
+  String get gram_no_filled_deals;
+
+  /// No description provided for @side_menu_esouq_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop online for the best deals'**
+  String get side_menu_esouq_subtitle;
+
+  /// No description provided for @side_menu_orders_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your orders and manage them'**
+  String get side_menu_orders_subtitle;
+
+  /// No description provided for @side_menu_gift_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Send a gift to a friend'**
+  String get side_menu_gift_subtitle;
+
+  /// No description provided for @side_menu_alerts_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified when the price of gold reaches your target'**
+  String get side_menu_alerts_subtitle;
+
+  /// No description provided for @side_menu_support_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact our support team'**
+  String get side_menu_support_subtitle;
+
+  /// No description provided for @side_menu_settings_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your account and app preferences'**
+  String get side_menu_settings_subtitle;
+
+  /// No description provided for @side_menu_logout_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out of your account'**
+  String get side_menu_logout_subtitle;
+
+  /// No description provided for @deal_sell_greater_than_current_sell_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a sell price greater than the current sell price (IQD {price}).'**
+  String deal_sell_greater_than_current_sell_price(String price);
+
+  /// No description provided for @about_to_save_profit.
+  ///
+  /// In en, this message translates to:
+  /// **'You are about to save profit'**
+  String get about_to_save_profit;
+
+  /// No description provided for @about_to_take_profit_message.
+  ///
+  /// In en, this message translates to:
+  /// **'You are about to take profit'**
+  String get about_to_take_profit_message;
+
+  /// No description provided for @something_went_wrong_try_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again.'**
+  String get something_went_wrong_try_again;
+
+  /// No description provided for @quick_action_withdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get quick_action_withdraw;
+
+  /// No description provided for @could_not_open_link.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open the link'**
+  String get could_not_open_link;
+
+  /// No description provided for @home_wallet_funds_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Funds'**
+  String get home_wallet_funds_label;
+
+  /// No description provided for @history_no_metal.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'\'t have any Metal history at the moment.'**
+  String get history_no_metal;
+
+  /// No description provided for @history_no_money.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'\'t have any Money history at the moment.'**
+  String get history_no_money;
+
+  /// No description provided for @see_details.
+  ///
+  /// In en, this message translates to:
+  /// **'See Details'**
+  String get see_details;
+
+  /// No description provided for @see_less.
+  ///
+  /// In en, this message translates to:
+  /// **'See Less'**
+  String get see_less;
+
+  /// No description provided for @screen_details_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get screen_details_title;
+
+  /// No description provided for @triggered_by.
+  ///
+  /// In en, this message translates to:
+  /// **'Triggered by'**
+  String get triggered_by;
+
+  /// No description provided for @transaction_details_header.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction Details'**
+  String get transaction_details_header;
+
+  /// No description provided for @metal_opened_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Opened @'**
+  String get metal_opened_at;
+
+  /// No description provided for @metal_closed_at.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed @'**
+  String get metal_closed_at;
+
+  /// No description provided for @buy_gold_grams_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the amount of gold in grams to trade'**
+  String get buy_gold_grams_subtitle;
+
+  /// No description provided for @grams_unit_lowercase.
+  ///
+  /// In en, this message translates to:
+  /// **'grams'**
+  String get grams_unit_lowercase;
+
+  /// No description provided for @buy_gold_approx_total.
+  ///
+  /// In en, this message translates to:
+  /// **'≈ IQD {amount}'**
+  String buy_gold_approx_total(String amount);
+
+  /// No description provided for @invest_target_price_per_gram.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Price (per gram)'**
+  String get invest_target_price_per_gram;
+
+  /// No description provided for @buy_order_executes_at_iqd.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order will execute when the price reaches IQD {price}'**
+  String buy_order_executes_at_iqd(String price);
+
+  /// No description provided for @trade_at_market_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade at market price'**
+  String get trade_at_market_price;
+
+  /// No description provided for @invest_target_price_menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Target price'**
+  String get invest_target_price_menu;
+
+  /// No description provided for @invest_market_price_short.
+  ///
+  /// In en, this message translates to:
+  /// **'Market price'**
+  String get invest_market_price_short;
+
+  /// No description provided for @target_price_hint_example.
+  ///
+  /// In en, this message translates to:
+  /// **'IQD 170,000.00'**
+  String get target_price_hint_example;
+
+  /// No description provided for @error_loading_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading price'**
+  String get error_loading_price;
+
+  /// No description provided for @trade_confirm_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Trade'**
+  String get trade_confirm_dialog_title;
+
+  /// No description provided for @trade_confirm_dialog_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Review your order details'**
+  String get trade_confirm_dialog_subtitle;
+
+  /// No description provided for @trade_confirm_dialog_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Trade'**
+  String get trade_confirm_dialog_button;
+
+  /// No description provided for @trade_confirm_sale_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Sale'**
+  String get trade_confirm_sale_title;
+
+  /// No description provided for @trade_row_target_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Target Price'**
+  String get trade_row_target_price;
+
+  /// No description provided for @trade_row_est_total.
+  ///
+  /// In en, this message translates to:
+  /// **'Est. Total Cost'**
+  String get trade_row_est_total;
+
+  /// No description provided for @trade_confirm_limit_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order will be executed when the gold price reaches IQD {targetPrice} per gram. You\'\'ll be notified when this happens.'**
+  String trade_confirm_limit_body(String targetPrice);
+
+  /// No description provided for @order_placed_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Order Placed!'**
+  String get order_placed_title;
+
+  /// No description provided for @limit_order_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Limit Order'**
+  String get limit_order_title;
+
+  /// No description provided for @limit_order_des.
+  ///
+  /// In en, this message translates to:
+  /// **'Your limit order has been placed and will\nexecute when the target price is reached.'**
+  String get limit_order_des;
+
+  /// No description provided for @limit_order_success.
+  ///
+  /// In en, this message translates to:
+  /// **'You have Successfully Placed the order.'**
+  String get limit_order_success;
+
+  /// No description provided for @limit_date_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Date & Time'**
+  String get limit_date_time;
+
+  /// No description provided for @limit_trade_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade type'**
+  String get limit_trade_type;
+
+  /// No description provided for @limit_amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get limit_amount;
+
+  /// No description provided for @gmt_time.
+  ///
+  /// In en, this message translates to:
+  /// **'GMT+3 Total'**
+  String get gmt_time;
+
+  /// No description provided for @will_notify.
+  ///
+  /// In en, this message translates to:
+  /// **'We’ll notify you when your order is executed'**
+  String get will_notify;
+
+  /// No description provided for @return_home.
+  ///
+  /// In en, this message translates to:
+  /// **'Return to home'**
+  String get return_home;
+
+  /// No description provided for @trade_confirm_market_body.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trade will be executed immediately at the current market price of IQD {price}. Ensure you have sufficient balance.'**
+  String trade_confirm_market_body(String price);
 }
 
 class _AppLocalizationsDelegate

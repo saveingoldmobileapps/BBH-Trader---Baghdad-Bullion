@@ -649,9 +649,9 @@ Future<void> showConfirmTradeDialog({
   required String targetPrice,
   required String totalCost,
   required Future<void> Function() onConfirm,
-  String title = "Confirm Trade",
-  String subtitle = "Review your order details",
-  String confirmButtonText = "Confirm Trade",
+  String? title,
+  String? subtitle,
+  String? confirmButtonText,
 }) async {
   Timer? timer;
   int remainingSeconds = 5; // 👈 5-second countdown
@@ -662,6 +662,12 @@ Future<void> showConfirmTradeDialog({
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setModalState) {
+          final l10n = AppLocalizations.of(context)!;
+          final dialogTitle = title ?? l10n.trade_confirm_dialog_title;
+          final dialogSubtitle =
+              subtitle ?? l10n.trade_confirm_dialog_subtitle;
+          final dialogConfirm =
+              confirmButtonText ?? l10n.trade_confirm_dialog_button;
           // 1. Initialize the timer once
           timer ??= Timer.periodic(const Duration(seconds: 1), (t) {
             if (remainingSeconds <= 1) {
@@ -698,7 +704,7 @@ Future<void> showConfirmTradeDialog({
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              title,
+                              dialogTitle,
                               style: GoogleFonts.inter(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -707,7 +713,7 @@ Future<void> showConfirmTradeDialog({
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              subtitle,
+                              dialogSubtitle,
                               style: GoogleFonts.inter(
                                 color: const Color(0xFF8E8E93),
                                 fontSize: 13,
@@ -737,7 +743,7 @@ Future<void> showConfirmTradeDialog({
                               ),
                             ),
                             child: Text(
-                              "00:0${remainingSeconds}s",
+                              "00:0$remainingSeconds${l10n.sec}",
                               style: GoogleFonts.inter(
                                 color: remainingSeconds <= 2
                                     ? Colors.red
@@ -783,7 +789,7 @@ Future<void> showConfirmTradeDialog({
                         ),
                       ),
                       child: Text(
-                        "Limit Order",
+                        l10n.deal_take_profit,
                         style: GoogleFonts.inter(
                           color: const Color(0xFFBBA473),
                           fontSize: 11,
@@ -795,17 +801,26 @@ Future<void> showConfirmTradeDialog({
                   ],
 
                   /// Details Section
-                  _tradeDetailRow("Amount", "$amountGrams grams"),
+                  _tradeDetailRow(
+                    l10n.amountVar,
+                    '$amountGrams ${l10n.grams_unit_lowercase}',
+                  ),
                   const SizedBox(height: 12),
                   const Divider(color: Colors.white10, height: 1),
                   const SizedBox(height: 12),
                   if (isLimitOrder) ...[
-                    _tradeDetailRow("Target Price", "IQD $targetPrice / gram"),
+                    _tradeDetailRow(
+                      l10n.trade_row_target_price,
+                      l10n.price_iqd_per_gram(targetPrice),
+                    ),
                     const SizedBox(height: 12),
                     const Divider(color: Colors.white10, height: 1),
                     const SizedBox(height: 12),
                   ],
-                  _tradeDetailRow("Est. Total Cost", "IQD $totalCost"),
+                  _tradeDetailRow(
+                    l10n.trade_row_est_total,
+                    '${l10n.iqd_currency} $totalCost',
+                  ),
 
                   const SizedBox(height: 24),
 
@@ -818,8 +833,8 @@ Future<void> showConfirmTradeDialog({
                     ),
                     child: Text(
                       isLimitOrder
-                          ? "Your order will be executed when the gold price reaches IQD $targetPrice per gram. You'll be notified when this happens."
-                          : "Your trade will be executed immediately at the current market price of IQD ${targetPrice}. Ensure you have sufficient balance.",
+                          ? l10n.trade_confirm_limit_body(targetPrice)
+                          : l10n.trade_confirm_market_body(targetPrice),
                       style: GoogleFonts.inter(
                         color: const Color(0xFF8E8E93),
                         fontSize: 12,
@@ -847,7 +862,7 @@ Future<void> showConfirmTradeDialog({
                             ),
                             child: Center(
                               child: Text(
-                                "Cancel",
+                                l10n.cancel,
                                 style: GoogleFonts.inter(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -882,7 +897,7 @@ Future<void> showConfirmTradeDialog({
                             ),
                             child: Center(
                               child: Text(
-                                confirmButtonText,
+                                dialogConfirm,
                                 style: GoogleFonts.inter(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,

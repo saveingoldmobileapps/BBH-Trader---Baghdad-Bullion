@@ -117,7 +117,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    isExpanded ? "See Less" : "See Details",
+                    isExpanded ? l10n.see_less : l10n.see_details,
                     style: const TextStyle(
                       color: Color(0xFFBBA473),
                       fontWeight: FontWeight.w500,
@@ -192,6 +192,11 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
         return "استرداد نقدي";
       case "Referral Cashback":
         return "استرداد نقدي للإحالة";
+
+  case "Covering the Purchase":
+    return "تغطية الشراء";
+  case "Proceeds from the Sale":
+    return "عائدات البيع";
       default:
         return AppLocalizations.of(context)!.not_available;
     }

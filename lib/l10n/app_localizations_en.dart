@@ -31,6 +31,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getStarted => 'Get Started';
 
   @override
+  String get your_gold => 'Your Gold\nYour Wealth.';
+
+  @override
+  String get new_to_bbh => 'I\'m new to BBH';
+
+  @override
+  String get exiting_to_bbh => 'I\'m an existing user';
+
+  @override
+  String get eng_title => 'English';
+
+  @override
+  String get arabic_title => 'Arabic';
+
+  @override
   String get app_lang => 'App Language';
 
   @override
@@ -63,6 +78,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get create_account => 'Create Account';
+
+  @override
+  String get enter_phone_to_login => 'Enter your phone number to login';
+
+  @override
+  String get enter_email_to_login => 'Enter your email to login';
+
+  @override
+  String get enter_bank_to_login =>
+      'Enter your banking details to login with your bank';
+
+  @override
+  String get login_with_phone => 'Login with phone';
+
+  @override
+  String get login_with_email => 'Login with email';
+
+  @override
+  String get login_or => 'OR';
 
   @override
   String get forgotPassword_title => 'Forgot Password?';
@@ -324,6 +358,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please enter email or phone number';
 
   @override
+  String get enter_email_hint => 'Enter your email';
+
+  @override
+  String get login_email_Labe => 'Email';
+
+  @override
+  String get login_email_validation => 'Please enter email';
+
+  @override
+  String get please_valid_email => 'Please enter a valid email';
+
+  @override
   String get please_enter_first_name => 'Please enter first name';
 
   @override
@@ -351,6 +397,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get confirm_pwd =>
       'Password do not match, Please re-enter confirm paswword.';
+
+  @override
+  String get plz_enter_valid_phone => 'Please enter a valid phone number';
 
   @override
   String get agreement_prefix => 'By Creating Account, I agree to SaveInGold ';
@@ -2145,6 +2194,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get g_Gold => 'g Gold';
 
   @override
+  String get profit_title => 'Profit';
+
+  @override
   String trade_order_message(Object tradeType, Object grams, Object price) {
     return '$tradeType ${grams}g Gold @ $price';
   }
@@ -2296,7 +2348,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get select_script => 'Select Script';
 
   @override
-  String get target_price => 'Target Price';
+  String get target_price => 'Target price';
 
   @override
   String get enter_price => 'Enter price';
@@ -2348,6 +2400,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get idq => 'IQD';
+
+  @override
+  String get at => 'at';
+
+  @override
+  String get g_ => '/g';
 
   @override
   String get rejected => 'Rejected';
@@ -2686,4 +2744,219 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nam_mismatch => 'Name Mismatch';
+
+  @override
+  String get trade_gold => 'Trade Gold';
+
+  @override
+  String get current_market_price => 'Current Market Price';
+
+  @override
+  String get buying_at => 'Buying at';
+
+  @override
+  String get selling_at => 'Selling at';
+
+  @override
+  String get error_loading_prices => 'Error loading prices';
+
+  @override
+  String price_iqd_per_gram(String price) {
+    return 'IQD $price / gram';
+  }
+
+  @override
+  String ounce_price_iqd(String price) {
+    return 'Ounce: IQD $price';
+  }
+
+  @override
+  String high_price_badge(String price) {
+    return 'High $price';
+  }
+
+  @override
+  String low_price_badge(String price) {
+    return 'Low $price';
+  }
+
+  @override
+  String get gram_unit_plural => 'gram(s)';
+
+  @override
+  String get current_trade_deals => 'Current trade deals';
+
+  @override
+  String get gram_no_filled_deals =>
+      'You don\'t have any filled or opened deals at the moment.';
+
+  @override
+  String get side_menu_esouq_subtitle => 'Shop online for the best deals';
+
+  @override
+  String get side_menu_orders_subtitle => 'Track your orders and manage them';
+
+  @override
+  String get side_menu_gift_subtitle => 'Send a gift to a friend';
+
+  @override
+  String get side_menu_alerts_subtitle =>
+      'Get notified when the price of gold reaches your target';
+
+  @override
+  String get side_menu_support_subtitle => 'Contact our support team';
+
+  @override
+  String get side_menu_settings_subtitle =>
+      'Manage your account and app preferences';
+
+  @override
+  String get side_menu_logout_subtitle => 'Log out of your account';
+
+  @override
+  String deal_sell_greater_than_current_sell_price(String price) {
+    return 'Please enter a sell price greater than the current sell price (IQD $price).';
+  }
+
+  @override
+  String get about_to_save_profit => 'You are about to save profit';
+
+  @override
+  String get about_to_take_profit_message => 'You are about to take profit';
+
+  @override
+  String get something_went_wrong_try_again =>
+      'Something went wrong. Please try again.';
+
+  @override
+  String get quick_action_withdraw => 'Withdraw';
+
+  @override
+  String get could_not_open_link => 'Could not open the link';
+
+  @override
+  String get home_wallet_funds_label => 'Funds';
+
+  @override
+  String get history_no_metal =>
+      'You don\'t have any Metal history at the moment.';
+
+  @override
+  String get history_no_money =>
+      'You don\'t have any Money history at the moment.';
+
+  @override
+  String get see_details => 'See Details';
+
+  @override
+  String get see_less => 'See Less';
+
+  @override
+  String get screen_details_title => 'Details';
+
+  @override
+  String get triggered_by => 'Triggered by';
+
+  @override
+  String get transaction_details_header => 'Transaction Details';
+
+  @override
+  String get metal_opened_at => 'Opened @';
+
+  @override
+  String get metal_closed_at => 'Closed @';
+
+  @override
+  String get buy_gold_grams_subtitle =>
+      'Enter the amount of gold in grams to trade';
+
+  @override
+  String get grams_unit_lowercase => 'grams';
+
+  @override
+  String buy_gold_approx_total(String amount) {
+    return '≈ IQD $amount';
+  }
+
+  @override
+  String get invest_target_price_per_gram => 'Target Price (per gram)';
+
+  @override
+  String buy_order_executes_at_iqd(String price) {
+    return 'Your order will execute when the price reaches IQD $price';
+  }
+
+  @override
+  String get trade_at_market_price => 'Trade at market price';
+
+  @override
+  String get invest_target_price_menu => 'Target price';
+
+  @override
+  String get invest_market_price_short => 'Market price';
+
+  @override
+  String get target_price_hint_example => 'IQD 170,000.00';
+
+  @override
+  String get error_loading_price => 'Error loading price';
+
+  @override
+  String get trade_confirm_dialog_title => 'Confirm Trade';
+
+  @override
+  String get trade_confirm_dialog_subtitle => 'Review your order details';
+
+  @override
+  String get trade_confirm_dialog_button => 'Confirm Trade';
+
+  @override
+  String get trade_confirm_sale_title => 'Confirm Sale';
+
+  @override
+  String get trade_row_target_price => 'Target Price';
+
+  @override
+  String get trade_row_est_total => 'Est. Total Cost';
+
+  @override
+  String trade_confirm_limit_body(String targetPrice) {
+    return 'Your order will be executed when the gold price reaches IQD $targetPrice per gram. You\'ll be notified when this happens.';
+  }
+
+  @override
+  String get order_placed_title => 'Order Placed!';
+
+  @override
+  String get limit_order_title => 'Limit Order';
+
+  @override
+  String get limit_order_des =>
+      'Your limit order has been placed and will\nexecute when the target price is reached.';
+
+  @override
+  String get limit_order_success => 'You have Successfully Placed the order.';
+
+  @override
+  String get limit_date_time => 'Date & Time';
+
+  @override
+  String get limit_trade_type => 'Trade type';
+
+  @override
+  String get limit_amount => 'Amount';
+
+  @override
+  String get gmt_time => 'GMT+3 Total';
+
+  @override
+  String get will_notify => 'We’ll notify you when your order is executed';
+
+  @override
+  String get return_home => 'Return to home';
+
+  @override
+  String trade_confirm_market_body(String price) {
+    return 'Your trade will be executed immediately at the current market price of IQD $price. Ensure you have sufficient balance.';
+  }
 }

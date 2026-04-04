@@ -7,6 +7,11 @@
   "gs_subtitle": "Seamlessly buy, sell, and grow your gold portfolio with the platform you trust.",
   "login": "Login",
   "getStarted": "Get Started",
+  "your_gold":"Your Gold\nYour Wealth.",
+  "new_to_bbh":"I''m new to BBH",
+  "exiting_to_bbh": "I''m an existing user",
+  "eng_title": "English",
+  "arabic_title": "Arabic",
 
   "@languageScreen": {},
   "app_lang": "App Language",
@@ -22,6 +27,13 @@
   "loginBtn": "Login",
   "dont_have_account": "Dont have an account?",
   "create_account": "Create Account",
+  "enter_phone_to_login" : "Enter your phone number to login",
+  "enter_email_to_login" : "Enter your email to login",
+  "enter_bank_to_login": "Enter your banking details to login with your bank",
+  "login_with_phone": "Login with phone",
+  "login_with_email" : "Login with email",
+  "login_or" : "OR",
+
 
   "@ForgotPasswordScreen": {},
   "forgotPassword_title": "Forgot Password?",
@@ -117,6 +129,10 @@
   "please_enter_password": "Please enter password",
   "invalid_email_or_password": "Invalid email or password. Please try again.",
   "please_enter_email_or_phone": "Please enter email or phone number",
+  "enter_email_hint": "Enter your email",
+  "login_email_Labe" : "Email",
+  "login_email_validation": "Please enter email",
+  "please_valid_email":"Please enter a valid email",
 
   "@Validations": {},
   "please_enter_first_name": "Please enter first name",
@@ -128,6 +144,7 @@
   "incorrect_password": "Incorrect password",
   "please_select_amount": "Please select an amount",
   "confirm_pwd": "Password do not match, Please re-enter confirm paswword.",
+  "plz_enter_valid_phone": "Please enter a valid phone number",
 
   "@LegalText": {},
   "agreement_prefix": "By Creating Account, I agree to SaveInGold ",
@@ -867,6 +884,7 @@
    "gram_buy_word": "Buy",
    "gram_sell_word": "Sell",
    "g_Gold": "g Gold",
+   "profit_title" : "Profit",
 
    "trade_order_message": "{tradeType} {grams}g Gold @ {price}",
 "@trade_order_message": {
@@ -946,6 +964,8 @@
   "no": "No",
   "yes": "Yes",
   "idq": "IQD",
+  "at": "at",
+  "g_":"/g",
   "rejected": "Rejected",
   "approved": "Approved",
   "comment_here": "Comment here",
@@ -1054,9 +1074,126 @@
   "temporary_freezed": "Account Temporarily Frozen",
   "temporary_freezed_account_desc": "Your account has been temporarily frozen. To restore access, please contact our support team for assistance.",
   "doc_mismatch": "Document name and profile name language do not match. Please upload a matching ID.",
-  "nam_mismatch":"Name Mismatch"
+  "nam_mismatch":"Name Mismatch",
 
-   
+  "@MainScreens": {},
+  "trade_gold": "Trade Gold",
+  "current_market_price": "Current Market Price",
+  "buying_at": "Buying at",
+  "selling_at": "Selling at",
+  "error_loading_prices": "Error loading prices",
+  "price_iqd_per_gram": "IQD {price} / gram",
+  "@price_iqd_per_gram": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "ounce_price_iqd": "Ounce: IQD {price}",
+  "@ounce_price_iqd": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "high_price_badge": "High {price}",
+  "@high_price_badge": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "low_price_badge": "Low {price}",
+  "@low_price_badge": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "gram_unit_plural": "gram(s)",
+  "current_trade_deals": "Current trade deals",
+  "gram_no_filled_deals": "You don''t have any filled or opened deals at the moment.",
+  "side_menu_esouq_subtitle": "Shop online for the best deals",
+  "side_menu_orders_subtitle": "Track your orders and manage them",
+  "side_menu_gift_subtitle": "Send a gift to a friend",
+  "side_menu_alerts_subtitle": "Get notified when the price of gold reaches your target",
+  "side_menu_support_subtitle": "Contact our support team",
+  "side_menu_settings_subtitle": "Manage your account and app preferences",
+  "side_menu_logout_subtitle": "Log out of your account",
+  "deal_sell_greater_than_current_sell_price": "Please enter a sell price greater than the current sell price (IQD {price}).",
+  "@deal_sell_greater_than_current_sell_price": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "about_to_save_profit": "You are about to save profit",
+  "about_to_take_profit_message": "You are about to take profit",
+  "something_went_wrong_try_again": "Something went wrong. Please try again.",
+  "quick_action_withdraw": "Withdraw",
+  "could_not_open_link": "Could not open the link",
+  "home_wallet_funds_label": "Funds",
+  "history_no_metal": "You don''t have any Metal history at the moment.",
+  "history_no_money": "You don''t have any Money history at the moment.",
+
+  "see_details": "See Details",
+  "see_less": "See Less",
+  "screen_details_title": "Details",
+  "triggered_by": "Triggered by",
+  "transaction_details_header": "Transaction Details",
+  "metal_opened_at": "Opened @",
+  "metal_closed_at": "Closed @",
+
+  "buy_gold_grams_subtitle": "Enter the amount of gold in grams to trade",
+  "grams_unit_lowercase": "grams",
+  "buy_gold_approx_total": "≈ IQD {amount}",
+  "@buy_gold_approx_total": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "invest_target_price_per_gram": "Target Price (per gram)",
+  "buy_order_executes_at_iqd": "Your order will execute when the price reaches IQD {price}",
+  "@buy_order_executes_at_iqd": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "trade_at_market_price": "Trade at market price",
+  "invest_target_price_menu": "Target price",
+  "invest_market_price_short": "Market price",
+  "target_price_hint_example": "IQD 170,000.00",
+  "error_loading_price": "Error loading price",
 
 
+
+  "trade_confirm_dialog_title": "Confirm Trade",
+  "trade_confirm_dialog_subtitle": "Review your order details",
+  "trade_confirm_dialog_button": "Confirm Trade",
+  "trade_confirm_sale_title": "Confirm Sale",
+  "trade_row_target_price": "Target Price",
+  "trade_row_est_total": "Est. Total Cost",
+  "trade_confirm_limit_body": "Your order will be executed when the gold price reaches IQD {targetPrice} per gram. You''ll be notified when this happens.",
+  "@trade_confirm_limit_body": {
+    "placeholders": {
+      "targetPrice": { "type": "String" }
+    }
+  },
+  "order_placed_title": "Order Placed!",
+  "limit_order_title": "Limit Order",
+  "limit_order_des": "Your limit order has been placed and will\nexecute when the target price is reached.",
+  "limit_order_success":"You have Successfully Placed the order.",
+  "limit_date_time": "Date & Time",
+  "limit_trade_type": "Trade type",
+  "limit_amount": "Amount",
+  "target_price":"Target price",
+  "gmt_time":"GMT+3 Total",
+  "will_notify":"We’ll notify you when your order is executed",
+  "return_home": "Return to home",
+
+
+
+
+
+  "trade_confirm_market_body": "Your trade will be executed immediately at the current market price of IQD {price}. Ensure you have sufficient balance.",
+  "@trade_confirm_market_body": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  }
 }

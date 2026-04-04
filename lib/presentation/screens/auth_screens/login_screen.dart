@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:saveingold_fzco/l10n/app_localizations_en.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/widgets/no_copy_paste_format.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/register_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
@@ -137,7 +139,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Text(
                       _selectedType == LoginType.bank
                           ? "Bank login"
-                          : "Welcome back",
+                          : AppLocalizations.of(context)!.welcome_back,//"Welcome back",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 32,
@@ -164,7 +166,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         return ButtonWidget(
                           title: _selectedType == LoginType.bank
                               ? "Login"
-                              : "Continue",
+                              : AppLocalizations.of(context)!.continu,//"Continue",
                           isLoadingState: authStateWatch.isButtonState,
                           enabled: isValid,
                           onTap: _handleLogin,
@@ -180,7 +182,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                     if (_selectedType != LoginType.phone)
                       _buildSecondaryButton(
-                        "Login with phone",
+                        AppLocalizations.of(context)!.login_with_phone,//"Login with phone",
                         () {
                           setState(() => _selectedType = LoginType.phone);
                           _isFormValidNotifier.value = _isFormValid();
@@ -188,7 +190,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     if (_selectedType != LoginType.email)
                       _buildSecondaryButton(
-                        "Login with email",
+                        AppLocalizations.of(context)!.login_with_email,//"Login with email",
                         () {
                           setState(() => _selectedType = LoginType.email);
                           _isFormValidNotifier.value = _isFormValid();
@@ -211,9 +213,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           );
                         },
-                        child: const Text(
-                          "I'm new to BBH",
-                          style: TextStyle(
+                        child: Text(
+                          AppLocalizations.of(context)!.new_to_bbh,//"I'm new to BBH",
+                          style: const TextStyle(
                             color: Color(0xFFC5A353),
                             fontSize: 16,
                           ),
@@ -247,18 +249,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 Expanded(
                   child: _buildTextField(
                     controller: phoneController,
-                    hint: "Phone number",
+                    hint: AppLocalizations.of(context)!.phone_number,//"Phone number",
                     isNumeric: true,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter phone number';
+                        return AppLocalizations.of(context)!.please_enter_phone_number;//'Please enter phone number';
                       }
                       final digitsOnly = value.replaceAll(
                         RegExp(r'[^0-9]'),
                         '',
                       );
                       if (digitsOnly.length < 9) {
-                        return 'Please enter a valid phone number';
+                        return AppLocalizations.of(context)!.plz_enter_valid_phone;//'Please enter a valid phone number';
                       }
                       return null;
                     },
@@ -270,11 +272,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _buildTextField(
               controller: passwordController,
               hint: "**********",
-              label: "Password",
+              label: AppLocalizations.of(context)!.password,//"Password",
               isPassword: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter password';
+                  return AppLocalizations.of(context)!.please_enter_password;//'Please enter password';
                 }
                 return null;
               },
@@ -288,14 +290,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           children: [
             _buildTextField(
               controller: emailController,
-              hint: "Enter your email",
-              label: "Email",
+              hint: AppLocalizations.of(context)!.enter_email_hint,//"Enter your email",
+              label: AppLocalizations.of(context)!.login_email_Labe,//"Email",
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter email';
+                  return AppLocalizations.of(context)!.login_email_validation;//'Please enter email';
                 }
                 if (!value.trim().validateEmail()) {
-                  return 'Please enter a valid email';
+                  return AppLocalizations.of(context)!.please_valid_email;//'Please enter a valid email';
                 }
                 return null;
               },
@@ -304,11 +306,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _buildTextField(
               controller: passwordController,
               hint: "**********",
-              label: "Password",
+              label: AppLocalizations.of(context)!.password,//"Password",
               isPassword: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter password';
+                  return AppLocalizations.of(context)!.please_enter_password;//'Please enter password';
                 }
                 return null;
               },
@@ -480,8 +482,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           );
         },
-        child: const Text(
-          "Forgot Password?",
+        child:  Text(
+          AppLocalizations.of(context)!.forgot_password,//"Forgot Password?",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -587,11 +589,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Widget _buildDivider() {
     return Row(
-      children: const [
+      children:  [
         Expanded(child: Divider(color: Colors.white24)),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text("Or", style: TextStyle(color: Colors.white54)),
+          child: Text(AppLocalizations.of(context)!.login_or, style: TextStyle(color: Colors.white54)),
         ),
         Expanded(child: Divider(color: Colors.white24)),
       ],
@@ -601,11 +603,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String _getSubtitleText() {
     switch (_selectedType) {
       case LoginType.bank:
-        return "Enter your banking details to login with your bank";
+        return AppLocalizations.of(context)!.enter_bank_to_login;//"Enter your banking details to login with your bank";
       case LoginType.email:
-        return "Enter your email to login";
+        return AppLocalizations.of(context)!.enter_email_to_login;//"Enter your email to login";
       case LoginType.phone:
-        return "Enter your phone number to login";
+        return AppLocalizations.of(context)!.enter_phone_to_login;//"Enter your phone number to login";
     }
   }
 

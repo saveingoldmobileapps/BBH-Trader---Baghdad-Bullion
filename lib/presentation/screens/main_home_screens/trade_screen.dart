@@ -31,6 +31,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
+    final l10n = AppLocalizations.of(context)!;
     final goldPriceState = ref.watch(goldPriceProvider);
     final mainStateWatchProvider = ref.watch(homeProvider);
     return Scaffold(
@@ -125,7 +126,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        "Search here",
+                        l10n.gift_search_here,
                         style: TextStyle(
                           color: Colors.white.withOpacity(0.5),
                           fontSize: 14,
@@ -172,13 +173,13 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
               const SizedBox(height: 24),
 
               // 2. Current Market Price Card
-              _buildMarketPriceCard(goldPriceState),
+              _buildMarketPriceCard(context, goldPriceState),
 
               const SizedBox(height: 24),
 
               // 3. Trade Gold Action Button
               LoaderButton(
-                title: "Trade Gold",
+                title: l10n.trade_gold,
                 // c: AppColors.primaryGold500, // Or use a gradient decoration if needed
                 onTap: () {
                   // Navigate to the BuyGoldScreen UI previously provided
@@ -231,6 +232,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
   }
 
   Widget _buildTopHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
         // User Profile Pic
@@ -253,9 +255,9 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             ),
             child: Row(
               children: [
-                const Text(
-                  "Placeholder",
-                  style: TextStyle(color: Colors.white38),
+                Text(
+                  l10n.gift_search_here,
+                  style: const TextStyle(color: Colors.white38),
                 ),
                 const Spacer(),
                 const Icon(Icons.search, color: Colors.white70, size: 20),
@@ -280,7 +282,11 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
     );
   }
 
-  Widget _buildMarketPriceCard(AsyncValue goldPriceState) {
+  Widget _buildMarketPriceCard(
+    BuildContext context,
+    AsyncValue goldPriceState,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -292,17 +298,18 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
         data: (data) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Current Market Price",
-              style: TextStyle(
+            Text(
+              l10n.current_market_price,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             _buildPriceRow(
-              label: "Buying at",
+              l10n: l10n,
+              label: l10n.buying_at,
               price: data.oneGramBuyingPriceInIQD,
               ouncePrice: data.oneOunceBuyingPriceInIQD,
               highLowPrice: data.lastHighBuyingPrice,
@@ -312,7 +319,8 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             const SizedBox(height: 16),
 
             _buildPriceRow(
-              label: "Selling at",
+              l10n: l10n,
+              label: l10n.selling_at,
               price: data.oneGramSellingPriceInIQD,
               ouncePrice: data.oneOunceSellingPriceInIQD,
               highLowPrice: data.lastLowSellingPrice,
@@ -323,10 +331,10 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.primaryGold500),
         ),
-        error: (_, __) => const Center(
+        error: (_, __) => Center(
           child: Text(
-            "Error loading prices",
-            style: TextStyle(color: Colors.red),
+            l10n.error_loading_prices,
+            style: const TextStyle(color: Colors.red),
           ),
         ),
       ),
@@ -334,6 +342,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
   }
 
   Widget _buildPriceRow({
+    required AppLocalizations l10n,
     required String label,
     required double price,
     required double ouncePrice,
@@ -353,7 +362,9 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              "IQD ${CommonService.formatPriceCompact(price)} / gram",
+              l10n.price_iqd_per_gram(
+                CommonService.formatPriceCompact(price),
+              ),
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -362,7 +373,9 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             ),
             const SizedBox(height: 2),
             Text(
-              "Ounce: IQD ${CommonService.formatPriceCompact(ouncePrice)}",
+              l10n.ounce_price_iqd(
+                CommonService.formatPriceCompact(ouncePrice),
+              ),
               style: TextStyle(
                 color: Colors.white.withOpacity(0.5),
                 fontSize: 12,
@@ -390,7 +403,13 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
               ),
               const SizedBox(width: 4),
               Text(
-                "${isHigh ? "High" : "Low"} ${CommonService.formatPriceCompact(highLowPrice)}",
+                isHigh
+                    ? l10n.high_price_badge(
+                        CommonService.formatPriceCompact(highLowPrice),
+                      )
+                    : l10n.low_price_badge(
+                        CommonService.formatPriceCompact(highLowPrice),
+                      ),
                 style: TextStyle(
                   color: isHigh ? Colors.green : Colors.red,
                   fontSize: 12,

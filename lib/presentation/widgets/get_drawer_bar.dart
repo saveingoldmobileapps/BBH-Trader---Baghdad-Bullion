@@ -71,7 +71,7 @@ class GetDrawerBar extends ConsumerWidget {
                     children: [
                       const SizedBox(width: 16),
                       Text(
-                        l10n.more ?? "More",
+                        l10n.more,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 32,
@@ -84,7 +84,7 @@ class GetDrawerBar extends ConsumerWidget {
                       _buildMenuCard(
                         context,
                         title: l10n.esouq,
-                        subtitle: "Shop online for the best deals",
+                        subtitle: l10n.side_menu_esouq_subtitle,
                         icon: "assets/svg/shop.svg",
                         onTap: () => Navigator.push(
                           context,
@@ -98,7 +98,7 @@ class GetDrawerBar extends ConsumerWidget {
                       _buildMenuCard(
                         context,
                         title: l10n.my_orders,
-                        subtitle: "Track your orders and manage them",
+                        subtitle: l10n.side_menu_orders_subtitle,
                         icon: "assets/svg/box.svg",
                         onTap: () => Navigator.push(
                           context,
@@ -112,7 +112,7 @@ class GetDrawerBar extends ConsumerWidget {
                       _buildMenuCard(
                         context,
                         title: l10n.gift,
-                        subtitle: "Send a gift to a friend",
+                        subtitle: l10n.side_menu_gift_subtitle,
                         icon: "assets/svg/gift.svg",
                         onTap: () => _handleGiftLogic(
                           context,
@@ -125,8 +125,7 @@ class GetDrawerBar extends ConsumerWidget {
                       _buildMenuCard(
                         context,
                         title: l10n.alert_title,
-                        subtitle:
-                            "Get notified when the price of gold reaches your target",
+                        subtitle: l10n.side_menu_alerts_subtitle,
                         icon: "assets/svg/notification.svg",
                         onTap: () => Navigator.push(
                           context,
@@ -149,7 +148,7 @@ class GetDrawerBar extends ConsumerWidget {
                       _buildMenuCard(
                         context,
                         title: l10n.support,
-                        subtitle: "Contact our support team",
+                        subtitle: l10n.side_menu_support_subtitle,
                         icon: "assets/svg/support_icon.svg",
                         onTap: () => Navigator.push(
                           context,
@@ -162,7 +161,7 @@ class GetDrawerBar extends ConsumerWidget {
                       _buildMenuCard(
                         context,
                         title: l10n.settings,
-                        subtitle: "Manage your account and app preferences",
+                        subtitle: l10n.side_menu_settings_subtitle,
                         icon: "assets/svg/setting_icon.svg",
                         onTap: () => Navigator.push(
                           context,
@@ -178,7 +177,7 @@ class GetDrawerBar extends ConsumerWidget {
                       _buildMenuCard(
                         context,
                         title: l10n.logout,
-                        subtitle: "Log out of your account",
+                        subtitle: l10n.side_menu_logout_subtitle,
                         icon: "assets/svg/logout_icon.svg",
                         onTap: () => _handleLogout(
                           context,
@@ -347,7 +346,11 @@ class GetDrawerBar extends ConsumerWidget {
           : (type == "residency"
                 ? l10n.residency_document_required
                 : l10n.kyc_verification_required),
-      subtitle: l10n.residency_verification_message,
+      subtitle: type == "email"
+          ? l10n.email_verification_message
+          : (type == "residency"
+                ? l10n.residency_verification_message
+                : l10n.kyc_verification_message),
       noButtonTitle: l10n.later,
       yesButtonTitle: l10n.proceed,
       onNoPress: () => Navigator.pop(context),

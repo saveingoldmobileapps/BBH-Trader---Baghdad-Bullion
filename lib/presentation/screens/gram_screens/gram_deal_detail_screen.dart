@@ -770,8 +770,13 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                           currentSellPrice == null ||
                                           editedPrice < currentSellPrice) {
                                         Toasts.getErrorToast(
-                                          text:
-                                              "Please enter a sell price greater than the current sell price (IQD ${currentSellPrice?.toStringAsFixed(2) ?? "-"})",
+                                          text: AppLocalizations.of(
+                                            context,
+                                          )!.deal_sell_greater_than_current_sell_price(
+                                            currentSellPrice
+                                                    ?.toStringAsFixed(2) ??
+                                                "-",
+                                          ),
                                           gravity: ToastGravity.TOP,
                                         );
                                         return;
@@ -1204,14 +1209,12 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                 final String confirmationMessage =
                                     (roundedInput >= buyAt &&
                                         roundedInput <= roundedSelling)
-                                    ? "You are about to save Profit"
-                                    // AppLocalizations.of(
-                                    //     context,
-                                    //   )!.about_save_profit
-                                    :  "You are about to take Profit";
-                                    // AppLocalizations.of(
-                                    //     context,
-                                    //   )!.about_take_profit;
+                                    ? AppLocalizations.of(
+                                        context,
+                                      )!.about_to_save_profit
+                                    : AppLocalizations.of(
+                                        context,
+                                      )!.about_to_take_profit_message;
 
                                 //if bool is true than show the user that you want to save profit insteady of you want to update deal
 
@@ -1342,8 +1345,9 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   });
 
                                   Toasts.getErrorToast(
-                                    text:
-                                        "Something went wrong. Please try again.",
+                                    text: AppLocalizations.of(
+                                      context,
+                                    )!.something_went_wrong_try_again,
                                     gravity: ToastGravity.TOP,
                                   );
                                 }

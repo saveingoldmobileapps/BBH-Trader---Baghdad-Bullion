@@ -16,6 +16,7 @@ import 'package:saveingold_fzco/presentation/widgets/live_price_container.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
 import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import '../main_home_screens/trade_screen.dart';
 
 class SellGoldScreen extends ConsumerStatefulWidget {
@@ -412,8 +413,9 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                           ? sellAtProfitController.text.trim()
                           : sellingPriceInOneGram.toStringAsFixed(2),
                       totalCost: calculatedValue,
-                      title: "Confirm Sale",
-                      confirmButtonText: "Place Order",
+                      title: AppLocalizations.of(context)!.trade_confirm_sale_title,
+                      confirmButtonText:
+                          AppLocalizations.of(context)!.place_order,
                       onConfirm: () async {
                         if (!context.mounted) return;
                         await ref
@@ -525,8 +527,9 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                       amountGrams: userInputController.text,
                       targetPrice: sellingPriceInOneGram.toStringAsFixed(2),
                       totalCost: calculatedValue,
-                      title: "Confirm Sale",
-                      confirmButtonText: "Confirm Sale",
+                      title: AppLocalizations.of(context)!.trade_confirm_sale_title,
+                      confirmButtonText:
+                          AppLocalizations.of(context)!.trade_confirm_sale_title,
                       onConfirm: () async {
                         if (!context.mounted) return;
                         await ref

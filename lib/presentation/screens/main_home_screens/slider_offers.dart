@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/enums/loading_state.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../core/res_sizes/sizes.dart';
 import '../../../core/theme/const_colors.dart';
 import '../../sharedProviders/providers/states/home_state.dart';
@@ -142,8 +143,12 @@ class _OfferCarouselState extends State<OfferCarousel> {
                                   mode: LaunchMode.externalApplication);
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text("Could not open the link"),
+                                SnackBar(
+                                  content: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.could_not_open_link,
+                                  ),
                                 ),
                               );
                             }

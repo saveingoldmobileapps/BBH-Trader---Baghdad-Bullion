@@ -41,6 +41,7 @@ class _MetalStatementDetailScreenState
   Widget build(BuildContext context) {
     /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
@@ -51,7 +52,7 @@ class _MetalStatementDetailScreenState
         centerTitle: true,
         titleSpacing: 0,
         title: GetGenericText(
-          text: "Details",
+          text: l10n.screen_details_title,
           // fontSize: 20,
           fontSize: sizes!.responsiveFont(
             phoneVal: 20,
@@ -100,7 +101,7 @@ class _MetalStatementDetailScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GetGenericText(
-                    text: "Triggered by",
+                    text: l10n.triggered_by,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -187,7 +188,7 @@ class _MetalStatementDetailScreenState
               ),
               ConstPadding.sizeBoxWithHeight(height: 10),
               GetGenericText(
-                text: "Transaction Details",
+                text: l10n.transaction_details_header,
                 fontSize: sizes!.responsiveFont(
                   phoneVal: 16,
                   tabletVal: 18,
@@ -200,7 +201,7 @@ class _MetalStatementDetailScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GetGenericText(
-                    text: "Invest",
+                    text: l10n.invest,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -253,7 +254,7 @@ class _MetalStatementDetailScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GetGenericText(
-                    text: "Opened @",
+                    text: l10n.metal_opened_at,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -279,7 +280,7 @@ class _MetalStatementDetailScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GetGenericText(
-                    text: "Closed @",
+                    text: l10n.metal_closed_at,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,
@@ -288,9 +289,7 @@ class _MetalStatementDetailScreenState
                     color: AppColors.grey3Color,
                   ),
                   GetGenericText(
-                    text:
-                        "${AppLocalizations.of(context)!.idq} ${AppLocalizations.of(context)!.na}"
-                        "IQD N/A",
+                    text: "${l10n.idq} ${l10n.na}",
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,

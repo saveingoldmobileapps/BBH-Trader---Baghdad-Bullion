@@ -132,7 +132,7 @@ class _MetalScreenState extends ConsumerState<HistoryScreen> {
                           children: [
                             Expanded(
                               child: Text(
-                                "Search here",
+                                l10n.gift_search_here,
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.5),
                                   fontSize: 14,

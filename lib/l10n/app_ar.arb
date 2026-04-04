@@ -7,6 +7,11 @@
   "gs_subtitle": "اشترِ وبِع واستثمر في محفظتك الذهبية بسهولة عبر منصة موثوقة.",
   "login": "تسجيل الدخول",
   "getStarted": "ابدأ الآن",
+  "your_gold": "ذهبك\nثروتك.",
+  "new_to_bbh": "أنا مستخدم جديد في BBH",
+  "exiting_to_bbh": "أنا مستخدم حالي",
+  "eng_title": "الإنجليزية",
+  "arabic_title": "العربية",
 
   "@languageScreen": {},
   "app_lang": "لغة التطبيق",
@@ -23,6 +28,12 @@
   "loginBtn": "تسجيل الدخول",
   "dont_have_account": "هل لديك حساب؟",
   "create_account": "إنشاء حساب",
+  "enter_phone_to_login": "أدخل رقم هاتفك لتسجيل الدخول",
+  "enter_email_to_login": "أدخل بريدك الإلكتروني لتسجيل الدخول",
+  "enter_bank_to_login": "أدخل بياناتك البنكية لتسجيل الدخول عبر البنك",
+  "login_with_phone": "تسجيل الدخول عبر الهاتف",
+  "login_with_email": "تسجيل الدخول عبر البريد الإلكتروني",
+  "login_or": "أو",
 
   "@ForgotPasswordScreen": {},
   "forgotPassword_title": "نسيت كلمة المرور؟",
@@ -56,6 +67,10 @@
   "iraq_num": "يجب أن يكون رقم العراق مكونًا من 10 أرقام.",
   "iraq_num_str": "يجب أن يبدأ رقم العراق بالرقم 7.",
   "invalid_message_phone": "رمز الدولة غير صالح",
+  "enter_email_hint": "أدخل بريدك الإلكتروني",
+  "login_email_Labe": "البريد الإلكتروني",
+  "login_email_validation": "يرجى إدخال البريد الإلكتروني",
+  "please_valid_email": "يرجى إدخال بريد إلكتروني صالح",
   
 
   "@KycBasic": {},
@@ -133,6 +148,7 @@
   "incorrect_password": "كلمة المرور غير صحيحة",
   "please_select_amount": "يرجى اختيار المبلغ",
   "confirm_pwd": "كلمة المرور غير متطابقة، يرجى إعادة إدخال كلمة المرور للتأكيد.",
+  "plz_enter_valid_phone": "يرجى إدخال رقم هاتف صالح",
 
 
   "@LegalText": {},
@@ -872,6 +888,7 @@
   "gram_invest_status" : "حالة الاستثمار:",
   "gram_date" : "التاريخ:",
   "g_Gold": "غرام الذهب",
+  "profit_title": "الربح",
 
 
 
@@ -888,8 +905,6 @@
       }
     },
    "trade_sell": "بيع",
-
-"trade_sell": "Sell",
   "deal_bought_at_price": "تم الشراء بسعر",
   "deal_edit_price": "تعديل السعر",
   "deal_price_per_gram": "السعر لكل غرام (الدينار العراقي)",
@@ -966,6 +981,8 @@
 
 
   "idq": "الدينار العراقي",
+  "g_": "غرام",
+  "at": "في",
   "rejected": "مرفوض",
   "approved": "مقبول",
   "comment_here": "اكتب تعليقك هنا",
@@ -1075,7 +1092,122 @@
   "temporary_freezed": "تم إيقاف الحساب مؤقتًا",
   "temporary_freezed_account_desc": "تم إيقاف حسابك مؤقتًا. لاستعادة الوصول، يرجى التواصل مع فريق الدعم للحصول على المساعدة.",
   "doc_mismatch": "لغة اسم المستند واسم الملف الشخصي غير متطابقة. يرجى تحميل هوية مطابقة.",
-  "nam_mismatch": "عدم تطابق في الأسماء"
+  "nam_mismatch": "عدم تطابق في الأسماء",
+
+  "@MainScreens": {},
+  "trade_gold": "تداول الذهب",
+  "current_market_price": "سعر السوق الحالي",
+  "buying_at": "الشراء عند",
+  "selling_at": "البيع عند",
+  "error_loading_prices": "تعذر تحميل الأسعار",
+  "price_iqd_per_gram": "{price} د.ع / غرام",
+  "@price_iqd_per_gram": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "ounce_price_iqd": "الأونصة: {price} د.ع",
+  "@ounce_price_iqd": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "high_price_badge": "أعلى {price}",
+  "@high_price_badge": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "low_price_badge": "أدنى {price}",
+  "@low_price_badge": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "gram_unit_plural": "غرام",
+  "current_trade_deals": "صفقات التداول الحالية",
+  "gram_no_filled_deals": "لا توجد لديك صفقات مفتوحة أو منفذة في الوقت الحالي.",
+  "side_menu_esouq_subtitle": "تسوّق عبر الإنترنت لأفضل العروض",
+  "side_menu_orders_subtitle": "تتبع طلباتك وإدارتها",
+  "side_menu_gift_subtitle": "أرسل هدية لصديق",
+  "side_menu_alerts_subtitle": "احصل على إشعار عندما يصل سعر الذهب إلى هدفك",
+  "side_menu_support_subtitle": "تواصل مع فريق الدعم",
+  "side_menu_settings_subtitle": "إدارة حسابك وتفضيلات التطبيق",
+  "side_menu_logout_subtitle": "تسجيل الخروج من حسابك",
+  "deal_sell_greater_than_current_sell_price": "يرجى إدخال سعر بيع أعلى من سعر البيع الحالي ({price} د.ع).",
+  "@deal_sell_greater_than_current_sell_price": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "about_to_save_profit": "أنت على وشك حفظ الربح",
+  "about_to_take_profit_message": "أنت على وشك جني الربح",
+  "something_went_wrong_try_again": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  "quick_action_withdraw": "سحب",
+  "could_not_open_link": "تعذر فتح الرابط",
+  "home_wallet_funds_label": "الأموال",
+  "history_no_metal": "لا يوجد لديك سجل معادن في الوقت الحالي.",
+  "history_no_money": "لا يوجد لديك سجل أموال في الوقت الحالي.",
+
+  "see_details": "عرض التفاصيل",
+  "see_less": "إخفاء التفاصيل",
+  "screen_details_title": "التفاصيل",
+  "triggered_by": "وقت التنفيذ",
+  "transaction_details_header": "تفاصيل المعاملة",
+  "metal_opened_at": "فُتح عند",
+  "metal_closed_at": "أُغلق عند",
+
+  "buy_gold_grams_subtitle": "أدخل كمية الذهب بالغرامات للتداول",
+  "grams_unit_lowercase": "غرامات",
+  "buy_gold_approx_total": "≈ {amount} د.ع",
+  "@buy_gold_approx_total": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "invest_target_price_per_gram": "السعر المستهدف (للغرام)",
+  "buy_order_executes_at_iqd": "يُنفَّذ طلبك عندما يصل السعر إلى {price} د.ع",
+  "@buy_order_executes_at_iqd": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  },
+  "trade_at_market_price": "التداول بسعر السوق",
+  "invest_target_price_menu": "سعر مستهدف",
+  "invest_market_price_short": "سعر السوق",
+  "target_price_hint_example": "د.ع 170,000.00",
+  "error_loading_price": "تعذر تحميل السعر",
+
+  "trade_confirm_dialog_title": "تأكيد الصفقة",
+  "trade_confirm_dialog_subtitle": "راجع تفاصيل طلبك",
+  "trade_confirm_dialog_button": "تأكيد الصفقة",
+  "trade_confirm_sale_title": "تأكيد البيع",
+  "trade_row_target_price": "السعر المستهدف",
+  "trade_row_est_total": "التكلفة الإجمالية التقديرية",
+  "trade_confirm_limit_body": "يُنفَّذ طلبك عندما يصل سعر الذهب إلى {targetPrice} د.ع للغرام. سنُعلمك عند حدوث ذلك.",
+  "@trade_confirm_limit_body": {
+    "placeholders": {
+      "targetPrice": { "type": "String" }
+    }
+  },
+  "order_placed_title": "تم تنفيذ الطلب!",
+"limit_order_title": "أمر محدد",
+"limit_order_des": "تم تقديم الأمر المحدد الخاص بك وسيتم\nتنفيذه عند الوصول إلى السعر المستهدف.",
+"limit_order_success": "تم تقديم الطلب بنجاح.",
+"limit_date_time": "التاريخ والوقت",
+"limit_trade_type": "نوع العملية",
+"limit_amount": "المبلغ",
+"target_price": "السعر المستهدف",
+"gmt_time": "GMT+3 الإجمالي",
+"will_notify": "سنقوم بإشعارك عند تنفيذ طلبك",
+"return_home": "العودة إلى الصفحة الرئيسية",
+
+  "trade_confirm_market_body": "يُنفَّذ تداولك فورًا بسعر السوق الحالي البالغ {price} د.ع. تأكد من كفاية رصيدك.",
+  "@trade_confirm_market_body": {
+    "placeholders": {
+      "price": { "type": "String" }
+    }
+  }
 
 
 

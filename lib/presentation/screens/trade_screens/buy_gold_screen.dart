@@ -104,6 +104,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final tradeStateWatchProvider = ref.watch(tradeProvider);
     final mainStateWatchProvider = ref.watch(homeProvider);
     final goldPriceState = ref.watch(goldPriceProvider);
@@ -126,7 +127,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         backgroundColor: const Color(0xff171919),
         elevation: 0,
         title: Text(
-          AppLocalizations.of(context)!.buy_gold,
+          l10n.buy_gold,
           style: GoogleFonts.inter(
             fontSize: 18,
             fontWeight: FontWeight.w600,
@@ -156,7 +157,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         
                   // Gram Input Section
                   Text(
-                    AppLocalizations.of(context)!.amount,
+                    l10n.amount,
                     style: GoogleFonts.inter(
                       color: Colors.white,
                       fontSize: 18,
@@ -164,7 +165,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     ),
                   ),
                   Text(
-                    "Enter the amount of gold in grams to trade",
+                    l10n.buy_gold_grams_subtitle,
                     style: GoogleFonts.inter(color: Colors.grey, fontSize: 13),
                   ),
                   const SizedBox(height: 15),
@@ -208,7 +209,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                       ),
                       const SizedBox(width: 10),
                       Text(
-                        "grams",
+                        l10n.grams_unit_lowercase,
                         style: GoogleFonts.inter(
                           color: Colors.white54,
                           fontSize: 20,
@@ -217,7 +218,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     ],
                   ),
                   Text(
-                    "≈ IQD $calculatedValue",
+                    l10n.buy_gold_approx_total(calculatedValue),
                     style: GoogleFonts.inter(
                       color: Colors.white70,
                       fontSize: 16,
@@ -253,7 +254,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                       return Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          "${AppLocalizations.of(context)!.max_grams_note} ${maxGrams.toStringAsFixed(2)}",
+                          "${l10n.max_grams_note} ${maxGrams.toStringAsFixed(2)}",
                           style: GoogleFonts.inter(
                             color: Colors.white54,
                             fontSize: 13,
@@ -269,14 +270,14 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   const SizedBox(height: 35),
 
                   // Current Market Price Display
-                  _buildPriceCard(goldPriceState),
+                  _buildPriceCard(context, goldPriceState),
 
                   const SizedBox(height: 25),
 
                   // Conditional Target Price Input
                   if (isBuyAtPriceStatus) ...[
                     Text(
-                      "Target Price (per gram)",
+                      l10n.invest_target_price_per_gram,
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 14,
@@ -284,10 +285,14 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    _buildTargetPriceInput(),
+                    _buildTargetPriceInput(context),
                     const SizedBox(height: 10),
                     Text(
-                      "Your order will execute when the price reaches IQD ${buyAtPriceController.text.isEmpty ? '0.00' : buyAtPriceController.text}",
+                      l10n.buy_order_executes_at_iqd(
+                        buyAtPriceController.text.isEmpty
+                            ? '0.00'
+                            : buyAtPriceController.text,
+                      ),
                       style: GoogleFonts.inter(
                         color: Colors.grey,
                         fontSize: 12,
@@ -306,7 +311,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                             ? 1.0
                             : 0.5, // 👈 Visually show disabled state
                         child: LoaderButton(
-                          title: AppLocalizations.of(context)!.buy_gold,
+                          title: l10n.buy_gold,
                           isLoadingState: tradeStateWatchProvider.isButtonState,
                           onTap: () => _onTradeButtonTap(
                             mainStateWatchProvider,
@@ -326,50 +331,8 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     );
   }
 
-  Widget _buildTradeTypeSelector() {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _selectorBtn("Trade at market price", !isBuyAtPriceStatus),
-          _selectorBtn("Target price", isBuyAtPriceStatus),
-        ],
-      ),
-    );
-  }
-
-  Widget _selectorBtn(String title, bool isSelected) {
-    return GestureDetector(
-      onTap: () => setState(() {
-        isBuyAtPriceStatus = title == "Target price";
-        _updateCalculation();
-      }),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? Colors.white.withOpacity(0.15)
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          title,
-          style: GoogleFonts.inter(
-            color: isSelected ? Colors.white : Colors.white38,
-            fontSize: 12,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPriceCard(AsyncValue goldPriceState) {
+  Widget _buildPriceCard(BuildContext context, AsyncValue goldPriceState) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -384,7 +347,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Current Market Price",
+                l10n.current_market_price,
                 style: GoogleFonts.inter(color: Colors.white54, fontSize: 12),
               ),
               const SizedBox(height: 4),
@@ -393,7 +356,9 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "IQD ${data.oneGramBuyingPriceInIQD.toStringAsFixed(2)} / gram",
+                      l10n.price_iqd_per_gram(
+                        data.oneGramBuyingPriceInIQD.toStringAsFixed(2),
+                      ),
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -402,7 +367,11 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      "Ounce: IQD ${CommonService.formatPriceCompact(data.oneOunceBuyingPriceInIQD)}",
+                      l10n.ounce_price_iqd(
+                        CommonService.formatPriceCompact(
+                          data.oneOunceBuyingPriceInIQD,
+                        ),
+                      ),
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.5),
                         fontSize: 11,
@@ -416,9 +385,9 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   width: 15,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 ),
-                error: (_, __) => const Text(
-                  "Error loading price",
-                  style: TextStyle(color: Colors.red),
+                error: (_, __) => Text(
+                  l10n.error_loading_price,
+                  style: const TextStyle(color: Colors.red),
                 ),
               ),
             ],
@@ -440,7 +409,9 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    "High ${data.lastHighBuyingPrice.toStringAsFixed(2)}",
+                    l10n.high_price_badge(
+                      data.lastHighBuyingPrice.toStringAsFixed(2),
+                    ),
                     style: const TextStyle(
                       color: Color(0xFF4CAF50),
                       fontSize: 12,
@@ -472,19 +443,25 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
           _updateCalculation();
         });
       },
-      itemBuilder: (context) => [
-        _buildPopupItem(
-          title: "Trade at market price",
-          value: false,
-          isSelected: !isBuyAtPriceStatus,
-        ),
-        _buildPopupItem(
-          title: "Target price",
-          value: true,
-          isSelected: isBuyAtPriceStatus,
-        ),
-      ],
-      child: Container(
+      itemBuilder: (menuContext) {
+        final l10n = AppLocalizations.of(menuContext)!;
+        return [
+          _buildPopupItem(
+            title: l10n.trade_at_market_price,
+            value: false,
+            isSelected: !isBuyAtPriceStatus,
+          ),
+          _buildPopupItem(
+            title: l10n.invest_target_price_menu,
+            value: true,
+            isSelected: isBuyAtPriceStatus,
+          ),
+        ];
+      },
+      child: Builder(
+        builder: (ctx) {
+          final l10n = AppLocalizations.of(ctx)!;
+          return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.08),
@@ -494,7 +471,9 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         child: Row(
           children: [
             Text(
-              isBuyAtPriceStatus ? "Target price" : "Market price",
+              isBuyAtPriceStatus
+                  ? l10n.invest_target_price_menu
+                  : l10n.invest_market_price_short,
               style: GoogleFonts.inter(
                 color: Colors.white,
                 fontSize: 12,
@@ -509,6 +488,8 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
             ),
           ],
         ),
+          );
+        },
       ),
     );
   }
@@ -539,7 +520,8 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     );
   }
 
-  Widget _buildTargetPriceInput() {
+  Widget _buildTargetPriceInput(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return TextFormField(
       controller: buyAtPriceController,
       focusNode: _focusBuyAtPrice,
@@ -547,7 +529,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       decoration: InputDecoration(
         filled: true,
         fillColor: const Color(0xFF121212),
-        hintText: "IQD 170,000.00",
+        hintText: l10n.target_price_hint_example,
         hintStyle: const TextStyle(color: Colors.white24),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

@@ -31,6 +31,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get getStarted => 'ابدأ الآن';
 
   @override
+  String get your_gold => 'ذهبك\nثروتك.';
+
+  @override
+  String get new_to_bbh => 'أنا مستخدم جديد في BBH';
+
+  @override
+  String get exiting_to_bbh => 'أنا مستخدم حالي';
+
+  @override
+  String get eng_title => 'الإنجليزية';
+
+  @override
+  String get arabic_title => 'العربية';
+
+  @override
   String get app_lang => 'لغة التطبيق';
 
   @override
@@ -62,6 +77,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get create_account => 'إنشاء حساب';
+
+  @override
+  String get enter_phone_to_login => 'أدخل رقم هاتفك لتسجيل الدخول';
+
+  @override
+  String get enter_email_to_login => 'أدخل بريدك الإلكتروني لتسجيل الدخول';
+
+  @override
+  String get enter_bank_to_login =>
+      'أدخل بياناتك البنكية لتسجيل الدخول عبر البنك';
+
+  @override
+  String get login_with_phone => 'تسجيل الدخول عبر الهاتف';
+
+  @override
+  String get login_with_email => 'تسجيل الدخول عبر البريد الإلكتروني';
+
+  @override
+  String get login_or => 'أو';
 
   @override
   String get forgotPassword_title => 'نسيت كلمة المرور؟';
@@ -320,6 +354,18 @@ class AppLocalizationsAr extends AppLocalizations {
       'يرجى إدخال البريد الإلكتروني أو رقم الهاتف';
 
   @override
+  String get enter_email_hint => 'أدخل بريدك الإلكتروني';
+
+  @override
+  String get login_email_Labe => 'البريد الإلكتروني';
+
+  @override
+  String get login_email_validation => 'يرجى إدخال البريد الإلكتروني';
+
+  @override
+  String get please_valid_email => 'يرجى إدخال بريد إلكتروني صالح';
+
+  @override
   String get please_enter_first_name => 'يرجى إدخال الاسم الأول';
 
   @override
@@ -347,6 +393,9 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get confirm_pwd =>
       'كلمة المرور غير متطابقة، يرجى إعادة إدخال كلمة المرور للتأكيد.';
+
+  @override
+  String get plz_enter_valid_phone => 'يرجى إدخال رقم هاتف صالح';
 
   @override
   String get agreement_prefix => 'بإنشائي حسابًا، أوافق على ';
@@ -2126,12 +2175,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get g_Gold => 'غرام الذهب';
 
   @override
+  String get profit_title => 'الربح';
+
+  @override
   String trade_order_message(Object tradeType, Object grams, Object price) {
     return '$tradeType $grams غرام من الذهب بسعر $price';
   }
 
   @override
-  String get trade_sell => 'Sell';
+  String get trade_sell => 'بيع';
 
   @override
   String get deal_bought_at_price => 'تم الشراء بسعر';
@@ -2328,6 +2380,12 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get idq => 'الدينار العراقي';
+
+  @override
+  String get at => 'في';
+
+  @override
+  String get g_ => 'غرام';
 
   @override
   String get rejected => 'مرفوض';
@@ -2664,4 +2722,215 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get nam_mismatch => 'عدم تطابق في الأسماء';
+
+  @override
+  String get trade_gold => 'تداول الذهب';
+
+  @override
+  String get current_market_price => 'سعر السوق الحالي';
+
+  @override
+  String get buying_at => 'الشراء عند';
+
+  @override
+  String get selling_at => 'البيع عند';
+
+  @override
+  String get error_loading_prices => 'تعذر تحميل الأسعار';
+
+  @override
+  String price_iqd_per_gram(String price) {
+    return '$price د.ع / غرام';
+  }
+
+  @override
+  String ounce_price_iqd(String price) {
+    return 'الأونصة: $price د.ع';
+  }
+
+  @override
+  String high_price_badge(String price) {
+    return 'أعلى $price';
+  }
+
+  @override
+  String low_price_badge(String price) {
+    return 'أدنى $price';
+  }
+
+  @override
+  String get gram_unit_plural => 'غرام';
+
+  @override
+  String get current_trade_deals => 'صفقات التداول الحالية';
+
+  @override
+  String get gram_no_filled_deals =>
+      'لا توجد لديك صفقات مفتوحة أو منفذة في الوقت الحالي.';
+
+  @override
+  String get side_menu_esouq_subtitle => 'تسوّق عبر الإنترنت لأفضل العروض';
+
+  @override
+  String get side_menu_orders_subtitle => 'تتبع طلباتك وإدارتها';
+
+  @override
+  String get side_menu_gift_subtitle => 'أرسل هدية لصديق';
+
+  @override
+  String get side_menu_alerts_subtitle =>
+      'احصل على إشعار عندما يصل سعر الذهب إلى هدفك';
+
+  @override
+  String get side_menu_support_subtitle => 'تواصل مع فريق الدعم';
+
+  @override
+  String get side_menu_settings_subtitle => 'إدارة حسابك وتفضيلات التطبيق';
+
+  @override
+  String get side_menu_logout_subtitle => 'تسجيل الخروج من حسابك';
+
+  @override
+  String deal_sell_greater_than_current_sell_price(String price) {
+    return 'يرجى إدخال سعر بيع أعلى من سعر البيع الحالي ($price د.ع).';
+  }
+
+  @override
+  String get about_to_save_profit => 'أنت على وشك حفظ الربح';
+
+  @override
+  String get about_to_take_profit_message => 'أنت على وشك جني الربح';
+
+  @override
+  String get something_went_wrong_try_again =>
+      'حدث خطأ ما. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get quick_action_withdraw => 'سحب';
+
+  @override
+  String get could_not_open_link => 'تعذر فتح الرابط';
+
+  @override
+  String get home_wallet_funds_label => 'الأموال';
+
+  @override
+  String get history_no_metal => 'لا يوجد لديك سجل معادن في الوقت الحالي.';
+
+  @override
+  String get history_no_money => 'لا يوجد لديك سجل أموال في الوقت الحالي.';
+
+  @override
+  String get see_details => 'عرض التفاصيل';
+
+  @override
+  String get see_less => 'إخفاء التفاصيل';
+
+  @override
+  String get screen_details_title => 'التفاصيل';
+
+  @override
+  String get triggered_by => 'وقت التنفيذ';
+
+  @override
+  String get transaction_details_header => 'تفاصيل المعاملة';
+
+  @override
+  String get metal_opened_at => 'فُتح عند';
+
+  @override
+  String get metal_closed_at => 'أُغلق عند';
+
+  @override
+  String get buy_gold_grams_subtitle => 'أدخل كمية الذهب بالغرامات للتداول';
+
+  @override
+  String get grams_unit_lowercase => 'غرامات';
+
+  @override
+  String buy_gold_approx_total(String amount) {
+    return '≈ $amount د.ع';
+  }
+
+  @override
+  String get invest_target_price_per_gram => 'السعر المستهدف (للغرام)';
+
+  @override
+  String buy_order_executes_at_iqd(String price) {
+    return 'يُنفَّذ طلبك عندما يصل السعر إلى $price د.ع';
+  }
+
+  @override
+  String get trade_at_market_price => 'التداول بسعر السوق';
+
+  @override
+  String get invest_target_price_menu => 'سعر مستهدف';
+
+  @override
+  String get invest_market_price_short => 'سعر السوق';
+
+  @override
+  String get target_price_hint_example => 'د.ع 170,000.00';
+
+  @override
+  String get error_loading_price => 'تعذر تحميل السعر';
+
+  @override
+  String get trade_confirm_dialog_title => 'تأكيد الصفقة';
+
+  @override
+  String get trade_confirm_dialog_subtitle => 'راجع تفاصيل طلبك';
+
+  @override
+  String get trade_confirm_dialog_button => 'تأكيد الصفقة';
+
+  @override
+  String get trade_confirm_sale_title => 'تأكيد البيع';
+
+  @override
+  String get trade_row_target_price => 'السعر المستهدف';
+
+  @override
+  String get trade_row_est_total => 'التكلفة الإجمالية التقديرية';
+
+  @override
+  String trade_confirm_limit_body(String targetPrice) {
+    return 'يُنفَّذ طلبك عندما يصل سعر الذهب إلى $targetPrice د.ع للغرام. سنُعلمك عند حدوث ذلك.';
+  }
+
+  @override
+  String get order_placed_title => 'تم تنفيذ الطلب!';
+
+  @override
+  String get limit_order_title => 'أمر محدد';
+
+  @override
+  String get limit_order_des =>
+      'تم تقديم الأمر المحدد الخاص بك وسيتم\nتنفيذه عند الوصول إلى السعر المستهدف.';
+
+  @override
+  String get limit_order_success => 'تم تقديم الطلب بنجاح.';
+
+  @override
+  String get limit_date_time => 'التاريخ والوقت';
+
+  @override
+  String get limit_trade_type => 'نوع العملية';
+
+  @override
+  String get limit_amount => 'المبلغ';
+
+  @override
+  String get gmt_time => 'GMT+3 الإجمالي';
+
+  @override
+  String get will_notify => 'سنقوم بإشعارك عند تنفيذ طلبك';
+
+  @override
+  String get return_home => 'العودة إلى الصفحة الرئيسية';
+
+  @override
+  String trade_confirm_market_body(String price) {
+    return 'يُنفَّذ تداولك فورًا بسعر السوق الحالي البالغ $price د.ع. تأكد من كفاية رصيدك.';
+  }
 }

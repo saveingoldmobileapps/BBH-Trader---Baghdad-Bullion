@@ -164,7 +164,7 @@ class _GramScreenState extends ConsumerState<GramScreen> {
                           children: [
                             Expanded(
                               child: Text(
-                                "Search here",
+                                l10n.gift_search_here,
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(0.5),
                                   fontSize: 14,
@@ -232,9 +232,9 @@ class _GramScreenState extends ConsumerState<GramScreen> {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        const Text(
-                          "gram(s)",
-                          style: TextStyle(
+                        Text(
+                          l10n.gram_unit_plural,
+                          style: const TextStyle(
                             color: AppColors.primaryGold500,
                             fontSize: 20,
                           ),
@@ -243,8 +243,8 @@ class _GramScreenState extends ConsumerState<GramScreen> {
                     ),
                     const SizedBox(height: 15),
                     Text(
-                      "Current trade deals",
-                      style: TextStyle(
+                      l10n.current_trade_deals,
+                      style: const TextStyle(
                         color: AppColors.primaryGold500,
                         fontSize: 16,
                       ),
@@ -281,7 +281,7 @@ class _GramScreenState extends ConsumerState<GramScreen> {
         children: [
           //SizedBox(height: sizes!.height * 0.15),
           NoDataWidget(
-            title: "You don't have any filled or opened deals at the moment.",
+            title: AppLocalizations.of(context)!.gram_no_filled_deals,
             description: "",
             // title: AppLocalizations.of(context)!.empty_no_data,
             // description: AppLocalizations.of(context)!.empty_no_gram_balance,

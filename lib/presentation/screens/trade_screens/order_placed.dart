@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 
 class OrderPlacedScreen extends StatelessWidget {
   final String orderId;
@@ -39,7 +40,7 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
               Text(
-                "Order Placed!",
+                AppLocalizations.of(context)!.order_placed_title,//"Order Placed!",
                 style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: 22,
@@ -50,15 +51,15 @@ class OrderPlacedScreen extends StatelessWidget {
               const SizedBox(height: 8),
 
               /// ✅ Subtitle
-             tradeType== 'Limit Order'? Text(
-                "Your limit order has been placed and will\nexecute when the target price is reached.",
+             tradeType== 'Limit Order' ||tradeType== "أمر محدد"? Text(
+                AppLocalizations.of(context)!.limit_order_des,//"Your limit order has been placed and will\nexecute when the target price is reached.",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   color: Colors.white60,
                   fontSize: 13,
                 ),
               ):Text(
-                "You have Successfully Placed the order.",
+                AppLocalizations.of(context)!.limit_order_success,//"You have Successfully Placed the order.",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.inter(
                   color: Colors.white60,
@@ -82,12 +83,18 @@ class OrderPlacedScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // _row("Order ID", orderId),
-                    _row("Date & Time", dateTime),
-                    _badgeRow("Trade type", tradeType),
-                    _row("Amount", amount),
-                    _row("Target price", targetPrice),
+                    // _row("Date & Time", dateTime),
+                    // _badgeRow("Trade type", tradeType),
+                    // _row("Amount", amount),
+                    // _row("Target price", targetPrice),
+                    // const Divider(color: Colors.white12),
+                    // _totalRow("GMT+3 Total", total),
+                    _row("${AppLocalizations.of(context)!.limit_date_time}", dateTime),
+                    _badgeRow("${AppLocalizations.of(context)!.limit_trade_type}", tradeType),
+                    _row("${AppLocalizations.of(context)!.limit_amount}", amount),
+                    _row("${AppLocalizations.of(context)!.target_price}", targetPrice),
                     const Divider(color: Colors.white12),
-                    _totalRow("Est. Total", total),
+                    _totalRow("${AppLocalizations.of(context)!.gmt_time}", total),
                   ],
                 ),
               ),
@@ -96,7 +103,7 @@ class OrderPlacedScreen extends StatelessWidget {
 
               /// ✅ Info Text
               Text(
-                "We’ll notify you when your order is executed",
+                "${AppLocalizations.of(context)!.will_notify}",//"We’ll notify you when your order is executed",
                 style: GoogleFonts.inter(
                   color: Colors.white38,
                   fontSize: 12,
@@ -134,7 +141,7 @@ class OrderPlacedScreen extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "Return to home",
+                        "${AppLocalizations.of(context)!.return_home}",//"Return to home",
                         style: GoogleFonts.inter(
                           color: Colors.black,
                           fontWeight: FontWeight.w600,

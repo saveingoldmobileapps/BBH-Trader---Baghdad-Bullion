@@ -1,8 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:saveingold_fzco/l10n/app_localizations_ar.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/register_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/language_provider.dart';
 import 'auth_screens/login_screen.dart';
@@ -93,37 +95,37 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// Language Switch (Top Right)
-                  // Align(
-                  //   alignment: Alignment.topRight,
-                  //   child: Row(
-                  //     mainAxisSize: MainAxisSize.min,
-                  //     children: [
-                  //       Text(
-                  //         "English",
-                  //         style: TextStyle(
-                  //           color: isEnglish ? Colors.white : Colors.grey,
-                  //           fontSize: 14,
-                  //         ),
-                  //       ),
-                  //       const SizedBox(width: 6),
-                  //       Switch.adaptive(
-                  //         activeColor: AppColors.primaryGold500,
-                  //         value: !isEnglish,
-                  //         onChanged: (_) {
-                  //           languageNotifier.toggleLanguage(context);
-                  //         },
-                  //       ),
-                  //       const SizedBox(width: 6),
-                  //       Text(
-                  //         "العربية",
-                  //         style: TextStyle(
-                  //           color: !isEnglish ? Colors.white : Colors.grey,
-                  //           fontSize: 14,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.eng_title,//"English",
+                          style: TextStyle(
+                            color: isEnglish ? Colors.white : Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        Switch.adaptive(
+                          activeColor: AppColors.primaryGold500,
+                          value: !isEnglish,
+                          onChanged: (_) {
+                            languageNotifier.toggleLanguage(context);
+                          },
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          AppLocalizations.of(context)!.arabic_title,//"العربية",
+                          style: TextStyle(
+                            color: !isEnglish ? Colors.white : Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
                   const Spacer(flex: 2),
 
@@ -148,8 +150,8 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
 
                   /// Title
                   Text(
-                    "Your Gold\nYour Wealth.",
-                    textAlign: TextAlign.left,
+                    "${AppLocalizations.of(context)!.your_gold}",//"Your Gold\nYour Wealth.",
+                    textAlign: Directionality.of(context) == TextDirection.rtl?TextAlign.right:TextAlign.left,
                     style: GoogleFonts.roboto(
                       fontSize: 40,
                       fontWeight: FontWeight.w600,
@@ -163,7 +165,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                   /// Subtitle
                   Text(
                     AppLocalizations.of(context)!.gs_subtitle,
-                    textAlign: TextAlign.left,
+                    textAlign: Directionality.of(context) == TextDirection.rtl?TextAlign.right:TextAlign.left,
                     style: GoogleFonts.roboto(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -198,9 +200,9 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                             end: Alignment.bottomRight,
                           ),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            "I'm new to B&H",
+                            "${AppLocalizations.of(context)!.new_to_bbh}",//"I'm new to B&H",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -236,7 +238,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                         );
                       },
                       child: Text(
-                        "I'm an existing user",
+                       "${AppLocalizations.of(context)!.exiting_to_bbh}",// "I'm an existing user",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

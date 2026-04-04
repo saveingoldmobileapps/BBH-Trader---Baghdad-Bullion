@@ -55,6 +55,7 @@ class _MoneyStatementScreenState extends ConsumerState<MoneyStatementScreen> {
   Widget build(BuildContext context) {
     /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
+    final l10n = AppLocalizations.of(context)!;
     final historyState = ref.watch(historyProvider);
 
     return Column(
@@ -147,9 +148,8 @@ class _MoneyStatementScreenState extends ConsumerState<MoneyStatementScreen> {
         historyState.loadingState == LoadingState.data
             ? (historyState.moneyStatements.isEmpty)
                   ? NoDataWidget(
-                      title: "You don’t have any Money history at the moment.",
-                      description:
-                          "",
+                      title: l10n.history_no_money,
+                      description: "",
                       //"Please create new metal statement or try again later",
                     ).get20VerticalPadding()
                   : SizedBox(
@@ -232,12 +232,8 @@ class _MoneyStatementScreenState extends ConsumerState<MoneyStatementScreen> {
                 height: MediaQuery.of(context).size.height * 0.5,
                 child: Center(
                   child: NoDataWidget(
-                    title: "You don’t have any Money history at the moment.",
-                    // AppLocalizations.of(
-                    //   context,
-                    // )!.empty_no_data, //"No Data To Show",
-                    description:
-                        "",
+                    title: l10n.history_no_money,
+                    description: "",
                   ),
                 ),
               )

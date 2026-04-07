@@ -214,6 +214,7 @@
 
   "@TimezoneScreen": {},
   "timezone_title": "Timezone",
+  "timezone_select_label": "Select timezone",
   "timezone_error": "Timezone not selected please select timezone",
   "timezone_label": "Timezone",
   "edit": "Edit",
@@ -250,6 +251,7 @@
   "update_password_title": "Update Password",
   "change_password_confirm_msg": "Are you sure you want to change your password? You will need to use the new password for your next login.",
   "current_password": "Enter Current Password",
+  "current_password_label": "Current Password",
   "new_password": "New Password",
   "confirm_new_password": "Confirm Password",
   "update_password_btn": "Update Password",
@@ -438,6 +440,17 @@
   "grandTotal": "Grand Total",
   "buyNowBtn": "Buy Now",
   "checkout": "Checkout",
+  "esouq_review_order": "Review order",
+  "esouq_select_document": "Select document",
+  "esouq_choose_file": "Files",
+  "esouq_order_summary": "Order summary",
+  "esouq_order_id": "Order ID",
+  "esouq_items": "Items",
+  "esouq_total_paid": "Total paid",
+  "esouq_order_placed_subtitle": "Your order was placed successfully.",
+  "esouq_house_number_example": "10",
+  "esouq_weight_range": "Weight range",
+  "esouq_bar_type": "Bar type",
   "delivery": "Delivery",
   "collection": "Collection",
   "houseNumber": "House Number",
@@ -658,7 +671,7 @@
   "gram_bar_nmbr": "Bar Number :",
   "gram_status": "Status",
   "gram_target_price": "Target Price",
-  "gram_current_price": "Current price",
+  "gram_current_price": "Current Price",
   
 
   "@InvestToasts": {},
@@ -700,23 +713,33 @@
   "email_verification_cancel_btn": "Cancel",
 
   "@Settings": {},
-  "settings_title": "User Settings",
+  "settings_title": "Settings",
   "settings_personal_info": "Personal Information",
   "settings_personal_info_desc": "Manage your personal details and preferences.",
   "settings_language": "Language Settings",
   "settings_language_desc": "Select your preferred language for the app.",
-  "settings_switch": "Switch",
-  "settings_switch_desc": "Switch Demo user to Real",
+  "settings_switch": "Account type",
+  "settings_switch_desc": "Switch from demo account to real account",
   "settings_biometric": "Enable Biometric Login",
-  "settings_biometric_desc": "Log in securely using Touch ID or fingerprint.",
+  "settings_biometric_desc": "Log in securely using Face ID, Touch ID, or fingerprint.",
   "settings_timezone": "Timezone",
   "settings_timezone_desc": "Adjust your timezone to match your location.",
   "settings_password": "Password Settings",
   "settings_password_desc": "Update or change your account password.",
   "settings_delete": "Disable Account",
-  "settings_delete_desc": "Disable your account",
+  "settings_delete_desc": "Temporarily disable your account",
   "settings_logout": "Logout",
   "settings_logout_desc": "Sign out of your account securely.",
+  "settings_build_env_staging": "staging",
+  "settings_build_env_live": "live",
+  "settings_app_version_footer": "{versionWord} {buildNumber}-{environment}",
+  "@settings_app_version_footer": {
+    "placeholders": {
+      "versionWord": {"type": "String"},
+      "buildNumber": {"type": "String"},
+      "environment": {"type": "String"}
+    }
+  },
 
   "account_warning": "Please verify your {kycStatus} to get access to all the features.",
   "@account_warning": {
@@ -938,6 +961,15 @@
    "update_Account": "Update Account",
    "active_alerts": "Active Alerts",
    "no_active_alerts": "No active alerts",
+   "no_active_alert_at_moment": "No active alert available at the moment.",
+   "create_new_alert": "Create new alert",
+   "alert_selling": "Selling alert",
+   "alert_buying": "Buying Alert",
+   "alert_bar": "Alerts",
+
+   "active_title": "Active",
+   "active_difference": "Difference",
+   
    "please_enter_target_price": "Please enter target price",
   "unable_to_fetch_current_prices": "Unable to fetch current prices",
   "buy_alert_below_current_price": "Buy alert price must be below current buying price",
@@ -1075,9 +1107,11 @@
   "temporary_freezed_account_desc": "Your account has been temporarily frozen. To restore access, please contact our support team for assistance.",
   "doc_mismatch": "Document name and profile name language do not match. Please upload a matching ID.",
   "nam_mismatch":"Name Mismatch",
+  "no_withdraw": "No withdraw request found at the moment.",
 
   "@MainScreens": {},
   "trade_gold": "Trade Gold",
+  "trade_gram": "/ gram",
   "current_market_price": "Current Market Price",
   "buying_at": "Buying at",
   "selling_at": "Selling at",
@@ -1157,9 +1191,12 @@
   "trade_at_market_price": "Trade at market price",
   "invest_target_price_menu": "Target price",
   "invest_market_price_short": "Market price",
+  "inves_market_order": "Market Order",
   "target_price_hint_example": "IQD 170,000.00",
   "error_loading_price": "Error loading price",
-
+  "plz_enter_target_price": "Please enter the target price",
+  "target_buying_price_lower": "Target buying price must be lower than current buying price",
+  "target_selling_price": "Target selling price must be higher than current selling price",
 
 
   "trade_confirm_dialog_title": "Confirm Trade",

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/l10n/app_localizations_ar.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/register_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/language_provider.dart';
 import 'auth_screens/login_screen.dart';

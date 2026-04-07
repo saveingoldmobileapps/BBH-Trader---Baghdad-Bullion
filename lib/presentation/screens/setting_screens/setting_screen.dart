@@ -64,18 +64,15 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
           context: context,
           heading: AppLocalizations.of(
             context,
-          )!
-              .upgrade_real_account_title, //"Upgrade to Real Account",
+          )!.upgrade_real_account_title, //"Upgrade to Real Account",
           subtitle: AppLocalizations.of(context)!.upgrade_to_real_message,
-              //"Please note, upgrading to a real account will result in the deletion of your existing demo account data.",
+          //"Please note, upgrading to a real account will result in the deletion of your existing demo account data.",
           noButtonTitle: AppLocalizations.of(
             context,
-          )!
-              .upgrade_real_account_later, //"Not Now",
+          )!.upgrade_real_account_later, //"Not Now",
           yesButtonTitle: AppLocalizations.of(
             context,
-          )!
-              .upgrade_real_account_now, //"Upgrade Now",
+          )!.upgrade_real_account_now, //"Upgrade Now",
           onNoPress: () {
             Navigator.pop(context);
 
@@ -123,13 +120,16 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     final authStateReadProvider = ref.read(authProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
 
-    final isDemo = LocalDatabase.instance.getIsDemo() ?? false;
     //final authStateWatchProvider = ref.watch(authProvider);
     sizes!.refreshSize(context);
 
     final environment = dotenv.env['ENVIRONMENT'] ?? 'staging';
     debugPrint("Environment: $environment");
+    final buildEnvLabel = environment == 'production'
+        ? l10n.settings_build_env_live
+        : l10n.settings_build_env_staging;
 
     return Scaffold(
       appBar: AppBar(
@@ -140,7 +140,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
         centerTitle: false,
         titleSpacing: 0,
         title: GetGenericText(
-          text: AppLocalizations.of(context)!.settings_title, //"User Settings",
+          text: l10n.settings_title,
           fontSize: sizes!.responsiveFont(
             phoneVal: 20,
             tabletVal: 24,
@@ -158,57 +158,19 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
         child: SafeArea(
           bottom: true,
           child: SingleChildScrollView(
-
-    physics: const BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewPadding.bottom + 20,),
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewPadding.bottom + 20,
+              ),
               child: Column(
                 children: [
                   ConstPadding.sizeBoxWithHeight(height: 12),
                   BuildSettingCard(
-                    title: AppLocalizations.of(
-                      context,
-                    )!
-                        .personalInfo_title, //"Personal Information",
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_personal_info_desc, //"Manage your personal details and preferences.",
+                    title: l10n.settings_personal_info,
+                    subtitle: l10n.settings_personal_info_desc,
                     iconString: "assets/svg/user_icon.svg",
-                    onTap: () async {
-                      final isDemo =
-                          await LocalDatabase.instance.getIsDemo() ?? false;
-              
-                      // if (isDemo) {
-                      //   if (!context.mounted) return;
-                      //   await genericPopUpWidget(
-                      //     isLoadingState: false,
-                      //     context: context,
-                      //     heading: AppLocalizations.of(context)!.upgrade_real_account_title,
-                      //         //"Upgrade to Real Account", //"Real Account Required",
-                      //     subtitle: AppLocalizations.of(context)!.upgrade_real_account_msg,
-                      //     // "This feature requires a verified real account. "
-                      //     // "Please convert your demo account to a real account to access all features.",
-                      //     noButtonTitle: AppLocalizations.of(context)!.upgrade_real_account_later,//"Not Now",
-                      //     yesButtonTitle: AppLocalizations.of(context)!.upgrade_real_account_now, //"Upgrade Now",
-                      //     onNoPress: () async {
-                      //       Navigator.pop(context);
-                      //     },
-                      //     onYesPress: () async {
-                      //       // All verifications passed
-              
-                      //       Navigator.pop(context);
-                      //       Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //           builder: (context) => const SettingScreen(),
-                      //         ),
-                      //       );
-                      //     },
-                      //   );
-                      //   return;
-                      // }
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -221,14 +183,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   // _isRealAccount ? SizedBox.shrink() :
                   _buildDivider(),
                   BuildSettingCard(
-                    title: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_language, //"Language Settings",
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_language_desc, //"Select your preferred language for the app.",
+                    title: l10n.settings_language,
+                    subtitle: l10n.settings_language_desc,
                     iconString: "assets/svg/lang_icon.svg",
                     onTap: () {
                       Navigator.push(
@@ -244,16 +200,11 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   _isRealAccount
                       ? SizedBox.shrink()
                       : SwitchAccountCard(
-                          title: AppLocalizations.of(
-                            context,
-                          )!
-                              .settings_switch, //"Switch",
-                          subtitle: AppLocalizations.of(
-                            context,
-                          )!
-                              .settings_switch_desc, //"Switch Demo user to Real",
+                          title: l10n.settings_switch,
+                          subtitle: l10n.settings_switch_desc,
                           iconString: "assets/svg/user_icon.svg",
                           isSecondIcon: true,
+                          isLoading: _loadingSwitch,
                           initialSwitchValue: _isRealAccount,
                           onTap: () {
                             debugPrint("Switch card tapped");
@@ -263,8 +214,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   if (!Platform.isAndroid) _buildDivider(),
                   if (Platform.isIOS)
                     BuildSettingCard(
-                      title: AppLocalizations.of(context)!.faceid_enable,//"Enable Face ID",
-                      subtitle: AppLocalizations.of(context)!.faceid_desc,//"Use Face ID for quick and secure access.",
+                      title: l10n.faceid_enable,
+                      subtitle: l10n.faceid_desc,
                       iconString: "assets/svg/faceId_icon.svg",
                       onTap: () {
                         Navigator.push(
@@ -276,20 +227,14 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                       },
                       isSecondIcon: true,
                     ),
-                    if (!Platform.isIOS) _buildDivider(),
-                  //if (CommonService.hasFingerHardWare == true) 
+                  if (!Platform.isIOS) _buildDivider(),
+                  //if (CommonService.hasFingerHardWare == true)
                   //_buildDivider(),
                   // if (CommonService.hasFingerHardWare == true)
-                    if (Platform.isAndroid)
+                  if (Platform.isAndroid)
                     BuildSettingCard(
-                      title: AppLocalizations.of(
-                        context,
-                      )!
-                          .settings_biometric, //"Enable Biometric Login",
-                      subtitle: AppLocalizations.of(
-                        context,
-                      )!
-                          .settings_biometric_desc, //"Log in securely using Touch ID or fingerprint."
+                      title: l10n.settings_biometric,
+                      subtitle: l10n.settings_biometric_desc,
                       iconString: "assets/svg/fingerprint_icon.svg",
                       onTap: () {
                         Navigator.push(
@@ -303,14 +248,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     ),
                   _buildDivider(),
                   BuildSettingCard(
-                    title: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_timezone, //"Timezone",
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_timezone_desc, //"Adjust your timezone to match your location.",
+                    title: l10n.settings_timezone,
+                    subtitle: l10n.settings_timezone_desc,
                     iconString: "assets/svg/timezone_icon.svg",
                     onTap: () {
                       Navigator.push(
@@ -324,14 +263,8 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   ),
                   _buildDivider(),
                   BuildSettingCard(
-                    title: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_password, //"Password Settings",
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_password_desc, //"Update or change your account password.",
+                    title: l10n.settings_password,
+                    subtitle: l10n.settings_password_desc,
                     iconString: "assets/svg/password_icon.svg",
                     onTap: () {
                       Navigator.push(
@@ -345,43 +278,36 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   ),
                   _buildDivider(),
                   BuildSettingCard(
-                    title: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_delete, //"Delete Account",
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_delete_desc, //"Delete your account",
+                    title: l10n.settings_delete,
+                    subtitle: l10n.settings_delete_desc,
                     iconString: "assets/svg/user_icon.svg",
                     onTap: () async {
                       await genericPopUpWidget(
                         context: context,
                         heading: AppLocalizations.of(
                           context,
-                        )!
-                            .settings_delete, //"Delete Account",
+                        )!.settings_delete, //"Delete Account",
                         // subtitle: //AppLocalizations.of(context)!.settings_delete,
                         //     "Warning: Deleting your account is permanent. All of your data will be permanently erased and cannot be restored. Are you sure you want to continue?",
                         // noButtonTitle: "Cancel",
                         // yesButtonTitle: "Delete Account",
                         subtitle: //AppLocalizations.of(context)!.settings_delete,
-                            AppLocalizations.of(
+                        AppLocalizations.of(
                           context,
-                        )!
-                                .delete_account_warning,
+                        )!.delete_account_warning,
                         noButtonTitle: AppLocalizations.of(context)!.cancel,
                         yesButtonTitle: AppLocalizations.of(
                           context,
-                        )!
-                            .delete_account_title,
+                        )!.delete_account_title,
                         isLoadingState: ref.watch(authProvider).isButtonState,
                         onNoPress: () {
                           Navigator.pop(context);
                         },
                         onYesPress: () async {
                           /// delete user account
-                          await ref.read(authProvider.notifier).deleteUserAccount(
+                          await ref
+                              .read(authProvider.notifier)
+                              .deleteUserAccount(
                                 context: context,
                               );
                           await LocalDatabase.instance.clearAllUserData();
@@ -392,39 +318,29 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   ),
                   _buildDivider(),
                   BuildSettingCard(
-                    title: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_logout, //"Logout",
-                    subtitle: AppLocalizations.of(
-                      context,
-                    )!
-                        .settings_logout_desc, //"Sign out of your account securely.",
+                    title: l10n.settings_logout,
+                    subtitle: l10n.settings_logout_desc,
                     iconString: "assets/svg/logout_color_icon.svg",
                     onTap: () async {
                       final userId = await LocalDatabase.instance
                           .getUserId(); // pre-fetch here
-              
+
                       if (!context.mounted) return;
-              
+
                       await genericPopUpWidget(
                         context: context,
                         heading: AppLocalizations.of(
                           context,
-                        )!
-                            .logout_popup_title, //"Are you sure you want to logout?",
+                        )!.logout_popup_title, //"Are you sure you want to logout?",
                         subtitle: AppLocalizations.of(
                           context,
-                        )!
-                            .logout_popup_desc, //"You will be logged out of your account.",
+                        )!.logout_popup_desc, //"You will be logged out of your account.",
                         noButtonTitle: AppLocalizations.of(
                           context,
-                        )!
-                            .logout_no, //"NO",
+                        )!.logout_no, //"NO",
                         yesButtonTitle: AppLocalizations.of(
                           context,
-                        )!
-                            .logout_yes, //"YES",
+                        )!.logout_yes, //"YES",
                         isLoadingState: false,
                         onNoPress: () {
                           Navigator.pop(context);
@@ -440,16 +356,23 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                     isSecondIcon: false,
                   ),
                   _buildDivider(),
-              
+
                   GetGenericText(
-                    text:
-                        "Version $appVersion-${environment == "production" ? "live" : "staging"}",
-                    // "v1.0.0-${environment == "production" ? "live" : "staging"}",
-                    fontSize: sizes!.responsiveFont(phoneVal: 11, tabletVal: 13),
+                    text: l10n.settings_app_version_footer(
+                      l10n.app_version,
+                      appVersion,
+                      buildEnvLabel,
+                    ),
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 11,
+                      tabletVal: 13,
+                    ),
                     fontWeight: FontWeight.w400,
                     color: AppColors.grey3Color,
                   ),
-                  ConstPadding.sizeBoxWithHeight(height: sizes!.heightRatio * 100),
+                  ConstPadding.sizeBoxWithHeight(
+                    height: sizes!.heightRatio * 100,
+                  ),
                 ],
               ).get16HorizontalPadding(),
             ),

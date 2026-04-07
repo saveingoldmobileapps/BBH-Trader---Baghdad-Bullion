@@ -129,6 +129,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final mainStateWatchProvider = ref.watch(homeProvider);
     sizes!.refreshSize(context);
 
@@ -184,7 +185,6 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
               return;
             }
 
-            final isDemo = await LocalDatabase.instance.getIsDemo() ?? false;
             final temporaryCreditStatus =
                 await LocalDatabase.instance.getIsUsertemporaryCreditStatus() ??
                 false;
@@ -296,7 +296,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                   ),
                   GetGenericText(
                     text:
-                        "${AppLocalizations.of(context)!.idq_currency}${widget.oneGramPriceInIQD}/g",
+                        "${l10n.idq_currency}${widget.oneGramPriceInIQD}${l10n.g_}",
                     fontSize: 13,
                     color: AppColors.grey4Color,
                     fontWeight: FontWeight.bold,

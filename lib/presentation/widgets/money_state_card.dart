@@ -70,8 +70,8 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
                   ),
                   Text(
                     item.credit != null
-                        ? "${l10n.idq_currency} ${double.tryParse(item.credit.toString())?.toStringAsFixed(2) ?? '0.00'}"
-                        : "${l10n.idq_currency} ${double.tryParse(item.debit.toString())?.toStringAsFixed(2) ?? '0.00'}",
+                        ? "${l10n.idq_currency} ${double.tryParse(item.credit.toString())?.toStringAsFixed(3) ?? '0.00'}"
+                        : "${l10n.idq_currency} ${double.tryParse(item.debit.toString())?.toStringAsFixed(3) ?? '0.00'}",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -104,7 +104,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
             ),
             _buildDetailRow(
               l10n.balanceAfterTransaction,
-              "${l10n.idq_currency} ${double.tryParse(item.moneyBalance.toString())?.toStringAsFixed(2) ?? '0.00'}",
+              "${l10n.idq_currency} ${double.tryParse(item.moneyBalance.toString())?.toStringAsFixed(3) ?? '0.00'}",
             ),
             const SizedBox(height: 12),
           ],

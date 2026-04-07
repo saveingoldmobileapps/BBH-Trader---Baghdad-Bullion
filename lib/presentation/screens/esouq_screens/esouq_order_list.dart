@@ -43,6 +43,7 @@ class _OrderListScreenState extends ConsumerState<OrderListScreen> {
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.greyScale1000,
@@ -100,7 +101,7 @@ class _OrderListScreenState extends ConsumerState<OrderListScreen> {
           if (loanState.errorResponse != null) {
             return Center(
               child: Text(
-                loanState.errorResponse!.message ?? "Some Error Occurred",
+                loanState.errorResponse!.message ?? l10n.some_error_occurred,
               ),
             );
           }
@@ -400,7 +401,7 @@ class _OrderListScreenState extends ConsumerState<OrderListScreen> {
 
   Widget rejectionCard() {
     return _statusContainer(
-      "Rejected",
+      AppLocalizations.of(context)!.rejected,
       AppColors.red900Color,
       AppColors.red800Color,
     );
@@ -408,14 +409,18 @@ class _OrderListScreenState extends ConsumerState<OrderListScreen> {
 
   Widget acceptanceCard() {
     return _statusContainer(
-      "Approved",
+      AppLocalizations.of(context)!.approved,
       Color(0xFF34C759),
       AppColors.green900Color,
     );
   }
 
   Widget pendingCard() {
-    return _statusContainer("Pending", Color(0xFFE8B931), Color(0xFF11271C));
+    return _statusContainer(
+      AppLocalizations.of(context)!.pending,
+      Color(0xFFE8B931),
+      Color(0xFF11271C),
+    );
   }
 
   Widget _statusContainer(String text, Color bgColor, Color textColor) {

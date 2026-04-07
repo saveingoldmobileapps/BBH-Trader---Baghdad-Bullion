@@ -85,7 +85,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
               child: Column(
                 children: [
                   GetGenericText(
-                    text: "Password Setting",
+                    text: AppLocalizations.of(context)!.settings_password,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 26,
                       tabletVal: 32,
@@ -95,7 +95,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   ).getAlign(),
 
                   GetGenericText(
-                    text: "login securely using touch id or fingerprint",
+                    text: AppLocalizations.of(context)!.settings_password_desc,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
                       tabletVal: 20,
@@ -105,7 +105,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 16),
                   GetGenericText(
-                    text: "Current Password",
+                    text: AppLocalizations.of(context)!.current_password_label,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
                       tabletVal: 18,
@@ -115,7 +115,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 8),
                   CommonTextFormField(
-                    title: "title",
+                    title: "",
                     hintText: "******",
                     labelText: AppLocalizations.of(
                       context,
@@ -138,7 +138,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
                   GetGenericText(
-                    text: "New Password",
+                    text: AppLocalizations.of(context)!.new_password,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
                       tabletVal: 18,
@@ -148,7 +148,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 8),
                   CommonTextFormField(
-                    title: "title",
+                    title: "",
                     hintText: "*******",
                     labelText: AppLocalizations.of(
                       context,
@@ -175,7 +175,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
                   GetGenericText(
-                    text: "Repeat Password",
+                    text: AppLocalizations.of(context)!.confirm_new_password,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
                       tabletVal: 18,
@@ -185,7 +185,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 8),
                   CommonTextFormField(
-                    title: "title",
+                    title: "",
                     hintText: "******",
                     labelText: AppLocalizations.of(
                       context,

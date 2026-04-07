@@ -224,7 +224,7 @@ class _GramScreenState extends ConsumerState<GramScreen> {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          totalGrams.toStringAsFixed(2),
+                          totalGrams.toStringAsFixed(3),
                           style: const TextStyle(
                             color: AppColors.primaryGold500,
                             fontSize: 60,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/core/decimal_text_input_formatter.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/fund_screens/add_fund_screen.dart';
 import 'package:saveingold_fzco/presentation/screens/withdraw_fund_screens/edit_card_screen.dart';
@@ -225,6 +226,9 @@ class _WithdrawFundScreenState
                         context,
                       )!.amount, //"Amount",
                       controller: amountController,
+                      inputFormatters: [
+                        DecimalTextInputFormatter(decimalRange: 3),
+                      ],
                       textInputType: TextInputType.numberWithOptions(
                         signed: true,
                         decimal: true,
@@ -234,11 +238,6 @@ class _WithdrawFundScreenState
                           return AppLocalizations.of(
                             context,
                           )!.amountReq; //"Amount is required";
-                        }
-                        if (!RegExp(r'^\d+$').hasMatch(value.trim())) {
-                          return AppLocalizations.of(
-                            context,
-                          )!.withdraw_digit; //"Amount must be digits only";
                         }
                         final amount = double.tryParse(value.trim());
                         if (amount == null || amount <= 0) {

@@ -29,6 +29,7 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
     // You can safely watch/read providers here
     final mainStateWatchProvider = ref.watch(homeProvider);
     final authStateReadProvider = ref.read(authProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.greyScale1000,
@@ -140,8 +141,8 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                       children: [
                         _settingTile(
                           icon: "assets/svg/profile.svg",
-                          title: "Personal Information",
-                          subtitle: "Manage your personal details",
+                          title: l10n.settings_personal_info,
+                          subtitle: l10n.settings_personal_info_desc,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -154,8 +155,8 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
 
                         _settingTile(
                           icon: "assets/svg/language_circle.svg",
-                          title: "Language Settings",
-                          subtitle: "Select your preferred language",
+                          title: l10n.settings_language,
+                          subtitle: l10n.settings_language_desc,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -169,9 +170,8 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                         if (Platform.isAndroid)
                           _settingTile(
                             icon: "assets/svg/finger_scan.svg",
-                            title: "Enable Biometric Login",
-                            subtitle:
-                                "Login securely using Touch ID or fingerprint",
+                            title: l10n.settings_biometric,
+                            subtitle: l10n.settings_biometric_desc,
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -184,12 +184,8 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
 
                         _settingTile(
                           icon: "assets/svg/lock.svg",
-                          title: AppLocalizations.of(
-                            context,
-                          )!.settings_password,
-                          subtitle: AppLocalizations.of(
-                            context,
-                          )!.settings_password_desc,
+                          title: l10n.settings_password,
+                          subtitle: l10n.settings_password_desc,
                           onTap: () {
                             Navigator.push(
                               context,
@@ -202,26 +198,16 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
 
                         _settingTile(
                           icon: "assets/svg/profile_delete.svg",
-                          title: AppLocalizations.of(context)!.settings_delete,
-                          subtitle: AppLocalizations.of(
-                            context,
-                          )!.settings_delete_desc,
+                          title: l10n.settings_delete,
+                          subtitle: l10n.settings_delete_desc,
                           isDanger: true,
                           onTap: () async {
                             await genericPopUpWidget(
                               context: context,
-                              heading: AppLocalizations.of(
-                                context,
-                              )!.settings_delete,
-                              subtitle: AppLocalizations.of(
-                                context,
-                              )!.delete_account_warning,
-                              noButtonTitle: AppLocalizations.of(
-                                context,
-                              )!.cancel,
-                              yesButtonTitle: AppLocalizations.of(
-                                context,
-                              )!.delete_account_title,
+                              heading: l10n.settings_delete,
+                              subtitle: l10n.delete_account_warning,
+                              noButtonTitle: l10n.cancel,
+                              yesButtonTitle: l10n.delete_account_title,
                               isLoadingState: ref
                                   .watch(authProvider)
                                   .isButtonState,
@@ -241,8 +227,8 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
 
                         _settingTile(
                           icon: "assets/svg/logout.svg",
-                          title: "Logout",
-                          subtitle: "Log out of your account",
+                          title: l10n.settings_logout,
+                          subtitle: l10n.settings_logout_desc,
                           isDanger: true,
                           onTap: () async {
                             final userId = await LocalDatabase.instance
@@ -251,18 +237,10 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                             if (!context.mounted) return;
                             await genericPopUpWidget(
                               context: context,
-                              heading: AppLocalizations.of(
-                                context,
-                              )!.logout_popup_title,
-                              subtitle: AppLocalizations.of(
-                                context,
-                              )!.logout_popup_desc,
-                              noButtonTitle: AppLocalizations.of(
-                                context,
-                              )!.logout_no,
-                              yesButtonTitle: AppLocalizations.of(
-                                context,
-                              )!.logout_yes,
+                              heading: l10n.logout_popup_title,
+                              subtitle: l10n.logout_popup_desc,
+                              noButtonTitle: l10n.logout_no,
+                              yesButtonTitle: l10n.logout_yes,
                               isLoadingState: false,
                               onNoPress: () {
                                 Navigator.pop(context);

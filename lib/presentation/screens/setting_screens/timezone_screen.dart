@@ -260,14 +260,18 @@ class _TimezoneScreenState extends ConsumerState<TimezoneScreen> {
                     absorbing: !isEditable,
                     child: SearchableDropdown(
                       iconString: "assets/svg/arrow_down.svg",
-                      title: "Select Timezone",
+                      title: AppLocalizations.of(
+                        context,
+                      )!.timezone_select_label,
                       items: settingState.timeZoneList!.map<String>((tz) {
                         return "${tz.timezone ?? ""} - ${tz.name ?? ""}";
                       }).toList(),
                       label: AppLocalizations.of(
                         context,
                       )!.settings_timezone, //"Timezone",
-                      hint: "Select Timezone",
+                      hint: AppLocalizations.of(
+                        context,
+                      )!.timezone_select_label,
                       selectedItem: () {
                         if (_selectedTimezone == null) return "";
 
@@ -293,8 +297,9 @@ class _TimezoneScreenState extends ConsumerState<TimezoneScreen> {
                         fontWeight: FontWeight.w400,
                         fontFamily: GoogleFonts.roboto().fontFamily,
                       ),
-                      validator: (value) =>
-                          value == null ? 'Please select timezone' : null,
+                      validator: (value) => value == null
+                          ? AppLocalizations.of(context)!.timezone_error
+                          : null,
                       // onChanged: isEditable
                       //     ? (String selected) {
                       //         final selectedOffset = selected

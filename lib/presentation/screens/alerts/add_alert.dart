@@ -67,11 +67,11 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
 
     if (side == "Buy") {
       if (enteredPrice >= currentBuyingPrice) {
-        return "${AppLocalizations.of(context)!.buy_alert_below_current_price} (${currentBuyingPrice.toStringAsFixed(2)})";
+        return "${AppLocalizations.of(context)!.buy_alert_below_current_price} (${currentBuyingPrice.toStringAsFixed(3)})";
       }
     } else {
       if (enteredPrice <= currentSellingPrice) {
-        return "${AppLocalizations.of(context)!.sell_alert_above_current_price} (${currentSellingPrice.toStringAsFixed(2)})";
+        return "${AppLocalizations.of(context)!.sell_alert_above_current_price} (${currentSellingPrice.toStringAsFixed(3)})";
       }
     }
     return null;
@@ -103,7 +103,7 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
         elevation: 0,
         centerTitle: false,
         title: GetGenericText(
-          text: "Alerts",
+          text: AppLocalizations.of(context)!.alert_bar,//"Alerts",
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: Colors.white,
@@ -124,7 +124,7 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
             child: alertStateWatch.isCreatingAlert
                 ? const CircularProgressIndicator(color: Colors.white)
                 : Text(
-                    isEditMode ? "Update alert" : "Add alert",
+                    isEditMode ? AppLocalizations.of(context)!.update_alert : AppLocalizations.of(context)!.add_alert,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -168,13 +168,13 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
               TextFormField(
                 controller: priceController,
                 validator: _validatePrice,
-                inputFormatters: [DecimalTextInputFormatter(decimalRange: 2)],
+                inputFormatters: [DecimalTextInputFormatter(decimalRange: 3)],
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),
                 style: const TextStyle(color: Colors.white),
                 decoration: _inputDecoration(
-                  hint: "Please enter the target price",
+                  hint: AppLocalizations.of(context)!.plz_enter_target_price,//"Please enter the target price",
                 ),
               ),
               const SizedBox(height: 12),
@@ -236,8 +236,8 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Current Market Price",
+           Text(
+            AppLocalizations.of(context)!.current_market_price,//"Current Market Price",
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -248,9 +248,10 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
           goldPriceState.when(
             data: (data) => Column(
               children: [
-                _marketPriceRow("Buying at", data.oneGramBuyingPriceInIQD),
+                // _marketPriceRow("Buying at", data.oneGramBuyingPriceInIQD),
+                _marketPriceRow(AppLocalizations.of(context)!.buying_at, data.oneGramBuyingPriceInIQD),
                 const SizedBox(height: 16),
-                _marketPriceRow("Selling at", data.oneGramSellingPriceInIQD),
+                _marketPriceRow(AppLocalizations.of(context)!.selling_at, data.oneGramSellingPriceInIQD),
               ],
             ),
             loading: () => const Center(child: CircularProgressIndicator()),
@@ -276,7 +277,7 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
               style: const TextStyle(color: Colors.grey, fontSize: 12),
             ),
             Text(
-              "IQD ${NumberFormat("#,##0.00").format(price)} / gram",
+              "${AppLocalizations.of(context)!.idq} ${NumberFormat("#,##0.000").format(price)} ${AppLocalizations.of(context)!.trade_gram}",
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
@@ -708,7 +709,7 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
 //                       TextFormField(
 //                         controller: priceController,
 //                         inputFormatters: [
-//                           DecimalTextInputFormatter(decimalRange: 2),
+//                           DecimalTextInputFormatter(decimalRange: 3),
 //                         ],
 //                         keyboardType: const TextInputType.numberWithOptions(
 //                           signed: true,

@@ -75,6 +75,7 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
+    final l10n = AppLocalizations.of(context)!;
     final esouqState = ref.watch(esouqProvider);
     final goldPriceStateWatchProvider = ref.watch(goldPriceProvider);
     final oneGramBuyingPriceInIQD =
@@ -153,7 +154,7 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                   child: TextField(
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      hintText: "Search",
+                      hintText: l10n.gift_search,
                       hintStyle: const TextStyle(color: Colors.grey),
                       prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       border: InputBorder.none,
@@ -204,7 +205,7 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                             );
 
                             return EsouqItemCard(
-                              title: product.productName ?? "N/A",
+                              title: product.productName ?? l10n.na,
                               imageUrl: product.imageUrl?.isNotEmpty == true
                                   ? product.imageUrl!.first
                                   : "",
@@ -218,9 +219,9 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                                     builder: (context) => EsouqItemDetailScreen(
                                       product: product,
                                       productPrice: eSouqProductPrice
-                                          .toStringAsFixed(2),
+                                          .toStringAsFixed(3),
                                       oneGramPriceInIQD: oneGramBuyingPriceInIQD
-                                          .toStringAsFixed(2),
+                                          .toStringAsFixed(3),
                                     ),
                                   ),
                                 );

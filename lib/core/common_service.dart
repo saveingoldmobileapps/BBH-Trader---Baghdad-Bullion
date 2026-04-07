@@ -64,7 +64,7 @@ class CommonService {
     required double oneGramSellingPrice,
   }) {
     final weight = double.tryParse(weightFactor ?? "0.0") ?? 0.0;
-    return double.parse((weight * oneGramSellingPrice).toStringAsFixed(2));
+    return double.parse((weight * oneGramSellingPrice).toStringAsFixed(3));
   }
 
   /// format currency
@@ -73,7 +73,7 @@ class CommonService {
   }) {
     final amountInDouble = double.tryParse(amount) ?? 0.0;
     if (amountInDouble >= 10000) {
-      return "${(amountInDouble / 1000).toStringAsFixed(2)}K"; // Keep 3 decimal places in large values
+      return "${(amountInDouble / 1000).toStringAsFixed(3)}K"; // Keep 3 decimal places in large values
     }
 
     final formatter = NumberFormat("#,##0.00", "en_US");
@@ -111,7 +111,7 @@ class CommonService {
     if (amount.abs() >= 1000) {
       return NumberFormat("#,##0.00", "en_US").format(amount);
     }
-    return amount.toStringAsFixed(2);
+    return amount.toStringAsFixed(3);
   }
 
   static String getGreeting(String name, BuildContext context) {
@@ -359,14 +359,14 @@ class CommonService {
   static String convertToShortNum({required double num}) {
     if (num < 1000) {
       return num.toStringAsFixed(
-        2,
+        3,
       ); // Ensures two decimal places for smaller numbers
     } else if (num < 1000000) {
-      return '${(num / 1000).toStringAsFixed(2)}K'; // Three decimal places for thousands
+      return '${(num / 1000).toStringAsFixed(3)}K'; // Three decimal places for thousands
     } else if (num < 1000000000) {
-      return '${(num / 1000000).toStringAsFixed(2)}M'; // Three decimal places for millions
+      return '${(num / 1000000).toStringAsFixed(3)}M'; // Three decimal places for millions
     } else {
-      return num.toStringAsFixed(2); // Shows full value for numbers < 1M
+      return num.toStringAsFixed(3); // Shows full value for numbers < 1M
     }
   }
 
@@ -388,9 +388,9 @@ class CommonService {
     required BuildContext context,
   }) {
     if (num < 1000) {
-      return '${num.toStringAsFixed(2)} ${AppLocalizations.of(context)!.metal_g}';
+      return '${num.toStringAsFixed(3)} ${AppLocalizations.of(context)!.metal_g}';
     } else {
-      return '${(num / 1000).toStringAsFixed(1)} kg';
+      return '${(num / 1000).toStringAsFixed(3)} kg';
     }
   }
 
@@ -400,15 +400,15 @@ class CommonService {
   }) {
     if (grams < 3.8) {
       // 1 tola is approximately equal to 11.66 grams, but in gold, 1 tola is equal to 11.66/1000 = 0.01166 kg, that is 11.66 grams
-      return (grams * 1000 / 11.66).toStringAsFixed(2);
+      return (grams * 1000 / 11.66).toStringAsFixed(3);
     } else if (grams < 28.35) {
       // 1 ounce is equal to 28.35 grams
-      return (grams / 28.35).toStringAsFixed(2);
+      return (grams / 28.35).toStringAsFixed(3);
     } else if (grams < 1000) {
-      return grams.toStringAsFixed(2);
+      return grams.toStringAsFixed(3);
     } else {
       // return grams.toStringAsFixed(2);
-      return (grams / 1000).toStringAsFixed(2);
+      return (grams / 1000).toStringAsFixed(3);
     }
   }
 
@@ -575,16 +575,16 @@ class CommonService {
   static String formatNumber({required double number}) {
     if (number >= 1e9) {
       // Convert to billions (B)
-      return '${(number / 1e9).toStringAsFixed(1)}B';
+      return '${(number / 1e9).toStringAsFixed(3)}B';
     } else if (number >= 1e6) {
       // Convert to millions (M)
-      return '${(number / 1e6).toStringAsFixed(1)}M';
+      return '${(number / 1e6).toStringAsFixed(3)}M';
     } else if (number >= 1e3) {
       // Convert to thousands (K)
-      return '${(number / 1e3).toStringAsFixed(1)}K';
+      return '${(number / 1e3).toStringAsFixed(3)}K';
     } else {
       // Return the number as is if it's less than 1,000
-      return number.toStringAsFixed(1);
+      return number.toStringAsFixed(3);
     }
   }
 }

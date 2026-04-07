@@ -572,7 +572,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     labelText: AppLocalizations.of(context)!.amount, //"Amount",
                     controller: amountController,
                     inputFormatters: [
-                      DecimalTextInputFormatter(decimalRange: 2),
+                      DecimalTextInputFormatter(decimalRange: 3),
                     ],
                     textInputType: TextInputType.numberWithOptions(
                       signed: true,
@@ -607,7 +607,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                   //   labelText: "Amount",
                   //   controller: amountController,
                   //   inputFormatters: [
-                  //     DecimalTextInputFormatter(decimalRange: 2),
+                  //     DecimalTextInputFormatter(decimalRange: 3),
                   //     //LengthLimitingTextInputFormatter(15),
                   //   ],
                   //   textInputType: TextInputType.numberWithOptions(
@@ -739,7 +739,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                     hint: quantity <= 0
                                         ? AppLocalizations.of(context)!
                                               .gift_enter_qu //"Enter valid quantity first"
-                                        : "${AppLocalizations.of(context)!.gift_please_choose} ${totalAvailableGrams.toStringAsFixed(2)}${AppLocalizations.of(context)!.metal_g})",
+                                        : "${AppLocalizations.of(context)!.gift_please_choose} ${totalAvailableGrams.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g})",
                                     gramBalanceEqual: quantity,
                                     selectedItems: selectedIds != null
                                         ? selectedIds!.map((id) {
@@ -748,7 +748,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                                   (d) =>
                                                       d.dealId.toString() == id,
                                                 );
-                                            return "${deal.dealId} - ${deal.tradeType} ${deal.tradeMetal!.toStringAsFixed(2)}${AppLocalizations.of(context)!.g_Gold}";
+                                            return "${deal.dealId} - ${deal.tradeType} ${deal.tradeMetal!.toStringAsFixed(3)}${AppLocalizations.of(context)!.g_Gold}";
                                           }).toList()
                                         : [],
                                     onChanged: (List<String> selectedList) {
@@ -1259,11 +1259,11 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                 : (amount as double? ?? 0.0);
                             // normalize this deal amount to 2 decimals
                             dealAmount = double.parse(
-                              dealAmount.toStringAsFixed(2),
+                              dealAmount.toStringAsFixed(3),
                             );
                             double newSum = sum + dealAmount;
                             // normalize running sum as well
-                            return double.parse(newSum.toStringAsFixed(2));
+                            return double.parse(newSum.toStringAsFixed(3));
                           },
                         );
 

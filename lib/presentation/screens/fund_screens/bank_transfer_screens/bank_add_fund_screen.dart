@@ -140,7 +140,7 @@ class _BankAddFundScreenState extends ConsumerState<BankAddFundScreen> {
                         ),
                         inputFormatters: [
                           FilteringTextInputFormatter.allow(
-                            RegExp(r'^\d{0,9}(\.\d{0,2})?$'),
+                            RegExp(r'^\d{0,9}(\.\d{0,3})?$'),
                           ),
                         ],
                         onChanged: (value) {

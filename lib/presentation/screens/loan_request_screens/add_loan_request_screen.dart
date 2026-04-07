@@ -309,7 +309,7 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
                             labelText: "Amount",
                             controller: amountController,
                             inputFormatters: [
-                              DecimalTextInputFormatter(decimalRange: 2),
+                              DecimalTextInputFormatter(decimalRange: 3),
                               //LengthLimitingTextInputFormatter(15),
                             ],
                             textInputType: TextInputType.numberWithOptions(
@@ -349,7 +349,7 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
                                 ConstPadding.sizeBoxWithHeight(height: 8),
                                 GetGenericText(
                                   text:
-                                      "Hold Metal = ${_metalHolded.toStringAsFixed(2)} grams",
+                                      "Hold Metal = ${_metalHolded.toStringAsFixed(3)} grams",
                                   fontSize: sizes!.responsiveFont(
                                     phoneVal: 12,
                                     tabletVal: 14,

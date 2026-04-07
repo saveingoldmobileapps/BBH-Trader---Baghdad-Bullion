@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 
 class EsouqItemCard extends StatelessWidget {
   final String title;
@@ -21,6 +22,7 @@ class EsouqItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -73,13 +75,13 @@ class EsouqItemCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   GetGenericText(
-                    text: "IQD $itemPrice",
+                    text: "${l10n.idq_currency} $itemPrice",
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryGold500,
                   ),
                   GetGenericText(
-                    text: "IQD $oneGramPrice/g", // ✅ REAL PRICE
+                    text: "${l10n.idq_currency} $oneGramPrice${l10n.g_}",
                     fontSize: 10,
                     color: Colors.grey,
                     fontWeight: FontWeight.normal,

@@ -316,7 +316,9 @@ class _EditPersonalInfoScreenState
                     child: Column(
                       children: [
                         GetGenericText(
-                          text: "Personal Information",
+                          text: AppLocalizations.of(
+                            context,
+                          )!.settings_personal_info,
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 26,
                             tabletVal: 32,
@@ -326,7 +328,9 @@ class _EditPersonalInfoScreenState
                         ).getAlign(),
 
                         GetGenericText(
-                          text: "Manage your personal details",
+                          text: AppLocalizations.of(
+                            context,
+                          )!.settings_personal_info_desc,
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 14,
                             tabletVal: 20,
@@ -391,7 +395,7 @@ class _EditPersonalInfoScreenState
                         ).getAlign(),
                         ConstPadding.sizeBoxWithHeight(height: 16),
                         GetGenericText(
-                          text: "First Name",
+                          text: AppLocalizations.of(context)!.kyc_first_name,
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 14,
                             tabletVal: 18,
@@ -423,7 +427,7 @@ class _EditPersonalInfoScreenState
 
                         ConstPadding.sizeBoxWithHeight(height: 16),
                         GetGenericText(
-                          text: "Last Name",
+                          text: AppLocalizations.of(context)!.kyc_last_name,
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 14,
                             tabletVal: 18,
@@ -451,7 +455,7 @@ class _EditPersonalInfoScreenState
                         ),
                         ConstPadding.sizeBoxWithHeight(height: 16),
                         GetGenericText(
-                          text: "Email",
+                          text: AppLocalizations.of(context)!.login_email_Labe,
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 14,
                             tabletVal: 18,
@@ -462,7 +466,9 @@ class _EditPersonalInfoScreenState
                         ConstPadding.sizeBoxWithHeight(height: 8),
                         CommonTextFormField(
                           title: AppLocalizations.of(context)!.email,
-                          hintText: "jondoe@example.com",
+                          hintText: AppLocalizations.of(
+                            context,
+                          )!.enter_email_hint,
                           labelText: AppLocalizations.of(context)!.pi_email,
                           controller: emailController,
                           readOnly: isEditable ? false : true,
@@ -546,7 +552,7 @@ class _EditPersonalInfoScreenState
                         //   },
                         // ),
                         GetGenericText(
-                          text: "Phone",
+                          text: AppLocalizations.of(context)!.phone_number,
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 14,
                             tabletVal: 18,
@@ -594,7 +600,7 @@ class _EditPersonalInfoScreenState
                             Expanded(
                               child: _buildTextField(
                                 phoneNumberController,
-                                "Placeholder",
+                                '',
                                 isNumeric: true,
                                 readOnly: !isEditable,
                               ),

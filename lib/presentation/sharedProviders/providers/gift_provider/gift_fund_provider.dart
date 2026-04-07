@@ -553,11 +553,11 @@ class Gift extends _$Gift {
 
     // Print body for debugging (with 2 decimal formatting)
     print("API Body: ${jsonEncode(body)}");
-    print("Gift Amount: ${formattedGiftAmount.toStringAsFixed(2)}");
+    print("Gift Amount: ${formattedGiftAmount.toStringAsFixed(3)}");
     if (formattedDealsData != null) {
       for (var deal in formattedDealsData) {
         print(
-            "Deal ${deal['dealId']} Amount: ${(deal['amount'] as double).toStringAsFixed(2)}");
+            "Deal ${deal['dealId']} Amount: ${(deal['amount'] as double).toStringAsFixed(3)}");
       }
     }
 

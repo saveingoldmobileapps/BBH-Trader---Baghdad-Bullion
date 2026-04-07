@@ -85,7 +85,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       // Update the UI
       if (mounted) {
         setState(() {
-          calculatedValue = (inputValue * priceToUse).toStringAsFixed(2);
+          calculatedValue = (inputValue * priceToUse).toStringAsFixed(3);
           buyingPriceInOneGram = oneGramIQDPrice;
         });
       }
@@ -196,7 +196,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                             //errorText: _isValidAmount ? null : 'Amount must be greater than zero', // 👈 Show error if invalid
                           ),
                           inputFormatters: [
-                            AmountInputFormatter(maxDigits: 4, decimalRange: 2),
+                            AmountInputFormatter(maxDigits: 4, decimalRange: 3),
                           ],
                           onChanged: (value) {
                             // Validate on each change
@@ -254,7 +254,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                       return Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          "${l10n.max_grams_note} ${maxGrams.toStringAsFixed(2)}",
+                          "${l10n.max_grams_note} ${maxGrams.toStringAsFixed(3)}",
                           style: GoogleFonts.inter(
                             color: Colors.white54,
                             fontSize: 13,
@@ -357,7 +357,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   children: [
                     Text(
                       l10n.price_iqd_per_gram(
-                        data.oneGramBuyingPriceInIQD.toStringAsFixed(2),
+                        data.oneGramBuyingPriceInIQD.toStringAsFixed(3),
                       ),
                       style: GoogleFonts.inter(
                         color: Colors.white,
@@ -410,7 +410,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   const SizedBox(width: 4),
                   Text(
                     l10n.high_price_badge(
-                      data.lastHighBuyingPrice.toStringAsFixed(2),
+                      data.lastHighBuyingPrice.toStringAsFixed(3),
                     ),
                     style: const TextStyle(
                       color: Color(0xFF4CAF50),
@@ -542,7 +542,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
-        AmountInputFormatter(maxDigits: 6, decimalRange: 2),
+        AmountInputFormatter(maxDigits: 6, decimalRange: 3),
       ],
     );
   }
@@ -650,8 +650,8 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         context: context,
         heading: AppLocalizations.of(context)!.insufficient_balance,
         subtitle: AppLocalizations.of(context)!.insufficient_balance_message(
-          walletBalance.toStringAsFixed(2),
-          inputAmount.toStringAsFixed(2),
+          walletBalance.toStringAsFixed(3),
+          inputAmount.toStringAsFixed(3),
         ),
         noButtonTitle: AppLocalizations.of(context)!.close,
         yesButtonTitle: AppLocalizations.of(context)!.add_funds,
@@ -715,7 +715,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       amountGrams: userInputController.text.trim(),
       targetPrice: isBuyAtPriceStatus
           ? buyAtPriceController.text
-          : buyingPriceInOneGram.toStringAsFixed(2),
+          : buyingPriceInOneGram.toStringAsFixed(3),
       totalCost: calculatedValue,
       onConfirm: () async {
         await ref

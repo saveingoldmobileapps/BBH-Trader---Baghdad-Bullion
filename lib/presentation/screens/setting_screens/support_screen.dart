@@ -324,7 +324,7 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
                           GestureDetector(
                             onTap: () async {
                               await CommonService.openCallingUrl(
-                                phoneNumber: "+971524378778",
+                                phoneNumber: "6810",
                               );
                             },
                             child: GetGenericText(

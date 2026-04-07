@@ -15,8 +15,6 @@ import 'package:saveingold_fzco/presentation/sharedProviders/providers/eouq_prov
 import 'package:saveingold_fzco/presentation/widgets/shimmers/shimmer_loader.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
-import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
-
 class OrderCheckoutScreen extends ConsumerStatefulWidget {
   final AllProducts product;
   final String paymentMethod;
@@ -58,7 +56,9 @@ class OrderCheckoutScreen extends ConsumerStatefulWidget {
 
 class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
   // Initial selected value
-  String _selectedItem = 'Delivery';
+  static const String _deliveryMethod = 'Delivery';
+  static const String _collectionMethod = 'Collection';
+  String _selectedItem = _deliveryMethod;
   int selectedBranchIndex = -1;
   bool isSelected = true;
   String? selectedBranchId;
@@ -67,8 +67,8 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
 
   // List of items in the dropdown
   final _dropdownItems = [
-    'Delivery',
-    'Collection',
+    _deliveryMethod,
+    _collectionMethod,
   ];
 
   final houseNumberController = TextEditingController();
@@ -87,7 +87,6 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
   num totalChargersMinusDeliveryFee = 0.0;
   num collectionCharges = 0.0;
   // final MapController _mapController = MapController();
-  final bool _isLocationLoading = true;
   bool isLocationRequired = false;
   @override
   @override
@@ -182,9 +181,12 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
             height: 180,
             child: Column(
               children: [
-                const Text(
-                  "Select Document",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  AppLocalizations.of(context)!.esouq_select_document,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -192,7 +194,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                   children: [
                     _optionButton(
                       icon: Icons.camera_alt,
-                      text: "Camera",
+                      text: AppLocalizations.of(context)!.select_camera,
                       onTap: () {
                         Navigator.pop(context);
                         _takePhotoFromCamera();
@@ -200,7 +202,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                     ),
                     _optionButton(
                       icon: Icons.insert_drive_file,
-                      text: "File",
+                      text: AppLocalizations.of(context)!.esouq_choose_file,
                       onTap: () {
                         Navigator.pop(context);
                         _pickFileFromStorage();
@@ -213,7 +215,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
           );
         },
       );
-    } catch (e, stackTrace) {
+    } catch (e) {
       debugPrint('Error showing bottom sheet: $e');
       // await Sentry.captureException(e, stackTrace: stackTrace);
     }
@@ -265,7 +267,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
 
         await _processSelectedFile(pickedFile.path, shortName);
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       debugPrint('Error taking photo: $e');
       // await Sentry.captureException(e, stackTrace: stackTrace);
     }
@@ -301,7 +303,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
           result.files.single.name,
         );
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       debugPrint('Error picking file: $e');
       // await Sentry.captureException(e, stackTrace: stackTrace);
     }
@@ -327,7 +329,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
         isPDFError = false;
         selectedPDFFileName = fileName;
       });
-    } catch (e, stackTrace) {
+    } catch (e) {
       debugPrint('Error processing file: $e');
       setState(() {
         isPDFSelected = false;
@@ -362,26 +364,26 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
       // Money or Metal
       bool isMoneyPayment = widget.paymentMethod == "Money";
       // Collection | Delivery
-      final bool isDelivery = _selectedItem == "Delivery";
+      final bool isDelivery = _selectedItem == _deliveryMethod;
       debugPrint("isMoneyPayment: $isMoneyPayment | isDelivery: $isDelivery");
 
       if (isDelivery) {
         // delivery
-        withDeliveryCharges = num.parse(payableAmount.toStringAsFixed(2));
+        withDeliveryCharges = num.parse(payableAmount.toStringAsFixed(3));
         debugPrint("withDeliveryCharges: $withDeliveryCharges");
       } else if (!isDelivery && isMoneyPayment) {
         // collect and money
         collectionTotal = num.parse(
-          (payableAmount - deliveryFee).toStringAsFixed(2),
+          (payableAmount - deliveryFee).toStringAsFixed(3),
         );
         debugPrint("collectionTotal: $collectionTotal");
       } else {
         // collect and metal
         collectionTotal = num.parse(
-          (payableAmount).toStringAsFixed(2),
+          (payableAmount).toStringAsFixed(3),
         );
         totalChargersMinusDeliveryFee = num.parse(
-          (totalCharges - deliveryFee).toStringAsFixed(2),
+          (totalCharges - deliveryFee).toStringAsFixed(3),
         );
       }
     });
@@ -389,17 +391,12 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     // Map English -> Arabic for display only
     final Map<String, String> displayMap = {
-      'Delivery': Directionality.of(context) == TextDirection.rtl
-          ? 'توصيل'
-          : 'Delivery',
-      'Collection': Directionality.of(context) == TextDirection.rtl
-          ? 'استلام'
-          : 'Collection',
+      _deliveryMethod: l10n.delivery,
+      _collectionMethod: l10n.collection,
     };
-    final goldPriceState = ref.watch(goldPriceProvider);
-
     /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
     //final bankBranchNotifier = ref.watch(bankBranchProvider.notifier);
@@ -470,7 +467,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
             child: Column(
               children: [
                 GetGenericText(
-                  text: "Method",
+                  text: l10n.paymentMethod,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   color: AppColors.grey4Color,
@@ -572,7 +569,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                   ),
                 ),
                 ConstPadding.sizeBoxWithHeight(height: 16),
-                _selectedItem == "Delivery"
+                _selectedItem == _deliveryMethod
                     ? buildDeliveryCard()
                     : bankBranchState.loadingState == LoadingState.loading
                     ? Center(
@@ -581,7 +578,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                     : buildCollectionCard(),
                 ConstPadding.sizeBoxWithHeight(height: 16),
                 //Delivery charge field
-                _selectedItem == "Delivery"
+                _selectedItem == _deliveryMethod
                     ? Container(
                         width: sizes!.isPhone
                             ? sizes!.widthRatio * 360
@@ -611,9 +608,9 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 GetGenericText(
-                                  text: _selectedItem == "Delivery"
-                                      ? "${(widget.deliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}"
-                                      : "${collectionTotal.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
+                                  text: _selectedItem == _deliveryMethod
+                                      ? "${(widget.deliveryCharges).toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}"
+                                      : "${collectionTotal.toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.grey6Color,
@@ -655,13 +652,13 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           GetGenericText(
-                            text: _selectedItem == "Delivery"
+                            text: _selectedItem == _deliveryMethod
                                 ? widget.paymentMethod == "Money"
-                                      ? "${(withDeliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}"
-                                      : "${(withDeliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.grams}"
+                                      ? "${(withDeliveryCharges).toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}"
+                                      : "${(withDeliveryCharges).toStringAsFixed(3)} ${AppLocalizations.of(context)!.grams}"
                                 : widget.paymentMethod == "Money"
-                                ? "${collectionTotal.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}"
-                                : "${collectionTotal.toStringAsFixed(2)} ${AppLocalizations.of(context)!.grams}",
+                                ? "${collectionTotal.toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}"
+                                : "${collectionTotal.toStringAsFixed(3)} ${AppLocalizations.of(context)!.grams}",
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                             color: AppColors.grey6Color,
@@ -704,9 +701,9 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 GetGenericText(
-                                  text: _selectedItem == "Delivery"
-                                      ? "${widget.totalCharges.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}"
-                                      : "${collectionCharges.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
+                                  text: _selectedItem == _deliveryMethod
+                                      ? "${widget.totalCharges.toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}"
+                                      : "${collectionCharges.toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}",
                                   //collectionTotal.toStringAsFixed(2),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -738,7 +735,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                   )!.confirmPaymentBtn, //"Confirm Payment",
                   isLoadingState: esouqStateWatchProvider.isButtonState,
                   onTap: () async {
-                    if (_selectedItem == "Delivery") {
+                    if (_selectedItem == _deliveryMethod) {
                       if (_formKey.currentState?.validate() ?? false) {
                         var deliveryAddress =
                             "${houseNumberController.text.toString().trim()}, ${streetAddressController.text.toString().trim()}, ${areaController.text.toString().trim()}, ${emirateController.text.toString().trim()}";
@@ -779,7 +776,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                               ? authState.residencyPDFUrl
                               : "",
                           branchId: null,
-                          deliveryMethod: "Delivery",
+                          deliveryMethod: _deliveryMethod,
                           makingCharges: widget.makingCharges.toString(),
                           valueAtTax: widget.valueAtTax.toString(),
                           deliveryCharges: widget.deliveryCharges.toString(),
@@ -924,7 +921,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
           ConstPadding.sizeBoxWithHeight(height: 6),
           CommonTextFormField(
             title: "",
-            hintText: "10",
+            hintText: AppLocalizations.of(context)!.esouq_house_number_example,
             labelText: AppLocalizations.of(context)!.houseNumber,
             textInputType: TextInputType.number,
             controller: houseNumberController,

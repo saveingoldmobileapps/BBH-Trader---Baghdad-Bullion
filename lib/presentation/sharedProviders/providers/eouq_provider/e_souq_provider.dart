@@ -8,6 +8,7 @@ import 'package:saveingold_fzco/core/sounds/app_sounds.dart';
 import 'package:saveingold_fzco/core/theme/const_toasts.dart';
 import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../data/data_sources/local_database/local_database.dart';
@@ -652,12 +653,12 @@ class Esouq extends _$Esouq {
         ((double.parse(product.weightFactor!) *
                 double.parse(goldQuantity) *
                 currentGoldPrice)
-            .toStringAsFixed(2)),
+            .toStringAsFixed(3)),
       );
 
       double totalMetal = double.parse(
         ((double.parse(product.weightFactor!) * double.parse(goldQuantity))
-            .toStringAsFixed(2)),
+            .toStringAsFixed(3)),
       );
       setButtonState(true);
       // setLoadingState(LoadingState.loading);
@@ -726,20 +727,26 @@ class Esouq extends _$Esouq {
           );
 
           if (!context.mounted) return;
-          final payload = successResponse.payload;
 
           final String orderId = "#GLD5QUF3K";
 
+          final l10n = AppLocalizations.of(context)!;
+          final localeName = Localizations.localeOf(context).toLanguageTag();
           final String dateTime = DateFormat(
             'MMM dd, yyyy, hh:mm a',
+            localeName,
           ).format(DateTime.now());
 
-          final String productInfo =
-              "$goldQuantity × ${product.productName ?? "Gold"}";
+          final String productName =
+              product.productName?.trim().isNotEmpty == true
+              ? product.productName!.trim()
+              : l10n.gold;
+
+          final String productInfo = "$goldQuantity × $productName";
 
           final String totalPaid = paymentMethod == "Money"
-              ? "IQD ${double.parse(payableGrandTotal).toStringAsFixed(2)}"
-              : "${double.parse(payableGrandTotal).toStringAsFixed(2)} g";
+              ? "${l10n.idq_currency} ${double.parse(payableGrandTotal).toStringAsFixed(3)}"
+              : "${double.parse(payableGrandTotal).toStringAsFixed(3)} ${l10n.metal_g}";
 
           Navigator.pushReplacement(
             context,

@@ -1184,6 +1184,12 @@ abstract class AppLocalizations {
   /// **'Timezone'**
   String get timezone_title;
 
+  /// No description provided for @timezone_select_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Select timezone'**
+  String get timezone_select_label;
+
   /// No description provided for @timezone_error.
   ///
   /// In en, this message translates to:
@@ -1351,6 +1357,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter Current Password'**
   String get current_password;
+
+  /// No description provided for @current_password_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get current_password_label;
 
   /// No description provided for @new_password.
   ///
@@ -2372,6 +2384,72 @@ abstract class AppLocalizations {
   /// **'Checkout'**
   String get checkout;
 
+  /// No description provided for @esouq_review_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Review order'**
+  String get esouq_review_order;
+
+  /// No description provided for @esouq_select_document.
+  ///
+  /// In en, this message translates to:
+  /// **'Select document'**
+  String get esouq_select_document;
+
+  /// No description provided for @esouq_choose_file.
+  ///
+  /// In en, this message translates to:
+  /// **'Files'**
+  String get esouq_choose_file;
+
+  /// No description provided for @esouq_order_summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order summary'**
+  String get esouq_order_summary;
+
+  /// No description provided for @esouq_order_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Order ID'**
+  String get esouq_order_id;
+
+  /// No description provided for @esouq_items.
+  ///
+  /// In en, this message translates to:
+  /// **'Items'**
+  String get esouq_items;
+
+  /// No description provided for @esouq_total_paid.
+  ///
+  /// In en, this message translates to:
+  /// **'Total paid'**
+  String get esouq_total_paid;
+
+  /// No description provided for @esouq_order_placed_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your order was placed successfully.'**
+  String get esouq_order_placed_subtitle;
+
+  /// No description provided for @esouq_house_number_example.
+  ///
+  /// In en, this message translates to:
+  /// **'10'**
+  String get esouq_house_number_example;
+
+  /// No description provided for @esouq_weight_range.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight range'**
+  String get esouq_weight_range;
+
+  /// No description provided for @esouq_bar_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Bar type'**
+  String get esouq_bar_type;
+
   /// No description provided for @delivery.
   ///
   /// In en, this message translates to:
@@ -3299,7 +3377,7 @@ abstract class AppLocalizations {
   /// No description provided for @gram_current_price.
   ///
   /// In en, this message translates to:
-  /// **'Current price'**
+  /// **'Current Price'**
   String get gram_current_price;
 
   /// No description provided for @invest_buy_at_price_update_success.
@@ -3473,7 +3551,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_title.
   ///
   /// In en, this message translates to:
-  /// **'User Settings'**
+  /// **'Settings'**
   String get settings_title;
 
   /// No description provided for @settings_personal_info.
@@ -3503,13 +3581,13 @@ abstract class AppLocalizations {
   /// No description provided for @settings_switch.
   ///
   /// In en, this message translates to:
-  /// **'Switch'**
+  /// **'Account type'**
   String get settings_switch;
 
   /// No description provided for @settings_switch_desc.
   ///
   /// In en, this message translates to:
-  /// **'Switch Demo user to Real'**
+  /// **'Switch from demo account to real account'**
   String get settings_switch_desc;
 
   /// No description provided for @settings_biometric.
@@ -3521,7 +3599,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_biometric_desc.
   ///
   /// In en, this message translates to:
-  /// **'Log in securely using Touch ID or fingerprint.'**
+  /// **'Log in securely using Face ID, Touch ID, or fingerprint.'**
   String get settings_biometric_desc;
 
   /// No description provided for @settings_timezone.
@@ -3557,7 +3635,7 @@ abstract class AppLocalizations {
   /// No description provided for @settings_delete_desc.
   ///
   /// In en, this message translates to:
-  /// **'Disable your account'**
+  /// **'Temporarily disable your account'**
   String get settings_delete_desc;
 
   /// No description provided for @settings_logout.
@@ -3571,6 +3649,28 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sign out of your account securely.'**
   String get settings_logout_desc;
+
+  /// No description provided for @settings_build_env_staging.
+  ///
+  /// In en, this message translates to:
+  /// **'staging'**
+  String get settings_build_env_staging;
+
+  /// No description provided for @settings_build_env_live.
+  ///
+  /// In en, this message translates to:
+  /// **'live'**
+  String get settings_build_env_live;
+
+  /// No description provided for @settings_app_version_footer.
+  ///
+  /// In en, this message translates to:
+  /// **'{versionWord} {buildNumber}-{environment}'**
+  String settings_app_version_footer(
+    String versionWord,
+    String buildNumber,
+    String environment,
+  );
 
   /// No description provided for @account_warning.
   ///
@@ -4466,6 +4566,48 @@ abstract class AppLocalizations {
   /// **'No active alerts'**
   String get no_active_alerts;
 
+  /// No description provided for @no_active_alert_at_moment.
+  ///
+  /// In en, this message translates to:
+  /// **'No active alert available at the moment.'**
+  String get no_active_alert_at_moment;
+
+  /// No description provided for @create_new_alert.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new alert'**
+  String get create_new_alert;
+
+  /// No description provided for @alert_selling.
+  ///
+  /// In en, this message translates to:
+  /// **'Selling alert'**
+  String get alert_selling;
+
+  /// No description provided for @alert_buying.
+  ///
+  /// In en, this message translates to:
+  /// **'Buying Alert'**
+  String get alert_buying;
+
+  /// No description provided for @alert_bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get alert_bar;
+
+  /// No description provided for @active_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get active_title;
+
+  /// No description provided for @active_difference.
+  ///
+  /// In en, this message translates to:
+  /// **'Difference'**
+  String get active_difference;
+
   /// No description provided for @please_enter_target_price.
   ///
   /// In en, this message translates to:
@@ -5258,11 +5400,23 @@ abstract class AppLocalizations {
   /// **'Name Mismatch'**
   String get nam_mismatch;
 
+  /// No description provided for @no_withdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'No withdraw request found at the moment.'**
+  String get no_withdraw;
+
   /// No description provided for @trade_gold.
   ///
   /// In en, this message translates to:
   /// **'Trade Gold'**
   String get trade_gold;
+
+  /// No description provided for @trade_gram.
+  ///
+  /// In en, this message translates to:
+  /// **'/ gram'**
+  String get trade_gram;
 
   /// No description provided for @current_market_price.
   ///
@@ -5516,6 +5670,12 @@ abstract class AppLocalizations {
   /// **'Market price'**
   String get invest_market_price_short;
 
+  /// No description provided for @inves_market_order.
+  ///
+  /// In en, this message translates to:
+  /// **'Market Order'**
+  String get inves_market_order;
+
   /// No description provided for @target_price_hint_example.
   ///
   /// In en, this message translates to:
@@ -5527,6 +5687,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error loading price'**
   String get error_loading_price;
+
+  /// No description provided for @plz_enter_target_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the target price'**
+  String get plz_enter_target_price;
+
+  /// No description provided for @target_buying_price_lower.
+  ///
+  /// In en, this message translates to:
+  /// **'Target buying price must be lower than current buying price'**
+  String get target_buying_price_lower;
+
+  /// No description provided for @target_selling_price.
+  ///
+  /// In en, this message translates to:
+  /// **'Target selling price must be higher than current selling price'**
+  String get target_selling_price;
 
   /// No description provided for @trade_confirm_dialog_title.
   ///

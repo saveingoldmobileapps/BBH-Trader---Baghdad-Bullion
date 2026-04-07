@@ -572,6 +572,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get timezone_title => 'المنطقة الزمنية';
 
   @override
+  String get timezone_select_label => 'اختر المنطقة الزمنية';
+
+  @override
   String get timezone_error => 'لم يتم اختيار المنطقة الزمنية، يرجى تحديدها';
 
   @override
@@ -658,6 +661,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get current_password => 'أدخل كلمة المرور الحالية';
+
+  @override
+  String get current_password_label => 'كلمة المرور الحالية';
 
   @override
   String get new_password => 'كلمة المرور الجديدة';
@@ -1181,6 +1187,39 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get checkout => 'إتمام الشراء';
+
+  @override
+  String get esouq_review_order => 'مراجعة الطلب';
+
+  @override
+  String get esouq_select_document => 'اختر مستندًا';
+
+  @override
+  String get esouq_choose_file => 'ملفات';
+
+  @override
+  String get esouq_order_summary => 'ملخص الطلب';
+
+  @override
+  String get esouq_order_id => 'رقم الطلب';
+
+  @override
+  String get esouq_items => 'العناصر';
+
+  @override
+  String get esouq_total_paid => 'إجمالي المدفوع';
+
+  @override
+  String get esouq_order_placed_subtitle => 'تم تقديم طلبك بنجاح.';
+
+  @override
+  String get esouq_house_number_example => '10';
+
+  @override
+  String get esouq_weight_range => 'نطاق الوزن';
+
+  @override
+  String get esouq_bar_type => 'نوع السبيكة';
 
   @override
   String get delivery => 'التوصيل';
@@ -1774,56 +1813,72 @@ class AppLocalizationsAr extends AppLocalizations {
   String get email_verification_cancel_btn => 'إلغاء';
 
   @override
-  String get settings_title => 'إعدادات المستخدم';
+  String get settings_title => 'الإعدادات';
 
   @override
   String get settings_personal_info => 'المعلومات الشخصية';
 
   @override
-  String get settings_personal_info_desc => 'إدارة تفاصيلك الشخصية وتفضيلاتك.';
+  String get settings_personal_info_desc =>
+      'إدارة بياناتك الشخصية وتفضيلاتك في التطبيق.';
 
   @override
   String get settings_language => 'إعدادات اللغة';
 
   @override
-  String get settings_language_desc => 'اختر لغتك المفضلة للتطبيق.';
+  String get settings_language_desc => 'اختر لغة التطبيق المفضلة لديك.';
 
   @override
-  String get settings_switch => 'تبديل';
+  String get settings_switch => 'نوع الحساب';
 
   @override
-  String get settings_switch_desc => 'تبديل الحساب من تجربة إلى حقيقي';
+  String get settings_switch_desc => 'التحويل من حساب تجريبي إلى حساب حقيقي';
 
   @override
   String get settings_biometric => 'تمكين تسجيل الدخول البيومتري';
 
   @override
   String get settings_biometric_desc =>
-      'تسجيل الدخول بأمان باستخدام بصمة  الوجه أو بصمة الإصبع.';
+      'سجّل الدخول بأمان باستخدام التعرف على الوجه أو بصمة الإصبع.';
 
   @override
   String get settings_timezone => 'المنطقة الزمنية';
 
   @override
-  String get settings_timezone_desc => 'اضبط منطقتك الزمنية لتطابق موقعك.';
+  String get settings_timezone_desc => 'اضبط المنطقة الزمنية لتطابق موقعك.';
 
   @override
   String get settings_password => 'إعدادات كلمة المرور';
 
   @override
-  String get settings_password_desc => 'تحديث أو تغيير كلمة المرور الخاصة بك.';
+  String get settings_password_desc => 'تحديث كلمة مرور حسابك.';
 
   @override
   String get settings_delete => 'تعطيل الحساب';
 
   @override
-  String get settings_delete_desc => 'تعطيل حسابك';
+  String get settings_delete_desc => 'تعطيل حسابك مؤقتًا';
 
   @override
   String get settings_logout => 'تسجيل الخروج';
 
   @override
   String get settings_logout_desc => 'تسجيل الخروج من حسابك بأمان.';
+
+  @override
+  String get settings_build_env_staging => 'تجريبي';
+
+  @override
+  String get settings_build_env_live => 'إنتاج';
+
+  @override
+  String settings_app_version_footer(
+    String versionWord,
+    String buildNumber,
+    String environment,
+  ) {
+    return '$versionWord $buildNumber-$environment';
+  }
 
   @override
   String account_warning(String kycStatus) {
@@ -2302,6 +2357,28 @@ class AppLocalizationsAr extends AppLocalizations {
   String get no_active_alerts => 'لا توجد تنبيهات نشطة';
 
   @override
+  String get no_active_alert_at_moment =>
+      'لا يوجد أي تنبيه نشط في الوقت الحالي';
+
+  @override
+  String get create_new_alert => 'إنشاء تنبيه جديد';
+
+  @override
+  String get alert_selling => 'تنبيه بيع';
+
+  @override
+  String get alert_buying => 'تنبيه شراء';
+
+  @override
+  String get alert_bar => 'التنبيهات';
+
+  @override
+  String get active_title => 'نشط';
+
+  @override
+  String get active_difference => 'الفرق';
+
+  @override
   String get please_enter_target_price => 'يرجى إدخال السعر المستهدف';
 
   @override
@@ -2724,7 +2801,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get nam_mismatch => 'عدم تطابق في الأسماء';
 
   @override
+  String get no_withdraw => 'لا توجد طلبات سحب في الوقت الحالي';
+
+  @override
   String get trade_gold => 'تداول الذهب';
+
+  @override
+  String get trade_gram => '/ غرام';
 
   @override
   String get current_market_price => 'سعر السوق الحالي';
@@ -2870,10 +2953,24 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invest_market_price_short => 'سعر السوق';
 
   @override
+  String get inves_market_order => 'أمر السوق';
+
+  @override
   String get target_price_hint_example => 'د.ع 170,000.00';
 
   @override
   String get error_loading_price => 'تعذر تحميل السعر';
+
+  @override
+  String get plz_enter_target_price => 'يرجى إدخال السعر المستهدف';
+
+  @override
+  String get target_buying_price_lower =>
+      'يجب أن يكون سعر الشراء المستهدف أقل من سعر الشراء الحالي';
+
+  @override
+  String get target_selling_price =>
+      'يجب أن يكون سعر البيع المستهدف أعلى من سعر البيع الحالي';
 
   @override
   String get trade_confirm_dialog_title => 'تأكيد الصفقة';

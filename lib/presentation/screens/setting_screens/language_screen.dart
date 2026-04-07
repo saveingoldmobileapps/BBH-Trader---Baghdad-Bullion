@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/language_provider.dart';
 
 class LanguageScreen extends ConsumerStatefulWidget {
@@ -58,7 +59,7 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GetGenericText(
-                      text: "Language Settings",
+                      text: AppLocalizations.of(context)!.settings_language,
                       fontSize: sizes!.responsiveFont(
                         phoneVal: 26,
                         tabletVal: 32,
@@ -68,7 +69,7 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
                     ).getAlign(),
 
                     GetGenericText(
-                      text: "Select your preferred language",
+                      text: AppLocalizations.of(context)!.settings_language_desc,
                       fontSize: sizes!.responsiveFont(
                         phoneVal: 14,
                         tabletVal: 20,

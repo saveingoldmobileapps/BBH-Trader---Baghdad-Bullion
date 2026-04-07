@@ -37,6 +37,8 @@ class EsouqCartScreen extends ConsumerStatefulWidget {
 }
 
 class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
+  static const String _moneyMethod = "Money";
+  static const String _metalMethod = "Metal";
   final goldQuantityController = TextEditingController();
   var paymentMethod = PaymentMethod.money;
 
@@ -50,7 +52,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
   double totalChargeBeforeGoldPrice = 0.0;
   WalletExists? walletExists;
   final _formKey = GlobalKey<FormState>();
-  String _selectedPaymentMethod = "Money";
+  String _selectedPaymentMethod = _moneyMethod;
   late String? selectedDealId = '';
   List? selectedIds;
   List<Map<String, dynamic>> selectedDealsData = [];
@@ -105,7 +107,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
   }
 
   void _resetDealsWhenQuantityChanges() {
-    if (_selectedPaymentMethod == "Metal" &&
+    if (_selectedPaymentMethod == _metalMethod &&
         (selectedDealsData.isNotEmpty || (selectedIds != null && selectedIds!.isNotEmpty))) {
       setState(() {
         selectedDealsData = [];
@@ -169,6 +171,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
+    final l10n = AppLocalizations.of(context)!;
     final gramState = ref.watch(gramProvider);
     final goldPriceState = ref.watch(goldPriceProvider);
     final mainStateWatchProvider = ref.watch(homeProvider);
@@ -205,7 +208,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Review order",
+                              l10n.esouq_review_order,
                               style: TextStyle(
                                 color: const Color(0xFFF2F2F7),
                                 fontSize: sizes!.isPhone ? 32 : 36,
@@ -253,7 +256,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          "IQD ${finalGoldPrice.toStringAsFixed(2)}",
+                                          "${l10n.idq_currency} ${finalGoldPrice.toStringAsFixed(3)}",
                                           style: const TextStyle(
                                             color: Color(0xFFBBA473),
                                             fontSize: 14,
@@ -329,8 +332,8 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    "Charges",
+                                  Text(
+                                    l10n.charges,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 18,
@@ -338,16 +341,16 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                     ),
                                   ),
                                   const SizedBox(height: 20),
-                                  _buildChargeRow("Premium", goldPremium),
-                                  _buildChargeRow("Making", makingCharges),
-                                  _buildChargeRow("VAT", valueAtTax),
-                                  _buildChargeRow("Delivery", deliveryCharges),
+                                  _buildChargeRow(l10n.premium, goldPremium),
+                                  _buildChargeRow(l10n.making, makingCharges),
+                                  _buildChargeRow(l10n.vat, valueAtTax),
+                                  _buildChargeRow(l10n.delivery, deliveryCharges),
                                   const Divider(
                                     color: Colors.white10,
                                     height: 32,
                                   ),
                                   _buildChargeRow(
-                                    "Total charges",
+                                    l10n.totalCharges,
                                     totalChargeBeforeGoldPrice,
                                     isTotal: true,
                                   ),
@@ -376,18 +379,18 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Grant total",
+                      Text(
+                        l10n.grandTotal,
                         style: TextStyle(
                           color: Color(0xFFD1D1D6),
                           fontSize: 16,
                         ),
                       ),
 
-                              _selectedPaymentMethod == "Money"
+                              _selectedPaymentMethod == _moneyMethod
                                   ? GetGenericText(
                                       text:
-                                          "${(totalGrandGoldPayableCharges - deliveryCharges).toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}",
+                                          "${(totalGrandGoldPayableCharges - deliveryCharges).toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}",
                                       fontSize: sizes!.responsiveFont(
                                         phoneVal: 18,
                                         tabletVal: 20,
@@ -396,7 +399,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                       color: AppColors.grey6Color,
                                     )
                                   : GetGenericText(
-                                      text: "${(gramBalanceEqual).toStringAsFixed(2)} ${AppLocalizations.of(context)!.esouq_gram_balance}",
+                                      text: "${(gramBalanceEqual).toStringAsFixed(3)} ${AppLocalizations.of(context)!.esouq_gram_balance}",
                                       fontSize: sizes!.responsiveFont(
                                         phoneVal: 16,
                                         tabletVal: 20,
@@ -416,7 +419,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                   ),
                   const SizedBox(height: 20),
                   LoaderButton(
-                    title: "Go to checkout",
+                    title: l10n.checkout,
                     onTap: () async => await _handleBuyNow(context),
                   ),
                 ],
@@ -442,7 +445,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
             ),
           ),
           Text(
-            "IQD ${value.toStringAsFixed(2)}",
+            "${AppLocalizations.of(context)!.idq_currency} ${value.toStringAsFixed(3)}",
             style: TextStyle(
               color: Colors.white,
               fontSize: isTotal ? 16 : 14,
@@ -455,18 +458,21 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
   }
 
   Widget _buildPaymentMethodDropdown(BuildContext context, dynamic gramState) {
+    final l10n = AppLocalizations.of(context)!;
     final hasGramDeals =
         gramState.gramApiResponseModel.payload?.any(
           (deal) => deal.tradeType == 'Buy' && deal.tradeStatus == 'Opened',
         ) ??
         false;
-    final dropdownItems = hasGramDeals ? ['Money', 'Metal'] : ['Money'];
+    final dropdownItems = hasGramDeals
+        ? [_moneyMethod, _metalMethod]
+        : [_moneyMethod];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Payment Method",
+        Text(
+          l10n.paymentMethod,
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -489,11 +495,20 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
           
           value: _selectedPaymentMethod,
           items: dropdownItems
-              .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+              .map(
+                (item) => DropdownMenuItem(
+                  value: item,
+                  child: Text(
+                    item == _metalMethod
+                        ? l10n.metal
+                        : l10n.money,
+                  ),
+                ),
+              )
               .toList(),
           onChanged: (value) => setState(() => _selectedPaymentMethod = value!),
         ),
-        if (_selectedPaymentMethod == "Metal") ...[
+        if (_selectedPaymentMethod == _metalMethod) ...[
           const SizedBox(height: 16),
           Builder(
             builder: (context) {
@@ -509,7 +524,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
               final dealItems = List<String>.from(
                 filteredDeals.map(
                   (deal) =>
-                      "${deal.dealId} - ${deal.tradeMetal!.toStringAsFixed(2)}g gold",
+                      "${deal.dealId} - ${deal.tradeMetal!.toStringAsFixed(3)} ${l10n.g_Gold}",
                 ),
               );
               // Pass full item strings (matching items) so dialog shows them as checked
@@ -519,7 +534,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                           .map((id) {
                             for (var d in filteredDeals) {
                               if (d.dealId.toString() == id.toString()) {
-                                return "${d.dealId} - ${d.tradeMetal!.toStringAsFixed(2)}g gold";
+                                return "${d.dealId} - ${d.tradeMetal!.toStringAsFixed(3)} ${l10n.g_Gold}";
                               }
                             }
                             return null;
@@ -622,7 +637,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
       return;
     }
 
-    final isMoneyPayment = _selectedPaymentMethod == "Money";
+    final isMoneyPayment = _selectedPaymentMethod == _moneyMethod;
     final isDemo = await LocalDatabase.instance.getIsDemo() ?? false;
 
     if (!isDemo &&

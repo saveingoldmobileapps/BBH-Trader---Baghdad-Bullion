@@ -23,10 +23,13 @@ class GetFilterDrawerBar extends StatefulWidget {
 }
 
 class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
+  static const String _castedBarType = 'Casted';
+  static const String _mintedBarType = 'Minted';
+
   String? selectedUniqueWeight;
   String? selectedWeight;
   String? selectedWeightCategory;
-  String selectedBarType = "Minted"; // Default to match UI screenshot
+  String selectedBarType = _mintedBarType; // Default to match UI screenshot
 
   final List<Map<String, dynamic>> weights = [
     {
@@ -140,6 +143,7 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
   Widget build(BuildContext context) {
     bool isFilterSelected = selectedWeight != null;
     final allWeights = [...weights, ...castingWeights];
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.92,
@@ -169,9 +173,9 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      "Filters",
-                      style: TextStyle(
+                    Text(
+                      l10n.filters,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
@@ -188,9 +192,9 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  "Apply Filters to quickly view your desired products.",
-                  style: TextStyle(color: Colors.grey, fontSize: 14),
+                Text(
+                  l10n.apply_filters_description,
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ],
             ),
@@ -204,9 +208,9 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 24),
-                  const Text(
-                    "Weight range",
-                    style: TextStyle(
+                  Text(
+                    l10n.esouq_weight_range,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -257,9 +261,9 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                   ),
 
                   const SizedBox(height: 32),
-                  const Text(
-                    "Bar type",
-                    style: TextStyle(
+                  Text(
+                    l10n.esouq_bar_type,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -267,14 +271,20 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                   ),
                   const SizedBox(height: 16),
                   Row(
-                    children: ["Casted", "Minted"].map((type) {
+                    children: [
+                      _castedBarType,
+                      _mintedBarType,
+                    ].map((type) {
                       bool isSelected = selectedBarType == type;
+                      final label = type == _castedBarType
+                          ? l10n.casting
+                          : l10n.minting;
                       return Expanded(
                         child: GestureDetector(
                           onTap: () => setState(() => selectedBarType = type),
                           child: Container(
                             margin: EdgeInsets.only(
-                              right: type == "Casted" ? 12 : 0,
+                              right: type == _castedBarType ? 12 : 0,
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             decoration: BoxDecoration(
@@ -290,7 +300,7 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                             ),
                             child: Center(
                               child: Text(
-                                type,
+                                label,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w500,
@@ -342,7 +352,7 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                 ),
                 child: Center(
                   child: Text(
-                    "Apply filters",
+                    l10n.apply_filters,
                     style: TextStyle(
                       color: isFilterSelected ? Colors.black : Colors.white38,
                       fontWeight: FontWeight.bold,

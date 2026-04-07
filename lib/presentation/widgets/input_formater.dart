@@ -6,7 +6,7 @@ class AmountInputFormatter extends TextInputFormatter {
 
   AmountInputFormatter({
     required this.maxDigits,
-    this.decimalRange = 2,
+    this.decimalRange = 3,
   });
 
   late final RegExp _regex =

@@ -26,10 +26,10 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
   String getPrice({required Payload gramList}) {
     if (gramList.tradeType == 'Buy') {
       final price = gramList.buyAtPrice ?? gramList.buyingPrice;
-      return price?.toStringAsFixed(2) ?? '';
+      return price?.toStringAsFixed(3) ?? '';
     } else {
       final price = gramList.sellAtProfit ?? gramList.sellingPrice;
-      return price?.toStringAsFixed(2) ?? '';
+      return price?.toStringAsFixed(3) ?? '';
     }
   }
 
@@ -70,7 +70,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${item.tradeMetal?.toStringAsFixed(2)} ${AppLocalizations.of(context)!.g_Gold}",
+                  "${item.tradeMetal?.toStringAsFixed(3)} ${AppLocalizations.of(context)!.g_Gold}",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -87,7 +87,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        "${pnl.abs().toStringAsFixed(2)} ${AppLocalizations.of(context)!.metal_profit}",
+                        "${pnl.abs().toStringAsFixed(3)} ${AppLocalizations.of(context)!.metal_profit}",
                         style: TextStyle(
                           color: pnl >= 0 ? Colors.green : Colors.red,
                           fontWeight: FontWeight.bold,
@@ -102,13 +102,13 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
             // Detail Rows
             _detailRow(
               l10n.gram_buy_word == "Buy" ? "Bought @" : "تم الشراء @",
-              "${AppLocalizations.of(context)!.idq} ${item.buyingPrice?.toStringAsFixed(2) ?? '0.00'}",
+              "${AppLocalizations.of(context)!.idq} ${item.buyingPrice?.toStringAsFixed(3) ?? '0.00'}",
             ),
             const SizedBox(height: 10),
             _detailRow(
               AppLocalizations.of(context)!.gram_current_price,
               //"Current price",
-              "${AppLocalizations.of(context)!.idq} ${goldPriceState.value?.oneGramSellingPriceInIQD.toStringAsFixed(2) ?? '0.00'}",
+              "${AppLocalizations.of(context)!.idq} ${goldPriceState.value?.oneGramSellingPriceInIQD.toStringAsFixed(3) ?? '0.00'}",
             ),
             const SizedBox(height: 10),
 
@@ -119,7 +119,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                 child: _detailRow(
                   AppLocalizations.of(context)!.gram_target_price,
                   //"Target price",
-                  "${AppLocalizations.of(context)!.idq} ${item.buyAtPrice?.toStringAsFixed(2) ?? '0.00'}",
+                  "${AppLocalizations.of(context)!.idq} ${item.buyAtPrice?.toStringAsFixed(3) ?? '0.00'}",
                 ),
               ),
 

@@ -578,6 +578,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get timezone_title => 'Timezone';
 
   @override
+  String get timezone_select_label => 'Select timezone';
+
+  @override
   String get timezone_error => 'Timezone not selected please select timezone';
 
   @override
@@ -663,6 +666,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get current_password => 'Enter Current Password';
+
+  @override
+  String get current_password_label => 'Current Password';
 
   @override
   String get new_password => 'New Password';
@@ -1191,6 +1197,40 @@ class AppLocalizationsEn extends AppLocalizations {
   String get checkout => 'Checkout';
 
   @override
+  String get esouq_review_order => 'Review order';
+
+  @override
+  String get esouq_select_document => 'Select document';
+
+  @override
+  String get esouq_choose_file => 'Files';
+
+  @override
+  String get esouq_order_summary => 'Order summary';
+
+  @override
+  String get esouq_order_id => 'Order ID';
+
+  @override
+  String get esouq_items => 'Items';
+
+  @override
+  String get esouq_total_paid => 'Total paid';
+
+  @override
+  String get esouq_order_placed_subtitle =>
+      'Your order was placed successfully.';
+
+  @override
+  String get esouq_house_number_example => '10';
+
+  @override
+  String get esouq_weight_range => 'Weight range';
+
+  @override
+  String get esouq_bar_type => 'Bar type';
+
+  @override
   String get delivery => 'Delivery';
 
   @override
@@ -1694,7 +1734,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gram_target_price => 'Target Price';
 
   @override
-  String get gram_current_price => 'Current price';
+  String get gram_current_price => 'Current Price';
 
   @override
   String get invest_buy_at_price_update_success =>
@@ -1787,7 +1827,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get email_verification_cancel_btn => 'Cancel';
 
   @override
-  String get settings_title => 'User Settings';
+  String get settings_title => 'Settings';
 
   @override
   String get settings_personal_info => 'Personal Information';
@@ -1804,17 +1844,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Select your preferred language for the app.';
 
   @override
-  String get settings_switch => 'Switch';
+  String get settings_switch => 'Account type';
 
   @override
-  String get settings_switch_desc => 'Switch Demo user to Real';
+  String get settings_switch_desc => 'Switch from demo account to real account';
 
   @override
   String get settings_biometric => 'Enable Biometric Login';
 
   @override
   String get settings_biometric_desc =>
-      'Log in securely using Touch ID or fingerprint.';
+      'Log in securely using Face ID, Touch ID, or fingerprint.';
 
   @override
   String get settings_timezone => 'Timezone';
@@ -1834,13 +1874,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_delete => 'Disable Account';
 
   @override
-  String get settings_delete_desc => 'Disable your account';
+  String get settings_delete_desc => 'Temporarily disable your account';
 
   @override
   String get settings_logout => 'Logout';
 
   @override
   String get settings_logout_desc => 'Sign out of your account securely.';
+
+  @override
+  String get settings_build_env_staging => 'staging';
+
+  @override
+  String get settings_build_env_live => 'live';
+
+  @override
+  String settings_app_version_footer(
+    String versionWord,
+    String buildNumber,
+    String environment,
+  ) {
+    return '$versionWord $buildNumber-$environment';
+  }
 
   @override
   String account_warning(String kycStatus) {
@@ -2322,6 +2377,28 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_active_alerts => 'No active alerts';
 
   @override
+  String get no_active_alert_at_moment =>
+      'No active alert available at the moment.';
+
+  @override
+  String get create_new_alert => 'Create new alert';
+
+  @override
+  String get alert_selling => 'Selling alert';
+
+  @override
+  String get alert_buying => 'Buying Alert';
+
+  @override
+  String get alert_bar => 'Alerts';
+
+  @override
+  String get active_title => 'Active';
+
+  @override
+  String get active_difference => 'Difference';
+
+  @override
   String get please_enter_target_price => 'Please enter target price';
 
   @override
@@ -2746,7 +2823,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nam_mismatch => 'Name Mismatch';
 
   @override
+  String get no_withdraw => 'No withdraw request found at the moment.';
+
+  @override
   String get trade_gold => 'Trade Gold';
+
+  @override
+  String get trade_gram => '/ gram';
 
   @override
   String get current_market_price => 'Current Market Price';
@@ -2896,10 +2979,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invest_market_price_short => 'Market price';
 
   @override
+  String get inves_market_order => 'Market Order';
+
+  @override
   String get target_price_hint_example => 'IQD 170,000.00';
 
   @override
   String get error_loading_price => 'Error loading price';
+
+  @override
+  String get plz_enter_target_price => 'Please enter the target price';
+
+  @override
+  String get target_buying_price_lower =>
+      'Target buying price must be lower than current buying price';
+
+  @override
+  String get target_selling_price =>
+      'Target selling price must be higher than current selling price';
 
   @override
   String get trade_confirm_dialog_title => 'Confirm Trade';

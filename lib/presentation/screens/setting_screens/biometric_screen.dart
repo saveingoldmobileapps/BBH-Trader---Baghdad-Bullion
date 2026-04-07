@@ -69,14 +69,14 @@ class _ChangePasswordScreenState extends ConsumerState<BiometricScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GetGenericText(
-                text: "Enable Biometric",
+                text: AppLocalizations.of(context)!.settings_biometric,
                 fontSize: sizes!.responsiveFont(phoneVal: 26, tabletVal: 32),
                 fontWeight: FontWeight.bold,
                 color: AppColors.whiteColor,
               ).getAlign(),
 
               GetGenericText(
-                text: "login securely using touch id or fingerprint",
+                text: AppLocalizations.of(context)!.settings_biometric_desc,
                 fontSize: sizes!.responsiveFont(phoneVal: 14, tabletVal: 20),
                 fontWeight: FontWeight.normal,
                 color: AppColors.whiteColor,

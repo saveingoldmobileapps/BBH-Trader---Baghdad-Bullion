@@ -59,11 +59,11 @@ class _MetalStatementCardState extends State<MetalStatementCard>
                 const SizedBox(height: 12),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.goldCredit,
-                  "${widget.statement.credit?.toStringAsFixed(2) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
+                  "${widget.statement.credit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
                 ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.balanceAfterTransaction,
-                  "${widget.statement.metalBalance?.toStringAsFixed(2) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
+                  "${widget.statement.metalBalance?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
                 ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.transactionType,
@@ -145,7 +145,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
     }
 
     return Text(
-      "$title: ${quantity.toStringAsFixed(2)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
+      "$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
       style: const TextStyle(
         color: Colors.white,
         fontSize: 18,
@@ -166,7 +166,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
     return _buildDetailRow(
       "$label ${AppLocalizations.of(context)!.at}",
-      "${AppLocalizations.of(context)!.idq} ${price?.toStringAsFixed(2) ?? '0.00'} ${AppLocalizations.of(context)!.g_}",
+      "${AppLocalizations.of(context)!.idq} ${price?.toStringAsFixed(3) ?? '0.00'} ${AppLocalizations.of(context)!.g_}",
     );
   }
 

@@ -21,6 +21,7 @@ class OrderSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.greyScale1000,
@@ -62,7 +63,7 @@ class OrderSuccessScreen extends StatelessWidget {
 
                 /// Title
                 GetGenericText(
-                  text: "Order Placed!",
+                  text: l10n.order_placed_title,
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
                   color: AppColors.grey1Color,
@@ -72,7 +73,7 @@ class OrderSuccessScreen extends StatelessWidget {
 
                 /// Subtitle
                 GetGenericText(
-                  text: "Your order is successfully placed.",
+                  text: l10n.esouq_order_placed_subtitle,
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
                   color: AppColors.grey4Color,
@@ -92,7 +93,7 @@ class OrderSuccessScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GetGenericText(
-                        text: "Order Summary",
+                        text: l10n.esouq_order_summary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                         color: AppColors.grey2Color,
@@ -102,7 +103,7 @@ class OrderSuccessScreen extends StatelessWidget {
 
                       _rowItem(
                         context,
-                        "Order id",
+                        l10n.esouq_order_id,
                         orderId,
                       ),
                       _divider(),
@@ -116,7 +117,7 @@ class OrderSuccessScreen extends StatelessWidget {
 
                       _rowItem(
                         context,
-                        "Items",
+                        l10n.esouq_items,
                         productInfo,
                       ),
 
@@ -130,7 +131,7 @@ class OrderSuccessScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           GetGenericText(
-                            text: "Total Paid",
+                            text: l10n.esouq_total_paid,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: AppColors.grey2Color,
@@ -161,7 +162,7 @@ class OrderSuccessScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: GetGenericText(
-                    text: "We'll notify you when your order is executed",
+                    text: l10n.will_notify,
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
                     color: AppColors.grey4Color,
@@ -203,7 +204,7 @@ class OrderSuccessScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: GetGenericText(
-                      text: "Return to home",
+                      text: l10n.return_home,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,

@@ -102,7 +102,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
         }
 
         setState(() {
-          calculatedValue = (inputValue * priceToUse).toStringAsFixed(2);
+          calculatedValue = (inputValue * priceToUse).toStringAsFixed(3);
           sellingPriceInOneGram = oneGramIQDPrice;
         });
       },
@@ -208,7 +208,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                 labelText: "Sell at Profit",
                 controller: sellAtProfitController,
                 inputFormatters: [
-                  DecimalTextInputFormatter(decimalRange: 2),
+                  DecimalTextInputFormatter(decimalRange: 3),
                   //LengthLimitingTextInputFormatter(15),
                 ],
                 textInputType: TextInputType.numberWithOptions(
@@ -411,7 +411,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                       amountGrams: userInputController.text.trim(),
                       targetPrice: isSellAtProfitStatus
                           ? sellAtProfitController.text.trim()
-                          : sellingPriceInOneGram.toStringAsFixed(2),
+                          : sellingPriceInOneGram.toStringAsFixed(3),
                       totalCost: calculatedValue,
                       title: AppLocalizations.of(context)!.trade_confirm_sale_title,
                       confirmButtonText:
@@ -525,7 +525,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                       context: context,
                       isLimitOrder: isSellAtProfitStatus,
                       amountGrams: userInputController.text,
-                      targetPrice: sellingPriceInOneGram.toStringAsFixed(2),
+                      targetPrice: sellingPriceInOneGram.toStringAsFixed(3),
                       totalCost: calculatedValue,
                       title: AppLocalizations.of(context)!.trade_confirm_sale_title,
                       confirmButtonText:
@@ -627,7 +627,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                       ),
                       textInputAction: TextInputAction.done,
                       inputFormatters: [
-                        DecimalTextInputFormatter(decimalRange: 2),
+                        DecimalTextInputFormatter(decimalRange: 3),
                         LengthLimitingTextInputFormatter(15),
                       ],
                       textAlign: TextAlign.center,

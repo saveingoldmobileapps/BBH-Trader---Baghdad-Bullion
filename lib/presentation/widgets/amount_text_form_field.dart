@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/core/decimal_text_input_formatter.dart';
 
 class AmountTextFormField extends StatelessWidget {
   final String title;
@@ -35,7 +36,10 @@ class AmountTextFormField extends StatelessWidget {
         controller: controller,
         validator: validator,
         maxLines: maxLines,
-        inputFormatters: inputFormatters,
+        inputFormatters: [
+          DecimalTextInputFormatter(decimalRange: 3),
+          ...(inputFormatters ?? const []),
+        ],
         cursorColor: AppColors.secondaryColor,
         keyboardType: textInputType,
         readOnly: readOnly,

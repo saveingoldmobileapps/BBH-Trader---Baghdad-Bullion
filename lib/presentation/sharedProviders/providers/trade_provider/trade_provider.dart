@@ -196,13 +196,13 @@ class Trade extends _$Trade {
                 orderId: "xyz",
 
                 dateTime: DateTime.now().toLocal().toString().split('.')[0],
-                tradeType: buyAtPriceStatus ? "Limit Order" : "Market Order",
+                tradeType: buyAtPriceStatus ? AppLocalizations.of(context)!.limit_order_title : AppLocalizations.of(context)!.inves_market_order, //"Market Order",
                 amount: "$tradeMetal grams",
                 targetPrice:
                     "IQD ${buyAtPriceStatus ? buyAtPrice : buyingPrice} / gram",
 
                 // The total money calculated
-                total: "IQD ${tradeMoney.toStringAsFixed(2)}",
+                total: "IQD ${tradeMoney.toStringAsFixed(3)}",
               ),
             ),
           );

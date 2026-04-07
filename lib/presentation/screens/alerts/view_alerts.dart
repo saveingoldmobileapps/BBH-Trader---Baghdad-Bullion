@@ -61,8 +61,9 @@ class _ActiveAlertsScreenState extends ConsumerState<ActiveAlertsScreen> {
               ),
             ),
             onPressed: () => _navigateToCreate(context),
-            child: const Text(
-              "Create new alert",
+            child: Text(
+              AppLocalizations.of(context)!.create_new_alert,
+              //"Create new alert",
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
@@ -75,7 +76,7 @@ class _ActiveAlertsScreenState extends ConsumerState<ActiveAlertsScreen> {
           : alerts.isEmpty
           ? Center(
               child: NoDataWidget(
-                title: "No active alert available at the moment.",
+                title: AppLocalizations.of(context)!.no_active_alert_at_moment,//"No active alert available at the moment.",
                 description: "",
               ),
             )
@@ -168,14 +169,14 @@ class _AlertItemCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          isSelling ? "Selling alert" : "Buying alert",
+                          isSelling ? AppLocalizations.of(context)!.alert_selling:AppLocalizations.of(context)!.alert_buying,//"Selling alert" : "Buying alert",
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        const Text(
-                          "Active Alert",
+                         Text(
+                          AppLocalizations.of(context)!.active_alerts,//"Active Alert",
                           style: TextStyle(color: Colors.grey, fontSize: 12),
                         ),
                       ],
@@ -200,25 +201,29 @@ class _AlertItemCard extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               _row(
-                "Current Price",
-                "IQD ${NumberFormat("#,##0.00").format(currentPrice)}",
+                AppLocalizations.of(context)!.gram_current_price,
+                //"Current Price",
+                "${AppLocalizations.of(context)!.idq_currency} ${NumberFormat("#,##0.000").format(currentPrice)}",
+                //"IQD ${NumberFormat("#,##0.00").format(currentPrice)}",
                 Colors.white,
               ),
               _row(
-                "Target Price",
-                "IQD ${NumberFormat("#,##0.00").format(targetPrice)}",
+                AppLocalizations.of(context)!.gram_target_price,
+                //"Target Price",
+                "${AppLocalizations.of(context)!.idq_currency} ${NumberFormat("#,##0.000").format(targetPrice)}",
+                //"IQD ${NumberFormat("#,##0.000").format(targetPrice)}",
                 const Color(0xFFC5A358),
               ),
               _row(
-                "Difference",
-                "${difference >= 0 ? '+' : ''}IQD ${NumberFormat("#,##0.00").format(difference)}",
+                AppLocalizations.of(context)!.active_difference,
+                "${difference >= 0 ? '+' : ''}${AppLocalizations.of(context)!.idq_currency} ${NumberFormat("#,##0.000").format(difference)}",
                 diffColor,
               ),
               const Divider(color: Colors.white10, height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Active", style: TextStyle(color: Colors.grey)),
+                   Text(AppLocalizations.of(context)!.active_title, style: TextStyle(color: Colors.grey)),
                   Transform.scale(
                     scale: 0.8,
                     child: CupertinoSwitch(

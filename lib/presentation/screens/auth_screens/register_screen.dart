@@ -31,8 +31,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   String _phoneNumber = ''; // Add this line
-  String _currentIsoCode = 'AE'; // Add this line
-  String dialCode = "+971";
+  String _currentIsoCode = 'IQ';
+  String dialCode = "+964";
   bool _isDemoAccount = true;
   String Status = 'Real Account';
 
@@ -337,7 +337,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       title: AppLocalizations.of(
                         context,
                       )!.phone_number, //"Phone Number",
-                      hintText: "52 00 00 000",
+                      hintText: "7xx xxx xxxx",
                       controller: phoneNumberController,
                       onPhoneNumberChanged:
                           (updatedPhoneNumber, isoCode, dCode) {
@@ -345,7 +345,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             _currentIsoCode = isoCode;
                             dialCode = dCode;
                           },
-                      isoCode: "AE",
+                      isoCode: "IQ",
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return AppLocalizations.of(
@@ -433,6 +433,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                               context,
                             )!.select_amount, //"Select Amount",
                             items: amountOptions,
+                            itemDisplayLabels: {
+                              '1M IQD':
+                                  AppLocalizations.of(context)!.deposit_amount_1m_iqd,
+                              '2M IQD':
+                                  AppLocalizations.of(context)!.deposit_amount_2m_iqd,
+                              '3M IQD':
+                                  AppLocalizations.of(context)!.deposit_amount_3m_iqd,
+                              '4M IQD':
+                                  AppLocalizations.of(context)!.deposit_amount_4m_iqd,
+                              '5M IQD':
+                                  AppLocalizations.of(context)!.deposit_amount_5m_iqd,
+                            },
                             value: selectedAmount,
                             hineClr: AppColors.whiteColor,
                             // onChanged: (value) {

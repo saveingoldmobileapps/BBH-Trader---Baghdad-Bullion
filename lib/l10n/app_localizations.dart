@@ -836,6 +836,36 @@ abstract class AppLocalizations {
   /// **'Please select an amount'**
   String get please_select_amount;
 
+  /// No description provided for @deposit_amount_1m_iqd.
+  ///
+  /// In en, this message translates to:
+  /// **'1M IQD'**
+  String get deposit_amount_1m_iqd;
+
+  /// No description provided for @deposit_amount_2m_iqd.
+  ///
+  /// In en, this message translates to:
+  /// **'2M IQD'**
+  String get deposit_amount_2m_iqd;
+
+  /// No description provided for @deposit_amount_3m_iqd.
+  ///
+  /// In en, this message translates to:
+  /// **'3M IQD'**
+  String get deposit_amount_3m_iqd;
+
+  /// No description provided for @deposit_amount_4m_iqd.
+  ///
+  /// In en, this message translates to:
+  /// **'4M IQD'**
+  String get deposit_amount_4m_iqd;
+
+  /// No description provided for @deposit_amount_5m_iqd.
+  ///
+  /// In en, this message translates to:
+  /// **'5M IQD'**
+  String get deposit_amount_5m_iqd;
+
   /// No description provided for @confirm_pwd.
   ///
   /// In en, this message translates to:
@@ -1675,6 +1705,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'to'**
   String get gift_to;
+
+  /// No description provided for @gift_a_friend.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift a friend'**
+  String get gift_a_friend;
+
+  /// No description provided for @gift_fill_form_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill the form below to gift gold.'**
+  String get gift_fill_form_subtitle;
+
+  /// No description provided for @gift_existing_friends.
+  ///
+  /// In en, this message translates to:
+  /// **'Existing Friends'**
+  String get gift_existing_friends;
+
+  /// No description provided for @gift_friend_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Friend'**
+  String get gift_friend_placeholder;
+
+  /// No description provided for @gift_hint_email_phone_sample.
+  ///
+  /// In en, this message translates to:
+  /// **'name@mail.com | 00964XXXXXXXXX'**
+  String get gift_hint_email_phone_sample;
+
+  /// No description provided for @gift_label_comment_section.
+  ///
+  /// In en, this message translates to:
+  /// **'Comment'**
+  String get gift_label_comment_section;
+
+  /// No description provided for @gift_success_sent_gram.
+  ///
+  /// In en, this message translates to:
+  /// **'You have successfully sent {amount}g gold gift to {name}'**
+  String gift_success_sent_gram(String amount, String name);
+
+  /// No description provided for @gift_success_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift sent!'**
+  String get gift_success_title;
+
+  /// No description provided for @gift_summary_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get gift_summary_title;
+
+  /// No description provided for @gift_summary_id_label.
+  ///
+  /// In en, this message translates to:
+  /// **'ID'**
+  String get gift_summary_id_label;
+
+  /// No description provided for @gift_return_home.
+  ///
+  /// In en, this message translates to:
+  /// **'Return to home'**
+  String get gift_return_home;
 
   /// No description provided for @insufficient_gram_title.
   ///
@@ -4533,13 +4629,13 @@ abstract class AppLocalizations {
   /// No description provided for @user_firstName.
   ///
   /// In en, this message translates to:
-  /// **'Amro'**
+  /// **'Mr Zaid'**
   String get user_firstName;
 
   /// No description provided for @user_lastName.
   ///
   /// In en, this message translates to:
-  /// **'Jaber'**
+  /// **''**
   String get user_lastName;
 
   /// No description provided for @upgrade_to_real_message.

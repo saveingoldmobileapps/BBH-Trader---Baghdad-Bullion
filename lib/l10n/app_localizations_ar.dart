@@ -391,6 +391,21 @@ class AppLocalizationsAr extends AppLocalizations {
   String get please_select_amount => 'يرجى اختيار المبلغ';
 
   @override
+  String get deposit_amount_1m_iqd => '١ مليون دينار عراقي';
+
+  @override
+  String get deposit_amount_2m_iqd => '٢ مليون دينار عراقي';
+
+  @override
+  String get deposit_amount_3m_iqd => '٣ مليون دينار عراقي';
+
+  @override
+  String get deposit_amount_4m_iqd => '٤ مليون دينار عراقي';
+
+  @override
+  String get deposit_amount_5m_iqd => '٥ مليون دينار عراقي';
+
+  @override
   String get confirm_pwd =>
       'كلمة المرور غير متطابقة، يرجى إعادة إدخال كلمة المرور للتأكيد.';
 
@@ -825,6 +840,41 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get gift_to => 'إلى';
+
+  @override
+  String get gift_a_friend => 'هدية لصديق';
+
+  @override
+  String get gift_fill_form_subtitle => 'يرجى ملء النموذج أدناه لإهداء الذهب.';
+
+  @override
+  String get gift_existing_friends => 'الأصدقاء المسجّلون';
+
+  @override
+  String get gift_friend_placeholder => 'صديق';
+
+  @override
+  String get gift_hint_email_phone_sample => 'name@mail.com | 00964XXXXXXXXX';
+
+  @override
+  String get gift_label_comment_section => 'تعليق';
+
+  @override
+  String gift_success_sent_gram(String amount, String name) {
+    return 'لقد أرسلت بنجاح هدية ذهبية بوزن $amount غرام إلى $name';
+  }
+
+  @override
+  String get gift_success_title => 'تم إرسال الهدية!';
+
+  @override
+  String get gift_summary_title => 'ملخص';
+
+  @override
+  String get gift_summary_id_label => 'المعرّف';
+
+  @override
+  String get gift_return_home => 'العودة إلى الرئيسية';
 
   @override
   String get insufficient_gram_title => 'اختيار غرام غير كافٍ';
@@ -1694,7 +1744,7 @@ class AppLocalizationsAr extends AppLocalizations {
       'هل أنت متأكد أنك تريد تحديث موقع الصفقة؟';
 
   @override
-  String get gramsBalance_title => 'رصيد الغرامات';
+  String get gramsBalance_title => 'رصيدك من الذهب (بالغرام)';
 
   @override
   String get grams_card_buy_at_price_order => 'طلب شراء بسعر';
@@ -2227,7 +2277,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get gram_sell_word => 'بيع';
 
   @override
-  String get g_Gold => 'غرام الذهب';
+  String get g_Gold => 'غرام ذهب';
 
   @override
   String get profit_title => 'الربح';
@@ -2338,7 +2388,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get invalid_otp => 'رمز التحقق غير صالح: يرجى إدخال رمز صالح';
 
   @override
-  String get user_firstName => 'عمرو';
+  String get user_firstName => 'السيد زيد';
 
   @override
   String get user_lastName => 'جابر';
@@ -2357,8 +2407,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get no_active_alerts => 'لا توجد تنبيهات نشطة';
 
   @override
-  String get no_active_alert_at_moment =>
-      'لا يوجد أي تنبيه نشط في الوقت الحالي';
+  String get no_active_alert_at_moment => ' لا توجد أي إشعارات فعّالة حالياً';
 
   @override
   String get create_new_alert => 'إنشاء تنبيه جديد';

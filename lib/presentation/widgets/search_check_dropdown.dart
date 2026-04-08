@@ -89,12 +89,15 @@ class _SearchableWithCheckBoxState extends State<SearchableWithCheckBox> {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return GestureDetector(
       onTap: _openMultiSelectDialog,
       child: AbsorbPointer(
         child: TextFormField(
           controller: _controller,
           decoration: InputDecoration(
+            floatingLabelAlignment: FloatingLabelAlignment.start,
+            alignLabelWithHint: !isRtl,
             labelText: widget.label,
             hintText: widget.hint,
             suffixIcon: SvgPicture.asset(
@@ -222,6 +225,7 @@ class _FullScreenMultiSelectState extends State<FullScreenMultiSelect> {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return Scaffold(
       backgroundColor: AppColors.primaryGold500,
       appBar: AppBar(
@@ -268,6 +272,8 @@ class _FullScreenMultiSelectState extends State<FullScreenMultiSelect> {
                   fontFamily: GoogleFonts.roboto().fontFamily,
                 ),
                 decoration: InputDecoration(
+                  floatingLabelAlignment: FloatingLabelAlignment.start,
+                  alignLabelWithHint: !isRtl,
                   labelText: AppLocalizations.of(
                     context,
                   )!.gift_search, //"Search",

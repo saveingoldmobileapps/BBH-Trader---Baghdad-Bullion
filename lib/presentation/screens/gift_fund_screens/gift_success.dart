@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/gift_provider/gift_fund_provider.dart';
 
 import '../main_home_screens/main_home_screen.dart';
@@ -56,6 +58,23 @@ class _GiftSuccessScreenState extends ConsumerState<GiftSuccessScreen> {
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
     final giftState = ref.watch(giftProvider);
+    final l10n = AppLocalizations.of(context)!;
+    final isMetal = widget.paymentMethod == 'Metal';
+    final localeTag =
+        Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en';
+
+    final String description = isMetal
+        ? l10n.gift_success_sent_gram(widget.giftAmount, widget.receiverName)
+        : l10n.gift_sent(widget.giftAmount, widget.receiverName);
+
+    final String amountSummary = isMetal
+        ? '${widget.giftAmount}g'
+        : '${l10n.idq_currency.trim()} ${widget.giftAmount}'.trim();
+
+    final String formattedDate = DateFormat(
+      'EEE, dd MMM yyyy, HH:mm',
+      localeTag,
+    ).format(DateTime.now());
 
     return WillPopScope(
       onWillPop: () async {
@@ -101,20 +120,21 @@ class _GiftSuccessScreenState extends ConsumerState<GiftSuccessScreen> {
                       const SizedBox(height: 24),
 
                       /// TITLE
-                      const Text(
-                        "Gift sent!",
-                        style: TextStyle(
+                      Text(
+                        l10n.gift_success_title,
+                        style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
                         ),
+                        textAlign: TextAlign.center,
                       ),
 
                       const SizedBox(height: 8),
 
                       /// DESCRIPTION
                       Text(
-                        "You’ve successfully sent ${widget.giftAmount}g gold gift to ${widget.receiverName}",
+                        description,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 15,
@@ -134,25 +154,31 @@ class _GiftSuccessScreenState extends ConsumerState<GiftSuccessScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Summary",
-                              style: TextStyle(
+                            Text(
+                              l10n.gift_summary_title,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
                               ),
                             ),
                             const SizedBox(height: 16),
-                            _summaryRow("ID", "#GLD5QUF3K"),
-                            _divider(),
                             _summaryRow(
-                              "Date & Time",
-                              "Dec 13, 2025, 07:02 PM",
+                              context,
+                              l10n.gift_summary_id_label,
+                              '#${widget.receiverId}',
                             ),
                             _divider(),
                             _summaryRow(
-                              "Amount",
-                              "${widget.giftAmount}g",
+                              context,
+                              l10n.dateTime,
+                              formattedDate,
+                            ),
+                            _divider(),
+                            _summaryRow(
+                              context,
+                              l10n.amount,
+                              amountSummary,
                             ),
                           ],
                         ),
@@ -185,10 +211,10 @@ class _GiftSuccessScreenState extends ConsumerState<GiftSuccessScreen> {
                               ],
                             ),
                           ),
-                          child: const Center(
+                          child: Center(
                             child: Text(
-                              "Return to home",
-                              style: TextStyle(
+                              l10n.gift_return_home,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white,
@@ -206,25 +232,32 @@ class _GiftSuccessScreenState extends ConsumerState<GiftSuccessScreen> {
   }
 
   /// SUMMARY ROW
-  Widget _summaryRow(String title, String value) {
+  Widget _summaryRow(BuildContext context, String title, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey.shade400,
+          Expanded(
+            flex: 2,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey.shade400,
+              ),
             ),
           ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: Colors.white,
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
             ),
           ),
         ],

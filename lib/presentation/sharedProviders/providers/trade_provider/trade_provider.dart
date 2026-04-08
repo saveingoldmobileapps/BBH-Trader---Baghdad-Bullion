@@ -74,7 +74,7 @@ class Trade extends _$Trade {
             context: context,
             heading: successResponse.status != null
                 ? "${successResponse.status![0].toUpperCase()}${successResponse.status!.substring(1)}"
-                : "Success",
+                : AppLocalizations.of(context)!.success,//"Success",
             subtitle: successResponse.payload!.message ?? "",
             yesButtonTitle: AppLocalizations.of(context)!.close, //"Close",
             isLoadingState: false,
@@ -98,7 +98,7 @@ class Trade extends _$Trade {
             context: context,
             heading: errorResponse.status != null
                 ? "${errorResponse.status![0].toUpperCase()}${errorResponse.status!.substring(1)}"
-                : "Success",
+                : AppLocalizations.of(context)!.success,//"Success",
             subtitle: errorResponse.message ?? "",
             yesButtonTitle: AppLocalizations.of(context)!.close, //"Close",
             isLoadingState: false,
@@ -188,21 +188,20 @@ class Trade extends _$Trade {
 
           if (!context.mounted) return;
           SoundPlayer().playSound(AppSounds.buySellSound);
+          final tradeTypeTitle = buyAtPriceStatus
+              ? AppLocalizations.of(context)!.limit_order_title
+              : AppLocalizations.of(context)!.inves_market_order;
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (_) => OrderPlacedScreen(
-                // otherwise a fallback
                 orderId: "xyz",
-
                 dateTime: DateTime.now().toLocal().toString().split('.')[0],
-                tradeType: buyAtPriceStatus ? AppLocalizations.of(context)!.limit_order_title : AppLocalizations.of(context)!.inves_market_order, //"Market Order",
-                amount: "$tradeMetal grams",
+                tradeType: tradeTypeTitle,
+                amount: "$tradeMetal ${AppLocalizations.of(context)!.grams_unit_lowercase}",
                 targetPrice:
-                    "IQD ${buyAtPriceStatus ? buyAtPrice : buyingPrice} / gram",
-
-                // The total money calculated
-                total: "IQD ${tradeMoney.toStringAsFixed(3)}",
+                    "${AppLocalizations.of(context)!.idq} ${buyAtPriceStatus ? buyAtPrice : buyingPrice} ${AppLocalizations.of(context)!.trade_gram}",
+                total: "${AppLocalizations.of(context)!.idq} ${tradeMoney.toStringAsFixed(3)}",
               ),
             ),
           );
@@ -317,12 +316,12 @@ class Trade extends _$Trade {
           await genericPopUpWidget(
             context: context,
             heading: sellAtProfitStatus
-                ? "Sell Order Placed"
-                : "Sell Order Filled",
+                ? AppLocalizations.of(context)!.invest_sell_order_placed//"Sell Order Placed"
+                : AppLocalizations.of(context)!.invest_sell_order_filled,//"Sell Order Filled",
             subtitle:
                 successResponse.payload!.message ??
-                "Your sell order has been successfully submitted for processing.",
-            yesButtonTitle: "Close",
+                AppLocalizations.of(context)!.invest_sell_order_submitted_success,//"Your sell order has been successfully submitted for processing.",
+            yesButtonTitle: AppLocalizations.of(context)!.close,//"Close",
             isLoadingState: false,
             onYesPress: () async {
               Navigator.pop(context);

@@ -395,6 +395,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get please_select_amount => 'Please select an amount';
 
   @override
+  String get deposit_amount_1m_iqd => '1M IQD';
+
+  @override
+  String get deposit_amount_2m_iqd => '2M IQD';
+
+  @override
+  String get deposit_amount_3m_iqd => '3M IQD';
+
+  @override
+  String get deposit_amount_4m_iqd => '4M IQD';
+
+  @override
+  String get deposit_amount_5m_iqd => '5M IQD';
+
+  @override
   String get confirm_pwd =>
       'Password do not match, Please re-enter confirm paswword.';
 
@@ -831,6 +846,42 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get gift_to => 'to';
+
+  @override
+  String get gift_a_friend => 'Gift a friend';
+
+  @override
+  String get gift_fill_form_subtitle =>
+      'Please fill the form below to gift gold.';
+
+  @override
+  String get gift_existing_friends => 'Existing Friends';
+
+  @override
+  String get gift_friend_placeholder => 'Friend';
+
+  @override
+  String get gift_hint_email_phone_sample => 'name@mail.com | 00964XXXXXXXXX';
+
+  @override
+  String get gift_label_comment_section => 'Comment';
+
+  @override
+  String gift_success_sent_gram(String amount, String name) {
+    return 'You have successfully sent ${amount}g gold gift to $name';
+  }
+
+  @override
+  String get gift_success_title => 'Gift sent!';
+
+  @override
+  String get gift_summary_title => 'Summary';
+
+  @override
+  String get gift_summary_id_label => 'ID';
+
+  @override
+  String get gift_return_home => 'Return to home';
 
   @override
   String get insufficient_gram_title => 'Insufficient Gram Selection';
@@ -2358,10 +2409,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalid_otp => 'Invalid OTP:Please enter valid otp';
 
   @override
-  String get user_firstName => 'Amro';
+  String get user_firstName => 'Mr Zaid';
 
   @override
-  String get user_lastName => 'Jaber';
+  String get user_lastName => '';
 
   @override
   String get upgrade_to_real_message =>

@@ -147,6 +147,11 @@
   "password_complexity_requirement": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، بما في ذلك حرف كبير ورقم ورمز خاص",
   "incorrect_password": "كلمة المرور غير صحيحة",
   "please_select_amount": "يرجى اختيار المبلغ",
+  "deposit_amount_1m_iqd": "١ مليون دينار عراقي",
+  "deposit_amount_2m_iqd": "٢ مليون دينار عراقي",
+  "deposit_amount_3m_iqd": "٣ مليون دينار عراقي",
+  "deposit_amount_4m_iqd": "٤ مليون دينار عراقي",
+  "deposit_amount_5m_iqd": "٥ مليون دينار عراقي",
   "confirm_pwd": "كلمة المرور غير متطابقة، يرجى إعادة إدخال كلمة المرور للتأكيد.",
   "plz_enter_valid_phone": "يرجى إدخال رقم هاتف صالح",
 
@@ -328,6 +333,23 @@
   "gift_target" : "مستهدف",
   "gift_no_item" : "لم يتم العثور على أي عناصر",
   "gift_to": "إلى",
+  "gift_a_friend": "هدية لصديق",
+  "gift_fill_form_subtitle": "يرجى ملء النموذج أدناه لإهداء الذهب.",
+  "gift_existing_friends": "الأصدقاء المسجّلون",
+  "gift_friend_placeholder": "صديق",
+  "gift_hint_email_phone_sample": "name@mail.com | 00964XXXXXXXXX",
+  "gift_label_comment_section": "تعليق",
+  "@gift_success_sent_gram": {
+    "placeholders": {
+      "amount": { "type": "String" },
+      "name": { "type": "String" }
+    }
+  },
+  "gift_success_sent_gram": "لقد أرسلت بنجاح هدية ذهبية بوزن {amount} غرام إلى {name}",
+  "gift_success_title": "تم إرسال الهدية!",
+  "gift_summary_title": "ملخص",
+  "gift_summary_id_label": "المعرّف",
+  "gift_return_home": "العودة إلى الرئيسية",
   "insufficient_gram_title": "اختيار غرام غير كافٍ",
 
   "ins_firt": "الصفقات المختارة (",
@@ -672,7 +694,7 @@
   "deal_update_confirm_message": "هل أنت متأكد أنك تريد تحديث موقع الصفقة؟",
 
   "@GramsBalanceScreen": {},
-  "gramsBalance_title": "رصيد الغرامات",
+  "gramsBalance_title": "رصيدك من الذهب (بالغرام)",
   "grams_card_buy_at_price_order": "طلب شراء بسعر",
   "grams_card_invest_money": "المبلغ المستثمر:",
   "grams_card_invest_status": "حالة الاستثمار:",
@@ -903,7 +925,7 @@
   "gram_invest_money" : "استثمار المال: الدينار العراقي",
   "gram_invest_status" : "حالة الاستثمار:",
   "gram_date" : "التاريخ:",
-  "g_Gold": "غرام الذهب",
+  "g_Gold": "غرام ذهب",
   "profit_title": "الربح",
 
 
@@ -956,7 +978,7 @@
   "@toastWarnings": {},
   "finger_print_warning" : "فشل التحقق من بصمة الإصبع.",
   "invalid_otp": "رمز التحقق غير صالح: يرجى إدخال رمز صالح",
-  "user_firstName": "عمرو",
+  "user_firstName": "السيد زيد",
   "user_lastName": "جابر",
   "request_sent": "تم إرسال رمز التحقق بنجاح",
 
@@ -966,7 +988,7 @@
   "active_alerts": "التنبيهات النشطة",
   
   "no_active_alerts": "لا توجد تنبيهات نشطة",
-  "no_active_alert_at_moment": "لا يوجد أي تنبيه نشط في الوقت الحالي",
+  "no_active_alert_at_moment": " لا توجد أي إشعارات فعّالة حالياً",
   "create_new_alert": "إنشاء تنبيه جديد",
   "alert_selling": "تنبيه بيع",
   "alert_buying": "تنبيه شراء",

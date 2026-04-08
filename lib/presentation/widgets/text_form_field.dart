@@ -63,6 +63,7 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return Center(
       child: TextFormField(
         textCapitalization: widget.isCapitalizationEnabled
@@ -90,7 +91,8 @@ class CommonTextFormFieldState extends State<CommonTextFormField> {
           fontFamily: GoogleFonts.roboto().fontFamily,
         ),
         decoration: InputDecoration(
-          alignLabelWithHint: true,
+          floatingLabelAlignment: FloatingLabelAlignment.start,
+          alignLabelWithHint: !isRtl,
           errorMaxLines: 3,
           helperMaxLines: 2,
           border: _border(AppColors.secondaryColor),

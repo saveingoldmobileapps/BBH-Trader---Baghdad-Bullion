@@ -24,6 +24,7 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
     /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
 
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     final languageState = ref.watch(languageProvider);
     final languageNotifier = ref.read(languageProvider.notifier);
 
@@ -56,27 +57,51 @@ class _LanguageScreenState extends ConsumerState<LanguageScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: isRtl
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
                   children: [
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.settings_language,
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 26,
-                        tabletVal: 32,
-                      ),
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.whiteColor,
-                    ).getAlign(),
+                    isRtl
+                        ? GetGenericText(
+                            text: AppLocalizations.of(context)!.settings_language,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 26,
+                              tabletVal: 32,
+                            ),
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.whiteColor,
+                          ).getAlignRight()
+                        : GetGenericText(
+                            text: AppLocalizations.of(context)!.settings_language,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 26,
+                              tabletVal: 32,
+                            ),
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.whiteColor,
+                          ).getAlign(),
 
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.settings_language_desc,
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 14,
-                        tabletVal: 20,
-                      ),
-                      fontWeight: FontWeight.normal,
-                      color: AppColors.whiteColor,
-                    ).getAlign(),
+                    isRtl
+                        ? GetGenericText(
+                            text:
+                                AppLocalizations.of(context)!.settings_language_desc,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 20,
+                            ),
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.whiteColor,
+                          ).getAlignRight()
+                        : GetGenericText(
+                            text:
+                                AppLocalizations.of(context)!.settings_language_desc,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 20,
+                            ),
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.whiteColor,
+                          ).getAlign(),
                     ConstPadding.sizeBoxWithHeight(height: 16),
                     Expanded(
                       child: ListView.builder(

@@ -133,6 +133,7 @@ class FullScreenDropdownState extends State<FullScreenDropdown> {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return 
     Scaffold(
       backgroundColor: AppColors.primaryGold500,
@@ -181,6 +182,8 @@ class FullScreenDropdownState extends State<FullScreenDropdown> {
                   fontFamily: GoogleFonts.roboto().fontFamily,
                 ),
                 decoration: InputDecoration(
+                  floatingLabelAlignment: FloatingLabelAlignment.start,
+                  alignLabelWithHint: !isRtl,
                   border: OutlineInputBorder(
                     borderSide: BorderSide(
                       color: AppColors.whiteColor,

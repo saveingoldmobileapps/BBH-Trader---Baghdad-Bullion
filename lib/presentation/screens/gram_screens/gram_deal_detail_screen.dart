@@ -181,22 +181,25 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                       /// Trade Type
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GetGenericText(
-                            text:
-                                "${widget.gramData.tradeType == "Sell" ? AppLocalizations.of(context)!.sold : AppLocalizations.of(context)!.deal_buy_order} ${widget.gramData.tradeMetal!.toStringAsFixed(3)} ${AppLocalizations.of(context)!.g_Gold}",
-                            // "${widget.gramData.tradeType == "Sell" ? "Sold" : "Buy Order"} ${widget.gramData.tradeMetal!.toStringAsFixed(2)}g Gold",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 20,
-                              tabletVal: 24,
-                            ), //20,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.grey5Color,
+                          Expanded(
+                            child: GetGenericText(
+                              text:
+                                  "${widget.gramData.tradeType == "Sell" ? AppLocalizations.of(context)!.sold : AppLocalizations.of(context)!.deal_buy_order} ${widget.gramData.tradeMetal!.toStringAsFixed(3)} ${AppLocalizations.of(context)!.g_Gold}",
+                              // "${widget.gramData.tradeType == "Sell" ? "Sold" : "Buy Order"} ${widget.gramData.tradeMetal!.toStringAsFixed(2)}g Gold",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 20,
+                                tabletVal: 24,
+                              ), //20,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.grey5Color,
+                              lines: 4,
+                            ),
                           ),
                           if (widget.gramData.tradeStatus == "Opened" ||
                               isTakeProfitTrade) ...[
-                            // if (widget.gramData.tradeStatus == "Opened"  ) ...[
+                            SizedBox(width: sizes!.widthRatio * 8),
                             GetGenericText(
                               text:
                                   "${AppLocalizations.of(context)!.idq_currency} ${pnl.toStringAsFixed(3)}", //"IQD ${pnl.toStringAsFixed(2)}",
@@ -215,19 +218,23 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                       ConstPadding.sizeBoxWithHeight(height: 12),
                       widget.gramData.tradeType == "Sell"
                           ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                GetGenericText(
-                                  text: AppLocalizations.of(
-                                    context,
-                                  )!.deal_bought_at_price, //"Bought at Price",
-                                  fontSize: sizes!.responsiveFont(
-                                    phoneVal: 16,
-                                    tabletVal: 18,
-                                  ), //16,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.grey3Color,
+                                Expanded(
+                                  child: GetGenericText(
+                                    text: AppLocalizations.of(
+                                      context,
+                                    )!.deal_bought_at_price, //"Bought at Price",
+                                    fontSize: sizes!.responsiveFont(
+                                      phoneVal: 16,
+                                      tabletVal: 18,
+                                    ), //16,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.grey3Color,
+                                    lines: 3,
+                                  ),
                                 ),
+                                SizedBox(width: sizes!.widthRatio * 8),
                                 GetGenericText(
                                   text:
                                       "${AppLocalizations.of(context)!.idq_currency} ${widget.gramData.buyingPrice?.toStringAsFixed(3)}",
@@ -255,19 +262,23 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                       /// Sell/Buy at Price
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GetGenericText(
-                            text:
-                                "${widget.gramData.tradeType == "Sell" ? AppLocalizations.of(context)!.trade_sell : AppLocalizations.of(context)!.gram_buy_word} ${AppLocalizations.of(context)!.deal_at_price}",
-                            // "${widget.gramData.tradeType == "Sell" ? "Sell" : "Buy"} at Price",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
-                            ), //16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
+                          Expanded(
+                            child: GetGenericText(
+                              text:
+                                  "${widget.gramData.tradeType == "Sell" ? AppLocalizations.of(context)!.trade_sell : AppLocalizations.of(context)!.gram_buy_word} ${AppLocalizations.of(context)!.deal_at_price}",
+                              // "${widget.gramData.tradeType == "Sell" ? "Sell" : "Buy"} at Price",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ), //16,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 3,
+                            ),
                           ),
+                          SizedBox(width: sizes!.widthRatio * 8),
                           GetGenericText(
                             text:
                                 "${AppLocalizations.of(context)!.idq} ${widget.gramData.tradeType == "Sell"
@@ -323,25 +334,29 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                       // ),
                       /// Current Price
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GetGenericText(
-                            text:
-                                (widget.gramData.tradeStatus == "Opened" ||
-                                    (widget.gramData.tradeStatus == "Pending" &&
-                                        widget.gramData.tradeType == "Sell"))
-                                ? AppLocalizations.of(context)!
-                                      .deal_current_sell_price //"Current Sell Price"
-                                : AppLocalizations.of(
-                                    context,
-                                  )!.deal_current_buy_price, //"Current Buy Price",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
+                          Expanded(
+                            child: GetGenericText(
+                              text:
+                                  (widget.gramData.tradeStatus == "Opened" ||
+                                      (widget.gramData.tradeStatus == "Pending" &&
+                                          widget.gramData.tradeType == "Sell"))
+                                  ? AppLocalizations.of(context)!
+                                        .deal_current_sell_price //"Current Sell Price"
+                                  : AppLocalizations.of(
+                                      context,
+                                    )!.deal_current_buy_price, //"Current Buy Price",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 3,
                             ),
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
                           ),
+                          SizedBox(width: sizes!.widthRatio * 8),
                           GetGenericText(
                             text:
                                 (widget.gramData.tradeStatus == "Opened" ||
@@ -368,19 +383,23 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                       /// Trade Money
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GetGenericText(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.grams_card_invest_money, //"Invest Money",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
-                            ), //16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
+                          Expanded(
+                            child: GetGenericText(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.grams_card_invest_money, //"Invest Money",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ), //16,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 3,
+                            ),
                           ),
+                          SizedBox(width: sizes!.widthRatio * 8),
                           GetGenericText(
                             text:
                                 "${AppLocalizations.of(context)!.idq_currency} ${widget.gramData.tradeMoney?.toStringAsFixed(3) ?? '0.00'}",
@@ -401,45 +420,54 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                       ),
                       ConstPadding.sizeBoxWithHeight(height: 12),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          GetGenericText(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.dateTime, //"Date & Time",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
+                          Expanded(
+                            flex: 2,
+                            child: GetGenericText(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.dateTime, //"Date & Time",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 2,
                             ),
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
                           ),
-                          GetGenericText(
-                            text:
-                                DateFormat(
-                                  'EEEE, dd MMM yyyy, HH:mm',
-                                  Localizations.localeOf(
-                                            context,
-                                          ).languageCode ==
-                                          'ar'
-                                      ? 'ar'
-                                      : 'en',
-                                ).format(
-                                  DateTime.parse(
-                                    widget.gramData.createdAt!.toString(),
-                                  ).toLocal(),
-                                ),
-                            // DateFormat('EEE, dd MMM yyyy HH:mm').format(
-                            //   DateTime.parse(
-                            //     widget.gramData.createdAt!.toString(),
-                            //   ).toLocal(),
-                            // ),
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 14,
-                              tabletVal: 16,
+                          SizedBox(width: sizes!.widthRatio * 8),
+                          Expanded(
+                            flex: 3,
+                            child: GetGenericText(
+                              text:
+                                  DateFormat(
+                                    'EEEE, dd MMM yyyy, HH:mm',
+                                    Localizations.localeOf(
+                                              context,
+                                            ).languageCode ==
+                                            'ar'
+                                        ? 'ar'
+                                        : 'en',
+                                  ).format(
+                                    DateTime.parse(
+                                      widget.gramData.createdAt!.toString(),
+                                    ).toLocal(),
+                                  ),
+                              // DateFormat('EEE, dd MMM yyyy HH:mm').format(
+                              //   DateTime.parse(
+                              //     widget.gramData.createdAt!.toString(),
+                              //   ).toLocal(),
+                              // ),
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 14,
+                                tabletVal: 16,
+                              ),
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.grey5Color,
+                              lines: 3,
                             ),
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.grey5Color,
                           ),
                         ],
                       ),
@@ -469,18 +497,21 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                         /// Edit Price
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            GetGenericText(
-                              text: AppLocalizations.of(
-                                context,
-                              )!.deal_edit_price, //"Edit Price",
-                              fontSize: sizes!.responsiveFont(
-                                phoneVal: 16,
-                                tabletVal: 18,
-                              ), //16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
+                            Expanded(
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.deal_edit_price, //"Edit Price",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 16,
+                                  tabletVal: 18,
+                                ), //16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                                lines: 3,
+                              ),
                             ),
                             Switch.adaptive(
                               activeColor: AppColors.primaryGold500,
@@ -565,18 +596,21 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                         /// Edit Price
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            GetGenericText(
-                              text: AppLocalizations.of(
-                                context,
-                              )!.deal_edit_gram, //"Edit Gram Amount",
-                              fontSize: sizes!.responsiveFont(
-                                phoneVal: 16,
-                                tabletVal: 18,
-                              ), //16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
+                            Expanded(
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.deal_edit_gram, //"Edit Gram Amount",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 16,
+                                  tabletVal: 18,
+                                ), //16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                                lines: 3,
+                              ),
                             ),
                             Switch.adaptive(
                               activeColor: AppColors.primaryGold500,
@@ -1024,18 +1058,21 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                         /// Take Profit
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            GetGenericText(
-                              text: AppLocalizations.of(
-                                context,
-                              )!.deal_take_profit, //"Take Profit",
-                              fontSize: sizes!.responsiveFont(
-                                phoneVal: 16,
-                                tabletVal: 18,
-                              ), //16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
+                            Expanded(
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.deal_take_profit, //"Take Profit",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 16,
+                                  tabletVal: 18,
+                                ), //16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                                lines: 3,
+                              ),
                             ),
                             Switch.adaptive(
                               activeColor: AppColors.primaryGold500,
@@ -1275,18 +1312,21 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                         /// Close Deal
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            GetGenericText(
-                              text: AppLocalizations.of(
-                                context,
-                              )!.deal_close_section, //"Close Deal",
-                              fontSize: sizes!.responsiveFont(
-                                phoneVal: 16,
-                                tabletVal: 18,
-                              ), //16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.white,
+                            Expanded(
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.deal_close_section, //"Close Deal",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 16,
+                                  tabletVal: 18,
+                                ), //16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.white,
+                                lines: 3,
+                              ),
                             ),
                             Switch.adaptive(
                               activeColor: AppColors.primaryGold500,

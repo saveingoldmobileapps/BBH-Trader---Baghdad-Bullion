@@ -23,11 +23,11 @@ class _EditPersonalInfoScreenState
   final surnameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneNumberController = TextEditingController();
-  String currentIsoCode = "AE";
+  String currentIsoCode = "IQ";
   String _originalFirstName = '';
-  String dialCode = "+971";
-  String orignalDialCode = "+971";
-  String orignalIsoCode = "AE";
+  String dialCode = "+964";
+  String orignalDialCode = "+964";
+  String orignalIsoCode = "IQ";
   String _originalSurname = '';
   String _originalEmail = '';
   String _originalPhoneNumber = '';
@@ -84,10 +84,10 @@ class _EditPersonalInfoScreenState
       surnameController.text = userProfile.surname!.en ?? "";
       phoneNumberController.text = userProfile.phoneNumber ?? "";
       emailController.text = userProfile.email ?? "";
-      currentIsoCode = userProfile.isoCode ?? "AE";
-      dialCode = userProfile.dialCode ?? "+971";
-      orignalIsoCode = userProfile.isoCode ?? "AE";
-      orignalDialCode = userProfile.dialCode ?? "+971";
+      currentIsoCode = userProfile.isoCode ?? "IQ";
+      dialCode = userProfile.dialCode ?? "+964";
+      orignalIsoCode = userProfile.isoCode ?? "IQ";
+      orignalDialCode = userProfile.dialCode ?? "+964";
       // Store original values for comparison
       _originalFirstName = firstNameController.text;
       _originalSurname = surnameController.text;
@@ -315,32 +315,38 @@ class _EditPersonalInfoScreenState
                     key: _formKey,
                     child: Column(
                       children: [
-                        GetGenericText(
-                          text: AppLocalizations.of(
-                            context,
-                          )!.settings_personal_info,
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 26,
-                            tabletVal: 32,
+                        _fieldSectionLabelAlign(
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.settings_personal_info,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 26,
+                              tabletVal: 32,
+                            ),
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.whiteColor,
                           ),
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.whiteColor,
-                        ).getAlign(),
+                        ),
 
-                        GetGenericText(
-                          text: AppLocalizations.of(
-                            context,
-                          )!.settings_personal_info_desc,
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 14,
-                            tabletVal: 20,
+                        _fieldSectionLabelAlign(
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.settings_personal_info_desc,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 20,
+                            ),
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.whiteColor,
+                            lines: 4,
                           ),
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.whiteColor,
-                        ).getAlign(),
+                        ),
 
                         DisplayImage(
-                          imagePath: mainStateWatchProvider
+                          imagePath:
+                              mainStateWatchProvider
                                   .getUserProfileResponse
                                   .payload
                                   ?.userProfile
@@ -365,44 +371,43 @@ class _EditPersonalInfoScreenState
                         ),
                         ConstPadding.sizeBoxWithHeight(height: 16),
 
-                        Directionality.of(context) == TextDirection.rtl
-                            ? GetGenericText(
-                                text: AppLocalizations.of(context)!.warning,
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 14,
-                                  tabletVal: 16,
-                                ),
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.redColor,
-                              ).getAlignRight()
-                            : GetGenericText(
-                                text: AppLocalizations.of(context)!.warning,
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 14,
-                                  tabletVal: 16,
-                                ),
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.redColor,
-                              ).getAlign(),
-                        GetGenericText(
-                          text: AppLocalizations.of(context)!.pi_update_warning,
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 12,
-                            tabletVal: 14,
+                        _fieldSectionLabelAlign(
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.warning,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 16,
+                            ),
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.redColor,
                           ),
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white,
-                        ).getAlign(),
+                        ),
+                        _fieldSectionLabelAlign(
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.pi_update_warning,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 12,
+                              tabletVal: 14,
+                            ),
+                            fontWeight: FontWeight.w400,
+                            color: Colors.white,
+                            lines: 4,
+                          ),
+                        ),
                         ConstPadding.sizeBoxWithHeight(height: 16),
-                        GetGenericText(
-                          text: AppLocalizations.of(context)!.kyc_first_name,
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 14,
-                            tabletVal: 18,
+                        _fieldSectionLabelAlign(
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.kyc_first_name,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.whiteColor,
                           ),
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.whiteColor,
-                        ).getAlign(),
+                        ),
                         ConstPadding.sizeBoxWithHeight(height: 8),
                         CommonTextFormField(
                           title: AppLocalizations.of(context)!.pi_first_name,
@@ -426,15 +431,17 @@ class _EditPersonalInfoScreenState
                         ),
 
                         ConstPadding.sizeBoxWithHeight(height: 16),
-                        GetGenericText(
-                          text: AppLocalizations.of(context)!.kyc_last_name,
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 14,
-                            tabletVal: 18,
+                        _fieldSectionLabelAlign(
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.kyc_last_name,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.whiteColor,
                           ),
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.whiteColor,
-                        ).getAlign(),
+                        ),
                         ConstPadding.sizeBoxWithHeight(height: 8),
                         CommonTextFormField(
                           title: AppLocalizations.of(context)!.surname,
@@ -454,15 +461,19 @@ class _EditPersonalInfoScreenState
                           },
                         ),
                         ConstPadding.sizeBoxWithHeight(height: 16),
-                        GetGenericText(
-                          text: AppLocalizations.of(context)!.login_email_Labe,
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 14,
-                            tabletVal: 18,
+                        _fieldSectionLabelAlign(
+                          GetGenericText(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.login_email_Labe,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.whiteColor,
                           ),
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.whiteColor,
-                        ).getAlign(),
+                        ),
                         ConstPadding.sizeBoxWithHeight(height: 8),
                         CommonTextFormField(
                           title: AppLocalizations.of(context)!.email,
@@ -551,15 +562,17 @@ class _EditPersonalInfoScreenState
                         //     return null;
                         //   },
                         // ),
-                        GetGenericText(
-                          text: AppLocalizations.of(context)!.phone_number,
-                          fontSize: sizes!.responsiveFont(
-                            phoneVal: 14,
-                            tabletVal: 18,
+                        _fieldSectionLabelAlign(
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.phone_number,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 14,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.normal,
+                            color: AppColors.whiteColor,
                           ),
-                          fontWeight: FontWeight.normal,
-                          color: AppColors.whiteColor,
-                        ).getAlign(),
+                        ),
                         ConstPadding.sizeBoxWithHeight(height: 8),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -795,6 +808,17 @@ class _EditPersonalInfoScreenState
       ),
     );
   }
+
+  /// Section labels above text fields — start edge (right in RTL, left in LTR).
+  Widget _fieldSectionLabelAlign(Widget label) {
+    return SizedBox(
+      width: double.infinity,
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: label,
+      ),
+    );
+  }
 }
 
 Widget _buildTextField(
@@ -807,14 +831,17 @@ Widget _buildTextField(
   bool readOnly = false, // ✅ ADD THIS
 }) {
   return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
       if (label != null)
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Text(
-            label,
-            style: const TextStyle(color: AppColors.grey6Color),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              label,
+              style: const TextStyle(color: AppColors.grey6Color),
+            ),
           ),
         ),
       TextFormField(

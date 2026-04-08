@@ -28,17 +28,23 @@ class PhoneTextFormFieldWithIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+          isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
       children: [
-        GetGenericText(
-          text: labelText,
-          fontSize: sizes!.responsiveFont(
-            phoneVal: 14,
-            tabletVal: 16,
+        SizedBox(
+          width: double.infinity,
+          child: GetGenericText(
+            text: labelText,
+            fontSize: sizes!.responsiveFont(
+              phoneVal: 14,
+              tabletVal: 16,
+            ),
+            fontWeight: FontWeight.w400,
+            color: AppColors.grey6Color,
+            textAlign: isRtl ? TextAlign.end : TextAlign.start,
           ),
-          fontWeight: FontWeight.w400,
-          color: AppColors.grey6Color,
         ),
         ConstPadding.sizeBoxWithHeight(height: 8),
 
@@ -48,7 +54,8 @@ class PhoneTextFormFieldWithIcon extends StatelessWidget {
           autovalidateMode: AutovalidateMode.disabled,
           builder: (FormFieldState<String> field) {
             return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  isRtl ? CrossAxisAlignment.end : CrossAxisAlignment.start,
               children: [
                 Container(
                   height: sizes!.responsiveLandscapeHeight(
@@ -123,9 +130,13 @@ class PhoneTextFormFieldWithIcon extends StatelessWidget {
                 ),
                 if (field.hasError)
                   Padding(
-                    padding: const EdgeInsets.only(top: 4.0, left: 8),
+                    padding: const EdgeInsetsDirectional.only(
+                      top: 4.0,
+                      start: 8,
+                    ),
                     child: Text(
                       field.errorText!,
+                      textAlign: isRtl ? TextAlign.end : TextAlign.start,
                       style: TextStyle(
                         color: AppColors.redColor,
                         fontSize: sizes!.responsiveFont(

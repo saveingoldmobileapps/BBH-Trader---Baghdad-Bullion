@@ -31,6 +31,7 @@ class AmountTextFormField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return Center(
       child: TextFormField(
         controller: controller,
@@ -50,6 +51,8 @@ class AmountTextFormField extends StatelessWidget {
           fontFamily: GoogleFonts.roboto().fontFamily,
         ),
         decoration: InputDecoration(
+          floatingLabelAlignment: FloatingLabelAlignment.start,
+          alignLabelWithHint: !isRtl,
           border: OutlineInputBorder(
             borderSide: BorderSide(
               color: AppColors.secondaryColor,

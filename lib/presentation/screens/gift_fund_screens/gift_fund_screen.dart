@@ -247,31 +247,57 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     ),
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 10),
-                  GetGenericText(
-                    text: "Gift a friend",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 20,
-                      tabletVal: 24,
-                    ),
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.grey5Color,
-                  ).getAlign(),
+                  Directionality.of(context) == TextDirection.rtl
+                      ? GetGenericText(
+                          text: AppLocalizations.of(context)!.gift_a_friend,
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 20,
+                            tabletVal: 24,
+                          ),
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.grey5Color,
+                        ).getAlignRight()
+                      : GetGenericText(
+                          text: AppLocalizations.of(context)!.gift_a_friend,
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 20,
+                            tabletVal: 24,
+                          ),
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.grey5Color,
+                        ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 4),
-                  GetGenericText(
-                    text: "Please fill the form below to gift gold.",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 14,
-                      tabletVal: 18,
-                    ),
-                    fontWeight: FontWeight.normal,
-                    color: AppColors.grey5Color,
-                  ).getAlign(),
+                  Directionality.of(context) == TextDirection.rtl
+                      ? GetGenericText(
+                          text: AppLocalizations.of(
+                            context,
+                          )!.gift_fill_form_subtitle,
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 14,
+                            tabletVal: 18,
+                          ),
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.grey5Color,
+                          lines: 4,
+                        ).getAlignRight()
+                      : GetGenericText(
+                          text: AppLocalizations.of(
+                            context,
+                          )!.gift_fill_form_subtitle,
+                          fontSize: sizes!.responsiveFont(
+                            phoneVal: 14,
+                            tabletVal: 18,
+                          ),
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.grey5Color,
+                          lines: 4,
+                        ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 16),
                   Directionality.of(context) == TextDirection.rtl
                       ? GetGenericText(
                           text: AppLocalizations.of(
                             context,
-                          )!.friends, //"Friends",
+                          )!.gift_existing_friends,
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 16,
                             tabletVal: 20,
@@ -280,7 +306,9 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                           color: AppColors.grey5Color,
                         ).getAlignRight()
                       : GetGenericText(
-                          text: "Existing Friends", //"Friends",
+                          text: AppLocalizations.of(
+                            context,
+                          )!.gift_existing_friends,
                           fontSize: sizes!.responsiveFont(
                             phoneVal: 16,
                             tabletVal: 20,
@@ -318,7 +346,8 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                         (friend.firstName != null &&
                                             friend.firstName!.length >= 2)
                                         ? friend.firstName!.substring(0, 1)
-                                        : "Friend",
+                                        : AppLocalizations.of(context)!
+                                              .gift_friend_placeholder,
                                     onLongPress: () {
                                       userIdController.text = friend.id!;
                                       genericPopUpWidget(
@@ -397,7 +426,8 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                         (friend.firstName != null &&
                                             friend.firstName!.length >= 2)
                                         ? friend.firstName!.substring(0, 1)
-                                        : "Friend",
+                                        : AppLocalizations.of(context)!
+                                              .gift_friend_placeholder,
                                     onLongPress: () {
                                       userIdController.text = friend.id!;
                                       genericPopUpWidget(
@@ -459,27 +489,31 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                             ),
                           ).getAlign()
                   else
-                    GetGenericText(
-                      text: AppLocalizations.of(
-                        context,
-                      )!.noFriendsFound, //"No friends found.",
-                      fontSize: sizes!.responsiveFont(
-                        phoneVal: 14,
-                        tabletVal: 16,
+                    _fieldSectionLabelAlign(
+                      GetGenericText(
+                        text: AppLocalizations.of(
+                          context,
+                        )!.noFriendsFound, //"No friends found.",
+                        fontSize: sizes!.responsiveFont(
+                          phoneVal: 14,
+                          tabletVal: 16,
+                        ),
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.grey5Color,
                       ),
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey5Color,
                     ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
-                  GetGenericText(
-                    text: "Account Number", //"Friends",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 20,
+                  _fieldSectionLabelAlign(
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.receiverAccNum,
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 16,
+                        tabletVal: 20,
+                      ),
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.whiteColor,
                     ),
-                    fontWeight: FontWeight.normal,
-                    color: AppColors.whiteColor,
-                  ).getAlign(),
+                  ),
                   ConstPadding.sizeBoxWithHeight(height: 10),
                   CommonTextFormField(
                     title: "title",
@@ -499,19 +533,22 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     },
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
-                  GetGenericText(
-                    text: "Receiver Name", //"Friends",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 20,
+                  _fieldSectionLabelAlign(
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.receiverName,
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 16,
+                        tabletVal: 20,
+                      ),
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.whiteColor,
                     ),
-                    fontWeight: FontWeight.normal,
-                    color: AppColors.whiteColor,
-                  ).getAlign(),
+                  ),
                   ConstPadding.sizeBoxWithHeight(height: 5),
                   CommonTextFormField(
                     title: "title",
-                    hintText: AppLocalizations.of(
+                    hintText: 
+                    AppLocalizations.of(
                       context,
                     )!.user_firstName, //"Amro Al Jaber",
                     labelText: AppLocalizations.of(
@@ -529,19 +566,23 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     },
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
-                  GetGenericText(
-                    text: "Email", //"Friends",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 20,
+                  _fieldSectionLabelAlign(
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.login_email_Labe,
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 16,
+                        tabletVal: 20,
+                      ),
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.whiteColor,
                     ),
-                    fontWeight: FontWeight.normal,
-                    color: AppColors.whiteColor,
-                  ).getAlign(),
+                  ),
                   ConstPadding.sizeBoxWithHeight(height: 5),
                   CommonTextFormField(
                     title: "title",
-                    hintText: "name@mail.com | 00971XXXXXXXXX",
+                    hintText: AppLocalizations.of(
+                      context,
+                    )!.gift_hint_email_phone_sample,
                     labelText: AppLocalizations.of(
                       context,
                     )!.receiverAccEmail, //"Receiver Email/Phone",
@@ -551,15 +592,17 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     validator: ValidatorUtils.validateEmailOrPhone,
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
-                  GetGenericText(
-                    text: "Amount", //"Friends",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 20,
+                  _fieldSectionLabelAlign(
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.amount,
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 16,
+                        tabletVal: 20,
+                      ),
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.whiteColor,
                     ),
-                    fontWeight: FontWeight.normal,
-                    color: AppColors.whiteColor,
-                  ).getAlign(),
+                  ),
                   ConstPadding.sizeBoxWithHeight(height: 5),
                   CommonTextFormField(
                     title: "title",
@@ -627,15 +670,17 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                   // ),
                   if (giftType == GiftType.metal)
                     ConstPadding.sizeBoxWithHeight(height: 16),
-                  GetGenericText(
-                    text: "Gram Deal", //"Friends",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 20,
+                  _fieldSectionLabelAlign(
+                    GetGenericText(
+                      text: AppLocalizations.of(context)!.gift_gram_deal,
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 16,
+                        tabletVal: 20,
+                      ),
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.whiteColor,
                     ),
-                    fontWeight: FontWeight.normal,
-                    color: AppColors.whiteColor,
-                  ).getAlign(),
+                  ),
                   ConstPadding.sizeBoxWithHeight(height: 5),
                   giftType == GiftType.metal
                       ? Consumer(
@@ -971,15 +1016,19 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                   //       )
                   //     : const SizedBox.shrink(),
                   ConstPadding.sizeBoxWithHeight(height: 16),
-                  GetGenericText(
-                    text: "Comment", //"Friends",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 20,
+                  _fieldSectionLabelAlign(
+                    GetGenericText(
+                      text: AppLocalizations.of(
+                        context,
+                      )!.gift_label_comment_section,
+                      fontSize: sizes!.responsiveFont(
+                        phoneVal: 16,
+                        tabletVal: 20,
+                      ),
+                      fontWeight: FontWeight.normal,
+                      color: AppColors.whiteColor,
                     ),
-                    fontWeight: FontWeight.normal,
-                    color: AppColors.whiteColor,
-                  ).getAlign(),
+                  ),
                   ConstPadding.sizeBoxWithHeight(height: 5),
                   CommonTextFormField(
                     title: "title",
@@ -1378,6 +1427,17 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// Section labels above text fields — start edge (right in RTL, left in LTR).
+  Widget _fieldSectionLabelAlign(Widget label) {
+    return SizedBox(
+      width: double.infinity,
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: label,
       ),
     );
   }

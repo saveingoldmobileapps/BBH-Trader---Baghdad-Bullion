@@ -9,6 +9,7 @@ import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
+import 'package:saveingold_fzco/core/core_export.dart';
 
 class MyOrderCard extends ConsumerWidget {
   final KAllOrders kAllOrders;
@@ -23,11 +24,18 @@ class MyOrderCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final esouqStateWatchProvider = ref.watch(esouqProvider);
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     String formattedDate = kAllOrders.createdAt != null
         ? DateFormat(
-            'dd MMM yyyy, HH:mm',
-          ).format(DateTime.parse(kAllOrders.createdAt!).toLocal())
+            'dd/MM/yyyy, HH:mm',
+            isArabic ? 'ar_IQ' : 'en_IQ',
+          ).format(
+            DateTime.parse(kAllOrders.createdAt!)
+                .toUtc()
+                .add(const Duration(hours: 3)),
+          )
         : "Dec 18, 2024  •  2:45 PM";
 
     return GestureDetector(
@@ -103,7 +111,7 @@ class MyOrderCard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GetGenericText(
-                  text: kAllOrders.quantity.toString(),
+                  text: "${kAllOrders.quantity ?? 0} ${l10n.gram_unit_plural}",
                   fontSize: 14,
                   color: AppColors.grey6Color,
                   fontWeight: FontWeight.normal,
@@ -126,8 +134,8 @@ class MyOrderCard extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const GetGenericText(
-                  text: "Total paid",
+                 GetGenericText(
+                  text: AppLocalizations.of(context)!.esouq_total_paid,//"Total paid",
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
@@ -140,9 +148,9 @@ class MyOrderCard extends ConsumerWidget {
                               .payload
                               ?.paymentMethod ==
                           'Money'
-                      ? "${AppLocalizations.of(context)!.iqd_currency} ${kAllOrders.grandTotal}"
+                      ? "${l10n.iqd_currency} ${CommonService.formatIQDForDisplay(kAllOrders.grandTotal ?? 0)}"
                       // "IQD ${widget.kAllOrders.grandTotal ?? '0.00'}":"",
-                      : "${AppLocalizations.of(context)!.iqd_gram} ${kAllOrders.grandTotal}",
+                      : "${l10n.iqd_gram} ${CommonService.formatIQDForDisplay(kAllOrders.grandTotal ?? 0)}",
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: AppColors.goldColor,
@@ -181,11 +189,28 @@ class MyOrderCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: GetGenericText(
-        text: status,
+        text: _localizedStatus(context, status),
         fontSize: 12,
         fontWeight: FontWeight.w500,
         color: textColor,
       ),
     );
+  }
+
+  String _localizedStatus(BuildContext context, String status) {
+    final l10n = AppLocalizations.of(context)!;
+    final normalized = status.trim().toLowerCase();
+    switch (normalized) {
+      case "pending":
+        return l10n.pending;
+      case "cancelled":
+      case "canceled":
+        return l10n.canceled;
+      case "completed":
+      case "delivered":
+        return l10n.approved;
+      default:
+        return status;
+    }
   }
 }

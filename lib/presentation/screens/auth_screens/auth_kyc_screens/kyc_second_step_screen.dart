@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -611,24 +611,12 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
       final shuftiProBaseUrl = dotenv.env['SHUFTIPRO_BASE_URL'];
       final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
       final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
+
+      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
+      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
       final shuftiProUUIDId = Directionality.of(context) == TextDirection.rtl
           ? dotenv.env['SHUFTIPRO_UUID_Ar']
           : dotenv.env['SHUFTIPRO_UUID_ID'];
-
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-      // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-      // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-      // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-      //  final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
 
       // Validate environment variables
       if (shuftiProBaseUrl == null ||
@@ -639,6 +627,14 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
           text: 'Configuration error, please try again later.',
         );
         return;
+      }
+
+      if (kDebugMode) {
+        debugPrint(
+          '[ShuftiPro] start — SHUFTIPRO_BASE_URL=$shuftiProBaseUrl '
+          'SHUFTIPRO_CLIENT_ID=$shuftiProClientId '
+          'SHUFTIPRO_SECRET_KEY=$shuftiProSecretKey',
+        );
       }
 
       final authObject = {
@@ -676,7 +672,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
         "language": locale?.languageCode ?? "EN",
         "verification_mode": "image_only",
         "show_results": 1,
-        "fetch_enhanced_data": "1",
+        // "fetch_enhanced_data": "1",
         "face": {
           "allow_online": "1",
           "allow_offline": "0",
@@ -689,7 +685,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
             "credit_or_debit_card",
           ],
           "allow_multi_language": "1",
-          "fetch_enhanced_data": "1",
+          //"fetch_enhanced_data": "1",
           "name": {
             "first_name": "",
             "last_name": "",
@@ -707,12 +703,12 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
           // "show_ocr_form": "1",
           "backside_proof_required": "1",
         },
-        "questionnaire": {
-          "questionnaire_type": "pre_kyc", //post_kyc //pre_kyc
-          "uuid": [
-            shuftiProUUIDId,
-          ],
-        },
+        // "questionnaire": {
+        //   "questionnaire_type": "pre_kyc", //post_kyc //pre_kyc
+        //   "uuid": [
+        //     shuftiProUUIDId,
+        //   ],
+        // },
       };
 
       /// Send request to Shufti Pro
@@ -721,7 +717,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
         createdPayload: payload,
         configObject: configObject,
       );
-
+      print("shufti error ${response.toString()}");
       if (response.isEmpty) {
         Toasts.getErrorToast(text: AppLocalizations.of(context)!.kyc_error);
         // Toasts.getErrorToast(text: 'Verification error, try again.');
@@ -780,237 +776,4 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
       // Toasts.getErrorToast(text: 'KYC verification failed, please try again.');
     }
   }
-
-  // Future<void> shuftiProKYC({
-  //   required String countryCode,
-  // }) async {
-  //   try {
-  //     /// Load keys from .env
-  //     final shuftiProBaseUrl = dotenv.env['SHUFTIPRO_BASE_URL'];
-  //     final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
-  //     final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
-  //     final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-  //     // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-  //     // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-  //     // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-  //     // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-  //     // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-  //     // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-  //     // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-  //     // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-  //     // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-  //     //  final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
-  //     // final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
-
-  //     // Validate environment variables
-  //     if (shuftiProBaseUrl == null ||
-  //         shuftiProSecretKey == null ||
-  //         shuftiProClientId == null ||
-  //         shuftiProUUIDId == null) {
-  //       final error = ArgumentError('Missing Shufti Pro configuration in .env');
-  //       await Sentry.captureException(error, stackTrace: StackTrace.current);
-  //       getLocator<Logger>().e('Shufti Pro configuration error', error: error);
-  //       Toasts.getErrorToast(
-  //         text: 'Configuration error, please try again later.',
-  //       );
-  //       return;
-  //     }
-
-  //     /// Shufti Pro auth object
-  //     final authObject = {
-  //       'auth_type': 'basic_auth',
-  //       'client_id': shuftiProClientId,
-  //       'secret_key': shuftiProSecretKey,
-  //     };
-
-  //     // Map<String, Object> authenticateWithToken = {
-  //     //   "auth_type": "access_token",
-  //     //   "access_token":
-  //     //       "be7dea4674732acd0f1b34b20944c23e6f91b5b3772fa514cd52d7c6153edae0:NlZ86s1ecQkLhOU0ArknGCR6MGy9BOaS",
-  //     // };
-
-  //     // Configuration object with consistent styling
-  //     final configObject = {
-  //       'base_url': shuftiProBaseUrl,
-  //       'consent_age': 18,
-  //       'button_text_color': '#FFFFFF',
-  //       'button_primary_color': '#BBA473',
-  //       'button_secondary_color': '#BBA473',
-  //       'cancel_button_color': '#BBA473',
-  //       "loader_color": "#BBA473",
-  //       "theme_color": "#BBA473",
-  //       "loader_text_color": "#FFFFFF",
-  //       'heading_color': '#FFFFFF',
-  //       'sub_heading_color': '#FFFFFF',
-  //       'icon_color': '#BBA473',
-  //       "card_background_color": "#333333",
-  //       'background_color': '#232323',
-  //       'stroke_color': '#FFFFFF',
-  //       'font_color': '#FFFFFF',
-  //       'hide_shuftipro_logo': true,
-  //       'brand_name': 'SaveInGold',
-  //       'consent': {
-  //         'supported_types': ['printed', 'handwritten'],
-  //         'text': 'My name is John Doe and I authorise this transaction of 100',
-  //       },
-  //     };
-
-  //     /// generate random hex reference
-  //     final reference = generateRandomHexReference();
-  //     getLocator<Logger>().i('Shufti Pro Reference: $reference');
-
-  //     /// create payload
-  //     Map<String, Object> createdPayload = {
-  //       "country": countryCode, //"AE",
-  //       "reference": reference,
-  //       "language": locale?.languageCode ?? "EN", //"AR",
-  //       "email": "",
-  //       "verification_mode": "image_only",
-  //       "show_results": 1,
-  //       "fetch_enhanced_data": "1",
-  //       "face": {
-  //         "allow_online": "1",
-  //         "allow_offline": "0",
-  //       },
-  //       "document": {
-  //         "supported_types": [
-  //           "passport",
-  //           "id_card",
-  //           "driving_license",
-  //           "credit_or_debit_card",
-  //         ],
-  //         "allow_multi_language": "1",
-  //         "fetch_enhanced_data": "1",
-  //         "name": {
-  //           "first_name": "",
-  //           "last_name": "",
-  //           "middle_name": "",
-  //         },
-  //         "dob": "",
-  //         "document_number": "",
-  //         "expiry_date": "",
-  //         "issue_date": "",
-  //         "gender": "",
-  //         "allow_online": "1",
-  //         "allow_offline": "0",
-  //         "show_ocr_form": "0",
-  //         // "allow_offline": "1",
-  //         // "show_ocr_form": "1",
-  //         "backside_proof_required": "1",
-  //       },
-  //       "questionnaire": {
-  //         "questionnaire_type": "pre_kyc", //post_kyc //pre_kyc
-  //         "uuid": [
-  //           shuftiProUUIDId,
-  //         ],
-  //       },
-  //     };
-
-  //     /// Send request to Shufti Pro
-  //     final response = await ShuftiproSdk.sendRequest(
-  //       authObject: authObject,
-  //       createdPayload: createdPayload,
-  //       configObject: configObject,
-  //     );
-  //     final prettyJson = const JsonEncoder.withIndent('  ').convert(response);
-
-  //     // getLocator<Logger>().i('Beautify Response $prettyJson');
-  //     getLocator<Logger>().i(' ShuftiPro Decoded Response:\n$prettyJson');
-  //       //print('ShuftiPro Decoded Response:\n$prettyJson');
-  //     /// Check for empty or null response
-  //     if (response.isEmpty) {
-  //       final error = Exception('Empty response from Shufti Pro');
-  //       await Sentry.captureException(error, stackTrace: StackTrace.current);
-  //       getLocator<Logger>().e(
-  //         'Shufti Pro Error: Empty response received',
-  //         error: error,
-  //       );
-  //       Toasts.getErrorToast(text: 'Verification error, try again.');
-  //       return;
-  //     }
-  //     ref.read(shuftiProProvider.notifier).setLoading(true);
-
-  //     /// Log raw response
-  //     getLocator<Logger>().i('ShuftiPro Raw Response: $response');
-
-  //     /// Decode JSON response
-  //     // late Map<String, dynamic> decodedResponse;
-  //     try {
-  //       final decodedResponse = jsonDecode(response) as Map<String, dynamic>;
-  //       // Extract the 'event' value
-  //       final event = decodedResponse['event'];
-  //       getLocator<Logger>().i('ShuftiProEvent: $event');
-
-  //       /// Pretty-print JSON for logging
-  //       final prettyResponse = JsonEncoder.withIndent(
-  //         '  ',
-  //       ).convert(decodedResponse);
-  //       getLocator<Logger>().e('ShuftiPro Pretty Response:\n$prettyResponse');
-
-  //       if (event == "request.invalid") {
-  //         Toasts.getErrorToast(text: 'Verification error, try again.');
-  //         return;
-  //       }
-
-  //       /// Get user ID from local database
-  //       final userid = await LocalDatabase.instance.getUserId();
-  //       if (userid == null) {
-  //         final error = Exception('User ID not found in local database');
-  //         await Sentry.captureException(error, stackTrace: StackTrace.current);
-  //         getLocator<Logger>().e('User ID retrieval failed', error: error);
-  //         Toasts.getErrorToast(text: 'User authentication error, try again.');
-  //         return;
-  //       }
-
-  //       /// Convert response to model
-  //       final shuftiProApiResponse = ShuftiProApiResponseModel.fromJson(
-  //         decodedResponse,
-  //       );
-
-  //       /// Prepare final JSON payload
-  //       final newJson = {
-  //         'userId': userid,
-  //         'kycData': shuftiProApiResponse.toJson(),
-  //       };
-
-  //       /// Log final payload
-  //       getLocator<Logger>().e(
-  //         "Final ShuftiSDK JSON Payload:\n${jsonEncode(newJson)}",
-  //       );
-
-  //       /// Submit KYC data if widget is still mounted
-  //       if (!mounted) {
-  //         getLocator<Logger>().w('Widget not mounted, aborting KYC submission');
-  //         return;
-  //       }
-
-  //       /// Call the API using the provider
-  //       await ref.read(shuftiProProvider.notifier)
-  //           .submitKycData(
-  //             data: newJson,
-  //             shuftiProResult: shuftiProApiResponse,
-  //             context: context,
-  //           );
-  //     } catch (e, stackTrace) {
-  //       await Sentry.captureException(e, stackTrace: stackTrace);
-  //       getLocator<Logger>().e('Failed to decode JSON response: $e', error: e);
-  //       Toasts.getErrorToast(text: 'Invalid response format, try again.');
-  //       return;
-  //     }
-  //   } catch (error, stackTrace) {
-  //     // Capture all unhandled exceptions in Sentry
-  //     await Sentry.captureException(error, stackTrace: stackTrace);
-  //     getLocator<Logger>().e(
-  //       'Error in Shufti Pro KYC process',
-  //       error: error,
-  //       stackTrace: stackTrace,
-  //     );
-  //     // Show user-friendly error message
-  //     Toasts.getErrorToast(text: 'KYC verification failed, please try again.');
-  //   }
-  // }
 }

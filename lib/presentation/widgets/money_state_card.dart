@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:saveingold_fzco/presentation/widgets/auto_scale_text.dart';
 
 import '../../data/models/history_model/NewMoneyApiResponseModel.dart';
 
@@ -26,6 +27,28 @@ class MoneyStatementCard extends StatefulWidget {
 class _MoneyStatementCardState extends State<MoneyStatementCard> {
   bool isExpanded = false;
 
+  /// Until the API returns grams on money statements, show a fixed placeholder.
+  static const String _gramAmountPlaceholder = '50';
+
+  String _formatIqd(num? value) {
+    return CommonService.formatIqdCurrency(value ?? 0);
+  }
+
+  String _formatIraqDateTime(String? isoDate, BuildContext context) {
+    if (isoDate == null || isoDate.isEmpty)
+      return AppLocalizations.of(context)!.not_available;
+    try {
+      final parsed = DateTime.parse(isoDate);
+      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+      final locale = Localizations.localeOf(context).languageCode == 'ar'
+          ? 'ar_IQ'
+          : 'en_IQ';
+      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
+    } catch (_) {
+      return isoDate;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -44,43 +67,19 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
         mainAxisSize: MainAxisSize.min, // Prevents occupying extra space
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Row: Transaction Type and Credit/Debit Status
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                widget.rtl
-                    ? getLocalizedTransactionType(context, item.transactionType)
-                    : (item.transactionType ?? l10n.not_available),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+          // Full-width headline; when debit/credit exist, IQD appears only in this line (no side column).
+          SizedBox(
+            width: double.infinity,
+            child: AutoScaleText(
+              text: _moneyHistoryHeadline(context),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    item.debit != null ? l10n.debit : l10n.credit,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
-                      fontSize: 12,
-                    ),
-                  ),
-                  Text(
-                    item.credit != null
-                        ? "${l10n.idq_currency} ${double.tryParse(item.credit.toString())?.toStringAsFixed(3) ?? '0.00'}"
-                        : "${l10n.idq_currency} ${double.tryParse(item.debit.toString())?.toStringAsFixed(3) ?? '0.00'}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+              alignment: Alignment.centerLeft,
+              maxLines: item.credit != null || item.debit != null ? 6 : 4,
+            ),
           ),
 
           // See Details Toggle
@@ -100,11 +99,11 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
             ),
             _buildDetailRow(
               l10n.dateTime,
-              CommonService.formatDateTime(context, item.date!),
+              _formatIraqDateTime(item.date, context),
             ),
             _buildDetailRow(
               l10n.balanceAfterTransaction,
-              "${l10n.idq_currency} ${double.tryParse(item.moneyBalance.toString())?.toStringAsFixed(3) ?? '0.00'}",
+              "${l10n.idq_currency} ${_formatIqd(double.tryParse(item.moneyBalance.toString()) ?? 0)}",
             ),
             const SizedBox(height: 12),
           ],
@@ -138,6 +137,31 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
         ],
       ),
     );
+  }
+
+  /// Debit → purchase line; credit → sale/proceeds line; IQD from debit or credit amount.
+  String _moneyHistoryHeadline(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final item = widget.data;
+    if (item.debit != null) {
+      final iqd = _formatIqd(double.tryParse(item.debit.toString()) ?? 0);
+      return l10n.money_history_gram_purchase_line(
+        iqd,
+        "",
+        //_gramAmountPlaceholder,
+      );
+    }
+    if (item.credit != null) {
+      final iqd = _formatIqd(double.tryParse(item.credit.toString()) ?? 0);
+      return l10n.money_history_gram_sale_line(
+        iqd,
+        "",//_gramAmountPlaceholder,
+      );
+    }
+    if (widget.rtl) {
+      return getLocalizedTransactionType(context, item.transactionType);
+    }
+    return item.transactionType ?? l10n.not_available;
   }
 
   Widget _buildDetailRow(String label, String value) {
@@ -193,13 +217,12 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
       case "Referral Cashback":
         return "استرداد نقدي للإحالة";
 
-  case "Covering the Purchase":
-    return "تغطية الشراء";
-  case "Proceeds from the Sale":
-    return "عائدات البيع";
+      case "Covering the Purchase":
+        return "تغطية الشراء";
+      case "Proceeds from the Sale":
+        return "عائدات البيع";
       default:
         return AppLocalizations.of(context)!.not_available;
     }
   }
-
 }

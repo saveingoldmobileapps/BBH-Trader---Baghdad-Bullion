@@ -48,6 +48,20 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
   final _focusAmountGramNode = FocusNode(); // Add FocusNode
   final _focusSellAtPriceNode = FocusNode(); // Add FocusNode
 
+  String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
+    if (isoDate == null || isoDate.isEmpty) return '-';
+    try {
+      final parsed = DateTime.parse(isoDate);
+      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+      final locale = Localizations.localeOf(context).languageCode == 'ar'
+          ? 'ar_IQ'
+          : 'en_IQ';
+      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
+    } catch (_) {
+      return isoDate;
+    }
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -200,18 +214,52 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                           if (widget.gramData.tradeStatus == "Opened" ||
                               isTakeProfitTrade) ...[
                             SizedBox(width: sizes!.widthRatio * 8),
-                            GetGenericText(
-                              text:
-                                  "${AppLocalizations.of(context)!.idq_currency} ${pnl.toStringAsFixed(3)}", //"IQD ${pnl.toStringAsFixed(2)}",
-                              fontSize: sizes!.responsiveFont(
-                                phoneVal: 16,
-                                tabletVal: 18,
-                              ),
-                              fontWeight: FontWeight.w400,
-                              color: pnl > 0
-                                  ? AppColors.greenColor
-                                  : AppColors.red900Color,
-                            ),
+                            // Flexible(
+                            //   child: FittedGetGenericText(
+                            //     text:
+                            //         "${AppLocalizations.of(context)!.idq_currency}  ${CommonService.formatIqdCurrency(pnl)}", //"IQD ${pnl.toStringAsFixed(2)}",
+                            //     fontSize: sizes!.responsiveFont(
+                            //       phoneVal: 16,
+                            //       tabletVal: 18,
+                            //     ),
+                            //     fontWeight: FontWeight.w400,
+                            //     color: pnl > 0
+                            //         ? AppColors.greenColor
+                            //         : AppColors.red900Color,
+                            //   ),
+                            // ),
+                            Flexible(
+  child: FittedGetGenericText(
+    text: (() {
+      final isRtl = Localizations.localeOf(context).languageCode == 'ar';
+      final formattedPnl = CommonService.formatIqdCurrency(pnl.abs());
+      final sign = pnl >= 0 ? '+' : '-';
+      
+      return isRtl
+          ? "$formattedPnl$sign ${AppLocalizations.of(context)!.idq_currency}"
+          : " ${AppLocalizations.of(context)!.idq_currency} $sign $formattedPnl";
+    })(),
+    fontSize: sizes!.responsiveFont(
+      phoneVal: 14,
+      tabletVal: 16,
+    ),
+    fontWeight: FontWeight.w400,
+    color: pnl >= 0 ? AppColors.greenColor : AppColors.red900Color,
+  ),
+),
+//                          Flexible(
+//   child: FittedGetGenericText(
+//     text: Directionality.of(context) == TextDirection.RTL
+//         ? "${pnl >= 0 ? '+' : '-'} ${AppLocalizations.of(context)!.idq_currency}  ${CommonService.formatIqdCurrency(pnl.abs())}"
+//         : " ${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIqdCurrency(pnl.abs())}${pnl >= 0 ? '+' : '-'}",
+//     fontSize: sizes!.responsiveFont(
+//       phoneVal: 16,
+//       tabletVal: 18,
+//     ),
+//     fontWeight: FontWeight.w400,
+//     color: pnl >= 0 ? AppColors.greenColor : AppColors.red900Color,
+//   ),
+// ),
                           ],
                         ],
                       ),
@@ -235,16 +283,18 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   ),
                                 ),
                                 SizedBox(width: sizes!.widthRatio * 8),
-                                GetGenericText(
-                                  text:
-                                      "${AppLocalizations.of(context)!.idq_currency} ${widget.gramData.buyingPrice?.toStringAsFixed(3)}",
-                                  // "IQD ${widget.gramData.buyingPrice?.toStringAsFixed(2)}",
-                                  fontSize: sizes!.responsiveFont(
-                                    phoneVal: 16,
-                                    tabletVal: 18,
-                                  ), //16,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.grey5Color,
+                                Flexible(
+                                  child: FittedGetGenericText(
+                                    text:
+                                        "${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIqdCurrency(widget.gramData.buyingPrice)}",
+                                    // "IQD ${widget.gramData.buyingPrice?.toStringAsFixed(2)}",
+                                    fontSize: sizes!.responsiveFont(
+                                      phoneVal: 16,
+                                      tabletVal: 18,
+                                    ), //16,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.grey5Color,
+                                  ),
                                 ),
                               ],
                             )
@@ -279,19 +329,21 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                             ),
                           ),
                           SizedBox(width: sizes!.widthRatio * 8),
-                          GetGenericText(
-                            text:
-                                "${AppLocalizations.of(context)!.idq} ${widget.gramData.tradeType == "Sell"
-                                    ? (widget.gramData.tradeStatus == "Pending" ? widget.gramData.sellAtProfit?.toStringAsFixed(3) : widget.gramData.sellingPrice?.toStringAsFixed(3))
-                                    : widget.gramData.tradeType == "Buy"
-                                    ? (widget.gramData.tradeStatus == "Pending" ? widget.gramData.buyAtPrice?.toStringAsFixed(3) : widget.gramData.buyingPrice?.toStringAsFixed(3))
-                                    : '0.000'}", // Fallback for unknown trade types
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
-                            ), //16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.grey5Color,
+                          Flexible(
+                            child: FittedGetGenericText(
+                              text:
+                                  "${AppLocalizations.of(context)!.idq} ${widget.gramData.tradeType == "Sell"
+                                      ? (widget.gramData.tradeStatus == "Pending" ? CommonService.formatIqdCurrency(widget.gramData.sellAtProfit) : CommonService.formatIqdCurrency(widget.gramData.sellingPrice))
+                                      : widget.gramData.tradeType == "Buy"
+                                      ? (widget.gramData.tradeStatus == "Pending" ? CommonService.formatIqdCurrency(widget.gramData.buyAtPrice) : CommonService.formatIqdCurrency(widget.gramData.buyingPrice))
+                                      : '0.000'}", // Fallback for unknown trade types
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ), //16,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.grey5Color,
+                            ),
                           ),
                         ],
                       ),
@@ -357,19 +409,21 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                             ),
                           ),
                           SizedBox(width: sizes!.widthRatio * 8),
-                          GetGenericText(
-                            text:
-                                (widget.gramData.tradeStatus == "Opened" ||
-                                    (widget.gramData.tradeStatus == "Pending" &&
-                                        widget.gramData.tradeType == "Sell"))
-                                ? "${AppLocalizations.of(context)!.idq} ${goldPriceStateWatchProvider.value?.oneGramSellingPriceInIQD.toStringAsFixed(3)}"
-                                : "${AppLocalizations.of(context)!.idq} ${goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD.toStringAsFixed(3)}",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
+                          Flexible(
+                            child: FittedGetGenericText(
+                              text:
+                                  (widget.gramData.tradeStatus == "Opened" ||
+                                      (widget.gramData.tradeStatus == "Pending" &&
+                                          widget.gramData.tradeType == "Sell"))
+                                  ? "${AppLocalizations.of(context)!.idq} ${CommonService.formatIqdCurrency(goldPriceStateWatchProvider.value?.oneGramSellingPriceInIQD)}"
+                                  : "${AppLocalizations.of(context)!.idq} ${CommonService.formatIqdCurrency(goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD)}",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.grey5Color,
                             ),
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.grey5Color,
                           ),
                         ],
                       ),
@@ -400,16 +454,18 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                             ),
                           ),
                           SizedBox(width: sizes!.widthRatio * 8),
-                          GetGenericText(
-                            text:
-                                "${AppLocalizations.of(context)!.idq_currency} ${widget.gramData.tradeMoney?.toStringAsFixed(3) ?? '0.00'}",
-                            // "IQD ${widget.gramData.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
-                            ), //16,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.grey5Color,
+                          Flexible(
+                            child: FittedGetGenericText(
+                              text:
+                                  "${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIqdCurrency(widget.gramData.tradeMoney)}",
+                              // "IQD ${widget.gramData.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ), //16,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.grey5Color,
+                            ),
                           ),
                         ],
                       ),
@@ -442,18 +498,9 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                             flex: 3,
                             child: GetGenericText(
                               text:
-                                  DateFormat(
-                                    'EEEE, dd MMM yyyy, HH:mm',
-                                    Localizations.localeOf(
-                                              context,
-                                            ).languageCode ==
-                                            'ar'
-                                        ? 'ar'
-                                        : 'en',
-                                  ).format(
-                                    DateTime.parse(
-                                      widget.gramData.createdAt!.toString(),
-                                    ).toLocal(),
+                                  _formatIraqGregorianDateTime(
+                                    widget.gramData.createdAt?.toString(),
+                                    context,
                                   ),
                               // DateFormat('EEE, dd MMM yyyy HH:mm').format(
                               //   DateTime.parse(

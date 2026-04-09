@@ -18,6 +18,19 @@ class OrderSuccessScreen extends StatelessWidget {
     required this.totalPaid,
   });
 
+
+//   String _formatIqd(String? value) {
+//   final parsed = double.tryParse(value ?? '') ?? 0;
+//   return CommonService.formatIQDForDisplay(parsed);
+// }
+String _formatIqd(String? value) {
+  if (value == null || value.isEmpty) return "0";
+
+  final cleaned = value.replaceAll(RegExp(r'[^0-9.]'), '');
+  final parsed = double.tryParse(cleaned) ?? 0;
+
+  return CommonService.formatIQDForDisplay(parsed);
+}
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
@@ -132,12 +145,12 @@ class OrderSuccessScreen extends StatelessWidget {
                         children: [
                           GetGenericText(
                             text: l10n.esouq_total_paid,
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: AppColors.grey2Color,
                           ),
                           GetGenericText(
-                            text: totalPaid,
+                            text: _formatIqd(totalPaid),
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
                             color: AppColors.primaryGold500,

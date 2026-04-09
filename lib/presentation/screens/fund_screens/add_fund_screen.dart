@@ -165,6 +165,13 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
           child: Column(
             children: [
               ConstPadding.sizeBoxWithHeight(height: 20),
+              Directionality.of(context) == TextDirection.rtl?
+              GetGenericText(
+                text: AppLocalizations.of(context)!.add_funds, //"Add Funds",
+                fontSize: sizes!.isPhone ? 24 : 28,
+                fontWeight: FontWeight.bold,
+                color: AppColors.grey6Color,
+              ).getAlignRight():
               GetGenericText(
                 text: AppLocalizations.of(context)!.add_funds, //"Add Funds",
                 fontSize: sizes!.isPhone ? 24 : 28,

@@ -1266,7 +1266,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get esouq_items => 'Items';
 
   @override
-  String get esouq_total_paid => 'Total paid';
+  String get esouq_total_paid => 'Total Paid';
 
   @override
   String get esouq_order_placed_subtitle =>
@@ -1307,6 +1307,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_enter_area => 'Please enter an area';
+
+  @override
+  String get will_notify_you => 'We\'ll notify you when your order is executed';
 
   @override
   String get dubai_title => 'Dubai';
@@ -1505,6 +1508,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get money_st => 'Money Statement';
+
+  @override
+  String money_history_gram_purchase_line(String iqd, String grams) {
+    return 'IQD $iqd, covering the purchase of $grams gold';
+  }
+
+  @override
+  String money_history_gram_sale_line(String iqd, String grams) {
+    return 'IQD $iqd, being proceeds from the sale of $grams gold';
+  }
 
   @override
   String get metal_rate_IQD => 'Rate: IQD';
@@ -1720,6 +1733,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get metal_profit => 'Profit';
+
+  @override
+  String get metal_loss => 'Loss';
 
   @override
   String get metal_plus_na => '+ IQD N/A';

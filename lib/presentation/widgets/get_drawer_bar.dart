@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/kyc_first_step_screen.dart';
@@ -15,35 +18,53 @@ import 'package:saveingold_fzco/presentation/widgets/demo_account_popup.dart'
     show UpgradeAccountPopup;
 import 'package:saveingold_fzco/presentation/widgets/drawer_screen.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
-
 import '../../data/data_sources/local_database/local_database.dart';
 import '../screens/alerts/view_alerts.dart';
 import '../sharedProviders/providers/auth_provider.dart';
 
-class GetDrawerBar extends ConsumerWidget {
+class GetDrawerBar extends ConsumerStatefulWidget {
   final VoidCallback onTap;
 
-  const GetDrawerBar({
-    super.key,
-    required this.onTap,
-  });
+  const GetDrawerBar({super.key, required this.onTap});
 
   @override
-  Widget build(BuildContext context, ref) {
+  ConsumerState<GetDrawerBar> createState() => _GetDrawerBarState();
+}
+
+class _GetDrawerBarState extends ConsumerState<GetDrawerBar> {
+  String appVersion = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAppVersion();
+  }
+
+  Future<void> _loadAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    final environment = dotenv.env['ENVIRONMENT'] ?? 'staging';
+    final buildEnvLabel = environment == 'production' ? "LIVE" : "STAGING";
+    setState(() {
+      appVersion = '${info.version}+${info.buildNumber} ($buildEnvLabel)';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final mainStateWatchProvider = ref.watch(homeProvider);
     final authStateReadProvider = ref.read(authProvider.notifier);
     final l10n = AppLocalizations.of(context)!;
 
     return SizedBox(
-      width: MediaQuery.of(context).size.width, // Full screen width
+      width: MediaQuery.of(context).size.width,
       child: Drawer(
-        backgroundColor: const Color(0xFF121212), // Dark theme background
+        backgroundColor: const Color(0xFF121212),
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header section with Back arrow and "More"
+              // Header with Back arrow
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -52,7 +73,7 @@ class GetDrawerBar extends ConsumerWidget {
                 child: Row(
                   children: [
                     GestureDetector(
-                      onTap: onTap,
+                      onTap: widget.onTap,
                       child: const Icon(
                         Icons.arrow_back,
                         color: Colors.white,
@@ -62,7 +83,6 @@ class GetDrawerBar extends ConsumerWidget {
                   ],
                 ),
               ),
-
               Expanded(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -89,7 +109,7 @@ class GetDrawerBar extends ConsumerWidget {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const EsouqScreen(),
+                            builder: (_) => const EsouqScreen(),
                           ),
                         ),
                       ),
@@ -135,15 +155,6 @@ class GetDrawerBar extends ConsumerWidget {
                         ),
                       ),
 
-                      // REQUEST LOAN (Placeholder for functionality)
-                      // _buildMenuCard(
-                      //   context,
-                      //   title: "Request loan",
-                      //   subtitle: "Apply for a loan",
-                      //   icon: "assets/svg/bank.svg",
-                      //   onTap: () {},
-                      // ),
-
                       // SUPPORT
                       _buildMenuCard(
                         context,
@@ -171,8 +182,6 @@ class GetDrawerBar extends ConsumerWidget {
                         ),
                       ),
 
-                      //const SizedBox(height: 10),
-
                       // LOGOUT
                       _buildMenuCard(
                         context,
@@ -187,7 +196,24 @@ class GetDrawerBar extends ConsumerWidget {
                         ),
                       ),
 
-                      const SizedBox(height: 40),
+                     // const SizedBox(height: 10),
+
+                      // APP VERSION FOOTER
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 10,
+                          ),
+                          child: Text(
+                            'App Version: $appVersion',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.5),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -199,7 +225,6 @@ class GetDrawerBar extends ConsumerWidget {
     );
   }
 
-  // Helper to build the stylized card from the image
   Widget _buildMenuCard(
     BuildContext context, {
     required String title,
@@ -214,7 +239,7 @@ class GetDrawerBar extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1E1E1E), // Darker grey card
+            color: const Color(0xFF1E1E1E),
             borderRadius: BorderRadius.circular(15),
           ),
           child: Row(
@@ -263,8 +288,6 @@ class GetDrawerBar extends ConsumerWidget {
     );
   }
 
-  // --- LOGIC FUNCTIONS (STAYING TRUE TO YOUR ORIGINAL CODE) ---
-
   Future<void> _handleGiftLogic(
     BuildContext context,
     WidgetRef ref,
@@ -280,9 +303,7 @@ class GetDrawerBar extends ConsumerWidget {
 
     final isEmailVerified = await db.getIsEmailVerified() ?? false;
     final isBasicKyc = await db.getIsUserBasicKycVerified() ?? false;
-    final isFullKyc =
-        await db.getIsUserBasicKycVerified() ??
-        false; // Fixed from your code logic
+    final isFullKyc = await db.getIsUserBasicKycVerified() ?? false;
     final tempCredit = await db.getIsUsertemporaryCreditStatus() ?? false;
 
     if (!context.mounted) return;
@@ -300,7 +321,7 @@ class GetDrawerBar extends ConsumerWidget {
           Navigator.pop(context);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const SupportScreen()),
+            MaterialPageRoute(builder: (_) => const SupportScreen()),
           );
         },
         oncloseButtonPress: () => Navigator.pop(context),
@@ -308,7 +329,6 @@ class GetDrawerBar extends ConsumerWidget {
       return;
     }
 
-    // KYC Chain logic from your original snippet
     if (!isEmailVerified) {
       _showKycPopup(context, "email", mainProvider.userEmail);
       return;
@@ -322,12 +342,11 @@ class GetDrawerBar extends ConsumerWidget {
       return;
     }
 
-    // Navigation if all passed
     if (mainProvider.getHomeFeedResponse.payload != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => GiftFundScreen(
+          builder: (_) => GiftFundScreen(
             walletExists:
                 mainProvider.getHomeFeedResponse.payload!.walletExists!,
           ),
@@ -361,10 +380,7 @@ class GetDrawerBar extends ConsumerWidget {
             : (type == "residency"
                   ? KycFirstStepScreen()
                   : KycSecondStepScreen());
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => screen),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
       },
     );
   }

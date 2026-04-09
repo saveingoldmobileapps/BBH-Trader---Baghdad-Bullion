@@ -194,15 +194,16 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                                 child: CircularProgressIndicator(),
                               );
                             }
+                            
                             final product = esouqState.products[index];
-                            final eSouqProductPrice =
-                                CommonService.calculateWeightPrice(
-                                  weightFactor: product.weightFactor,
-                                  oneGramSellingPrice: oneGramBuyingPriceInIQD,
-                                );
-                            final itemPrice = CommonService.formatCurrency(
-                              amount: eSouqProductPrice.toString(),
-                            );
+                            final eSouqProductPrice = CommonService.calculateWeightPrice(
+    weightFactor: product.weightFactor,
+    oneGramSellingPrice: oneGramBuyingPriceInIQD,
+  );
+                            final itemPrice =
+                             CommonService.formatCurrency(amount: eSouqProductPrice.toString(),
+  );
+                            
 
                             return EsouqItemCard(
                               title: product.productName ?? l10n.na,

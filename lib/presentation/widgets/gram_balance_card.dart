@@ -21,6 +21,9 @@ class GramBalanceCard extends ConsumerStatefulWidget {
   @override
   ConsumerState createState() => _GramBalanceCardState();
 }
+ String _formatIqd(num? value) {
+    return CommonService.formatIQDForDisplay(value ?? 0);
+  }
 
 class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
   String getPrice({required Payload gramList}) {
@@ -78,23 +81,91 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                   ),
                 ),
                 if (pnl != null)
-                  Row(
-                    children: [
-                      Icon(
-                        pnl >= 0 ? Icons.north_east : Icons.south_east,
-                        color: pnl >= 0 ? Colors.green : Colors.red,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "${pnl.abs().toStringAsFixed(3)} ${AppLocalizations.of(context)!.metal_profit}",
-                        style: TextStyle(
-                          color: pnl >= 0 ? Colors.green : Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+
+  // Row(
+  //   children: [
+  //     Icon(
+  //       pnl >= 0 ? Icons.north_east : Icons.south_east,
+  //       color: pnl >= 0 ? Colors.green : Colors.red,
+  //       size: 16,
+  //     ),
+  //     const SizedBox(width: 4),
+  //     Text(
+  //       "${pnl >= 0 ? '+' : '-'}${CommonService.formatIqdCurrency(pnl.abs())} "
+  //       "${pnl >= 0 
+  //           ? AppLocalizations.of(context)!.metal_profit 
+  //           : "Loss"
+  //           }",
+  //       style: TextStyle(
+  //         color: pnl >= 0 ? Colors.green : Colors.red,
+  //         fontWeight: FontWeight.bold,
+  //       ),
+  //     ),
+  //   ],
+  // ),
+  widget.rtl?
+    Row(
+  children: [
+    Icon(
+      pnl >= 0 ? Icons.north_east : Icons.south_east,
+      color: pnl >= 0 ? Colors.green : Colors.red,
+      size: 16,
+    ),
+    const SizedBox(width: 4),
+    Text(
+      // pnl >= 0 
+      //     ? widget.rtl?"${CommonService.formatIqdCurrency(pnl)}+ ${AppLocalizations.of(context)!.metal_profit}": "+ ${CommonService.formatIqdCurrency(pnl)} ${AppLocalizations.of(context)!.metal_profit}"
+      //     : "${CommonService.formatIqdCurrency(pnl.abs())}- ${AppLocalizations.of(context)!.metal_loss}",
+     pnl >= 0
+          ?"${CommonService.formatIqdCurrency(pnl)}+ ${AppLocalizations.of(context)!.metal_profit}"
+          : "${CommonService.formatIqdCurrency(pnl.abs())}- ${AppLocalizations.of(context)!.metal_loss}",
+      style: TextStyle(
+        color: pnl >= 0 ? Colors.green : Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+):
+  Row(
+  children: [
+    Icon(
+      pnl >= 0 ? Icons.north_east : Icons.south_east,
+      color: pnl >= 0 ? Colors.green : Colors.red,
+      size: 16,
+    ),
+    const SizedBox(width: 4),
+    Text(
+      // pnl >= 0 
+      //     ? widget.rtl?"${CommonService.formatIqdCurrency(pnl)}+ ${AppLocalizations.of(context)!.metal_profit}": "+ ${CommonService.formatIqdCurrency(pnl)} ${AppLocalizations.of(context)!.metal_profit}"
+      //     : "${CommonService.formatIqdCurrency(pnl.abs())}- ${AppLocalizations.of(context)!.metal_loss}",
+     pnl >= 0
+          ?"+${CommonService.formatIqdCurrency(pnl)} ${AppLocalizations.of(context)!.metal_profit}"
+          : "-${CommonService.formatIqdCurrency(pnl.abs())} ${AppLocalizations.of(context)!.metal_loss}",
+      style: TextStyle(
+        color: pnl >= 0 ? Colors.green : Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+),
+                  // Row(
+                  //   children: [
+                  //     Icon(
+                  //       pnl >= 0 ? Icons.north_east : Icons.south_east,
+                  //       color: pnl >= 0 ? Colors.green : Colors.red,
+                  //       size: 16,
+                  //     ),
+                  //     const SizedBox(width: 4),
+                  //     Text(
+                        
+                  //       "${CommonService.formatIqdCurrency(pnl.abs())} ${AppLocalizations.of(context)!.metal_profit}",
+                  //       style: TextStyle(
+                  //         color: pnl >= 0 ? Colors.green : Colors.red,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
               ],
             ),
             const SizedBox(height: 16),
@@ -102,13 +173,13 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
             // Detail Rows
             _detailRow(
               l10n.gram_buy_word == "Buy" ? "Bought @" : "تم الشراء @",
-              "${AppLocalizations.of(context)!.idq} ${item.buyingPrice?.toStringAsFixed(3) ?? '0.00'}",
+              "${AppLocalizations.of(context)!.idq} ${_formatIqd(item.buyingPrice) ?? '0.00'}",
             ),
             const SizedBox(height: 10),
             _detailRow(
               AppLocalizations.of(context)!.gram_current_price,
               //"Current price",
-              "${AppLocalizations.of(context)!.idq} ${goldPriceState.value?.oneGramSellingPriceInIQD.toStringAsFixed(3) ?? '0.00'}",
+              "${AppLocalizations.of(context)!.idq} ${_formatIqd(goldPriceState.value?.oneGramSellingPriceInIQD) ?? '0.00'}",
             ),
             const SizedBox(height: 10),
 
@@ -119,7 +190,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                 child: _detailRow(
                   AppLocalizations.of(context)!.gram_target_price,
                   //"Target price",
-                  "${AppLocalizations.of(context)!.idq} ${item.buyAtPrice?.toStringAsFixed(3) ?? '0.00'}",
+                  "${AppLocalizations.of(context)!.idq} ${_formatIqd(item.buyAtPrice) ?? '0.00'}",
                 ),
               ),
 

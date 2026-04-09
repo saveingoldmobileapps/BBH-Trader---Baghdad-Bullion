@@ -54,6 +54,11 @@ class OrderCheckoutScreen extends ConsumerStatefulWidget {
   ConsumerState createState() => _OrderCheckoutScreenState();
 }
 
+  String _formatIqd(String? value) {
+  final parsed = double.tryParse(value ?? '') ?? 0;
+  return CommonService.formatIQDForDisplay(parsed);
+}
+
 class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
   // Initial selected value
   static const String _deliveryMethod = 'Delivery';
@@ -609,7 +614,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                               children: [
                                 GetGenericText(
                                   text: _selectedItem == _deliveryMethod
-                                      ? "${(widget.deliveryCharges).toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}"
+                                      ? "${_formatIqd((widget.deliveryCharges).toStringAsFixed(3))} ${AppLocalizations.of(context)!.idq_currency}"
                                       : "${collectionTotal.toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -654,11 +659,11 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                           GetGenericText(
                             text: _selectedItem == _deliveryMethod
                                 ? widget.paymentMethod == "Money"
-                                      ? "${(withDeliveryCharges).toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}"
-                                      : "${(withDeliveryCharges).toStringAsFixed(3)} ${AppLocalizations.of(context)!.grams}"
+                                      ? "${_formatIqd((withDeliveryCharges).toStringAsFixed(3))} ${AppLocalizations.of(context)!.idq_currency}"
+                                      : "${_formatIqd((withDeliveryCharges).toStringAsFixed(3))} ${AppLocalizations.of(context)!.grams}"
                                 : widget.paymentMethod == "Money"
-                                ? "${collectionTotal.toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}"
-                                : "${collectionTotal.toStringAsFixed(3)} ${AppLocalizations.of(context)!.grams}",
+                                ? "${_formatIqd(collectionTotal.toStringAsFixed(3))} ${AppLocalizations.of(context)!.idq_currency}"
+                                : "${_formatIqd(collectionTotal.toStringAsFixed(3))} ${AppLocalizations.of(context)!.grams}",
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                             color: AppColors.grey6Color,

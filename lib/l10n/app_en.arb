@@ -468,7 +468,7 @@
   "esouq_order_summary": "Order summary",
   "esouq_order_id": "Order ID",
   "esouq_items": "Items",
-  "esouq_total_paid": "Total paid",
+  "esouq_total_paid": "Total Paid",
   "esouq_order_placed_subtitle": "Your order was placed successfully.",
   "esouq_house_number_example": "10",
   "esouq_weight_range": "Weight range",
@@ -482,6 +482,7 @@
   "enterHouseNo": "Please enter a house number",
   "emiratesHill": "Emirates Hill First",
   "please_enter_area": "Please enter an area",
+  "will_notify_you":"We''ll notify you when your order is executed",
   
 
   "dubai_title": "Dubai",
@@ -556,6 +557,23 @@
   "dateTime": "Date & Time",
   "metal_st" : "Metal Statement",
   "money_st" : "Money Statement",
+
+  "@money_history_gram_purchase_line": {
+    "description": "Money tab — gram buy (credit / money in); grams placeholder until API provides value",
+    "placeholders": {
+      "iqd": { "type": "String", "example": "3,750,000" },
+      "grams": { "type": "String", "example": "50" }
+    }
+  },
+  "money_history_gram_purchase_line": "IQD {iqd}, covering the purchase of {grams} gold",
+  "@money_history_gram_sale_line": {
+    "description": "Money tab — gram sell (debit / money out); grams placeholder until API provides value",
+    "placeholders": {
+      "iqd": { "type": "String", "example": "3,750,000" },
+      "grams": { "type": "String", "example": "50" }
+    }
+  },
+  "money_history_gram_sale_line": "IQD {iqd}, being proceeds from the sale of {grams} gold",
 
   "metal_rate_IQD" : "Rate: IQD",
   "metal_g": "g",
@@ -669,6 +687,7 @@
   "deal_val_enter_amount": "Please enter an amount",
   "metal_after_trade" : "Metal After Trade",
   "metal_profit": "Profit",
+  "metal_loss": "Loss",
   "metal_plus_na": "+ IQD N/A",
 
   "deal_cant_close": "You can''t close this deal at loss",

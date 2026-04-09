@@ -363,22 +363,26 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
             const SizedBox(height: 4),
             Text(
               l10n.price_iqd_per_gram(
-                CommonService.formatPriceCompact(price),
+                CommonService.formatIQDForDisplay(price),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 2),
             Text(
               l10n.ounce_price_iqd(
-                CommonService.formatPriceCompact(ouncePrice),
+                CommonService.formatIQDForDisplay(ouncePrice),
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: Colors.white.withOpacity(0.5),
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -405,14 +409,16 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
               Text(
                 isHigh
                     ? l10n.high_price_badge(
-                        CommonService.formatPriceCompact(highLowPrice),
+                        CommonService.formatIQDForDisplay(highLowPrice),
                       )
                     : l10n.low_price_badge(
-                        CommonService.formatPriceCompact(highLowPrice),
+                        CommonService.formatIQDForDisplay(highLowPrice),
                       ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: isHigh ? Colors.green : Colors.red,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.bold,
                 ),
               ),

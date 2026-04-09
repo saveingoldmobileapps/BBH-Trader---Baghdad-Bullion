@@ -12,7 +12,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get track => 'تتبع';
 
   @override
-  String get gold => 'الـذهب';
+  String get gold => 'ذهب';
 
   @override
   String get build => 'رحلتك نحو';
@@ -1299,6 +1299,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get please_enter_area => 'يرجى إدخال المنطقة';
 
   @override
+  String get will_notify_you => 'سنقوم بإبلاغك عندما يتم تنفيذ طلبك';
+
+  @override
   String get dubai_title => 'دبي';
 
   @override
@@ -1494,6 +1497,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get money_st => 'كشف الحساب المالي';
+
+  @override
+  String money_history_gram_purchase_line(String iqd, String grams) {
+    return 'دينار عراقي $iqd، تغطية شراء $grams من ذهب';
+  }
+
+  @override
+  String money_history_gram_sale_line(String iqd, String grams) {
+    return 'دينار عراقي $iqd، متحصلات من بيع $grams من الذهب';
+  }
 
   @override
   String get metal_rate_IQD => 'السعر: الدينار العراقي إماراتي';
@@ -1706,6 +1719,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get metal_profit => 'الربح';
+
+  @override
+  String get metal_loss => 'خسارة';
 
   @override
   String get metal_plus_na => '+ الدينار العراقي غير متاح';

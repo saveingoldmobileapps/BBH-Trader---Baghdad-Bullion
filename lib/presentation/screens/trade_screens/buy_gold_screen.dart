@@ -92,6 +92,11 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     });
   }
 
+  String _formatIqd(String value) {
+    final parsed = double.tryParse(value) ?? 0.0;
+    return CommonService.formatIQDForDisplay(parsed);
+  }
+
   @override
   void dispose() {
     buyAtPriceController.dispose();
@@ -218,7 +223,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     ],
                   ),
                   Text(
-                    l10n.buy_gold_approx_total(calculatedValue),
+                    l10n.buy_gold_approx_total(_formatIqd(calculatedValue)),
                     style: GoogleFonts.inter(
                       color: Colors.white70,
                       fontSize: 16,
@@ -290,8 +295,8 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     Text(
                       l10n.buy_order_executes_at_iqd(
                         buyAtPriceController.text.isEmpty
-                            ? '0.00'
-                            : buyAtPriceController.text,
+                            ? '0'
+                            : _formatIqd(buyAtPriceController.text),
                       ),
                       style: GoogleFonts.inter(
                         color: Colors.grey,
@@ -357,18 +362,20 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   children: [
                     Text(
                       l10n.price_iqd_per_gram(
-                        data.oneGramBuyingPriceInIQD.toStringAsFixed(3),
+                        CommonService.formatIQDForDisplay(
+                          data.oneGramBuyingPriceInIQD,
+                        ),
                       ),
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: 12,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       l10n.ounce_price_iqd(
-                        CommonService.formatPriceCompact(
+                        CommonService.formatIQDForDisplay(
                           data.oneOunceBuyingPriceInIQD,
                         ),
                       ),
@@ -394,7 +401,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
           ),
           goldPriceState.when(
             data: (data) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              //padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.green.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(6),
@@ -410,7 +417,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   const SizedBox(width: 4),
                   Text(
                     l10n.high_price_badge(
-                      data.lastHighBuyingPrice.toStringAsFixed(3),
+                      CommonService.formatIQDForDisplay(data.lastHighBuyingPrice),
                     ),
                     style: const TextStyle(
                       color: Color(0xFF4CAF50),
@@ -650,8 +657,8 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         context: context,
         heading: AppLocalizations.of(context)!.insufficient_balance,
         subtitle: AppLocalizations.of(context)!.insufficient_balance_message(
-          walletBalance.toStringAsFixed(3),
-          inputAmount.toStringAsFixed(3),
+          CommonService.formatIQDForDisplay(walletBalance),
+          CommonService.formatIQDForDisplay(inputAmount),
         ),
         noButtonTitle: AppLocalizations.of(context)!.close,
         yesButtonTitle: AppLocalizations.of(context)!.add_funds,
@@ -714,9 +721,9 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       isLimitOrder: isBuyAtPriceStatus,
       amountGrams: userInputController.text.trim(),
       targetPrice: isBuyAtPriceStatus
-          ? buyAtPriceController.text
-          : buyingPriceInOneGram.toStringAsFixed(3),
-      totalCost: calculatedValue,
+          ? _formatIqd(buyAtPriceController.text)
+          : CommonService.formatIQDForDisplay(buyingPriceInOneGram),
+      totalCost: _formatIqd(calculatedValue),
       onConfirm: () async {
         await ref
             .read(tradeProvider.notifier)

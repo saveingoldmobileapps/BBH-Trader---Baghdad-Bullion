@@ -194,15 +194,29 @@ class Trade extends _$Trade {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (_) => OrderPlacedScreen(
-                orderId: "xyz",
-                dateTime: DateTime.now().toLocal().toString().split('.')[0],
-                tradeType: tradeTypeTitle,
-                amount: "$tradeMetal ${AppLocalizations.of(context)!.grams_unit_lowercase}",
-                targetPrice:
-                    "${AppLocalizations.of(context)!.idq} ${buyAtPriceStatus ? buyAtPrice : buyingPrice} ${AppLocalizations.of(context)!.trade_gram}",
-                total: "${AppLocalizations.of(context)!.idq} ${tradeMoney.toStringAsFixed(3)}",
-              ),
+              builder: (_) {
+                final amountFormatted = (tradeMetal.toDouble())
+                    .toStringAsFixed(3);
+                final targetPriceValue = buyAtPriceStatus
+                    ? (num.tryParse('$buyAtPrice') ?? 0)
+                    : buyingPrice;
+                final targetPriceFormatted =
+                    CommonService.formatIQDForDisplay(targetPriceValue);
+                final totalFormatted =
+                    CommonService.formatIQDForDisplay(tradeMoney);
+
+                return OrderPlacedScreen(
+                  orderId: "xyz",
+                  dateTime: DateTime.now().toLocal().toString().split('.')[0],
+                  tradeType: tradeTypeTitle,
+                  amount:
+                      "$amountFormatted ${AppLocalizations.of(context)!.grams_unit_lowercase}",
+                  targetPrice:
+                      "${AppLocalizations.of(context)!.idq} $targetPriceFormatted ${AppLocalizations.of(context)!.trade_gram}",
+                  total:
+                      "${AppLocalizations.of(context)!.idq} $totalFormatted",
+                );
+              },
             ),
           );
 

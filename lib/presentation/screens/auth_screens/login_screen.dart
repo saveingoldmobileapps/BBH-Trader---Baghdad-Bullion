@@ -123,9 +123,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ),
           SafeArea(
             top: false,
-            bottom: false,
+            bottom: true,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              // padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Form(
                 key: _formKey,
                 autovalidateMode: _hasSubmitted
@@ -139,7 +144,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Text(
                       _selectedType == LoginType.bank
                           ? "Bank login"
-                          : AppLocalizations.of(context)!.welcome_back,//"Welcome back",
+                          : AppLocalizations.of(
+                              context,
+                            )!.welcome_back, //"Welcome back",
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 32,
@@ -166,7 +173,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         return ButtonWidget(
                           title: _selectedType == LoginType.bank
                               ? "Login"
-                              : AppLocalizations.of(context)!.continu,//"Continue",
+                              : AppLocalizations.of(
+                                  context,
+                                )!.continu, //"Continue",
                           isLoadingState: authStateWatch.isButtonState,
                           enabled: isValid,
                           onTap: _handleLogin,
@@ -182,7 +191,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
                     if (_selectedType != LoginType.phone)
                       _buildSecondaryButton(
-                        AppLocalizations.of(context)!.login_with_phone,//"Login with phone",
+                        AppLocalizations.of(
+                          context,
+                        )!.login_with_phone, //"Login with phone",
                         () {
                           setState(() => _selectedType = LoginType.phone);
                           _isFormValidNotifier.value = _isFormValid();
@@ -190,7 +201,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     if (_selectedType != LoginType.email)
                       _buildSecondaryButton(
-                        AppLocalizations.of(context)!.login_with_email,//"Login with email",
+                        AppLocalizations.of(
+                          context,
+                        )!.login_with_email, //"Login with email",
                         () {
                           setState(() => _selectedType = LoginType.email);
                           _isFormValidNotifier.value = _isFormValid();
@@ -214,7 +227,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           );
                         },
                         child: Text(
-                          AppLocalizations.of(context)!.new_to_bbh,//"I'm new to BBH",
+                          AppLocalizations.of(
+                            context,
+                          )!.new_to_bbh, //"I'm new to BBH",
                           style: const TextStyle(
                             color: Color(0xFFC5A353),
                             fontSize: 16,
@@ -223,7 +238,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).viewInsets.bottom + 20,
+                      height: MediaQuery.of(context).viewInsets.bottom+100,
                     ),
                   ],
                 ),
@@ -236,47 +251,82 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   /// ---------------- INPUT SECTION ----------------
-
   Widget _buildInputSection() {
     switch (_selectedType) {
       case LoginType.phone:
+        bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
         return Column(
           children: [
             Row(
-              children: [
-                _buildCountryDropdown(),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _buildTextField(
-                    controller: phoneController,
-                    hint: AppLocalizations.of(context)!.phone_number,//"Phone number",
-                    isNumeric: true,
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return AppLocalizations.of(context)!.please_enter_phone_number;//'Please enter phone number';
-                      }
-                      final digitsOnly = value.replaceAll(
-                        RegExp(r'[^0-9]'),
-                        '',
-                      );
-                      if (digitsOnly.length < 9) {
-                        return AppLocalizations.of(context)!.plz_enter_valid_phone;//'Please enter a valid phone number';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ],
+              children: isArabic
+                  ? [
+                      // For Arabic: phone field first, then country dropdown
+                      Expanded(
+                        child: _buildTextField(
+                          controller: phoneController,
+                          hint: AppLocalizations.of(context)!.phone_number,
+                          isNumeric: true,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return AppLocalizations.of(
+                                context,
+                              )!.please_enter_phone_number;
+                            }
+                            final digitsOnly = value.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
+                            if (digitsOnly.length < 9) {
+                              return AppLocalizations.of(
+                                context,
+                              )!.plz_enter_valid_phone;
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      _buildCountryDropdown(),
+                    ]
+                  : [
+                      // LTR (default): country dropdown first, then phone field
+                      _buildCountryDropdown(),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildTextField(
+                          controller: phoneController,
+                          hint: AppLocalizations.of(context)!.phone_number,
+                          isNumeric: true,
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return AppLocalizations.of(
+                                context,
+                              )!.please_enter_phone_number;
+                            }
+                            final digitsOnly = value.replaceAll(
+                              RegExp(r'[^0-9]'),
+                              '',
+                            );
+                            if (digitsOnly.length < 9) {
+                              return AppLocalizations.of(
+                                context,
+                              )!.plz_enter_valid_phone;
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
             ),
             const SizedBox(height: 20),
             _buildTextField(
               controller: passwordController,
               hint: "**********",
-              label: AppLocalizations.of(context)!.password,//"Password",
+              label: AppLocalizations.of(context)!.password,
               isPassword: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return AppLocalizations.of(context)!.please_enter_password;//'Please enter password';
+                  return AppLocalizations.of(context)!.please_enter_password;
                 }
                 return null;
               },
@@ -290,14 +340,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           children: [
             _buildTextField(
               controller: emailController,
-              hint: AppLocalizations.of(context)!.enter_email_hint,//"Enter your email",
-              label: AppLocalizations.of(context)!.login_email_Labe,//"Email",
+              hint: AppLocalizations.of(context)!.enter_email_hint,
+              label: AppLocalizations.of(context)!.login_email_Labe,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return AppLocalizations.of(context)!.login_email_validation;//'Please enter email';
+                  return AppLocalizations.of(context)!.login_email_validation;
                 }
                 if (!value.trim().validateEmail()) {
-                  return AppLocalizations.of(context)!.please_valid_email;//'Please enter a valid email';
+                  return AppLocalizations.of(context)!.please_valid_email;
                 }
                 return null;
               },
@@ -306,11 +356,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             _buildTextField(
               controller: passwordController,
               hint: "**********",
-              label: AppLocalizations.of(context)!.password,//"Password",
+              label: AppLocalizations.of(context)!.password,
               isPassword: true,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return AppLocalizations.of(context)!.please_enter_password;//'Please enter password';
+                  return AppLocalizations.of(context)!.please_enter_password;
                 }
                 return null;
               },
@@ -353,6 +403,122 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  // Widget _buildInputSection() {
+  //   switch (_selectedType) {
+  //     case LoginType.phone:
+  //       return Column(
+  //         children: [
+  //           Row(
+  //             children: [
+  //               _buildCountryDropdown(),
+  //               const SizedBox(width: 10),
+  //               Expanded(
+  //                 child: _buildTextField(
+  //                   controller: phoneController,
+  //                   hint: AppLocalizations.of(context)!.phone_number,//"Phone number",
+  //                   isNumeric: true,
+  //                   validator: (value) {
+  //                     if (value == null || value.trim().isEmpty) {
+  //                       return AppLocalizations.of(context)!.please_enter_phone_number;//'Please enter phone number';
+  //                     }
+  //                     final digitsOnly = value.replaceAll(
+  //                       RegExp(r'[^0-9]'),
+  //                       '',
+  //                     );
+  //                     if (digitsOnly.length < 9) {
+  //                       return AppLocalizations.of(context)!.plz_enter_valid_phone;//'Please enter a valid phone number';
+  //                     }
+  //                     return null;
+  //                   },
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //           const SizedBox(height: 20),
+  //           _buildTextField(
+  //             controller: passwordController,
+  //             hint: "**********",
+  //             label: AppLocalizations.of(context)!.password,//"Password",
+  //             isPassword: true,
+  //             validator: (value) {
+  //               if (value == null || value.isEmpty) {
+  //                 return AppLocalizations.of(context)!.please_enter_password;//'Please enter password';
+  //               }
+  //               return null;
+  //             },
+  //           ),
+  //           _buildForgotPassword(),
+  //         ],
+  //       );
+
+  //     case LoginType.email:
+  //       return Column(
+  //         children: [
+  //           _buildTextField(
+  //             controller: emailController,
+  //             hint: AppLocalizations.of(context)!.enter_email_hint,//"Enter your email",
+  //             label: AppLocalizations.of(context)!.login_email_Labe,//"Email",
+  //             validator: (value) {
+  //               if (value == null || value.trim().isEmpty) {
+  //                 return AppLocalizations.of(context)!.login_email_validation;//'Please enter email';
+  //               }
+  //               if (!value.trim().validateEmail()) {
+  //                 return AppLocalizations.of(context)!.please_valid_email;//'Please enter a valid email';
+  //               }
+  //               return null;
+  //             },
+  //           ),
+  //           const SizedBox(height: 20),
+  //           _buildTextField(
+  //             controller: passwordController,
+  //             hint: "**********",
+  //             label: AppLocalizations.of(context)!.password,//"Password",
+  //             isPassword: true,
+  //             validator: (value) {
+  //               if (value == null || value.isEmpty) {
+  //                 return AppLocalizations.of(context)!.please_enter_password;//'Please enter password';
+  //               }
+  //               return null;
+  //             },
+  //           ),
+  //           _buildForgotPassword(),
+  //         ],
+  //       );
+
+  //     case LoginType.bank:
+  //       return Column(
+  //         children: [
+  //           _buildTextField(
+  //             controller: bankIdController,
+  //             hint: "Enter your user ID",
+  //             label: "User ID",
+  //             showWarning: true,
+  //             validator: (value) {
+  //               if (value == null || value.trim().isEmpty) {
+  //                 return 'Please enter your user ID';
+  //               }
+  //               return null;
+  //             },
+  //           ),
+  //           const SizedBox(height: 20),
+  //           _buildTextField(
+  //             controller: passwordController,
+  //             hint: "**********",
+  //             label: "Password",
+  //             isPassword: true,
+  //             validator: (value) {
+  //               if (value == null || value.isEmpty) {
+  //                 return 'Please enter password';
+  //               }
+  //               return null;
+  //             },
+  //           ),
+  //           _buildForgotPassword(),
+  //         ],
+  //       );
+  //   }
+  // }
+
   /// ---------------- TEXT FIELD ----------------
 
   Widget _buildTextField({
@@ -373,59 +539,64 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Text(label, style: const TextStyle(color: Colors.white)),
           ),
         TextFormField(
-  controller: controller,
-  obscureText: isPassword && !_isPasswordVisible,
-  enableInteractiveSelection: !isPassword, // disables copy/paste for passwords
-  validator: validator,
-  keyboardType: isNumeric
-      ? TextInputType.number
-      : TextInputType.text, // password is text type
-  style: const TextStyle(color: Colors.white),
-  decoration: InputDecoration(
-    hintText: hint,
-    hintStyle: const TextStyle(color: Colors.white54),
-    suffixIcon: isPassword
-        ? IconButton(
-            icon: Icon(
-              _isPasswordVisible ?  Icons.visibility: Icons.visibility_off ,
-              color: Colors.white54,
+          controller: controller,
+          obscureText: isPassword && !_isPasswordVisible,
+          enableInteractiveSelection:
+              !isPassword, // disables copy/paste for passwords
+          validator: validator,
+          keyboardType: isNumeric
+              ? TextInputType.number
+              : TextInputType.text, // password is text type
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: const TextStyle(color: Colors.white54),
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Colors.white54,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : showWarning
+                ? const Icon(Icons.error_outline, color: Colors.white54)
+                : null,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.white),
             ),
-            onPressed: () {
-              setState(() {
-                _isPasswordVisible = !_isPasswordVisible;
-              });
-            },
-          )
-        : showWarning
-            ? const Icon(Icons.error_outline, color: Colors.white54)
-            : null,
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.white),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Color(0xFFC5A353)),
-    ),
-    errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.red),
-    ),
-    focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(color: Colors.red),
-    ),
-    errorStyle: const TextStyle(color: Colors.redAccent),
-  ),
-  // optional extra security: block pasting entirely
-  inputFormatters: isPassword ? [NoPasteTextFormatter()] : [],
-),],
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFC5A353)),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            errorStyle: const TextStyle(color: Colors.redAccent),
+          ),
+          // optional extra security: block pasting entirely
+          inputFormatters: isPassword ? [NoPasteTextFormatter()] : [],
+        ),
+      ],
     );
   }
 
   /// ---------------- COUNTRY DROPDOWN ----------------
-
   Widget _buildCountryDropdown() {
+    bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
     return Container(
       height: 56,
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -444,29 +615,99 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             }
           },
           items: _countries.map((country) {
-            return DropdownMenuItem(
-              value: country,
-              child: Row(
-                children: [
-                  SvgPicture.asset(
-                    country.flag,
-                    width: 22,
-                    errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.flag, color: Colors.white),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    country.dialCode,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            );
+            return isArabic
+                ? DropdownMenuItem(
+                    value: country,
+                    child: Row(
+                      textDirection: isArabic
+                          ? TextDirection.rtl
+                          : TextDirection.ltr,
+                      children: [
+                        Text(
+                          "${country.dialCode.replaceAll('+', '')}+",
+                          // Text("+${country.dialCode.replaceAll('+', '')}"), // shows +971
+                          //country.dialCode,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        const SizedBox(width: 8),
+                        SvgPicture.asset(
+                          country.flag,
+                          width: 22,
+                          errorBuilder: (_, __, ___) =>
+                              const Icon(Icons.flag, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  )
+                : DropdownMenuItem(
+                    value: country,
+                    child: Row(
+                      textDirection: isArabic
+                          ? TextDirection.rtl
+                          : TextDirection.ltr,
+                      children: [
+                        SvgPicture.asset(
+                          country.flag,
+                          width: 22,
+                          errorBuilder: (_, __, ___) =>
+                              const Icon(Icons.flag, color: Colors.white),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          country.dialCode,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  );
           }).toList(),
         ),
       ),
     );
   }
+
+  // Widget _buildCountryDropdown() {
+  //   return Container(
+  //     height: 56,
+  //     padding: const EdgeInsets.symmetric(horizontal: 12),
+  //     decoration: BoxDecoration(
+  //       border: Border.all(color: Colors.white),
+  //       borderRadius: BorderRadius.circular(12),
+  //     ),
+  //     child: DropdownButtonHideUnderline(
+  //       child: DropdownButton<CountryCode>(
+  //         value: _selectedCountry,
+  //         dropdownColor: const Color(0xFF2A2A2A),
+  //         icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+  //         onChanged: (value) {
+  //           if (value != null) {
+  //             setState(() => _selectedCountry = value);
+  //           }
+  //         },
+  //         items: _countries.map((country) {
+  //           return DropdownMenuItem(
+  //             value: country,
+  //             child: Row(
+  //               children: [
+  //                 SvgPicture.asset(
+  //                   country.flag,
+  //                   width: 22,
+  //                   errorBuilder: (_, __, ___) =>
+  //                       const Icon(Icons.flag, color: Colors.white),
+  //                 ),
+  //                 const SizedBox(width: 8),
+  //                 Text(
+  //                   country.dialCode,
+  //                   style: const TextStyle(color: Colors.white),
+  //                 ),
+  //               ],
+  //             ),
+  //           );
+  //         }).toList(),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// ---------------- HELPERS ----------------
 
@@ -482,8 +723,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           );
         },
-        child:  Text(
-          AppLocalizations.of(context)!.forgot_password,//"Forgot Password?",
+        child: Text(
+          AppLocalizations.of(context)!.forgot_password, //"Forgot Password?",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
@@ -589,11 +830,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Widget _buildDivider() {
     return Row(
-      children:  [
+      children: [
         Expanded(child: Divider(color: Colors.white24)),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text(AppLocalizations.of(context)!.login_or, style: TextStyle(color: Colors.white54)),
+          child: Text(
+            AppLocalizations.of(context)!.login_or,
+            style: TextStyle(color: Colors.white54),
+          ),
         ),
         Expanded(child: Divider(color: Colors.white24)),
       ],
@@ -603,11 +847,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   String _getSubtitleText() {
     switch (_selectedType) {
       case LoginType.bank:
-        return AppLocalizations.of(context)!.enter_bank_to_login;//"Enter your banking details to login with your bank";
+        return AppLocalizations.of(
+          context,
+        )!.enter_bank_to_login; //"Enter your banking details to login with your bank";
       case LoginType.email:
-        return AppLocalizations.of(context)!.enter_email_to_login;//"Enter your email to login";
+        return AppLocalizations.of(
+          context,
+        )!.enter_email_to_login; //"Enter your email to login";
       case LoginType.phone:
-        return AppLocalizations.of(context)!.enter_phone_to_login;//"Enter your phone number to login";
+        return AppLocalizations.of(
+          context,
+        )!.enter_phone_to_login; //"Enter your phone number to login";
     }
   }
 

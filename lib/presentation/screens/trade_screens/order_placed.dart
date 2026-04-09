@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 
 class OrderPlacedScreen extends StatelessWidget {
@@ -21,6 +22,20 @@ class OrderPlacedScreen extends StatelessWidget {
     required this.total,
   });
 
+  String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
+    if (isoDate == null || isoDate.isEmpty) return '-';
+    try {
+      final parsed = DateTime.parse(isoDate);
+      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+      final locale = Localizations.localeOf(context).languageCode == 'ar'
+          ? 'ar_IQ'
+          : 'en_IQ';
+      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
+    } catch (_) {
+      return isoDate;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +55,7 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
               Text(
-                AppLocalizations.of(context)!.order_placed_title,//"Order Placed!",
+                AppLocalizations.of(context)!.order_placed_title,
                 style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: 22,
@@ -51,32 +66,33 @@ class OrderPlacedScreen extends StatelessWidget {
               const SizedBox(height: 8),
 
               /// ✅ Subtitle
-             tradeType== 'Limit Order' ||tradeType== "أمر محدد"? Text(
-                AppLocalizations.of(context)!.limit_order_des,//"Your limit order has been placed and will\nexecute when the target price is reached.",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  color: Colors.white60,
-                  fontSize: 13,
-                ),
-              ):Text(
-                AppLocalizations.of(context)!.limit_order_success,//"You have Successfully Placed the order.",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
-                  color: Colors.white60,
-                  fontSize: 13,
-                ),
-              ),
+              tradeType == 'Limit Order' || tradeType == "أمر محدد"
+                  ? Text(
+                      AppLocalizations.of(context)!.limit_order_des,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        color: Colors.white60,
+                        fontSize: 13,
+                      ),
+                    )
+                  : Text(
+                      AppLocalizations.of(context)!.limit_order_success,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        color: Colors.white60,
+                        fontSize: 13,
+                      ),
+                    ),
 
               const SizedBox(height: 24),
 
-              /// ✅ Order Summary Card
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Color(0xff262929),
+                    color: const Color(0xff262929),
                   ),
                 ),
                 child: Column(
@@ -89,21 +105,38 @@ class OrderPlacedScreen extends StatelessWidget {
                     // _row("Target price", targetPrice),
                     // const Divider(color: Colors.white12),
                     // _totalRow("GMT+3 Total", total),
-                    _row("${AppLocalizations.of(context)!.limit_date_time}", dateTime),
-                    _badgeRow("${AppLocalizations.of(context)!.limit_trade_type}", tradeType),
-                    _row("${AppLocalizations.of(context)!.limit_amount}", amount),
-                    _row("${AppLocalizations.of(context)!.target_price}", targetPrice),
+                    _row(
+                      AppLocalizations.of(context)!.limit_date_time,
+                      _formatIraqGregorianDateTime(dateTime, context),
+                      context,
+                    ),
+                    _badgeRow(
+                      "${AppLocalizations.of(context)!.limit_trade_type}",
+                      tradeType,
+                    ),
+                    _row(
+                      "${AppLocalizations.of(context)!.limit_amount}",
+                      amount,
+                      context,
+                    ),
+                    _row(
+                      "${AppLocalizations.of(context)!.target_price}",
+                      targetPrice,
+                      context,
+                    ),
                     const Divider(color: Colors.white12),
-                    _totalRow("${AppLocalizations.of(context)!.gmt_time}", total),
+                    _totalRow(
+                      "${AppLocalizations.of(context)!.gmt_time}",
+                      total,
+                    ),
                   ],
                 ),
               ),
 
               const SizedBox(height: 16),
 
-              /// ✅ Info Text
               Text(
-                "${AppLocalizations.of(context)!.will_notify}",//"We’ll notify you when your order is executed",
+                "${AppLocalizations.of(context)!.will_notify}",
                 style: GoogleFonts.inter(
                   color: Colors.white38,
                   fontSize: 12,
@@ -112,40 +145,40 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const Spacer(),
 
-              /// ✅ Return Home Button
+              /// ✅ Fixed Button - No grey screen issue
               SizedBox(
                 width: double.infinity,
                 height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xff917330),
+                        Color(0xFF73530d),
+                        Color(0xff917330),
+                      ],
                     ),
                   ),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xff917330), // left
-                          Color(0xFF73530d), // center (brighter)
-                          Color(0xff917330), // right
-                        ],
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      foregroundColor: Colors.black,
+                      elevation: 0,
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Center(
-                      child: Text(
-                        "${AppLocalizations.of(context)!.return_home}",//"Return to home",
-                        style: GoogleFonts.inter(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    child: Text(
+                      "${AppLocalizations.of(context)!.return_home}",
+                      style: GoogleFonts.inter(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -158,7 +191,7 @@ class OrderPlacedScreen extends StatelessWidget {
     );
   }
 
-  Widget _row(String label, String value) {
+  Widget _row(String label, String value, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(

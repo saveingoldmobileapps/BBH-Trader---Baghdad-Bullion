@@ -43,6 +43,13 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
     });
     super.initState();
   }
+  // String _formatIqd(num? value) {
+  //   return CommonService.formatIQDForDisplay(value ?? 0);
+  // }
+  String _formatIqd(String? value) {
+  final parsed = double.tryParse(value ?? '') ?? 0;
+  return CommonService.formatIQDForDisplay(parsed);
+}
 
   @override
   void didChangeDependencies() {
@@ -289,14 +296,14 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                   const SizedBox(height: 4),
                   GetGenericText(
                     text:
-                        "${AppLocalizations.of(context)!.idq_currency}${widget.productPrice}",
+                        "${AppLocalizations.of(context)!.idq_currency}${_formatIqd(widget.productPrice)}",
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryGold500,
                   ),
                   GetGenericText(
                     text:
-                        "${l10n.idq_currency}${widget.oneGramPriceInIQD}${l10n.g_}",
+                        "${l10n.idq_currency}${_formatIqd(widget.oneGramPriceInIQD)}${l10n.g_}",
                     fontSize: 13,
                     color: AppColors.grey4Color,
                     fontWeight: FontWeight.bold,

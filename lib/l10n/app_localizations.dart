@@ -2519,7 +2519,7 @@ abstract class AppLocalizations {
   /// No description provided for @esouq_total_paid.
   ///
   /// In en, this message translates to:
-  /// **'Total paid'**
+  /// **'Total Paid'**
   String get esouq_total_paid;
 
   /// No description provided for @esouq_order_placed_subtitle.
@@ -2599,6 +2599,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter an area'**
   String get please_enter_area;
+
+  /// No description provided for @will_notify_you.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'\'ll notify you when your order is executed'**
+  String get will_notify_you;
 
   /// No description provided for @dubai_title.
   ///

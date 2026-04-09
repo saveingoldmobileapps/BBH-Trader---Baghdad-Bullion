@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/decimal_text_input_formatter.dart';
+import 'package:saveingold_fzco/core/common_service.dart';
 
 import '../../../core/theme/const_colors.dart';
 import '../../../core/theme/get_generic_text_widget.dart';
@@ -27,6 +27,10 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
   String condition = "Less";
   String selectedScript = "1 Gram Price";
   bool isEditMode = false;
+
+  String _localizedAlertType(String value, AppLocalizations l10n) {
+    return value == "Buying price" ? l10n.buying_price : l10n.selling_price;
+  }
 
   @override
   void initState() {
@@ -67,11 +71,11 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
 
     if (side == "Buy") {
       if (enteredPrice >= currentBuyingPrice) {
-        return "${AppLocalizations.of(context)!.buy_alert_below_current_price} (${currentBuyingPrice.toStringAsFixed(3)})";
+        return "${AppLocalizations.of(context)!.buy_alert_below_current_price} (${CommonService.formatIQDForDisplay(currentBuyingPrice)})";
       }
     } else {
       if (enteredPrice <= currentSellingPrice) {
-        return "${AppLocalizations.of(context)!.sell_alert_above_current_price} (${currentSellingPrice.toStringAsFixed(3)})";
+        return "${AppLocalizations.of(context)!.sell_alert_above_current_price} (${CommonService.formatIQDForDisplay(currentSellingPrice)})";
       }
     }
     return null;
@@ -156,7 +160,12 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                 items: ["Buying price", "Selling price"].map((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value),
+                    child: Text(
+                      _localizedAlertType(
+                        value,
+                        AppLocalizations.of(context)!,
+                      ),
+                    ),
                   );
                 }).toList(),
                 onChanged: _updateSide,
@@ -184,8 +193,8 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
                 data: (data) {
                   return Text(
                     side == "Buy"
-                        ? "Target buying price must be lower than current buying price"
-                        : "Target selling price must be higher than current selling price",
+                        ? AppLocalizations.of(context)!.target_buying_price_lower
+                        : AppLocalizations.of(context)!.target_selling_price,
                     style: const TextStyle(color: Colors.grey, fontSize: 13),
                   );
                 },
@@ -277,7 +286,7 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
               style: const TextStyle(color: Colors.grey, fontSize: 12),
             ),
             Text(
-              "${AppLocalizations.of(context)!.idq} ${NumberFormat("#,##0.000").format(price)} ${AppLocalizations.of(context)!.trade_gram}",
+              "${AppLocalizations.of(context)!.idq} ${CommonService.formatIQDForDisplay(price)} ${AppLocalizations.of(context)!.trade_gram}",
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,

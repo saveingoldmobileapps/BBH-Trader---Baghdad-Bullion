@@ -468,7 +468,7 @@
   "esouq_order_summary": "Order summary",
   "esouq_order_id": "Order ID",
   "esouq_items": "Items",
-  "esouq_total_paid": "Total paid",
+  "esouq_total_paid": "Total Paid",
   "esouq_order_placed_subtitle": "Your order was placed successfully.",
   "esouq_house_number_example": "10",
   "esouq_weight_range": "Weight range",
@@ -482,6 +482,7 @@
   "enterHouseNo": "Please enter a house number",
   "emiratesHill": "Emirates Hill First",
   "please_enter_area": "Please enter an area",
+  "will_notify_you":"We''ll notify you when your order is executed",
   
 
   "dubai_title": "Dubai",

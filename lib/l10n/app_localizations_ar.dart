@@ -12,7 +12,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get track => 'تتبع';
 
   @override
-  String get gold => 'الـذهب';
+  String get gold => 'ذهب';
 
   @override
   String get build => 'رحلتك نحو';
@@ -1297,6 +1297,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get please_enter_area => 'يرجى إدخال المنطقة';
+
+  @override
+  String get will_notify_you => 'سنقوم بإبلاغك عندما يتم تنفيذ طلبك';
 
   @override
   String get dubai_title => 'دبي';

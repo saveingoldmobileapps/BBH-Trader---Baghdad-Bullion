@@ -166,7 +166,7 @@ class _EditPersonalInfoScreenState
         mainStateWatchProvider.isBasicUserVerified;
 
     // force to bool
-    final bool isDemo = (LocalDatabase.instance.getIsDemo() ?? false) == true;
+    final bool isDemo = LocalDatabase.instance.getIsDemo() == true;
 
     // prepare subtitle dynamically instead of duplicating widget
     final subtitle = (isDemo || !isKycVerfied)
@@ -574,6 +574,64 @@ class _EditPersonalInfoScreenState
                           ),
                         ),
                         ConstPadding.sizeBoxWithHeight(height: 8),
+                       Localizations.localeOf(context).languageCode == 'ar'? 
+                       Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Directionality(
+                                textDirection:
+                                    Localizations.localeOf(
+                                          context,
+                                        ).languageCode ==
+                                        'ar'
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
+                                child: _buildTextField(
+                                  phoneNumberController,
+                                  '',
+                                  isNumeric: true,
+                                  readOnly: !isEditable,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 15,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: AppColors.secondaryColor,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    "packages/country_code_picker/flags/${currentIsoCode.toLowerCase()}.png",
+                                    width: 24,
+                                    errorBuilder: (c, e, s) => const Icon(
+                                      Icons.flag,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    dialCode,
+                                    style: const TextStyle(
+                                      color: AppColors.secondaryColor,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            
+                          ],
+                        ):
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -611,15 +669,25 @@ class _EditPersonalInfoScreenState
                             ),
                             const SizedBox(width: 10),
                             Expanded(
-                              child: _buildTextField(
-                                phoneNumberController,
-                                '',
-                                isNumeric: true,
-                                readOnly: !isEditable,
+                              child: Directionality(
+                                textDirection:
+                                    Localizations.localeOf(
+                                          context,
+                                        ).languageCode ==
+                                        'ar'
+                                    ? TextDirection.rtl
+                                    : TextDirection.ltr,
+                                child: _buildTextField(
+                                  phoneNumberController,
+                                  '',
+                                  isNumeric: true,
+                                  readOnly: !isEditable,
+                                ),
                               ),
                             ),
                           ],
                         ),
+
 
                         // CommonPhoneFieldWithDropdown(
                         //   title: AppLocalizations.of(context)!.phone_number,

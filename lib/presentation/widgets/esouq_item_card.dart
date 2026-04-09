@@ -19,7 +19,10 @@ class EsouqItemCard extends StatelessWidget {
     required this.onTap,
     required this.onTapAddToCart,
   });
-
+ String _formatIqd(String? value) {
+  final parsed = double.tryParse(value ?? '') ?? 0;
+  return CommonService.formatIQDForDisplay(parsed);
+}
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -76,13 +79,13 @@ class EsouqItemCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   GetGenericText(
                     text: "${l10n.idq_currency} $itemPrice",
-                    fontSize: 14,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                     color: AppColors.primaryGold500,
                   ),
                   GetGenericText(
-                    text: "${l10n.idq_currency} $oneGramPrice${l10n.g_}",
-                    fontSize: 10,
+                    text: "${l10n.idq_currency} ${_formatIqd(oneGramPrice)}${l10n.g_}",
+                    fontSize: 8,
                     color: Colors.grey,
                     fontWeight: FontWeight.normal,
                   ),

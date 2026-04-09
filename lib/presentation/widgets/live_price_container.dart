@@ -93,11 +93,13 @@ class _LivePriceContainerState extends ConsumerState<LivePriceContainer>
                   ConstPadding.sizeBoxWithHeight(height: 6),
                   GetGenericText(
                     text: NumberFormat("#,##0.00").format(oneGramIQDPrice),
-                    fontSize: sizes!.isPhone ? 16 : 45,
+                    fontSize: sizes!.isPhone ? 14 : 30,
                     fontWeight: FontWeight.w500,
                     color: widget.isSelling
                         ? AppColors.redColor
                         : AppColors.greenColor,
+                    overflow: TextOverflow.ellipsis,
+                    lines: 1,
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 6),
                   GetGenericText(
@@ -111,11 +113,13 @@ class _LivePriceContainerState extends ConsumerState<LivePriceContainer>
                   GetGenericText(
                     text:
                         "${widget.todayHighLow} ${NumberFormat("#,##0.00").format(lastPrice)}",
-                    fontSize: sizes!.isPhone ? 12 : 36,
+                    fontSize: sizes!.isPhone ? 11 : 22,
                     fontWeight: FontWeight.w400,
                     color: widget.isSelling
                         ? AppColors.redColor
                         : AppColors.greenColor,
+                    overflow: TextOverflow.ellipsis,
+                    lines: 1,
                   ),
                 ],
               );

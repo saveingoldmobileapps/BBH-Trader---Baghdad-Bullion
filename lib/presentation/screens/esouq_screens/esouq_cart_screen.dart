@@ -35,6 +35,10 @@ class EsouqCartScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState createState() => _EsouqCartScreenState();
 }
+  String _formatIqd(String? value) {
+  final parsed = double.tryParse(value ?? '') ?? 0;
+  return CommonService.formatIQDForDisplay(parsed);
+}
 
 class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
   static const String _moneyMethod = "Money";
@@ -256,7 +260,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          "${l10n.idq_currency} ${finalGoldPrice.toStringAsFixed(3)}",
+                                          "${l10n.idq_currency} ${_formatIqd(finalGoldPrice.toStringAsFixed(3))}",
                                           style: const TextStyle(
                                             color: Color(0xFFBBA473),
                                             fontSize: 14,
@@ -390,7 +394,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                               _selectedPaymentMethod == _moneyMethod
                                   ? GetGenericText(
                                       text:
-                                          "${(totalGrandGoldPayableCharges - deliveryCharges).toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}",
+                                          "${_formatIqd((totalGrandGoldPayableCharges - deliveryCharges).toStringAsFixed(3))} ${AppLocalizations.of(context)!.idq_currency}",
                                       fontSize: sizes!.responsiveFont(
                                         phoneVal: 18,
                                         tabletVal: 20,
@@ -445,7 +449,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
             ),
           ),
           Text(
-            "${AppLocalizations.of(context)!.idq_currency} ${value.toStringAsFixed(3)}",
+            "${AppLocalizations.of(context)!.idq_currency} ${_formatIqd(value.toStringAsFixed(3))}",
             style: TextStyle(
               color: Colors.white,
               fontSize: isTotal ? 16 : 14,

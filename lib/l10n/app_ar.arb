@@ -1,7 +1,7 @@
 {
   "@GetStartedScreen": {},
   "track": "تتبع",
-  "gold": "الـذهب",
+  "gold": "ذهب",
   "build": "رحلتك نحو",
   "wealth": "الثروة",
   "gs_subtitle": "اشترِ وبِع واستثمر في محفظتك الذهبية بسهولة عبر منصة موثوقة.",
@@ -492,6 +492,7 @@
   "enter_street_address":"يرجى إدخال عنوان الشارع",
   "emiratesHill": "تلال الإمارات الأولى",
 "please_enter_area": "يرجى إدخال المنطقة",
+"will_notify_you": "سنقوم بإبلاغك عندما يتم تنفيذ طلبك",
 "dubai_title": "دبي",
 "list_of_emirates": "يرجى إدخال الإمارة",
 "nominate_recipient": "تعيين المستلم",

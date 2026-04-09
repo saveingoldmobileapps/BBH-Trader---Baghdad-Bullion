@@ -26,6 +26,24 @@ class MoneyStatementCard extends StatefulWidget {
 class _MoneyStatementCardState extends State<MoneyStatementCard> {
   bool isExpanded = false;
 
+  String _formatIqd(num? value) {
+    return CommonService.formatIQDForDisplay(value ?? 0);
+  }
+
+  String _formatIraqDateTime(String? isoDate, BuildContext context) {
+    if (isoDate == null || isoDate.isEmpty) return AppLocalizations.of(context)!.not_available;
+    try {
+      final parsed = DateTime.parse(isoDate);
+      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+      final locale = Localizations.localeOf(context).languageCode == 'ar'
+          ? 'ar_IQ'
+          : 'en_IQ';
+      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
+    } catch (_) {
+      return isoDate;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -70,8 +88,8 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
                   ),
                   Text(
                     item.credit != null
-                        ? "${l10n.idq_currency} ${double.tryParse(item.credit.toString())?.toStringAsFixed(3) ?? '0.00'}"
-                        : "${l10n.idq_currency} ${double.tryParse(item.debit.toString())?.toStringAsFixed(3) ?? '0.00'}",
+                        ? "${l10n.idq_currency} ${_formatIqd(double.tryParse(item.credit.toString()) ?? 0)}"
+                        : "${l10n.idq_currency} ${_formatIqd(double.tryParse(item.debit.toString()) ?? 0)}",
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -100,11 +118,11 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
             ),
             _buildDetailRow(
               l10n.dateTime,
-              CommonService.formatDateTime(context, item.date!),
+              _formatIraqDateTime(item.date, context),
             ),
             _buildDetailRow(
               l10n.balanceAfterTransaction,
-              "${l10n.idq_currency} ${double.tryParse(item.moneyBalance.toString())?.toStringAsFixed(3) ?? '0.00'}",
+              "${l10n.idq_currency} ${_formatIqd(double.tryParse(item.moneyBalance.toString()) ?? 0)}",
             ),
             const SizedBox(height: 12),
           ],

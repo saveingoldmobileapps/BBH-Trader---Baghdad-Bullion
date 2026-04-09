@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:saveingold_fzco/core/common_service.dart';
 import 'package:saveingold_fzco/core/enums/loading_state.dart';
 import 'package:saveingold_fzco/core/sound_services.dart';
 import 'package:saveingold_fzco/core/sounds/app_sounds.dart';
@@ -41,6 +42,11 @@ class Esouq extends _$Esouq {
   void setLoadingState(LoadingState loadingState) {
     state = state.copyWith(loadingState: loadingState);
   }
+
+  String _formatIqd(String? value) {
+  final parsed = double.tryParse(value ?? '') ?? 0;
+  return CommonService.formatIQDForDisplay(parsed);
+}
 
   Future<void> fetchBankBranches({required String productId}) async {
     try {

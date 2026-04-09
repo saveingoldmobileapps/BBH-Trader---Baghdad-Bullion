@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/data/models/history_model/GetMetalStatementsResponse.dart';
-import 'package:saveingold_fzco/data/models/home_models/GetHomeFeedResponse.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../core/common_service.dart';
 
 class MetalStatementCard extends StatefulWidget {
   final VoidCallback onTap;
@@ -24,6 +24,24 @@ class MetalStatementCard extends StatefulWidget {
 class _MetalStatementCardState extends State<MetalStatementCard>
     with SingleTickerProviderStateMixin {
   bool isExpanded = false;
+
+  String _formatIqd(num? value) {
+    return CommonService.formatIQDForDisplay(value ?? 0);
+  }
+
+  String _formatIraqDateTime(String? isoDate, BuildContext context) {
+    if (isoDate == null || isoDate.isEmpty) return 'N/A';
+    try {
+      final parsed = DateTime.parse(isoDate);
+      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+      final locale = Localizations.localeOf(context).languageCode == 'ar'
+          ? 'ar_IQ'
+          : 'en_IQ';
+      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
+    } catch (_) {
+      return isoDate;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,16 +91,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
                 ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.grams_card_date_label,
-                  widget.statement.date != null
-                      ? DateFormat(
-                          'EEEE, dd MMM yyyy, HH:mm',
-                          Localizations.localeOf(context).languageCode,
-                        ).format(
-                          DateTime.parse(
-                            widget.statement.date.toString(),
-                          ).toLocal(),
-                        )
-                      : 'N/A',
+                  _formatIraqDateTime(widget.statement.date?.toString(), context),
                 ),
                 const Divider(color: Colors.white10, height: 24),
               ],
@@ -123,7 +132,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
   // ---------------- HELPERS ----------------
 
   Widget _buildTitle(BuildContext context) {
-    String title = "Trade";
+    String title = "";
     num quantity = widget.statement.credit != 0
         ? (widget.statement.credit ?? 0.0)
         : (widget.statement.debit ?? 0.0);
@@ -166,7 +175,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
     return _buildDetailRow(
       "$label ${AppLocalizations.of(context)!.at}",
-      "${AppLocalizations.of(context)!.idq} ${price?.toStringAsFixed(3) ?? '0.00'} ${AppLocalizations.of(context)!.g_}",
+      "${AppLocalizations.of(context)!.idq} ${_formatIqd(price)} ${AppLocalizations.of(context)!.g_}",
     );
   }
 

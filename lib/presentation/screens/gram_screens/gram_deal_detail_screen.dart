@@ -48,6 +48,29 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
   final _focusAmountGramNode = FocusNode(); // Add FocusNode
   final _focusSellAtPriceNode = FocusNode(); // Add FocusNode
 
+  // String _formatIqd(num? value) {
+  //   return CommonService.formatIQDForDisplay(value ?? 0);
+  // }
+  String _formatIqd(num? value) {
+  final parsed = value ?? 0;
+  final formatter = NumberFormat('#,##0.000'); // 3 decimals
+  return formatter.format(parsed);
+}
+
+  String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
+    if (isoDate == null || isoDate.isEmpty) return '-';
+    try {
+      final parsed = DateTime.parse(isoDate);
+      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+      final locale = Localizations.localeOf(context).languageCode == 'ar'
+          ? 'ar_IQ'
+          : 'en_IQ';
+      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
+    } catch (_) {
+      return isoDate;
+    }
+  }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -202,7 +225,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                             SizedBox(width: sizes!.widthRatio * 8),
                             GetGenericText(
                               text:
-                                  "${AppLocalizations.of(context)!.idq_currency} ${pnl.toStringAsFixed(3)}", //"IQD ${pnl.toStringAsFixed(2)}",
+                                  "${AppLocalizations.of(context)!.idq_currency}  ${_formatIqd(pnl)}", //"IQD ${pnl.toStringAsFixed(2)}",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 16,
                                 tabletVal: 18,
@@ -237,7 +260,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                 SizedBox(width: sizes!.widthRatio * 8),
                                 GetGenericText(
                                   text:
-                                      "${AppLocalizations.of(context)!.idq_currency} ${widget.gramData.buyingPrice?.toStringAsFixed(3)}",
+                                      "${AppLocalizations.of(context)!.idq_currency} ${_formatIqd(widget.gramData.buyingPrice)}",
                                   // "IQD ${widget.gramData.buyingPrice?.toStringAsFixed(2)}",
                                   fontSize: sizes!.responsiveFont(
                                     phoneVal: 16,
@@ -282,9 +305,9 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                           GetGenericText(
                             text:
                                 "${AppLocalizations.of(context)!.idq} ${widget.gramData.tradeType == "Sell"
-                                    ? (widget.gramData.tradeStatus == "Pending" ? widget.gramData.sellAtProfit?.toStringAsFixed(3) : widget.gramData.sellingPrice?.toStringAsFixed(3))
+                                    ? (widget.gramData.tradeStatus == "Pending" ? _formatIqd(widget.gramData.sellAtProfit) : _formatIqd(widget.gramData.sellingPrice))
                                     : widget.gramData.tradeType == "Buy"
-                                    ? (widget.gramData.tradeStatus == "Pending" ? widget.gramData.buyAtPrice?.toStringAsFixed(3) : widget.gramData.buyingPrice?.toStringAsFixed(3))
+                                    ? (widget.gramData.tradeStatus == "Pending" ? _formatIqd(widget.gramData.buyAtPrice) : _formatIqd(widget.gramData.buyingPrice))
                                     : '0.000'}", // Fallback for unknown trade types
                             fontSize: sizes!.responsiveFont(
                               phoneVal: 16,
@@ -362,8 +385,8 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                 (widget.gramData.tradeStatus == "Opened" ||
                                     (widget.gramData.tradeStatus == "Pending" &&
                                         widget.gramData.tradeType == "Sell"))
-                                ? "${AppLocalizations.of(context)!.idq} ${goldPriceStateWatchProvider.value?.oneGramSellingPriceInIQD.toStringAsFixed(3)}"
-                                : "${AppLocalizations.of(context)!.idq} ${goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD.toStringAsFixed(3)}",
+                                ? "${AppLocalizations.of(context)!.idq} ${_formatIqd(goldPriceStateWatchProvider.value?.oneGramSellingPriceInIQD)}"
+                                : "${AppLocalizations.of(context)!.idq} ${_formatIqd(goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD)}",
                             fontSize: sizes!.responsiveFont(
                               phoneVal: 16,
                               tabletVal: 18,
@@ -402,7 +425,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                           SizedBox(width: sizes!.widthRatio * 8),
                           GetGenericText(
                             text:
-                                "${AppLocalizations.of(context)!.idq_currency} ${widget.gramData.tradeMoney?.toStringAsFixed(3) ?? '0.00'}",
+                               "${AppLocalizations.of(context)!.idq_currency} ${_formatIqd(widget.gramData.tradeMoney)}",
                             // "IQD ${widget.gramData.tradeMoney?.toStringAsFixed(2) ?? '0.00'}",
                             fontSize: sizes!.responsiveFont(
                               phoneVal: 16,
@@ -442,18 +465,9 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                             flex: 3,
                             child: GetGenericText(
                               text:
-                                  DateFormat(
-                                    'EEEE, dd MMM yyyy, HH:mm',
-                                    Localizations.localeOf(
-                                              context,
-                                            ).languageCode ==
-                                            'ar'
-                                        ? 'ar'
-                                        : 'en',
-                                  ).format(
-                                    DateTime.parse(
-                                      widget.gramData.createdAt!.toString(),
-                                    ).toLocal(),
+                                  _formatIraqGregorianDateTime(
+                                    widget.gramData.createdAt?.toString(),
+                                    context,
                                   ),
                               // DateFormat('EEE, dd MMM yyyy HH:mm').format(
                               //   DateTime.parse(

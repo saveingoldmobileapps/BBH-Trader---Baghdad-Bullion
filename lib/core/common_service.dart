@@ -68,32 +68,37 @@ class CommonService {
   }
 
   /// format currency
-  static String formatCurrency({
-    required String amount,
-  }) {
-    final amountInDouble = double.tryParse(amount) ?? 0.0;
-    if (amountInDouble >= 10000) {
-      return "${(amountInDouble / 1000).toStringAsFixed(3)}K"; // Keep 3 decimal places in large values
-    }
-
-    final formatter = NumberFormat("#,##0.00", "en_US");
-    return formatter.format(amountInDouble);
-  }
-
-  /// Format IQD balance for display - handles very large values beautifully.
-  /// Uses compact notation (1.2M, 5.3B) for values >= 1M to prevent overflow.
-  // static String formatIQDForDisplay(num? value) {
-  //   final amount = (value ?? 0).toDouble();
-  //   if (amount == 0) return "0";
-  //   if (amount.abs() >= 1000000) {
-  //     return NumberFormat.compact(locale: "en_US").format(amount);
+  // static String formatCurrency({
+  //   required String amount,
+  // }) {
+  //   final amountInDouble = double.tryParse(amount) ?? 0.0;
+  //   if (amountInDouble >= 10000) {
+  //     return "${(amountInDouble / 1000).toStringAsFixed(3)}K"; // Keep 3 decimal places in large values
   //   }
-  //   return NumberFormat("#,##0", "en_US").format(amount);
+
+  //   final formatter = NumberFormat("#,##0.00", "en_US");
+  //   return formatter.format(amountInDouble);
   // }
+ 
+
+static String formatCurrency({
+  required String amount,
+  bool useArabic = false, // optional for Arabic numerals
+}) {
+  final amountInDouble = double.tryParse(amount) ?? 0.0;
+
+  final formatter = NumberFormat(
+    "#,##0.000", // always 3 decimal places
+    useArabic ? "ar_IQ" : "en_US",
+  );
+
+  return formatter.format(amountInDouble);
+}
+
   static String formatIQDForDisplay(num? value) {
   final amount = (value ?? 0).toDouble();
 
-  return "${NumberFormat("#,##0.00", "en_US").format(amount)}";
+  return NumberFormat("#,##0.###", "en_US").format(amount);
 }
 
   /// Format price for compact display (e.g. 2K, 3.5K, 1M) - for UI where full numbers are too big.
@@ -113,6 +118,60 @@ class CommonService {
     }
     return amount.toStringAsFixed(3);
   }
+  static String formatIraqDateTime(
+  String? isoDate,
+  BuildContext context, {
+  bool withTime = true,
+}) {
+  if (isoDate == null || isoDate.isEmpty) return '-';
+
+  try {
+    final parsed = DateTime.parse(isoDate);
+    final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+
+    final isArabic =
+        Localizations.localeOf(context).languageCode == 'ar';
+
+    // English fallback
+    if (!isArabic) {
+      return DateFormat(
+        withTime ? 'dd MMM yyyy, HH:mm' : 'dd MMM yyyy',
+        'en_US',
+      ).format(iraqTime);
+    }
+
+    // Iraqi Arabic month names
+    const iraqiMonths = [
+      'كانون الثاني',
+      'شباط',
+      'آذار',
+      'نيسان',
+      'أيار',
+      'حزيران',
+      'تموز',
+      'آب',
+      'أيلول',
+      'تشرين الأول',
+      'تشرين الثاني',
+      'كانون الأول',
+    ];
+
+    final day = iraqTime.day;
+    final month = iraqiMonths[iraqTime.month - 1];
+    final year = iraqTime.year;
+    final time = DateFormat('HH:mm').format(iraqTime);
+
+    String result = withTime
+        ? '$day $month $year، $time'
+        : '$day $month $year';
+
+    // Optional: convert digits to Arabic
+    return CommonService.toArabicDigits(result);
+  } catch (_) {
+    return isoDate;
+  }
+}
+
 
   static String getGreeting(String name, BuildContext context) {
     final hour = DateTime.now().hour;

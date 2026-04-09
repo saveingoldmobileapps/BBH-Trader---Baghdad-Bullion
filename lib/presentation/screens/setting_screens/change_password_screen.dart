@@ -48,6 +48,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     /// states
     final authStateWatchProvider = ref.watch(authProvider);
     final authStateReadProvider = ref.read(authProvider.notifier);
+    final isRTL = Directionality.of(context) == TextDirection.rtl;
 
     return Scaffold(
       appBar: AppBar(
@@ -84,26 +85,47 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                   : AutovalidateMode.disabled,
               child: Column(
                 children: [
-                  GetGenericText(
-                    text: AppLocalizations.of(context)!.settings_password,
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 26,
-                      tabletVal: 32,
+                  SizedBox(
+                    width: double.infinity,
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: GetGenericText(
+                        text: AppLocalizations.of(context)!.settings_password,
+                        fontSize: sizes!.responsiveFont(
+                          phoneVal: 26,
+                          tabletVal: 32,
+                        ),
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.whiteColor,
+                      ),
                     ),
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.whiteColor,
-                  ).getAlign(),
+                  ),
 
-                  GetGenericText(
-                    text: AppLocalizations.of(context)!.settings_password_desc,
+                  SizedBox(
+                    width: double.infinity,
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: GetGenericText(
+                        text: AppLocalizations.of(context)!.settings_password_desc,
+                        fontSize: sizes!.responsiveFont(
+                          phoneVal: 14,
+                          tabletVal: 20,
+                        ),
+                        fontWeight: FontWeight.normal,
+                        color: AppColors.whiteColor,
+                      ),
+                    ),
+                  ),
+                  ConstPadding.sizeBoxWithHeight(height: 16),
+                  isRTL?GetGenericText(
+                    text: AppLocalizations.of(context)!.current_password_label,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
-                      tabletVal: 20,
+                      tabletVal: 18,
                     ),
                     fontWeight: FontWeight.normal,
                     color: AppColors.whiteColor,
-                  ).getAlign(),
-                  ConstPadding.sizeBoxWithHeight(height: 16),
+                  ).getAlignRight():
                   GetGenericText(
                     text: AppLocalizations.of(context)!.current_password_label,
                     fontSize: sizes!.responsiveFont(
@@ -137,7 +159,15 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     },
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
-                  GetGenericText(
+                  isRTL?GetGenericText(
+                    text: AppLocalizations.of(context)!.new_password,
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 14,
+                      tabletVal: 18,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlignRight():GetGenericText(
                     text: AppLocalizations.of(context)!.new_password,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,
@@ -174,7 +204,15 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                     },
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 16),
-                  GetGenericText(
+                  isRTL?GetGenericText(
+                    text: AppLocalizations.of(context)!.new_password,
+                    fontSize: sizes!.responsiveFont(
+                      phoneVal: 14,
+                      tabletVal: 18,
+                    ),
+                    fontWeight: FontWeight.normal,
+                    color: AppColors.whiteColor,
+                  ).getAlignRight():GetGenericText(
                     text: AppLocalizations.of(context)!.confirm_new_password,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 14,

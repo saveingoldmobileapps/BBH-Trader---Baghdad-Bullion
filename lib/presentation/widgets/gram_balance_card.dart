@@ -21,6 +21,9 @@ class GramBalanceCard extends ConsumerStatefulWidget {
   @override
   ConsumerState createState() => _GramBalanceCardState();
 }
+ String _formatIqd(num? value) {
+    return CommonService.formatIQDForDisplay(value ?? 0);
+  }
 
 class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
   String getPrice({required Payload gramList}) {
@@ -102,13 +105,13 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
             // Detail Rows
             _detailRow(
               l10n.gram_buy_word == "Buy" ? "Bought @" : "تم الشراء @",
-              "${AppLocalizations.of(context)!.idq} ${item.buyingPrice?.toStringAsFixed(3) ?? '0.00'}",
+              "${AppLocalizations.of(context)!.idq} ${_formatIqd(item.buyingPrice) ?? '0.00'}",
             ),
             const SizedBox(height: 10),
             _detailRow(
               AppLocalizations.of(context)!.gram_current_price,
               //"Current price",
-              "${AppLocalizations.of(context)!.idq} ${goldPriceState.value?.oneGramSellingPriceInIQD.toStringAsFixed(3) ?? '0.00'}",
+              "${AppLocalizations.of(context)!.idq} ${_formatIqd(goldPriceState.value?.oneGramSellingPriceInIQD) ?? '0.00'}",
             ),
             const SizedBox(height: 10),
 
@@ -119,7 +122,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                 child: _detailRow(
                   AppLocalizations.of(context)!.gram_target_price,
                   //"Target price",
-                  "${AppLocalizations.of(context)!.idq} ${item.buyAtPrice?.toStringAsFixed(3) ?? '0.00'}",
+                  "${AppLocalizations.of(context)!.idq} ${_formatIqd(item.buyAtPrice) ?? '0.00'}",
                 ),
               ),
 

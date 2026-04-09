@@ -1266,7 +1266,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get esouq_items => 'Items';
 
   @override
-  String get esouq_total_paid => 'Total paid';
+  String get esouq_total_paid => 'Total Paid';
 
   @override
   String get esouq_order_placed_subtitle =>
@@ -1307,6 +1307,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get please_enter_area => 'Please enter an area';
+
+  @override
+  String get will_notify_you => 'We\'ll notify you when your order is executed';
 
   @override
   String get dubai_title => 'Dubai';

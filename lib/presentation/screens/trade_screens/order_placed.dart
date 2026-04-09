@@ -21,6 +21,7 @@ class OrderPlacedScreen extends StatelessWidget {
     required this.targetPrice,
     required this.total,
   });
+
   String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
     if (isoDate == null || isoDate.isEmpty) return '-';
     try {
@@ -54,9 +55,7 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
               Text(
-                AppLocalizations.of(
-                  context,
-                )!.order_placed_title, //"Order Placed!",
+                AppLocalizations.of(context)!.order_placed_title,
                 style: GoogleFonts.inter(
                   color: Colors.white,
                   fontSize: 22,
@@ -69,9 +68,7 @@ class OrderPlacedScreen extends StatelessWidget {
               /// ✅ Subtitle
               tradeType == 'Limit Order' || tradeType == "أمر محدد"
                   ? Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.limit_order_des, //"Your limit order has been placed and will\nexecute when the target price is reached.",
+                      AppLocalizations.of(context)!.limit_order_des,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         color: Colors.white60,
@@ -79,9 +76,7 @@ class OrderPlacedScreen extends StatelessWidget {
                       ),
                     )
                   : Text(
-                      AppLocalizations.of(
-                        context,
-                      )!.limit_order_success, //"You have Successfully Placed the order.",
+                      AppLocalizations.of(context)!.limit_order_success,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         color: Colors.white60,
@@ -91,14 +86,13 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const SizedBox(height: 24),
 
-              /// ✅ Order Summary Card
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Color(0xff262929),
+                    color: const Color(0xff262929),
                   ),
                 ),
                 child: Column(
@@ -141,9 +135,8 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              /// ✅ Info Text
               Text(
-                "${AppLocalizations.of(context)!.will_notify}", //"We’ll notify you when your order is executed",
+                "${AppLocalizations.of(context)!.will_notify}",
                 style: GoogleFonts.inter(
                   color: Colors.white38,
                   fontSize: 12,
@@ -152,40 +145,40 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const Spacer(),
 
-              /// ✅ Return Home Button
+              /// ✅ Fixed Button - No grey screen issue
               SizedBox(
                 width: double.infinity,
                 height: 48,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    padding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xff917330),
+                        Color(0xFF73530d),
+                        Color(0xff917330),
+                      ],
                     ),
                   ),
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xff917330), // left
-                          Color(0xFF73530d), // center (brighter)
-                          Color(0xff917330), // right
-                        ],
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      foregroundColor: Colors.black,
+                      elevation: 0,
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: Center(
-                      child: Text(
-                        "${AppLocalizations.of(context)!.return_home}", //"Return to home",
-                        style: GoogleFonts.inter(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    child: Text(
+                      "${AppLocalizations.of(context)!.return_home}",
+                      style: GoogleFonts.inter(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),

@@ -369,7 +369,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                       style: GoogleFonts.inter(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: 12,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -401,7 +401,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
           ),
           goldPriceState.when(
             data: (data) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              //padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.green.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(6),
@@ -417,7 +417,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   const SizedBox(width: 4),
                   Text(
                     l10n.high_price_badge(
-                      data.lastHighBuyingPrice.toStringAsFixed(3),
+                      CommonService.formatIQDForDisplay(data.lastHighBuyingPrice),
                     ),
                     style: const TextStyle(
                       color: Color(0xFF4CAF50),

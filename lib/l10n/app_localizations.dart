@@ -2996,6 +2996,18 @@ abstract class AppLocalizations {
   /// **'Money Statement'**
   String get money_st;
 
+  /// Money tab — gram buy (credit / money in); grams placeholder until API provides value
+  ///
+  /// In en, this message translates to:
+  /// **'IQD {iqd}, covering the purchase of {grams} gold'**
+  String money_history_gram_purchase_line(String iqd, String grams);
+
+  /// Money tab — gram sell (debit / money out); grams placeholder until API provides value
+  ///
+  /// In en, this message translates to:
+  /// **'IQD {iqd}, being proceeds from the sale of {grams} gold'**
+  String money_history_gram_sale_line(String iqd, String grams);
+
   /// No description provided for @metal_rate_IQD.
   ///
   /// In en, this message translates to:
@@ -3361,6 +3373,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Profit'**
   String get metal_profit;
+
+  /// No description provided for @metal_loss.
+  ///
+  /// In en, this message translates to:
+  /// **'Loss'**
+  String get metal_loss;
 
   /// No description provided for @metal_plus_na.
   ///

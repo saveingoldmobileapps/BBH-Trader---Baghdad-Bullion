@@ -927,7 +927,7 @@ Widget _tradeDetailRow(String title, String value) {
         title,
         style: GoogleFonts.inter(
           color: const Color(0xFF8E8E93),
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: FontWeight.w400,
         ),
       ),
@@ -935,7 +935,7 @@ Widget _tradeDetailRow(String title, String value) {
         value,
         style: GoogleFonts.inter(
           color: Colors.white,
-          fontSize: 15,
+          fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
       ),

@@ -29,82 +29,181 @@ class _ActiveAlertsScreenState extends ConsumerState<ActiveAlertsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final alertState = ref.watch(alertAllProvider);
-    final alerts = alertState.alerts ?? [];
+  // Widget build(BuildContext context) {
+  //   final alertState = ref.watch(alertAllProvider);
+  //   final alerts = alertState.alerts ?? [];
 
-    return Scaffold(
-      backgroundColor: AppColors.greyScale1000,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: AppColors.greyScale1000,
-        elevation: 0,
-        title: GetGenericText(
-          text: AppLocalizations.of(context)!.active_alerts,
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
+  //   return Scaffold(
+  //     backgroundColor: AppColors.greyScale1000,
+  //     appBar: AppBar(
+  //       leading: IconButton(
+  //         icon: const Icon(Icons.arrow_back, color: Colors.white),
+  //         onPressed: () => Navigator.of(context).pop(),
+  //       ),
+  //       backgroundColor: AppColors.greyScale1000,
+  //       elevation: 0,
+  //       title: GetGenericText(
+  //         text: AppLocalizations.of(context)!.active_alerts,
+  //         fontSize: 20,
+  //         fontWeight: FontWeight.w600,
+  //         color: Colors.white,
+  //       ),
+  //     ),
+  //     bottomNavigationBar: SafeArea(
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(16.0),
+  //         child: ElevatedButton(
+  //           style: ElevatedButton.styleFrom(
+  //             backgroundColor: const Color(0xFF91712F),
+  //             minimumSize: const Size(double.infinity, 56),
+  //             shape: RoundedRectangleBorder(
+  //               borderRadius: BorderRadius.circular(12),
+  //             ),
+  //           ),
+  //           onPressed: () => _navigateToCreate(context),
+  //           child: Text(
+  //             AppLocalizations.of(context)!.create_new_alert,
+  //             //"Create new alert",
+  //             style: TextStyle(color: Colors.white, fontSize: 16),
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //     body: alertState.loadingState == LoadingState.loading
+  //         ? const Center(
+  //             child: CircularProgressIndicator(color: AppColors.primaryGold500),
+  //           )
+  //         : alerts.isEmpty
+  //         ? Center(
+  //             child: NoDataWidget(
+  //               title: AppLocalizations.of(context)!.no_active_alert_at_moment,//"No active alert available at the moment.",
+  //               description: "",
+  //             ),
+  //           )
+  //         : ListView.builder(
+  //             padding: const EdgeInsets.symmetric(horizontal: 16),
+  //             itemCount: alerts.length,
+  //             itemBuilder: (context, index) {
+  //               final alert = alerts[index];
+  //               return InkWell(
+  //                 onTap: () async {
+  //                   await Navigator.push(
+  //                     context,
+  //                     MaterialPageRoute(
+  //                       builder: (_) => CreateAlertScreen(alert: alert),
+  //                     ),
+  //                   ).then(
+  //                     (_) => ref.read(alertAllProvider.notifier).fetchAlerts(),
+  //                   );
+  //                 },
+  //                 child: _AlertItemCard(
+  //                   alert: alert,
+  //                 ),
+  //               ); // Extracted for clean live updates
+  //             },
+  //           ),
+  //   );
+  // }
+  @override
+Widget build(BuildContext context) {
+  final alertState = ref.watch(alertAllProvider);
+
+  /// ✅ Clone + Sort Alerts (Latest First)
+  final alerts = [...(alertState.alerts ?? [])]
+    ..sort((a, b) {
+      final dateA = DateTime.tryParse(
+            a.createdAt ?? a.updatedAt ?? '',
+          ) ??
+          DateTime(0);
+
+      final dateB = DateTime.tryParse(
+            b.createdAt ?? b.updatedAt ?? '',
+          ) ??
+          DateTime(0);
+
+      return dateB.compareTo(dateA); // 🔥 latest first
+    });
+
+  return Scaffold(
+    backgroundColor: AppColors.greyScale1000,
+
+    /// 🔝 APP BAR
+    appBar: AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        onPressed: () => Navigator.of(context).pop(),
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF91712F),
-              minimumSize: const Size(double.infinity, 56),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+      backgroundColor: AppColors.greyScale1000,
+      elevation: 0,
+      title: GetGenericText(
+        text: AppLocalizations.of(context)!.active_alerts,
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: Colors.white,
+      ),
+    ),
+
+    /// 🔽 CREATE ALERT BUTTON
+    bottomNavigationBar: SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF91712F),
+            minimumSize: const Size(double.infinity, 56),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            onPressed: () => _navigateToCreate(context),
-            child: Text(
-              AppLocalizations.of(context)!.create_new_alert,
-              //"Create new alert",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
+          ),
+          onPressed: () => _navigateToCreate(context),
+          child: Text(
+            AppLocalizations.of(context)!.create_new_alert,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
         ),
       ),
-      body: alertState.loadingState == LoadingState.loading
-          ? const Center(
-              child: CircularProgressIndicator(color: AppColors.primaryGold500),
-            )
-          : alerts.isEmpty
-          ? Center(
-              child: NoDataWidget(
-                title: AppLocalizations.of(context)!.no_active_alert_at_moment,//"No active alert available at the moment.",
-                description: "",
-              ),
-            )
-          : ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: alerts.length,
-              itemBuilder: (context, index) {
-                final alert = alerts[index];
-                return InkWell(
-                  onTap: () async {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => CreateAlertScreen(alert: alert),
-                      ),
-                    ).then(
-                      (_) => ref.read(alertAllProvider.notifier).fetchAlerts(),
-                    );
-                  },
-                  child: _AlertItemCard(
-                    alert: alert,
-                  ),
-                ); // Extracted for clean live updates
-              },
-            ),
-    );
-  }
+    ),
 
+    /// 📄 BODY
+    body: alertState.loadingState == LoadingState.loading
+        ? const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.primaryGold500,
+            ),
+          )
+        : alerts.isEmpty
+            ? Center(
+                child: NoDataWidget(
+                  title: AppLocalizations.of(context)!
+                      .no_active_alert_at_moment,
+                  description: "",
+                ),
+              )
+            : ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: alerts.length,
+                itemBuilder: (context, index) {
+                  final alert = alerts[index];
+
+                  return InkWell(
+                    onTap: () async {
+                      await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              CreateAlertScreen(alert: alert),
+                        ),
+                      );
+
+                      /// 🔄 Refresh after returning
+                      ref.read(alertAllProvider.notifier).fetchAlerts();
+                    },
+                    child: _AlertItemCard(alert: alert),
+                  );
+                },
+              ),
+  );
+}
   void _navigateToCreate(BuildContext context) async {
     await Navigator.push(
       context,
@@ -189,7 +288,7 @@ class _AlertItemCard extends ConsumerWidget {
                         await ref
                             .read(alertAllProvider.notifier)
                             .deleteAlert(alertId: alert.id.toString());
-                        ref.read(alertAllProvider.notifier).fetchAlerts();
+                           ref.read(alertAllProvider.notifier).fetchAlerts();
                       }
                     },
                     child: const Icon(

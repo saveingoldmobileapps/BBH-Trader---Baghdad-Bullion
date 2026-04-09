@@ -81,25 +81,31 @@ class CommonService {
   // }
  
 
-static String formatCurrency({
-  required String amount,
-  bool useArabic = false, // optional for Arabic numerals
-}) {
-  final amountInDouble = double.tryParse(amount) ?? 0.0;
+  /// Parses a string amount (e.g. from inputs) with fixed 3 decimal places.
+  /// Prefer [formatIqdCurrency] when the value is already numeric.
+  static String formatCurrency({
+    required String amount,
+    bool useArabic = false,
+  }) {
+    final amountInDouble = double.tryParse(amount) ?? 0.0;
 
-  final formatter = NumberFormat(
-    "#,##0.000", // always 3 decimal places
-    useArabic ? "ar_IQ" : "en_US",
-  );
+    final formatter = NumberFormat(
+      "#,##0.000",
+      useArabic ? "ar_IQ" : "en_US",
+    );
 
-  return formatter.format(amountInDouble);
-}
+    return formatter.format(amountInDouble);
+  }
 
-  static String formatIQDForDisplay(num? value) {
-  final amount = (value ?? 0).toDouble();
+  /// **App-wide IQD amount formatting** — thousand separators, up to 3 fractional digits.
+  /// Use this (or [formatIQDForDisplay]) for every IQD number shown in the UI.
+  static String formatIqdCurrency(num? value) {
+    final amount = (value ?? 0).toDouble();
+    return NumberFormat("#,##0.###", "en_US").format(amount);
+  }
 
-  return NumberFormat("#,##0.###", "en_US").format(amount);
-}
+  /// Same as [formatIqdCurrency]; kept for existing call sites.
+  static String formatIQDForDisplay(num? value) => formatIqdCurrency(value);
 
   /// Format price for compact display (e.g. 2K, 3.5K, 1M) - for UI where full numbers are too big.
   static String formatPriceCompact(num? value) {

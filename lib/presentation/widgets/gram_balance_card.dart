@@ -81,23 +81,91 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                   ),
                 ),
                 if (pnl != null)
-                  Row(
-                    children: [
-                      Icon(
-                        pnl >= 0 ? Icons.north_east : Icons.south_east,
-                        color: pnl >= 0 ? Colors.green : Colors.red,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        "${pnl.abs().toStringAsFixed(3)} ${AppLocalizations.of(context)!.metal_profit}",
-                        style: TextStyle(
-                          color: pnl >= 0 ? Colors.green : Colors.red,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+
+  // Row(
+  //   children: [
+  //     Icon(
+  //       pnl >= 0 ? Icons.north_east : Icons.south_east,
+  //       color: pnl >= 0 ? Colors.green : Colors.red,
+  //       size: 16,
+  //     ),
+  //     const SizedBox(width: 4),
+  //     Text(
+  //       "${pnl >= 0 ? '+' : '-'}${CommonService.formatIqdCurrency(pnl.abs())} "
+  //       "${pnl >= 0 
+  //           ? AppLocalizations.of(context)!.metal_profit 
+  //           : "Loss"
+  //           }",
+  //       style: TextStyle(
+  //         color: pnl >= 0 ? Colors.green : Colors.red,
+  //         fontWeight: FontWeight.bold,
+  //       ),
+  //     ),
+  //   ],
+  // ),
+  widget.rtl?
+    Row(
+  children: [
+    Icon(
+      pnl >= 0 ? Icons.north_east : Icons.south_east,
+      color: pnl >= 0 ? Colors.green : Colors.red,
+      size: 16,
+    ),
+    const SizedBox(width: 4),
+    Text(
+      // pnl >= 0 
+      //     ? widget.rtl?"${CommonService.formatIqdCurrency(pnl)}+ ${AppLocalizations.of(context)!.metal_profit}": "+ ${CommonService.formatIqdCurrency(pnl)} ${AppLocalizations.of(context)!.metal_profit}"
+      //     : "${CommonService.formatIqdCurrency(pnl.abs())}- ${AppLocalizations.of(context)!.metal_loss}",
+     pnl >= 0
+          ?"${CommonService.formatIqdCurrency(pnl)}+ ${AppLocalizations.of(context)!.metal_profit}"
+          : "${CommonService.formatIqdCurrency(pnl.abs())}- ${AppLocalizations.of(context)!.metal_loss}",
+      style: TextStyle(
+        color: pnl >= 0 ? Colors.green : Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+):
+  Row(
+  children: [
+    Icon(
+      pnl >= 0 ? Icons.north_east : Icons.south_east,
+      color: pnl >= 0 ? Colors.green : Colors.red,
+      size: 16,
+    ),
+    const SizedBox(width: 4),
+    Text(
+      // pnl >= 0 
+      //     ? widget.rtl?"${CommonService.formatIqdCurrency(pnl)}+ ${AppLocalizations.of(context)!.metal_profit}": "+ ${CommonService.formatIqdCurrency(pnl)} ${AppLocalizations.of(context)!.metal_profit}"
+      //     : "${CommonService.formatIqdCurrency(pnl.abs())}- ${AppLocalizations.of(context)!.metal_loss}",
+     pnl >= 0
+          ?"+${CommonService.formatIqdCurrency(pnl)} ${AppLocalizations.of(context)!.metal_profit}"
+          : "-${CommonService.formatIqdCurrency(pnl.abs())} ${AppLocalizations.of(context)!.metal_loss}",
+      style: TextStyle(
+        color: pnl >= 0 ? Colors.green : Colors.red,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+),
+                  // Row(
+                  //   children: [
+                  //     Icon(
+                  //       pnl >= 0 ? Icons.north_east : Icons.south_east,
+                  //       color: pnl >= 0 ? Colors.green : Colors.red,
+                  //       size: 16,
+                  //     ),
+                  //     const SizedBox(width: 4),
+                  //     Text(
+                        
+                  //       "${CommonService.formatIqdCurrency(pnl.abs())} ${AppLocalizations.of(context)!.metal_profit}",
+                  //       style: TextStyle(
+                  //         color: pnl >= 0 ? Colors.green : Colors.red,
+                  //         fontWeight: FontWeight.bold,
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
               ],
             ),
             const SizedBox(height: 16),

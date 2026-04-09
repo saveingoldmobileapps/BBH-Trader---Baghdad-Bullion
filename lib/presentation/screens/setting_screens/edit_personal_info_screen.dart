@@ -574,120 +574,177 @@ class _EditPersonalInfoScreenState
                           ),
                         ),
                         ConstPadding.sizeBoxWithHeight(height: 8),
-                       Localizations.localeOf(context).languageCode == 'ar'? 
-                       Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Directionality(
-                                textDirection:
-                                    Localizations.localeOf(
-                                          context,
-                                        ).languageCode ==
-                                        'ar'
-                                    ? TextDirection.rtl
-                                    : TextDirection.ltr,
-                                child: _buildTextField(
-                                  phoneNumberController,
-                                  '',
-                                  isNumeric: true,
-                                  readOnly: !isEditable,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 10),
+                        // Localizations.localeOf(context).languageCode == 'ar'
+                        //     ? Row(
+                        //         crossAxisAlignment: CrossAxisAlignment.start,
+                        //         children: [
+                        //           Expanded(
+                        //             child: Directionality(
+                        //               textDirection:
+                        //                   Localizations.localeOf(
+                        //                         context,
+                        //                       ).languageCode ==
+                        //                       'ar'
+                        //                   ? TextDirection.rtl
+                        //                   : TextDirection.ltr,
+                        //               child: _buildTextField(
+                        //                 phoneNumberController,
+                        //                 '',
+                        //                 isNumeric: true,
+                        //                 readOnly: !isEditable,
+                        //               ),
+                        //             ),
+                        //           ),
+                        //           const SizedBox(width: 10),
 
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 15,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: AppColors.secondaryColor,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
+                        //           Container(
+                        //             padding: const EdgeInsets.symmetric(
+                        //               horizontal: 12,
+                        //               vertical: 15,
+                        //             ),
+                        //             decoration: BoxDecoration(
+                        //               border: Border.all(
+                        //                 color: AppColors.secondaryColor,
+                        //               ),
+                        //               borderRadius: BorderRadius.circular(12),
+                        //             ),
+                        //             child: Row(
+                        //               children: [
+                        //                 Image.asset(
+                        //                   "packages/country_code_picker/flags/${currentIsoCode.toLowerCase()}.png",
+                        //                   width: 24,
+                        //                   errorBuilder: (c, e, s) => const Icon(
+                        //                     Icons.flag,
+                        //                     color: Colors.white,
+                        //                   ),
+                        //                 ),
+                        //                 const SizedBox(width: 8),
+                        //                 Text(
+                        //                   dialCode,
+                        //                   style: const TextStyle(
+                        //                     color: AppColors.secondaryColor,
+                        //                     fontSize: 16,
+                        //                   ),
+                        //                 ),
+                        //               ],
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       )
+                        Localizations.localeOf(context).languageCode == 'ar'
+    ? Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// FLAG + CODE (ALWAYS LTR - FIXED POSITION)
+          Expanded(
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: _buildTextField(
+                phoneNumberController,
+                '',
+                isNumeric: true,
+                readOnly: !isEditable,
+              ),
+            ),
+          ),
+
+          const SizedBox(width: 10),
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 15,
+              ),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: AppColors.secondaryColor,
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    "packages/country_code_picker/flags/${currentIsoCode.toLowerCase()}.png",
+                    width: 24,
+                    errorBuilder: (c, e, s) => const Icon(
+                      Icons.flag,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    dialCode,
+                    style: const TextStyle(
+                      color: AppColors.secondaryColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+           /// PHONE FIELD (ALWAYS LTR INPUT)
+          
+
+         
+        ],
+      )  
+                            : Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.asset(
-                                    "packages/country_code_picker/flags/${currentIsoCode.toLowerCase()}.png",
-                                    width: 24,
-                                    errorBuilder: (c, e, s) => const Icon(
-                                      Icons.flag,
-                                      color: Colors.white,
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 15,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: AppColors.secondaryColor,
+                                      ),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          "packages/country_code_picker/flags/${currentIsoCode.toLowerCase()}.png",
+                                          width: 24,
+                                          errorBuilder: (c, e, s) => const Icon(
+                                            Icons.flag,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Text(
+                                          dialCode,
+                                          style: const TextStyle(
+                                            color: AppColors.secondaryColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    dialCode,
-                                    style: const TextStyle(
-                                      color: AppColors.secondaryColor,
-                                      fontSize: 16,
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Directionality(
+                                      textDirection:
+                                          Localizations.localeOf(
+                                                context,
+                                              ).languageCode ==
+                                              'ar'
+                                          ? TextDirection.rtl
+                                          : TextDirection.ltr,
+                                      child: _buildTextField(
+                                        phoneNumberController,
+                                        '',
+                                        isNumeric: true,
+                                        readOnly: !isEditable,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
-                            ),
-                            
-                          ],
-                        ):
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 15,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: AppColors.secondaryColor,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    "packages/country_code_picker/flags/${currentIsoCode.toLowerCase()}.png",
-                                    width: 24,
-                                    errorBuilder: (c, e, s) => const Icon(
-                                      Icons.flag,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    dialCode,
-                                    style: const TextStyle(
-                                      color: AppColors.secondaryColor,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Directionality(
-                                textDirection:
-                                    Localizations.localeOf(
-                                          context,
-                                        ).languageCode ==
-                                        'ar'
-                                    ? TextDirection.rtl
-                                    : TextDirection.ltr,
-                                child: _buildTextField(
-                                  phoneNumberController,
-                                  '',
-                                  isNumeric: true,
-                                  readOnly: !isEditable,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
 
                         // CommonPhoneFieldWithDropdown(
                         //   title: AppLocalizations.of(context)!.phone_number,

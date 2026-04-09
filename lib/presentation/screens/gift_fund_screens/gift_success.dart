@@ -60,8 +60,9 @@ class _GiftSuccessScreenState extends ConsumerState<GiftSuccessScreen> {
     final giftState = ref.watch(giftProvider);
     final l10n = AppLocalizations.of(context)!;
     final isMetal = widget.paymentMethod == 'Metal';
-    final localeTag =
-        Localizations.localeOf(context).languageCode == 'ar' ? 'ar' : 'en';
+    final localeTag = Localizations.localeOf(context).languageCode == 'ar'
+        ? 'ar'
+        : 'en';
 
     final String description = isMetal
         ? l10n.gift_success_sent_gram(widget.giftAmount, widget.receiverName)

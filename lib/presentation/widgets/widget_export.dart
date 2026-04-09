@@ -8,6 +8,8 @@ export 'button_widget.dart';
 export 'checkbox_item.dart';
 export 'collection_branch_card.dart';
 export 'dot_bullet.dart';
+export 'auto_scale_text.dart';
+export 'fitted_get_generic_text.dart';
 export 'esouq_item_card.dart';
 export 'get_drawer_bar.dart';
 export 'get_filter_drawer_bar.dart';

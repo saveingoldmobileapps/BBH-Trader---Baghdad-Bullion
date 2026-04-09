@@ -1510,6 +1510,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get money_st => 'Money Statement';
 
   @override
+  String money_history_gram_purchase_line(String iqd, String grams) {
+    return 'IQD $iqd, covering the purchase of $grams gold';
+  }
+
+  @override
+  String money_history_gram_sale_line(String iqd, String grams) {
+    return 'IQD $iqd, being proceeds from the sale of $grams gold';
+  }
+
+  @override
   String get metal_rate_IQD => 'Rate: IQD';
 
   @override
@@ -1723,6 +1733,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get metal_profit => 'Profit';
+
+  @override
+  String get metal_loss => 'Loss';
 
   @override
   String get metal_plus_na => '+ IQD N/A';

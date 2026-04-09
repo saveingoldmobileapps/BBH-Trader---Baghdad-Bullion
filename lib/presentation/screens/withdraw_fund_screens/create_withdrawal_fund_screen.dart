@@ -412,13 +412,13 @@ class _WithdrawFundScreenState
                         ),
                       ),
 
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.bank_fee_notice,
-                      //"Minimum deposit amount is IQD 100, charges may apply",
-                      fontSize: sizes!.isPhone ? 11 : 14,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey3Color,
-                    ).getAlign(),
+                    // GetGenericText(
+                    //   text: AppLocalizations.of(context)!.bank_fee_notice,
+                    //   //"Minimum deposit amount is IQD 100, charges may apply",
+                    //   fontSize: sizes!.isPhone ? 11 : 14,
+                    //   fontWeight: FontWeight.w400,
+                    //   color: AppColors.grey3Color,
+                    // ).getAlign(),
                     ConstPadding.sizeBoxWithHeight(height: 24),
                     LoaderButton(
                       title: AppLocalizations.of(
@@ -529,6 +529,15 @@ class _WithdrawFundScreenState
                             ?.cardsList!
                             .isEmpty ??
                         true)
+                        Directionality.of(context) == TextDirection.rtl?
+                        GetGenericText(
+                        text: AppLocalizations.of(
+                          context,
+                        )!.no_save_card_found, //"No Saved Card Found",
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.grey4Color,
+                      ).getAlignRight():
                       GetGenericText(
                         text: AppLocalizations.of(
                           context,

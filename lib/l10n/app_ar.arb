@@ -575,6 +575,23 @@
   "metal_st" : "كشف المعادن",
   "money_st" : "كشف الحساب المالي",
 
+  "@money_history_gram_purchase_line": {
+    "description": "Money tab — gram buy (credit / money in); grams placeholder until API provides value",
+    "placeholders": {
+      "iqd": { "type": "String", "example": "3,750,000" },
+      "grams": { "type": "String", "example": "50" }
+    }
+  },
+  "money_history_gram_purchase_line": "دينار عراقي {iqd}، تغطية شراء {grams} من ذهب",
+  "@money_history_gram_sale_line": {
+    "description": "Money tab — gram sell (debit / money out); grams placeholder until API provides value",
+    "placeholders": {
+      "iqd": { "type": "String", "example": "3,750,000" },
+      "grams": { "type": "String", "example": "50" }
+    }
+  },
+  "money_history_gram_sale_line": "دينار عراقي {iqd}، متحصلات من بيع {grams} من الذهب",
+
   "metal_rate_IQD": "السعر: الدينار العراقي إماراتي",
   "metal_g": "غرام",
 
@@ -678,6 +695,7 @@
   "deal_val_enter_amount": "يرجى إدخال كمية",
   "metal_after_trade": "المعدن بعد التداول",
   "metal_profit": "الربح",
+  "metal_loss": "خسارة",
   "metal_plus_na": "+ الدينار العراقي غير متاح",
 
   "deal_cant_close": "لا يمكنك إغلاق هذه الصفقة بخسارة",

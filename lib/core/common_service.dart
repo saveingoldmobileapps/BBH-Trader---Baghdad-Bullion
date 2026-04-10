@@ -99,10 +99,14 @@ class CommonService {
 
   /// **App-wide IQD amount formatting** — thousand separators, up to 3 fractional digits.
   /// Use this (or [formatIQDForDisplay]) for every IQD number shown in the UI.
+  // static String formatIqdCurrency(num? value) {
+  //   final amount = (value ?? 0).toDouble();
+  //   return NumberFormat("#,##0.###", "en_US").format(amount);
+  // }
   static String formatIqdCurrency(num? value) {
-    final amount = (value ?? 0).toDouble();
-    return NumberFormat("#,##0.###", "en_US").format(amount);
-  }
+  final amount = (value ?? 0).toDouble();
+  return NumberFormat("#,##0.000", "en_US").format(amount);
+}
 
   /// Same as [formatIqdCurrency]; kept for existing call sites.
   static String formatIQDForDisplay(num? value) => formatIqdCurrency(value);

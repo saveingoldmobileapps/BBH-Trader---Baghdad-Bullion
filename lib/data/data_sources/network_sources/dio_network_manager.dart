@@ -388,6 +388,26 @@ to enhance security, stability, and real-time gold trading performance.
             );
         }
       } else {
+        // Mutating calls often return 204 / empty body (Dio gives data == null).
+        // Never treat GET that way — a GET with no body would look "successful" but
+        // would break list endpoints that expect JSON in resultData.
+        final allowEmptySuccessBody = httpMethod != HttpMethod.get;
+        switch (response.statusCode) {
+          case 200:
+          case 201:
+          case 202:
+          case 204:
+            if (allowEmptySuccessBody) {
+              return ServerResponse(
+                responseType: ServerResponseType.success,
+                message: 'Success',
+                resultData: <String, dynamic>{},
+              );
+            }
+            break;
+          default:
+            break;
+        }
         return ServerResponse(
           responseType: ServerResponseType.exception,
           resultData: null,

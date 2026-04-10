@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:saveingold_fzco/core/sound_services.dart';
@@ -15,6 +17,27 @@ import '../../../feature_injection.dart';
 import '../states/alert_states/alert_state.dart';
 
 part 'alert_provider.g.dart';
+
+List<AlertListData> _parseAlertListFromResponse(dynamic raw) {
+  if (raw == null) return [];
+  var data = raw;
+  if (data is String) {
+    final s = data.trim();
+    if (s.isEmpty) return [];
+    try {
+      data = jsonDecode(s);
+    } catch (_) {
+      return [];
+    }
+  }
+  if (data is List) {
+    return data.map((e) => AlertListData.fromJson(e)).toList();
+  }
+  if (data is Map) {
+    return AlertModelResponse.fromJson(data).payload ?? [];
+  }
+  return [];
+}
 
 @riverpod
 class AlertAll extends _$AlertAll {
@@ -34,8 +57,8 @@ class AlertAll extends _$AlertAll {
     try {
       state = state.copyWith(loadingState: LoadingState.loading);
 
-      String? refreshToken =
-          await SecureStorageService.instance.getRefreshToken();
+      String? refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
       final headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $refreshToken",
@@ -49,26 +72,32 @@ class AlertAll extends _$AlertAll {
 
       switch (serverResponse.responseType) {
         case ServerResponseType.success:
-          AlertModelResponse alertData = AlertModelResponse.fromJson(
+          final List<AlertListData> nextAlerts = _parseAlertListFromResponse(
             serverResponse.resultData,
           );
 
           state = state.copyWith(
-            alerts: alertData.payload,
+            alerts: nextAlerts,
             loadingState: LoadingState.data,
           );
 
-          getLocator<Logger>()
-              .i("Fetched ${alertData.payload!.length} alerts successfully.");
+          getLocator<Logger>().i(
+            "Fetched ${nextAlerts.length} alerts successfully.",
+          );
           break;
 
         case ServerResponseType.error:
-          ErrorResponse errorResponse =
-              ErrorResponse.fromJson(serverResponse.resultData);
-          state = state.copyWith(
-            errorResponse: errorResponse,
-            loadingState: LoadingState.error,
-          );
+          if (serverResponse.resultData is Map) {
+            final ErrorResponse errorResponse = ErrorResponse.fromJson(
+              serverResponse.resultData,
+            );
+            state = state.copyWith(
+              errorResponse: errorResponse,
+              loadingState: LoadingState.error,
+            );
+          } else {
+            state = state.copyWith(loadingState: LoadingState.error);
+          }
           break;
 
         case ServerResponseType.exception:
@@ -94,8 +123,8 @@ class AlertAll extends _$AlertAll {
     try {
       state = state.copyWith(isCreatingAlert: true);
 
-      String? refreshToken =
-          await SecureStorageService.instance.getRefreshToken();
+      String? refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
       final headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $refreshToken",
@@ -117,17 +146,20 @@ class AlertAll extends _$AlertAll {
 
       switch (serverResponse.responseType) {
         case ServerResponseType.success:
-          SuccessResponse success =
-              SuccessResponse.fromJson(serverResponse.resultData);
-              SoundPlayer().playSound(AppSounds.buySellSound);
+          final SuccessResponse success = serverResponse.resultData != null
+              ? SuccessResponse.fromJson(serverResponse.resultData)
+              : SuccessResponse();
+          SoundPlayer().playSound(AppSounds.buySellSound);
           state = state.copyWith(successResponse: success);
           await fetchAlerts(); // refresh list
           break;
 
         case ServerResponseType.error:
-          ErrorResponse errorResponse =
-              ErrorResponse.fromJson(serverResponse.resultData);
-          state = state.copyWith(errorResponse: errorResponse);
+          if (serverResponse.resultData is Map) {
+            state = state.copyWith(
+              errorResponse: ErrorResponse.fromJson(serverResponse.resultData),
+            );
+          }
           break;
 
         case ServerResponseType.exception:
@@ -152,8 +184,8 @@ class AlertAll extends _$AlertAll {
     try {
       state = state.copyWith(isCreatingAlert: true);
 
-      String? refreshToken =
-          await SecureStorageService.instance.getRefreshToken();
+      String? refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
       final headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $refreshToken",
@@ -176,16 +208,19 @@ class AlertAll extends _$AlertAll {
 
       switch (serverResponse.responseType) {
         case ServerResponseType.success:
-          SuccessResponse success =
-              SuccessResponse.fromJson(serverResponse.resultData);
+          final SuccessResponse success = serverResponse.resultData != null
+              ? SuccessResponse.fromJson(serverResponse.resultData)
+              : SuccessResponse();
           state = state.copyWith(successResponse: success);
           await fetchAlerts(); // refresh list
           break;
 
         case ServerResponseType.error:
-          ErrorResponse errorResponse =
-              ErrorResponse.fromJson(serverResponse.resultData);
-          state = state.copyWith(errorResponse: errorResponse);
+          if (serverResponse.resultData is Map) {
+            state = state.copyWith(
+              errorResponse: ErrorResponse.fromJson(serverResponse.resultData),
+            );
+          }
           break;
 
         case ServerResponseType.exception:
@@ -204,8 +239,8 @@ class AlertAll extends _$AlertAll {
     try {
       state = state.copyWith(isDeletingAlert: true);
 
-      String? refreshToken =
-          await SecureStorageService.instance.getRefreshToken();
+      String? refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
       final headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer $refreshToken",
@@ -224,16 +259,25 @@ class AlertAll extends _$AlertAll {
 
       switch (serverResponse.responseType) {
         case ServerResponseType.success:
-          SuccessResponse success =
-              SuccessResponse.fromJson(serverResponse.resultData);
-          state = state.copyWith(successResponse: success);
-          await fetchAlerts(); // refresh list
+          final SuccessResponse success = serverResponse.resultData != null
+              ? SuccessResponse.fromJson(serverResponse.resultData)
+              : SuccessResponse();
+          final withoutDeleted = state.alerts
+              .where((a) => a.id?.toString() != alertId)
+              .toList();
+          state = state.copyWith(
+            successResponse: success,
+            alerts: withoutDeleted,
+          );
+          await fetchAlerts(); // sync with server
           break;
 
         case ServerResponseType.error:
-          ErrorResponse errorResponse =
-              ErrorResponse.fromJson(serverResponse.resultData);
-          state = state.copyWith(errorResponse: errorResponse);
+          if (serverResponse.resultData is Map) {
+            state = state.copyWith(
+              errorResponse: ErrorResponse.fromJson(serverResponse.resultData),
+            );
+          }
           break;
 
         case ServerResponseType.exception:

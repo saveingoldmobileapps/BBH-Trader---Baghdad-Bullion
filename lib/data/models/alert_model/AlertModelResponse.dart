@@ -32,6 +32,8 @@ class AlertModelResponse {
       json['payload'].forEach((v) {
         _payload?.add(AlertListData.fromJson(v));
       });
+    } else {
+      _payload = [];
     }
   }
   String? _status;

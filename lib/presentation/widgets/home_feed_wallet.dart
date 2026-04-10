@@ -97,7 +97,7 @@ class HomeFeedWallet extends StatelessWidget {
                               ),
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: isMillion ? 22 : 42,
+                          fontSize: isMillion ||  Directionality.of(context) == TextDirection.rtl? 22 : 42,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -137,7 +137,7 @@ class HomeFeedWallet extends StatelessWidget {
                             : CommonService.formatIQDForDisplay(amount),
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: isMillion
+                          fontSize: isMillion || Directionality.of(context) == TextDirection.rtl
                               ? 22
                               : 42, // 👈 reduce size for millions
                           fontWeight: FontWeight.w600,

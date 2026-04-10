@@ -609,14 +609,29 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
     try {
       /// Load keys from .env
       final shuftiProBaseUrl = dotenv.env['SHUFTIPRO_BASE_URL'];
-      final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
-      final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
+      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
+      // final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
 
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
+      final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
+      final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
       final shuftiProUUIDId = Directionality.of(context) == TextDirection.rtl
           ? dotenv.env['SHUFTIPRO_UUID_Ar']
           : dotenv.env['SHUFTIPRO_UUID_ID'];
+
+      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
+      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
+      // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
+
+      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
+      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
+      // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
+
+      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
+      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
+      // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
+
+      //  final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
+      // final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
 
       // Validate environment variables
       if (shuftiProBaseUrl == null ||
@@ -672,7 +687,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
         "language": locale?.languageCode ?? "EN",
         "verification_mode": "image_only",
         "show_results": 1,
-        // "fetch_enhanced_data": "1",
+        "fetch_enhanced_data": "1",
         "face": {
           "allow_online": "1",
           "allow_offline": "0",
@@ -685,7 +700,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
             "credit_or_debit_card",
           ],
           "allow_multi_language": "1",
-          //"fetch_enhanced_data": "1",
+          "fetch_enhanced_data": "1",
           "name": {
             "first_name": "",
             "last_name": "",

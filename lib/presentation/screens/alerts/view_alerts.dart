@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart'; // For the iOS style switch
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -288,7 +287,6 @@ class _AlertItemCard extends ConsumerWidget {
                         await ref
                             .read(alertAllProvider.notifier)
                             .deleteAlert(alertId: alert.id.toString());
-                           ref.read(alertAllProvider.notifier).fetchAlerts();
                       }
                     },
                     child: const Icon(
@@ -320,17 +318,20 @@ class _AlertItemCard extends ConsumerWidget {
               ),
               const Divider(color: Colors.white10, height: 24),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                   Text(AppLocalizations.of(context)!.active_title, style: TextStyle(color: Colors.grey)),
-                  Transform.scale(
-                    scale: 0.8,
-                    child: CupertinoSwitch(
-                      value: true,
-                      activeTrackColor: const Color(0xFF91712F),
-                      onChanged: (v) {},
-                    ),
+                  Text(
+                    AppLocalizations.of(context)!.active_title,
+                    style: const TextStyle(color: Colors.grey),
                   ),
+                  // Transform.scale(
+                  //   scale: 0.8,
+                  //   child: CupertinoSwitch(
+                  //     value: true,
+                  //     activeTrackColor: const Color(0xFF91712F),
+                  //     onChanged: (v) {},
+                  //   ),
+                  // ),
                 ],
               ),
             ],

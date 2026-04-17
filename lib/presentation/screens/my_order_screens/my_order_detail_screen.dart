@@ -107,26 +107,25 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
   //   );
   // }
   Widget _buildStatusHeader(BuildContext context, String status) {
-  // Localized status
-  final l10n = AppLocalizations.of(context)!;
-  String localizedStatus;
-  switch (status.toLowerCase()) {
-    case "completed":
-    case "delivered":
-      localizedStatus = l10n.approved;   // Arabic: "مكتمل"
-      break;
-    case "cancelled":
-    case "canceled":
-      localizedStatus = l10n.canceled;   // Arabic: "ملغاة"
-      break;
-    case "pending":
-    case "confirmed":
-    case "preparing":
-      localizedStatus = l10n.pending;    // Arabic: "قيد الانتظار"
-      break;
-    default:
-      localizedStatus = status;          // fallback
-  }
+    final l10n = AppLocalizations.of(context)!;
+    String localizedStatus;
+    switch (status.toLowerCase()) {
+      case "completed":
+      case "delivered":
+        localizedStatus = l10n.approved;
+        break;
+      case "cancelled":
+      case "canceled":
+        localizedStatus = l10n.canceled;
+        break;
+      case "pending":
+      case "confirmed":
+      case "preparing":
+        localizedStatus = l10n.pending;
+        break;
+      default:
+        localizedStatus = status;
+    }
 
   IconData iconData;
   Color primaryColor;
@@ -136,21 +135,21 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
     case "delivered":
     case "picked up":
       iconData = Icons.check_circle_outline;
-      primaryColor = const Color(0xFF34C759); // Green
+      primaryColor = const Color(0xFF34C759);
       break;
     case "cancelled":
-    case "canceled":
-      iconData = Icons.cancel_outlined;
-      primaryColor = const Color(0xFFFF3B30); // Red
-      break;
-    case "pending":
-    case "confirmed":
-    case "preparing":
-    default:
-      iconData = Icons.access_time_rounded;
-      primaryColor = const Color(0xFFE8B931); // Yellow/Gold
-      break;
-  }
+      case "canceled":
+        iconData = Icons.cancel_outlined;
+        primaryColor = const Color(0xFFFF3B30);
+        break;
+      case "pending":
+      case "confirmed":
+      case "preparing":
+      default:
+        iconData = Icons.access_time_rounded;
+        primaryColor = const Color(0xFFE8B931);
+        break;
+    }
 
   return Column(
     children: [
@@ -195,7 +194,30 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
       ),
     ],
   );
-}
+ }
+
+  /// ✅ Get localized product name
+  String getLocalizedProductName() {
+    try {
+      final product = widget.kAllOrders.productId;
+      if (product == null) return "Gold Product";
+      
+      final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+      final rawName = product.rawProductName;
+      
+      if (rawName != null && rawName is Map) {
+        if (isArabic) {
+          return rawName['ar']?.toString() ?? rawName['en']?.toString() ?? "منتج ذهب";
+        } else {
+          return rawName['en']?.toString() ?? rawName['ar']?.toString() ?? "Gold Product";
+        }
+      }
+      
+      return product.productName ?? product.productCode ?? "${product.weight ?? "0"}g";
+    } catch (e) {
+      return "Gold Product";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -205,12 +227,11 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
     sizes!.refreshSize(context);
 
     final statusText = widget.kAllOrders.status ?? "Pending";
+    final productName = getLocalizedProductName();
+    final weightPerUnit = widget.kAllOrders.productId?.weight ?? "0";
+    final weightUnit = widget.kAllOrders.productId?.weightCategory ?? "Gram";
+    final totalWeight = (widget.kAllOrders.quantity ?? 0) * (double.tryParse(weightPerUnit) ?? 0);
 
-    // String formattedDate = widget.kAllOrders.createdAt != null
-    //     ? DateFormat(
-    //         'MMM dd, yyyy  •  h:mm a',
-    //       ).format(DateTime.parse(widget.kAllOrders.createdAt!))
-    //     : "Dec 18, 2024  •  2:45 PM";
     String formattedDate = widget.kAllOrders.createdAt != null
         ? DateFormat(
             'dd/MM/yyyy, HH:mm',
@@ -274,18 +295,81 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
                             AppLocalizations.of(context)!.esouq_order_id,//"Order ID",
                             "#${widget.kAllOrders.orderId}",
                           ),
-                          _buildSummaryRow("${AppLocalizations.of(context)!.dateTime}", formattedDate),
+                          
+                          _buildSummaryRow(
+                            AppLocalizations.of(context)!.dateTime,
+                            formattedDate,
+                          ),
+                          
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 12),
                             child: Divider(color: Color(0xFF2C2C2E)),
                           ),
+                          
+                          /// ✅ Product Name Row
                           _buildSummaryRow(
-                            "${widget.kAllOrders.quantity ?? 1} ${l10n.gram_unit_plural}",
-                            widget.kAllOrders.productId?.productName ??
-                                "Gold bar",
+                            isArabic ? "المنتج" : "Product",
+                            productName,
                             isItem: true,
                           ),
+                          
+                          const SizedBox(height: 8),
+                          
+                          /// ✅ Quantity Row
+                          _buildSummaryRow(
+                            isArabic ? "الكمية" : "Quantity",
+                            "${widget.kAllOrders.quantity ?? 0}",
+                            isItem: true,
+                          ),
+                          
+                          const SizedBox(height: 8),
+                          
+                          /// ✅ Weight per Unit Row
+                          _buildSummaryRow(
+                            isArabic ? "الوزن/الوحدة" : "Weight/Unit",
+                            "$weightPerUnit ${weightUnit == "Gram" ? (isArabic ? "جرام" : "g") : weightUnit}",
+                            isItem: true,
+                          ),
+                          
+                          const SizedBox(height: 8),
+                          
+                          /// ✅ Total Weight Row
+                          _buildSummaryRow(
+                            isArabic ? "الوزن الإجمالي" : "Total Weight",
+                            "${totalWeight.toStringAsFixed(2)} ${weightUnit == "Gram" ? (isArabic ? "جرام" : "g") : weightUnit}",
+                            isItem: true,
+                          ),
+                          
                           const SizedBox(height: 20),
+                          
+                          /// Payment Method Row
+                          _buildSummaryRow(
+                            isArabic ? "طريقة الدفع" : "Payment Method",
+                            widget.kAllOrders.paymentMethod == "Money"
+                                ? (isArabic ? "نقدي" : "Cash")
+                                : (isArabic ? "محفظة" : "Wallet"),
+                            isItem: true,
+                          ),
+                          
+                          const SizedBox(height: 8),
+                          
+                          /// Delivery Method Row
+                          if (widget.kAllOrders.deliveryMethod != null && widget.kAllOrders.deliveryMethod!.isNotEmpty)
+                            _buildSummaryRow(
+                              isArabic ? "طريقة التوصيل" : "Delivery Method",
+                              widget.kAllOrders.deliveryMethod == "Pickup"
+                                  ? (isArabic ? "استلام شخصي" : "Pickup")
+                                  : (isArabic ? "توصيل" : "Delivery"),
+                              isItem: true,
+                            ),
+                          
+                          const SizedBox(height: 20),
+                          
+                          const Divider(color: Color(0xFF2C2C2E)),
+                          
+                          const SizedBox(height: 12),
+                          
+                          /// TOTAL PAID
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -331,8 +415,6 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
                         child: Center(
                           child: GetGenericText(
                             text: AppLocalizations.of(context)!.will_notify_you,
-                                //"We'll notify you when your order is executed",
-
                             fontWeight: FontWeight.normal,
                             fontSize: 13,
                             color: AppColors.grey5Color,
@@ -342,7 +424,7 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
 
                     const SizedBox(height: 24),
 
-                    /// --- Go Back Button ---
+                    /// Go Back Button
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
                       child: Container(
@@ -356,10 +438,10 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
                             end: Alignment.bottomCenter,
                           ),
                         ),
-                        child:  Center(
+                        child: Center(
                           child: Text(
-                            AppLocalizations.of(context)!.gift_go_back,//"Go back",
-                            style: TextStyle(
+                            AppLocalizations.of(context)!.gift_go_back,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -393,6 +475,7 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
             fontSize: 14,
             fontWeight: isItem ? FontWeight.w400 : FontWeight.w500,
             color: Colors.white,
+            textAlign: TextAlign.end,
           ),
         ],
       ),

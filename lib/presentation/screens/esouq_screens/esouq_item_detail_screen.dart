@@ -137,6 +137,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final lang = Localizations.localeOf(context).languageCode;
     final mainStateWatchProvider = ref.watch(homeProvider);
     sizes!.refreshSize(context);
 
@@ -288,7 +289,8 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GetGenericText(
-                    text: widget.product.productName?.toUpperCase() ?? "",
+                    text: widget.product.localizedProductName(lang)
+                        .toUpperCase(),
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -344,7 +346,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                         ),
                         _buildFeatureRow(
                           AppLocalizations.of(context)!.brand,
-                          widget.product.brand,
+                          widget.product.localizedBrand(lang),
                         ),
                         _buildFeatureRow(
                           AppLocalizations.of(context)!.weight,
@@ -352,11 +354,11 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                         ),
                         _buildFeatureRow(
                           AppLocalizations.of(context)!.condition,
-                          widget.product.condition,
+                          widget.product.localizedCondition(lang),
                         ),
                         _buildFeatureRow(
                           AppLocalizations.of(context)!.origin,
-                          widget.product.origin,
+                          widget.product.localizedOrigin(lang),
                         ),
                         _buildFeatureRow(
                           AppLocalizations.of(context)!.dimensions,
@@ -384,7 +386,7 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                   ),
                   const SizedBox(height: 10),
                   GetGenericText(
-                    text: widget.product.description ?? "",
+                    text: widget.product.localizedDescription(lang),
                     fontSize: 14,
                     color: AppColors.grey4Color,
                     lines: 50,

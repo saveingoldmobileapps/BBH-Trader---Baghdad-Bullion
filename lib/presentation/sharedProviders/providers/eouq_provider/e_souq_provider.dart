@@ -211,7 +211,7 @@ class Esouq extends _$Esouq {
           /// Update state with new products and pagination details
           state = state.copyWith(
             products: updatedProducts,
-            page: response.payload!.page!,
+            page: response.payload?.page ?? 1,
             totalPages: response.payload?.totalPages ?? 1,
             hasNextPage: response.payload?.hasNextPage ?? false,
             hasPreviousPage: response.payload?.hasPreviousPage ?? false,
@@ -743,10 +743,10 @@ class Esouq extends _$Esouq {
             localeName,
           ).format(DateTime.now());
 
+          final String localizedName =
+              product.localizedProductName(CommonService.lang).trim();
           final String productName =
-              product.productName?.trim().isNotEmpty == true
-              ? product.productName!.trim()
-              : l10n.gold;
+              localizedName.isNotEmpty ? localizedName : l10n.gold;
 
           final String productInfo = "$goldQuantity × $productName";
 

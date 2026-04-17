@@ -196,17 +196,20 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                             }
                             
                             final product = esouqState.products[index];
+                            final lang =
+                                Localizations.localeOf(context).languageCode;
                             final eSouqProductPrice = CommonService.calculateWeightPrice(
-    weightFactor: product.weightFactor,
-    oneGramSellingPrice: oneGramBuyingPriceInIQD,
-  );
+                              weightFactor: product.weightFactor,
+                              oneGramSellingPrice: oneGramBuyingPriceInIQD,
+                         );
                             final itemPrice =
                              CommonService.formatCurrency(amount: eSouqProductPrice.toString(),
   );
+                            final title = product.localizedProductName(lang);
                             
 
                             return EsouqItemCard(
-                              title: product.productName ?? l10n.na,
+                              title: title.isNotEmpty ? title : l10n.na,
                               imageUrl: product.imageUrl?.isNotEmpty == true
                                   ? product.imageUrl!.first
                                   : "",

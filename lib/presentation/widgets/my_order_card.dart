@@ -8,7 +8,6 @@ import 'package:saveingold_fzco/core/theme/const_colors.dart';
 import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 
 class MyOrderCard extends ConsumerWidget {
@@ -23,7 +22,6 @@ class MyOrderCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final esouqStateWatchProvider = ref.watch(esouqProvider);
     final l10n = AppLocalizations.of(context)!;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
@@ -32,11 +30,59 @@ class MyOrderCard extends ConsumerWidget {
             'dd/MM/yyyy, HH:mm',
             isArabic ? 'ar_IQ' : 'en_IQ',
           ).format(
-            DateTime.parse(kAllOrders.createdAt!)
-                .toUtc()
-                .add(const Duration(hours: 3)),
+            DateTime.parse(
+              kAllOrders.createdAt!,
+            ).toUtc().add(const Duration(hours: 3)),
           )
         : "Dec 18, 2024  •  2:45 PM";
+
+    // ✅ Get product name directly from the rawProductName map
+    String getProductName() {
+      try {
+        final product = kAllOrders.productId;
+        if (product == null) return "Gold Product";
+
+        // Try to get rawProductName (which should be the Map)
+        final rawName = product.rawProductName;
+
+        if (rawName != null && rawName is Map) {
+          if (isArabic) {
+            return rawName['ar']?.toString() ??
+                rawName['en']?.toString() ??
+                "منتج ذهب";
+          } else {
+            return rawName['en']?.toString() ??
+                rawName['ar']?.toString() ??
+                "Gold Product";
+          }
+        }
+
+        // Fallback to productCode or weight
+        return product.productCode ?? "${product.weight ?? "0"}g";
+      } catch (e) {
+        return "Gold Product";
+      }
+    }
+
+    String getProductWeight() {
+      final product = kAllOrders.productId;
+      if (product == null) return "0";
+      return product.weight ?? "0";
+    }
+
+    String getWeightUnit() {
+      final product = kAllOrders.productId;
+      if (product == null) return "g";
+      final category = product.weightCategory ?? "";
+      if (category.toLowerCase() == "gram") return isArabic ? "جرام" : "g";
+      return category;
+    }
+
+    final productName = getProductName();
+    final weightPerUnit = getProductWeight();
+    final weightUnit = getWeightUnit();
+    final totalWeight =
+        (kAllOrders.quantity ?? 0) * (double.tryParse(weightPerUnit) ?? 0);
 
     return GestureDetector(
       onTap: onTap,
@@ -44,17 +90,16 @@ class MyOrderCard extends ConsumerWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFF262929), // Darker card background per image
-          borderRadius: BorderRadius.circular(16), // Softer rounding
+          color: const Color(0xFF262929),
+          borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// --- Header: Icon, ID, and Status ---
+            /// Header: Icon, ID, and Status
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Gold Bar Icon Container
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
@@ -63,6 +108,8 @@ class MyOrderCard extends ConsumerWidget {
                   ),
                   child: SvgPicture.asset(
                     "assets/svg/metal_active_icon.svg",
+                    height: 24,
+                    width: 24,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -72,7 +119,7 @@ class MyOrderCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GetGenericText(
-                        text: "#${kAllOrders.orderId ?? 'GLD5QUF3K'}",
+                        text: "#${kAllOrders.orderId ?? 'N/A'}",
                         fontSize: sizes!.responsiveFont(
                           phoneVal: 18,
                           tabletVal: 20,
@@ -94,7 +141,7 @@ class MyOrderCard extends ConsumerWidget {
                 ),
 
                 statusCard(
-                  status: kAllOrders.status ?? "Completed",
+                  status: kAllOrders.status ?? "Pending",
                   context: context,
                 ),
               ],
@@ -105,22 +152,97 @@ class MyOrderCard extends ConsumerWidget {
               child: Divider(color: Color(0xFF2C2C2E), thickness: 1),
             ),
 
-            /// --- Items List ---
-            // Assuming your model has a way to list items, if not, we use the product info
+            /// Product Info Row
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// Quantity Column
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GetGenericText(
+                      text: isArabic ? "الكمية" : "Quantity",
+                      fontSize: 12,
+                      color: AppColors.grey4Color,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    const SizedBox(height: 4),
+                    GetGenericText(
+                      text: "${kAllOrders.quantity ?? 0}",
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ],
+                ),
+
+                /// Product Name Column
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      GetGenericText(
+                        text: isArabic ? "المنتج" : "Product",
+                        fontSize: 12,
+                        color: AppColors.grey4Color,
+                        fontWeight: FontWeight.normal,
+                      ),
+                      const SizedBox(height: 4),
+                      GetGenericText(
+                        text: productName,
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                        textAlign: TextAlign.end,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            /// Weight Info Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GetGenericText(
-                  text: "${kAllOrders.quantity ?? 0} ${l10n.gram_unit_plural}",
-                  fontSize: 14,
-                  color: AppColors.grey6Color,
-                  fontWeight: FontWeight.normal,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GetGenericText(
+                      text: isArabic ? "الوزن/الوحدة" : "Weight/Unit",
+                      fontSize: 12,
+                      color: AppColors.grey4Color,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    const SizedBox(height: 4),
+                    GetGenericText(
+                      text: "$weightPerUnit $weightUnit",
+                      fontSize: 14,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ],
                 ),
-                GetGenericText(
-                  text: kAllOrders.productId?.productName ?? "10g Gold bar",
-                  fontSize: 14,
-                  color: Colors.white,
-                  fontWeight: FontWeight.normal,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    GetGenericText(
+                      text: isArabic ? "الوزن الإجمالي" : "Total Weight",
+                      fontSize: 12,
+                      color: AppColors.grey4Color,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    const SizedBox(height: 4),
+                    GetGenericText(
+                      text: "${totalWeight.toStringAsFixed(2)} $weightUnit",
+                      fontSize: 14,
+                      color: AppColors.goldColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -134,23 +256,15 @@ class MyOrderCard extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                 GetGenericText(
-                  text: AppLocalizations.of(context)!.esouq_total_paid,//"Total paid",
+                GetGenericText(
+                  text: AppLocalizations.of(context)!.esouq_total_paid,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),
-
                 GetGenericText(
                   text:
-                      esouqStateWatchProvider
-                              .selectedOrder
-                              .payload
-                              ?.paymentMethod ==
-                          'Money'
-                      ? "${l10n.iqd_currency} ${CommonService.formatIQDForDisplay(kAllOrders.grandTotal ?? 0)}"
-                      // "IQD ${widget.kAllOrders.grandTotal ?? '0.00'}":"",
-                      : "${l10n.iqd_gram} ${CommonService.formatIQDForDisplay(kAllOrders.grandTotal ?? 0)}",
+                      "${l10n.iqd_currency} ${CommonService.formatIQDForDisplay(kAllOrders.grandTotal ?? 0)}",
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: AppColors.goldColor,
@@ -164,12 +278,11 @@ class MyOrderCard extends ConsumerWidget {
   }
 
   Widget statusCard({required String status, required BuildContext context}) {
-    // Colors updated to match the pill style in the image
     final statusColors = {
-      "Completed": const Color(0xFF1E3A1E), // Dark green background
+      "Completed": const Color(0xFF1E3A1E),
       "Delivered": const Color(0xFF1E3A1E),
-      "Pending": const Color(0xFF3A2E1E), // Dark orange/gold background
-      "Cancelled": const Color(0xFF3A1E1E), // Dark red background
+      "Pending": const Color(0xFF3A2E1E),
+      "Cancelled": const Color(0xFF3A1E1E),
     };
 
     final textColors = {

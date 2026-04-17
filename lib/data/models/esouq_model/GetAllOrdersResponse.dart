@@ -1,3 +1,5 @@
+import 'package:saveingold_fzco/core/common_service.dart';
+
 class GetAllOrdersResponse {
   String? _status;
   num? _code;
@@ -10,43 +12,29 @@ class GetAllOrdersResponse {
     String? message,
     Payload? payload,
   }) {
-    if (status != null) {
-      _status = status;
-    }
-    if (code != null) {
-      _code = code;
-    }
-    if (message != null) {
-      _message = message;
-    }
-    if (payload != null) {
-      _payload = payload;
-    }
+    _status = status;
+    _code = code;
+    _message = message;
+    _payload = payload;
   }
 
   String? get status => _status;
-
   set status(String? status) => _status = status;
 
   num? get code => _code;
-
   set code(num? code) => _code = code;
 
   String? get message => _message;
-
   set message(String? message) => _message = message;
 
   Payload? get payload => _payload;
-
   set payload(Payload? payload) => _payload = payload;
 
   GetAllOrdersResponse.fromJson(Map<String, dynamic> json) {
     _status = json['status'];
     _code = json['code'];
     _message = json['message'];
-    _payload = json['payload'] != null
-        ? Payload.fromJson(json['payload'])
-        : null;
+    _payload = json['payload'] != null ? Payload.fromJson(json['payload']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -77,49 +65,30 @@ class Payload {
     bool? hasPreviousPage,
     List<KAllOrders>? kAllOrders,
   }) {
-    if (page != null) {
-      _page = page;
-    }
-    if (limit != null) {
-      _limit = limit;
-    }
-    if (totalPages != null) {
-      _totalPages = totalPages;
-    }
-    if (hasNextPage != null) {
-      _hasNextPage = hasNextPage;
-    }
-    if (hasPreviousPage != null) {
-      _hasPreviousPage = hasPreviousPage;
-    }
-    if (kAllOrders != null) {
-      _kAllOrders = kAllOrders;
-    }
+    _page = page;
+    _limit = limit;
+    _totalPages = totalPages;
+    _hasNextPage = hasNextPage;
+    _hasPreviousPage = hasPreviousPage;
+    _kAllOrders = kAllOrders;
   }
 
   num? get page => _page;
-
   set page(num? page) => _page = page;
 
   num? get limit => _limit;
-
   set limit(num? limit) => _limit = limit;
 
   num? get totalPages => _totalPages;
-
   set totalPages(num? totalPages) => _totalPages = totalPages;
 
   bool? get hasNextPage => _hasNextPage;
-
   set hasNextPage(bool? hasNextPage) => _hasNextPage = hasNextPage;
 
   bool? get hasPreviousPage => _hasPreviousPage;
-
-  set hasPreviousPage(bool? hasPreviousPage) =>
-      _hasPreviousPage = hasPreviousPage;
+  set hasPreviousPage(bool? hasPreviousPage) => _hasPreviousPage = hasPreviousPage;
 
   List<KAllOrders>? get kAllOrders => _kAllOrders;
-
   set kAllOrders(List<KAllOrders>? kAllOrders) => _kAllOrders = kAllOrders;
 
   Payload.fromJson(Map<String, dynamic> json) {
@@ -164,6 +133,7 @@ class KAllOrders {
   String? _address;
   bool? _isNominate;
   String? _nomineeName;
+  String? _nomineeDocument;
   BranchId? _branchId;
   String? _deliveryMethod;
   num? _totalCharges;
@@ -175,6 +145,9 @@ class KAllOrders {
   num? _orderId;
   String? _createdAt;
   String? _updatedAt;
+  num? _iV;
+  String? _goldQuantityInGrams;
+  List<DealsData>? _dealsData;
 
   KAllOrders({
     String? sId,
@@ -190,6 +163,7 @@ class KAllOrders {
     String? address,
     bool? isNominate,
     String? nomineeName,
+    String? nomineeDocument,
     BranchId? branchId,
     String? deliveryMethod,
     num? totalCharges,
@@ -201,6 +175,9 @@ class KAllOrders {
     num? orderId,
     String? createdAt,
     String? updatedAt,
+    num? iV,
+    String? goldQuantityInGrams,
+    List<DealsData>? dealsData,
   }) {
     _sId = sId;
     _userId = userId;
@@ -215,6 +192,7 @@ class KAllOrders {
     _address = address;
     _isNominate = isNominate;
     _nomineeName = nomineeName;
+    _nomineeDocument = nomineeDocument;
     _branchId = branchId;
     _deliveryMethod = deliveryMethod;
     _totalCharges = totalCharges;
@@ -226,6 +204,9 @@ class KAllOrders {
     _orderId = orderId;
     _createdAt = createdAt;
     _updatedAt = updatedAt;
+    _iV = iV;
+    _goldQuantityInGrams = goldQuantityInGrams;
+    _dealsData = dealsData;
   }
 
   // Getters
@@ -242,6 +223,7 @@ class KAllOrders {
   String? get address => _address;
   bool? get isNominate => _isNominate;
   String? get nomineeName => _nomineeName;
+  String? get nomineeDocument => _nomineeDocument;
   BranchId? get branchId => _branchId;
   String? get deliveryMethod => _deliveryMethod;
   num? get totalCharges => _totalCharges;
@@ -253,6 +235,9 @@ class KAllOrders {
   num? get orderId => _orderId;
   String? get createdAt => _createdAt;
   String? get updatedAt => _updatedAt;
+  num? get iV => _iV;
+  String? get goldQuantityInGrams => _goldQuantityInGrams;
+  List<DealsData>? get dealsData => _dealsData;
 
   // Setters
   set sId(String? sId) => _sId = sId;
@@ -262,35 +247,32 @@ class KAllOrders {
   set goldPrice(num? goldPrice) => _goldPrice = goldPrice;
   set makingCharges(num? makingCharges) => _makingCharges = makingCharges;
   set vat(num? vat) => _vat = vat;
-  set premiumDiscount(num? premiumDiscount) =>
-      _premiumDiscount = premiumDiscount;
-  set deliveryCharges(num? deliveryCharges) =>
-      _deliveryCharges = deliveryCharges;
+  set premiumDiscount(num? premiumDiscount) => _premiumDiscount = premiumDiscount;
+  set deliveryCharges(num? deliveryCharges) => _deliveryCharges = deliveryCharges;
   set paymentMethod(String? paymentMethod) => _paymentMethod = paymentMethod;
   set address(String? address) => _address = address;
   set isNominate(bool? isNominate) => _isNominate = isNominate;
   set nomineeName(String? nomineeName) => _nomineeName = nomineeName;
+  set nomineeDocument(String? nomineeDocument) => _nomineeDocument = nomineeDocument;
   set branchId(BranchId? branchId) => _branchId = branchId;
-  set deliveryMethod(String? deliveryMethod) =>
-      _deliveryMethod = deliveryMethod;
+  set deliveryMethod(String? deliveryMethod) => _deliveryMethod = deliveryMethod;
   set totalCharges(num? totalCharges) => _totalCharges = totalCharges;
   set grandTotal(num? grandTotal) => _grandTotal = grandTotal;
   set status(String? status) => _status = status;
-  set balanceInMoneyWallet(num? balanceInMoneyWallet) =>
-      _balanceInMoneyWallet = balanceInMoneyWallet;
-  set balanceInMetalWallet(num? balanceInMetalWallet) =>
-      _balanceInMetalWallet = balanceInMetalWallet;
+  set balanceInMoneyWallet(num? balanceInMoneyWallet) => _balanceInMoneyWallet = balanceInMoneyWallet;
+  set balanceInMetalWallet(num? balanceInMetalWallet) => _balanceInMetalWallet = balanceInMetalWallet;
   set transactionId(String? transactionId) => _transactionId = transactionId;
   set orderId(num? orderId) => _orderId = orderId;
   set createdAt(String? createdAt) => _createdAt = createdAt;
   set updatedAt(String? updatedAt) => _updatedAt = updatedAt;
+  set iV(num? iV) => _iV = iV;
+  set goldQuantityInGrams(String? goldQuantityInGrams) => _goldQuantityInGrams = goldQuantityInGrams;
+  set dealsData(List<DealsData>? dealsData) => _dealsData = dealsData;
 
   KAllOrders.fromJson(Map<String, dynamic> json) {
     _sId = json['_id'];
     _userId = json['userId'] != null ? UserId.fromJson(json['userId']) : null;
-    _productId = json['productId'] != null
-        ? ProductId.fromJson(json['productId'])
-        : null;
+    _productId = json['productId'] != null ? ProductId.fromJson(json['productId']) : null;
     _quantity = json['quantity'];
     _goldPrice = json['goldPrice'];
     _makingCharges = json['makingCharges'];
@@ -301,9 +283,8 @@ class KAllOrders {
     _address = json['address'];
     _isNominate = json['isNominate'];
     _nomineeName = json['nomineeName'];
-    _branchId = json['branchId'] != null
-        ? BranchId.fromJson(json['branchId'])
-        : null;
+    _nomineeDocument = json['nomineeDocument'];
+    _branchId = json['branchId'] != null ? BranchId.fromJson(json['branchId']) : null;
     _deliveryMethod = json['deliveryMethod'];
     _totalCharges = json['totalCharges'];
     _grandTotal = json['grandTotal'];
@@ -314,17 +295,21 @@ class KAllOrders {
     _orderId = json['orderId'];
     _createdAt = json['createdAt'];
     _updatedAt = json['updatedAt'];
+    _iV = json['__v'];
+    _goldQuantityInGrams = json['goldQuantityInGrams']?.toString();
+    if (json['dealsData'] != null) {
+      _dealsData = <DealsData>[];
+      json['dealsData'].forEach((v) {
+        _dealsData!.add(DealsData.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = _sId;
-    if (_userId != null) {
-      data['userId'] = _userId!.toJson();
-    }
-    if (_productId != null) {
-      data['productId'] = _productId!.toJson();
-    }
+    if (_userId != null) data['userId'] = _userId!.toJson();
+    if (_productId != null) data['productId'] = _productId!.toJson();
     data['quantity'] = _quantity;
     data['goldPrice'] = _goldPrice;
     data['makingCharges'] = _makingCharges;
@@ -335,9 +320,8 @@ class KAllOrders {
     data['address'] = _address;
     data['isNominate'] = _isNominate;
     data['nomineeName'] = _nomineeName;
-    if (_branchId != null) {
-      data['branchId'] = _branchId!.toJson();
-    }
+    data['nomineeDocument'] = _nomineeDocument;
+    if (_branchId != null) data['branchId'] = _branchId!.toJson();
     data['deliveryMethod'] = _deliveryMethod;
     data['totalCharges'] = _totalCharges;
     data['grandTotal'] = _grandTotal;
@@ -348,6 +332,51 @@ class KAllOrders {
     data['orderId'] = _orderId;
     data['createdAt'] = _createdAt;
     data['updatedAt'] = _updatedAt;
+    data['__v'] = _iV;
+    data['goldQuantityInGrams'] = _goldQuantityInGrams;
+    if (_dealsData != null) {
+      data['dealsData'] = _dealsData!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class DealsData {
+  String? _tradeId;
+  int? _dealId;
+  num? _amount;
+  String? _id;
+
+  DealsData({String? tradeId, int? dealId, num? amount, String? id}) {
+    _tradeId = tradeId;
+    _dealId = dealId;
+    _amount = amount;
+    _id = id;
+  }
+
+  String? get tradeId => _tradeId;
+  int? get dealId => _dealId;
+  num? get amount => _amount;
+  String? get id => _id;
+
+  set tradeId(String? value) => _tradeId = value;
+  set dealId(int? value) => _dealId = value;
+  set amount(num? value) => _amount = value;
+  set id(String? value) => _id = value;
+
+  DealsData.fromJson(Map<String, dynamic> json) {
+    _tradeId = json['tradeId'];
+    _dealId = json['dealId'];
+    _amount = json['amount'];
+    _id = json['_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final data = <String, dynamic>{};
+    data['tradeId'] = _tradeId;
+    data['dealId'] = _dealId;
+    data['amount'] = _amount;
+    data['_id'] = _id;
     return data;
   }
 }
@@ -376,76 +405,38 @@ class UserId {
     String? createdAt,
     String? updatedAt,
   }) {
-    if (sId != null) {
-      _sId = sId;
-    }
-    if (accountId != null) {
-      _accountId = accountId;
-    }
-    if (userType != null) {
-      _userType = userType;
-    }
-    if (firstName != null) {
-      _firstName = firstName;
-    }
-    if (surname != null) {
-      _surname = surname;
-    }
-    if (email != null) {
-      _email = email;
-    }
-    if (phoneNumber != null) {
-      _phoneNumber = phoneNumber;
-    }
-    if (imageUrl != null) {
-      _imageUrl = imageUrl;
-    }
-    if (createdAt != null) {
-      _createdAt = createdAt;
-    }
-    if (updatedAt != null) {
-      _updatedAt = updatedAt;
-    }
+    _sId = sId;
+    _accountId = accountId;
+    _userType = userType;
+    _firstName = firstName;
+    _surname = surname;
+    _email = email;
+    _phoneNumber = phoneNumber;
+    _imageUrl = imageUrl;
+    _createdAt = createdAt;
+    _updatedAt = updatedAt;
   }
 
   String? get sId => _sId;
-
-  set sId(String? sId) => _sId = sId;
-
   String? get accountId => _accountId;
-
-  set accountId(String? accountId) => _accountId = accountId;
-
   String? get userType => _userType;
-
-  set userType(String? userType) => _userType = userType;
-
   String? get firstName => _firstName;
-
-  set firstName(String? firstName) => _firstName = firstName;
-
   String? get surname => _surname;
-
-  set surname(String? surname) => _surname = surname;
-
   String? get email => _email;
-
-  set email(String? email) => _email = email;
-
   String? get phoneNumber => _phoneNumber;
-
-  set phoneNumber(String? phoneNumber) => _phoneNumber = phoneNumber;
-
   String? get imageUrl => _imageUrl;
-
-  set imageUrl(String? imageUrl) => _imageUrl = imageUrl;
-
   String? get createdAt => _createdAt;
-
-  set createdAt(String? createdAt) => _createdAt = createdAt;
-
   String? get updatedAt => _updatedAt;
 
+  set sId(String? sId) => _sId = sId;
+  set accountId(String? accountId) => _accountId = accountId;
+  set userType(String? userType) => _userType = userType;
+  set firstName(String? firstName) => _firstName = firstName;
+  set surname(String? surname) => _surname = surname;
+  set email(String? email) => _email = email;
+  set phoneNumber(String? phoneNumber) => _phoneNumber = phoneNumber;
+  set imageUrl(String? imageUrl) => _imageUrl = imageUrl;
+  set createdAt(String? createdAt) => _createdAt = createdAt;
   set updatedAt(String? updatedAt) => _updatedAt = updatedAt;
 
   UserId.fromJson(Map<String, dynamic> json) {
@@ -480,7 +471,7 @@ class UserId {
 class ProductId {
   String? _sId;
   String? _adminId;
-  String? _productName;
+  dynamic _productName;
   String? _productCode;
   String? _weightFactor;
   String? _vat;
@@ -488,12 +479,12 @@ class ProductId {
   String? _deliveryCharges;
   String? _makingCharges;
   List<String>? _availableBranches;
-  String? _description;
+  dynamic _description;
   String? _purity;
   String? _dimensions;
-  String? _origin;
-  String? _brand;
-  String? _condition;
+  dynamic _origin;
+  dynamic _brand;
+  dynamic _condition;
   List<String>? _imageUrl;
   bool? _isAvailable;
   bool? _inStoreCollection;
@@ -502,11 +493,12 @@ class ProductId {
   String? _createdAt;
   String? _updatedAt;
   num? _iV;
+  List<String>? _branchIds;
 
   ProductId({
     String? sId,
     String? adminId,
-    String? productName,
+    dynamic productName,
     String? productCode,
     String? weightFactor,
     String? vat,
@@ -514,12 +506,12 @@ class ProductId {
     String? deliveryCharges,
     String? makingCharges,
     List<String>? availableBranches,
-    String? description,
+    dynamic description,
     String? purity,
     String? dimensions,
-    String? origin,
-    String? brand,
-    String? condition,
+    dynamic origin,
+    dynamic brand,
+    dynamic condition,
     List<String>? imageUrl,
     bool? isAvailable,
     bool? inStoreCollection,
@@ -528,181 +520,112 @@ class ProductId {
     String? createdAt,
     String? updatedAt,
     num? iV,
+    List<String>? branchIds,
   }) {
-    if (sId != null) {
-      _sId = sId;
-    }
-    if (adminId != null) {
-      _adminId = adminId;
-    }
-    if (productName != null) {
-      _productName = productName;
-    }
-    if (productCode != null) {
-      _productCode = productCode;
-    }
-    if (weightFactor != null) {
-      _weightFactor = weightFactor;
-    }
-    if (vat != null) {
-      _vat = vat;
-    }
-    if (premiumDiscount != null) {
-      _premiumDiscount = premiumDiscount;
-    }
-    if (deliveryCharges != null) {
-      _deliveryCharges = deliveryCharges;
-    }
-    if (makingCharges != null) {
-      _makingCharges = makingCharges;
-    }
-    if (availableBranches != null) {
-      _availableBranches = availableBranches;
-    }
-    if (description != null) {
-      _description = description;
-    }
-    if (purity != null) {
-      _purity = purity;
-    }
-    if (dimensions != null) {
-      _dimensions = dimensions;
-    }
-    if (origin != null) {
-      _origin = origin;
-    }
-    if (brand != null) {
-      _brand = brand;
-    }
-    if (condition != null) {
-      _condition = condition;
-    }
-    if (imageUrl != null) {
-      
-      _imageUrl = imageUrl;
-    }
-    if (isAvailable != null) {
-      _isAvailable = isAvailable;
-    }
-    if (inStoreCollection != null) {
-      _inStoreCollection = inStoreCollection;
-    }
-    if (weightCategory != null) {
-      _weightCategory = weightCategory;
-    }
-    if (weight != null) {
-      _weight = weight;
-    }
-    if (createdAt != null) {
-      _createdAt = createdAt;
-    }
-    if (updatedAt != null) {
-      _updatedAt = updatedAt;
-    }
-    if (iV != null) {
-      _iV = iV;
-    }
+    _sId = sId;
+    _adminId = adminId;
+    _productName = productName;
+    _productCode = productCode;
+    _weightFactor = weightFactor;
+    _vat = vat;
+    _premiumDiscount = premiumDiscount;
+    _deliveryCharges = deliveryCharges;
+    _makingCharges = makingCharges;
+    _availableBranches = availableBranches;
+    _description = description;
+    _purity = purity;
+    _dimensions = dimensions;
+    _origin = origin;
+    _brand = brand;
+    _condition = condition;
+    _imageUrl = imageUrl;
+    _isAvailable = isAvailable;
+    _inStoreCollection = inStoreCollection;
+    _weightCategory = weightCategory;
+    _weight = weight;
+    _createdAt = createdAt;
+    _updatedAt = updatedAt;
+    _iV = iV;
+    _branchIds = branchIds;
   }
 
+  // Getters with localization support
   String? get sId => _sId;
-
-  set sId(String? sId) => _sId = sId;
-
   String? get adminId => _adminId;
-
-  set adminId(String? adminId) => _adminId = adminId;
-
-  String? get productName => _productName;
-
-  set productName(String? productName) => _productName = productName;
-
+  
+  String? get productName => _getLocalizedText(_productName);
+  dynamic get rawProductName => _productName;
+  
   String? get productCode => _productCode;
-
-  set productCode(String? productCode) => _productCode = productCode;
-
   String? get weightFactor => _weightFactor;
-
-  set weightFactor(String? weightFactor) => _weightFactor = weightFactor;
-
   String? get vat => _vat;
-
-  set vat(String? vat) => _vat = vat;
-
   String? get premiumDiscount => _premiumDiscount;
-
-  set premiumDiscount(String? premiumDiscount) =>
-      _premiumDiscount = premiumDiscount;
-
   String? get deliveryCharges => _deliveryCharges;
-
-  set deliveryCharges(String? deliveryCharges) =>
-      _deliveryCharges = deliveryCharges;
-
   String? get makingCharges => _makingCharges;
-
-  set makingCharges(String? makingCharges) => _makingCharges = makingCharges;
-
   List<String>? get availableBranches => _availableBranches;
-
-  set availableBranches(List<String>? availableBranches) =>
-      _availableBranches = availableBranches;
-
-  String? get description => _description;
-
-  set description(String? description) => _description = description;
-
+  
+  String? get description => _getLocalizedText(_description);
+  dynamic get rawDescription => _description;
+  
   String? get purity => _purity;
-
-  set purity(String? purity) => _purity = purity;
-
   String? get dimensions => _dimensions;
-
-  set dimensions(String? dimensions) => _dimensions = dimensions;
-
-  String? get origin => _origin;
-
-  set origin(String? origin) => _origin = origin;
-
-  String? get brand => _brand;
-
-  set brand(String? brand) => _brand = brand;
-
-  String? get condition => _condition;
-
-  set condition(String? condition) => _condition = condition;
-
-  bool? get isAvailable => _isAvailable;
-
-  set isAvailable(bool? isAvailable) => _isAvailable = isAvailable;
-
-  bool? get inStoreCollection => _inStoreCollection;
-
-  set inStoreCollection(bool? inStoreCollection) =>
-      _inStoreCollection = inStoreCollection;
-
-  String? get weightCategory => _weightCategory;
-
-  set weightCategory(String? weightCategory) =>
-      _weightCategory = weightCategory;
-
-  String? get weight => _weight;
-
-  set weight(String? weight) => _weight = weight;
-
-  String? get createdAt => _createdAt;
-
-  set createdAt(String? createdAt) => _createdAt = createdAt;
-
-  String? get updatedAt => _updatedAt;
-
-  set updatedAt(String? updatedAt) => _updatedAt = updatedAt;
-
-  num? get iV => _iV;
-
-  set iV(num? iV) => _iV = iV;
-
+  
+  String? get origin => _getLocalizedText(_origin);
+  dynamic get rawOrigin => _origin;
+  
+  String? get brand => _getLocalizedText(_brand);
+  dynamic get rawBrand => _brand;
+  
+  String? get condition => _getLocalizedText(_condition);
+  dynamic get rawCondition => _condition;
+  
   List<String>? get imageUrl => _imageUrl;
+  bool? get isAvailable => _isAvailable;
+  bool? get inStoreCollection => _inStoreCollection;
+  String? get weightCategory => _weightCategory;
+  String? get weight => _weight;
+  String? get createdAt => _createdAt;
+  String? get updatedAt => _updatedAt;
+  num? get iV => _iV;
+  List<String>? get branchIds => _branchIds;
+
+  // Setters
+  set sId(String? sId) => _sId = sId;
+  set adminId(String? adminId) => _adminId = adminId;
+  set productName(dynamic productName) => _productName = productName;
+  set productCode(String? productCode) => _productCode = productCode;
+  set weightFactor(String? weightFactor) => _weightFactor = weightFactor;
+  set vat(String? vat) => _vat = vat;
+  set premiumDiscount(String? premiumDiscount) => _premiumDiscount = premiumDiscount;
+  set deliveryCharges(String? deliveryCharges) => _deliveryCharges = deliveryCharges;
+  set makingCharges(String? makingCharges) => _makingCharges = makingCharges;
+  set availableBranches(List<String>? availableBranches) => _availableBranches = availableBranches;
+  set description(dynamic description) => _description = description;
+  set purity(String? purity) => _purity = purity;
+  set dimensions(String? dimensions) => _dimensions = dimensions;
+  set origin(dynamic origin) => _origin = origin;
+  set brand(dynamic brand) => _brand = brand;
+  set condition(dynamic condition) => _condition = condition;
   set imageUrl(List<String>? imageUrl) => _imageUrl = imageUrl;
+  set isAvailable(bool? isAvailable) => _isAvailable = isAvailable;
+  set inStoreCollection(bool? inStoreCollection) => _inStoreCollection = inStoreCollection;
+  set weightCategory(String? weightCategory) => _weightCategory = weightCategory;
+  set weight(String? weight) => _weight = weight;
+  set createdAt(String? createdAt) => _createdAt = createdAt;
+  set updatedAt(String? updatedAt) => _updatedAt = updatedAt;
+  set iV(num? iV) => _iV = iV;
+  set branchIds(List<String>? branchIds) => _branchIds = branchIds;
+
+  /// Helper method to extract localized text based on current app language
+  String? _getLocalizedText(dynamic value) {
+    if (value == null) return null;
+    if (value is String) return value;
+    if (value is Map<String, dynamic>) {
+      final currentLanguage = CommonService.lang ?? 'en';
+      return value[currentLanguage] ?? value['en'] ?? value.values.firstOrNull?.toString();
+    }
+    return value.toString();
+  }
 
   ProductId.fromJson(Map<String, dynamic> json) {
     _sId = json['_id'];
@@ -714,7 +637,7 @@ class ProductId {
     _premiumDiscount = json['premiumDiscount'];
     _deliveryCharges = json['deliveryCharges'];
     _makingCharges = json['makingCharges'];
-    _availableBranches = json['availableBranches'].cast<String>();
+    _availableBranches = json['availableBranches']?.cast<String>();
     _description = json['description'];
     _purity = json['purity'];
     _dimensions = json['dimensions'];
@@ -729,7 +652,9 @@ class ProductId {
     _createdAt = json['createdAt'];
     _updatedAt = json['updatedAt'];
     _iV = json['__v'];
+    _branchIds = json['branchIds']?.cast<String>();
   }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['_id'] = _sId;
@@ -756,6 +681,7 @@ class ProductId {
     data['createdAt'] = _createdAt;
     data['updatedAt'] = _updatedAt;
     data['__v'] = _iV;
+    data['branchIds'] = _branchIds;
     return data;
   }
 }
@@ -764,7 +690,9 @@ class BranchId {
   String? _sId;
   String? _adminId;
   String? _branchName;
+  String? _branchNameInArabic;
   String? _branchLocation;
+  String? _branchLocationInArabic;
   String? _branchPhoneNumber;
   String? _branchEmail;
   String? _branchManager;
@@ -778,7 +706,9 @@ class BranchId {
     String? sId,
     String? adminId,
     String? branchName,
+    String? branchNameInArabic,
     String? branchLocation,
+    String? branchLocationInArabic,
     String? branchPhoneNumber,
     String? branchEmail,
     String? branchManager,
@@ -788,104 +718,82 @@ class BranchId {
     String? updatedAt,
     num? iV,
   }) {
-    if (sId != null) {
-      _sId = sId;
-    }
-    if (adminId != null) {
-      _adminId = adminId;
-    }
-    if (branchName != null) {
-      _branchName = branchName;
-    }
-    if (branchLocation != null) {
-      _branchLocation = branchLocation;
-    }
-    if (branchPhoneNumber != null) {
-      _branchPhoneNumber = branchPhoneNumber;
-    }
-    if (branchEmail != null) {
-      _branchEmail = branchEmail;
-    }
-    if (branchManager != null) {
-      _branchManager = branchManager;
-    }
-    if (branchCoordinates != null) {
-      _branchCoordinates = branchCoordinates;
-    }
-    if (isAvailable != null) {
-      _isAvailable = isAvailable;
-    }
-    if (createdAt != null) {
-      _createdAt = createdAt;
-    }
-    if (updatedAt != null) {
-      _updatedAt = updatedAt;
-    }
-    if (iV != null) {
-      _iV = iV;
-    }
+    _sId = sId;
+    _adminId = adminId;
+    _branchName = branchName;
+    _branchNameInArabic = branchNameInArabic;
+    _branchLocation = branchLocation;
+    _branchLocationInArabic = branchLocationInArabic;
+    _branchPhoneNumber = branchPhoneNumber;
+    _branchEmail = branchEmail;
+    _branchManager = branchManager;
+    _branchCoordinates = branchCoordinates;
+    _isAvailable = isAvailable;
+    _createdAt = createdAt;
+    _updatedAt = updatedAt;
+    _iV = iV;
   }
 
   String? get sId => _sId;
-
-  set sId(String? sId) => _sId = sId;
-
   String? get adminId => _adminId;
-
-  set adminId(String? adminId) => _adminId = adminId;
-
-  String? get branchName => _branchName;
-
-  set branchName(String? branchName) => _branchName = branchName;
-
-  String? get branchLocation => _branchLocation;
-
-  set branchLocation(String? branchLocation) =>
-      _branchLocation = branchLocation;
-
+  
+  String? get branchName {
+    final currentLanguage = CommonService.lang ?? 'en';
+    if (currentLanguage == 'ar' && _branchNameInArabic != null && _branchNameInArabic!.isNotEmpty) {
+      return _branchNameInArabic;
+    }
+    return _branchName;
+  }
+  
+  String? get branchNameEn => _branchName;
+  String? get branchNameAr => _branchNameInArabic;
+  
+  String? get branchLocation {
+    final currentLanguage = CommonService.lang ?? 'en';
+    if (currentLanguage == 'ar' && _branchLocationInArabic != null && _branchLocationInArabic!.isNotEmpty) {
+      return _branchLocationInArabic;
+    }
+    return _branchLocation;
+  }
+  
+  String? get branchLocationEn => _branchLocation;
+  String? get branchLocationAr => _branchLocationInArabic;
+  
   String? get branchPhoneNumber => _branchPhoneNumber;
-
-  set branchPhoneNumber(String? branchPhoneNumber) =>
-      _branchPhoneNumber = branchPhoneNumber;
-
   String? get branchEmail => _branchEmail;
-
-  set branchEmail(String? branchEmail) => _branchEmail = branchEmail;
-
   String? get branchManager => _branchManager;
-
-  set branchManager(String? branchManager) => _branchManager = branchManager;
-
   List<num>? get branchCoordinates => _branchCoordinates;
-
-  set branchCoordinates(List<num>? branchCoordinates) =>
-      _branchCoordinates = branchCoordinates;
-
   bool? get isAvailable => _isAvailable;
-
-  set isAvailable(bool? isAvailable) => _isAvailable = isAvailable;
-
   String? get createdAt => _createdAt;
-
-  set createdAt(String? createdAt) => _createdAt = createdAt;
-
   String? get updatedAt => _updatedAt;
-
-  set updatedAt(String? updatedAt) => _updatedAt = updatedAt;
-
   num? get iV => _iV;
 
+  set sId(String? sId) => _sId = sId;
+  set adminId(String? adminId) => _adminId = adminId;
+  set branchName(String? branchName) => _branchName = branchName;
+  set branchNameInArabic(String? branchNameInArabic) => _branchNameInArabic = branchNameInArabic;
+  set branchLocation(String? branchLocation) => _branchLocation = branchLocation;
+  set branchLocationInArabic(String? branchLocationInArabic) => _branchLocationInArabic = branchLocationInArabic;
+  set branchPhoneNumber(String? branchPhoneNumber) => _branchPhoneNumber = branchPhoneNumber;
+  set branchEmail(String? branchEmail) => _branchEmail = branchEmail;
+  set branchManager(String? branchManager) => _branchManager = branchManager;
+  set branchCoordinates(List<num>? branchCoordinates) => _branchCoordinates = branchCoordinates;
+  set isAvailable(bool? isAvailable) => _isAvailable = isAvailable;
+  set createdAt(String? createdAt) => _createdAt = createdAt;
+  set updatedAt(String? updatedAt) => _updatedAt = updatedAt;
   set iV(num? iV) => _iV = iV;
 
   BranchId.fromJson(Map<String, dynamic> json) {
     _sId = json['_id'];
     _adminId = json['adminId'];
     _branchName = json['branchName'];
+    _branchNameInArabic = json['branchNameInArabic'];
     _branchLocation = json['branchLocation'];
+    _branchLocationInArabic = json['branchLocationInArabic'];
     _branchPhoneNumber = json['branchPhoneNumber'];
     _branchEmail = json['branchEmail'];
     _branchManager = json['branchManager'];
-    _branchCoordinates = json['branchCoordinates'].cast<num>();
+    _branchCoordinates = json['branchCoordinates']?.cast<num>();
     _isAvailable = json['isAvailable'];
     _createdAt = json['createdAt'];
     _updatedAt = json['updatedAt'];
@@ -897,7 +805,9 @@ class BranchId {
     data['_id'] = _sId;
     data['adminId'] = _adminId;
     data['branchName'] = _branchName;
+    data['branchNameInArabic'] = _branchNameInArabic;
     data['branchLocation'] = _branchLocation;
+    data['branchLocationInArabic'] = _branchLocationInArabic;
     data['branchPhoneNumber'] = _branchPhoneNumber;
     data['branchEmail'] = _branchEmail;
     data['branchManager'] = _branchManager;
@@ -908,4 +818,9 @@ class BranchId {
     data['__v'] = _iV;
     return data;
   }
+}
+
+// Extension for firstOrNull
+extension FirstOrNullExt on Iterable {
+  dynamic get firstOrNull => isEmpty ? null : first;
 }

@@ -132,7 +132,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
   // ---------------- HELPERS ----------------
 
   Widget _buildTitle(BuildContext context) {
-    String title = "";
+    String title = "Trade";
     num quantity = widget.statement.credit != 0
         ? (widget.statement.credit ?? 0.0)
         : (widget.statement.debit ?? 0.0);

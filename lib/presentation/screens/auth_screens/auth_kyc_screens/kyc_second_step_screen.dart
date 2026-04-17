@@ -393,33 +393,35 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
                             ),
                           ],
                         ),
+                        //ConstPadding.sizeBoxWithHeight(height: 4),
+                        // Row(
+                        //   children: [
+                        //     DotBullet(),
+                        //     ConstPadding.sizeBoxWithWidth(width: 4),
+                        //     GetGenericText(
+                        //       text: AppLocalizations.of(
+                        //         context,
+                        //       )!.kyc_em_id, //"Emirates ID",
+                        //       fontSize: sizes!.responsiveFont(
+                        //         phoneVal: 16,
+                        //         tabletVal: 18,
+                        //       ),
+                        //       fontWeight: FontWeight.w400,
+                        //       color: AppColors.neutral90,
+                        //     ),
+                        //   ],
+                        // ),
                         ConstPadding.sizeBoxWithHeight(height: 4),
                         Row(
                           children: [
                             DotBullet(),
                             ConstPadding.sizeBoxWithWidth(width: 4),
                             GetGenericText(
-                              text: AppLocalizations.of(
-                                context,
-                              )!.kyc_em_id, //"Emirates ID",
-                              fontSize: sizes!.responsiveFont(
-                                phoneVal: 16,
-                                tabletVal: 18,
-                              ),
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.neutral90,
-                            ),
-                          ],
-                        ),
-                        ConstPadding.sizeBoxWithHeight(height: 4),
-                        Row(
-                          children: [
-                            DotBullet(),
-                            ConstPadding.sizeBoxWithWidth(width: 4),
-                            GetGenericText(
-                              text: AppLocalizations.of(
-                                context,
-                              )!.kyc_driving, //"Driving License",
+                              text: "Housing Card",
+                              // text: 
+                              // AppLocalizations.of(
+                              //   context,
+                              // )!.kyc_driving, //"Driving License",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 16,
                                 tabletVal: 18,
@@ -609,11 +611,11 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
     try {
       /// Load keys from .env
       final shuftiProBaseUrl = dotenv.env['SHUFTIPRO_BASE_URL'];
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
+      final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
+      final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
 
-      final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
+      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
+      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
       final shuftiProUUIDId = Directionality.of(context) == TextDirection.rtl
           ? dotenv.env['SHUFTIPRO_UUID_Ar']
           : dotenv.env['SHUFTIPRO_UUID_ID'];
@@ -718,12 +720,12 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
           // "show_ocr_form": "1",
           "backside_proof_required": "1",
         },
-        // "questionnaire": {
-        //   "questionnaire_type": "pre_kyc", //post_kyc //pre_kyc
-        //   "uuid": [
-        //     shuftiProUUIDId,
-        //   ],
-        // },
+        "questionnaire": {
+          "questionnaire_type": "pre_kyc", //post_kyc //pre_kyc
+          "uuid": [
+            shuftiProUUIDId,
+          ],
+        },
       };
 
       /// Send request to Shufti Pro

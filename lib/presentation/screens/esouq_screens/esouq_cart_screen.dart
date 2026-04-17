@@ -251,7 +251,13 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "${widget.product.productName?.toUpperCase()}",
+                                          widget.product
+                                              .localizedProductName(
+                                                Localizations.localeOf(
+                                                  context,
+                                                ).languageCode,
+                                              )
+                                              .toUpperCase(),
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
@@ -387,7 +393,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                         l10n.grandTotal,
                         style: TextStyle(
                           color: Color(0xFFD1D1D6),
-                          fontSize: 16,
+                          fontSize: 14,
                         ),
                       ),
 
@@ -396,7 +402,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                       text:
                                           "${_formatIqd((totalGrandGoldPayableCharges - deliveryCharges).toStringAsFixed(3))} ${AppLocalizations.of(context)!.idq_currency}",
                                       fontSize: sizes!.responsiveFont(
-                                        phoneVal: 18,
+                                        phoneVal: 16,
                                         tabletVal: 20,
                                       ), //20,
                                       fontWeight: FontWeight.w500,

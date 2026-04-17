@@ -238,97 +238,98 @@ class _KycFirstStepScreenState extends ConsumerState<KycFirstStepScreen> {
                           },
                         ),
 
-                        ConstPadding.sizeBoxWithHeight(height: 16),
+                        // ConstPadding.sizeBoxWithHeight(height: 16),
 
-                        /// Upload Residency proof
-                        GestureDetector(
-                          onTap: _pickPdf,
-                          child: Container(
-                            height: sizes!.heightRatio * 120,
-                            width: sizes!.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                width: 1.50,
-                                color:
-                                    // isPDFError
-                                    //     ? Color(0xFFFF0000)
-                                    //     : isPDFSelected
-                                    // ? Color(0xFFBBA473)
-                                    // :
-                                    Color(0xFFBBA473).withAlpha(80),
-                              ),
-                            ),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    if (selectedPDFFileName != null) ...[
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: AppColors.primaryGold500,
-                                        size: 30,
-                                      ),
-                                      ConstPadding.sizeBoxWithHeight(height: 8),
-                                      GetGenericText(
-                                        text: selectedPDFFileName!,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColors.whiteColor,
-                                      ),
-                                      ConstPadding.sizeBoxWithHeight(height: 4),
-                                      GetGenericText(
-                                        text: AppLocalizations.of(context)!.kyc_doc_success,//"Document added successfully!",
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.whiteColor,
-                                      ),
-                                    ] else ...[
-                                      GetGenericText(
-                                        text:
-                                        AppLocalizations.of(context)!.kyc_upload_proof,
-                                            //"Upload residency proof (Optional)",
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.whiteColor,
-                                      ),
-                                      ConstPadding.sizeBoxWithHeight(
-                                        height: 4,
-                                      ),
-                                      GetGenericText(
-                                        text: AppLocalizations.of(context)!.kyc_utility_bill,//"Utility Bill or Bank Statement",
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.whiteColor,
-                                      ),
-                                      ConstPadding.sizeBoxWithHeight(
-                                        height: 4,
-                                      ),
-                                      GetGenericText(
-                                        text: AppLocalizations.of(context)!.kyc_allowed_format,//"Allowed Format PDF",
-                                        fontSize: 8,
-                                        fontWeight: FontWeight.w400,
-                                        color: AppColors.whiteColor,
-                                      ),
-                                    ],
-                                  ],
-                                ),
-                                Visibility(
-                                  visible: authState.isImageState,
-                                  child: Positioned(
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.primaryGold500,
-                                      strokeWidth: 2,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // /// Upload Residency proof
+                        // GestureDetector(
+                        //   onTap: _pickPdf,
+                        //   child: Container(
+                        //     height: sizes!.heightRatio * 120,
+                        //     width: sizes!.width,
+                        //     decoration: BoxDecoration(
+                        //       borderRadius: BorderRadius.circular(10),
+                        //       border: Border.all(
+                        //         width: 1.50,
+                        //         color:
+                        //             // isPDFError
+                        //             //     ? Color(0xFFFF0000)
+                        //             //     : isPDFSelected
+                        //             // ? Color(0xFFBBA473)
+                        //             // :
+                        //             Color(0xFFBBA473).withAlpha(80),
+                        //       ),
+                        //     ),
+                        //     child: Stack(
+                        //       alignment: Alignment.center,
+                        //       children: [
+                        //         Column(
+                        //           mainAxisAlignment: MainAxisAlignment.center,
+                        //           crossAxisAlignment: CrossAxisAlignment.center,
+                        //           children: [
+                        //             if (selectedPDFFileName != null) ...[
+                        //               Icon(
+                        //                 Icons.check_circle,
+                        //                 color: AppColors.primaryGold500,
+                        //                 size: 30,
+                        //               ),
+                        //               ConstPadding.sizeBoxWithHeight(height: 8),
+                        //               GetGenericText(
+                        //                 text: selectedPDFFileName!,
+                        //                 fontSize: 16,
+                        //                 fontWeight: FontWeight.w500,
+                        //                 color: AppColors.whiteColor,
+                        //               ),
+                        //               ConstPadding.sizeBoxWithHeight(height: 4),
+                        //               GetGenericText(
+                        //                 text: AppLocalizations.of(context)!.kyc_doc_success,//"Document added successfully!",
+                        //                 fontSize: 12,
+                        //                 fontWeight: FontWeight.w400,
+                        //                 color: AppColors.whiteColor,
+                        //               ),
+                        //             ] else ...[
+                        //               GetGenericText(
+                        //                 text:
+                        //                 AppLocalizations.of(context)!.kyc_upload_proof,
+                        //                     //"Upload residency proof (Optional)",
+                        //                 fontSize: 16,
+                        //                 fontWeight: FontWeight.w400,
+                        //                 color: AppColors.whiteColor,
+                        //               ),
+                        //               ConstPadding.sizeBoxWithHeight(
+                        //                 height: 4,
+                        //               ),
+                        //               GetGenericText(
+                        //                 text: AppLocalizations.of(context)!.kyc_utility_bill,//"Utility Bill or Bank Statement",
+                        //                 fontSize: 10,
+                        //                 fontWeight: FontWeight.w400,
+                        //                 color: AppColors.whiteColor,
+                        //               ),
+                        //               ConstPadding.sizeBoxWithHeight(
+                        //                 height: 4,
+                        //               ),
+                        //               GetGenericText(
+                        //                 text: AppLocalizations.of(context)!.kyc_allowed_format,//"Allowed Format PDF",
+                        //                 fontSize: 8,
+                        //                 fontWeight: FontWeight.w400,
+                        //                 color: AppColors.whiteColor,
+                        //               ),
+                        //             ],
+                        //           ],
+                        //         ),
+                        //         Visibility(
+                        //           visible: authState.isImageState,
+                        //           child: Positioned(
+                        //             child: CircularProgressIndicator(
+                        //               color: AppColors.primaryGold500,
+                        //               strokeWidth: 2,
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
+                        
                         //if (isPDFError) ...[
                         ConstPadding.sizeBoxWithHeight(height: 4),
                         // GetGenericText(

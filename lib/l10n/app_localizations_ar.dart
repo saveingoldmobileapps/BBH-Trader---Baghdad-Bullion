@@ -266,7 +266,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get kyc_issue =>
-      'يرجى تقديم المستندات المطلوبة للتحقق من هويتك بشكل آمن. المستندات التالية مقبولة:';
+      ' صادرة للتحقق من هويتك بشكل آمن. المستندات التالية مقبولة:';
 
   @override
   String get ky_selec_cont => 'يرجى اختيار دولة';

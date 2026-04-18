@@ -151,6 +151,13 @@ class _FullScreenMultiSelectState extends State<FullScreenMultiSelect> {
   late TextEditingController _searchController;
   double _currentTotal = 0.0;
 
+  double? _extractGramValue(String item) {
+    final valuePart = item.contains(' - ') ? item.split(' - ').last : item;
+    final gramMatch = RegExp(r'(\d+(\.\d+)?)').firstMatch(valuePart);
+    if (gramMatch == null) return null;
+    return double.tryParse(gramMatch.group(1)!);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -162,9 +169,9 @@ class _FullScreenMultiSelectState extends State<FullScreenMultiSelect> {
 
   double _calculateTotal(List<String> selectedItems) {
     return selectedItems.fold(0.0, (sum, item) {
-      final gramMatch = RegExp(r'(\d+(\.\d+)?)g').firstMatch(item);
-      if (gramMatch != null) {
-        return sum + double.parse(gramMatch.group(1)!);
+      final grams = _extractGramValue(item);
+      if (grams != null) {
+        return sum + grams;
       }
       return sum;
     });
@@ -179,10 +186,8 @@ class _FullScreenMultiSelectState extends State<FullScreenMultiSelect> {
   }
 
   void _toggleSelection(String item) {
-    final gramMatch = RegExp(r'(\d+(\.\d+)?)g').firstMatch(item);
-    if (gramMatch == null) return;
-
-    final itemGrams = double.parse(gramMatch.group(1)!);
+    final itemGrams = _extractGramValue(item);
+    if (itemGrams == null) return;
     final wouldBeSelected = !_selectedItems.contains(item);
 
     // Calculate what the new total would be if we add this item

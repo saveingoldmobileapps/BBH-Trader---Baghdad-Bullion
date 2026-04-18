@@ -469,14 +469,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
 
   Widget _buildPaymentMethodDropdown(BuildContext context, dynamic gramState) {
     final l10n = AppLocalizations.of(context)!;
-    final hasGramDeals =
-        gramState.gramApiResponseModel.payload?.any(
-          (deal) => deal.tradeType == 'Buy' && deal.tradeStatus == 'Opened',
-        ) ??
-        false;
-    final dropdownItems = hasGramDeals
-        ? [_moneyMethod, _metalMethod]
-        : [_moneyMethod];
+    final dropdownItems = [_moneyMethod, _metalMethod];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

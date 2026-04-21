@@ -178,15 +178,27 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
               const SizedBox(height: 24),
 
               // 3. Trade Gold Action Button
-              LoaderButton(
-                title: l10n.trade_gold,
-                // c: AppColors.primaryGold500, // Or use a gradient decoration if needed
-                onTap: () {
-                  // Navigate to the BuyGoldScreen UI previously provided
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const BuyGoldScreen(),
+              Builder(
+                builder: (context) {
+                  final liveBuyingPriceIqd =
+                      goldPriceState.value?.oneGramBuyingPriceInIQD ?? 0.0;
+                  final canOpenTradeBuy = liveBuyingPriceIqd > 0;
+                  return AbsorbPointer(
+                    absorbing: !canOpenTradeBuy,
+                    child: Opacity(
+                      opacity: canOpenTradeBuy ? 1.0 : 0.5,
+                      child: LoaderButton(
+                        title: l10n.trade_gold,
+                        onTap: () {
+                          if (!canOpenTradeBuy) return;
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const BuyGoldScreen(),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   );
                 },

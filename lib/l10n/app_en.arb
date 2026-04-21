@@ -547,6 +547,7 @@
   "balanceAfterTransaction": "Balance after Transaction",
   "transactionType": "Transaction Type",
   "sold": "Sold",
+  "purchased": "Purchased",
   "invest": "Invest",
   "sigWallet": "SIG Wallet",
   "moneyIn": "Money In",

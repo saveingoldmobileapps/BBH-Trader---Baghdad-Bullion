@@ -1483,6 +1483,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sold => 'Sold';
 
   @override
+  String get purchased => 'Purchased';
+
+  @override
   String get invest => 'Invest';
 
   @override

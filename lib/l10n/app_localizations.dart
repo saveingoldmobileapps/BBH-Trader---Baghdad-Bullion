@@ -2942,6 +2942,12 @@ abstract class AppLocalizations {
   /// **'Sold'**
   String get sold;
 
+  /// No description provided for @purchased.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchased'**
+  String get purchased;
+
   /// No description provided for @invest.
   ///
   /// In en, this message translates to:

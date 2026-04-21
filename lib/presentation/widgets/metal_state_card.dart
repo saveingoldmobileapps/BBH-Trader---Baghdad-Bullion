@@ -76,8 +76,13 @@ class _MetalStatementCardState extends State<MetalStatementCard>
               if (isExpanded) ...[
                 const SizedBox(height: 12),
                 _buildDetailRow(
-                  AppLocalizations.of(context)!.goldCredit,
-                  "${widget.statement.credit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
+                 widget.statement.paymentModel == "Invest" &&
+                        widget.statement.tradeType == "Sell"? 
+                        AppLocalizations.of(context)!.goldDebit
+                        :AppLocalizations.of(context)!.goldCredit,
+                        widget.statement.paymentModel == "Invest" 
+                        && widget.statement.tradeType == "Sell"?
+                        "${widget.statement.debit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}": "${widget.statement.credit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
                 ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.balanceAfterTransaction,
@@ -133,9 +138,10 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
   Widget _buildTitle(BuildContext context) {
     String title = "";
-    num quantity = widget.statement.credit != 0
-        ? (widget.statement.credit ?? 0.0)
-        : (widget.statement.debit ?? 0.0);
+    num quantity =widget.statement.paymentModel == "Invest" &&
+                        widget.statement.tradeType == "Sell" && widget.statement.debit != 0
+        ? (widget.statement.debit ?? 0.0)
+        : (widget.statement.credit ?? 0.0);
 
     switch (widget.statement.paymentModel) {
       case "Advance Payment":
@@ -148,9 +154,15 @@ class _MetalStatementCardState extends State<MetalStatementCard>
       case "Gift Received":
         title = AppLocalizations.of(context)!.gift;
         break;
-      case "SIG Wallet":
+      case "BBH Wallet":
         title = AppLocalizations.of(context)!.esouqPayment;
         break;
+        case "Invest":
+       title= widget.statement.paymentModel == "Invest" 
+       && widget.statement.tradeType == "Sell"? 
+       AppLocalizations.of(context)!.sold
+       //"Sold"
+       :AppLocalizations.of(context)!.purchased;//"Purchased";
     }
 
     return Text(

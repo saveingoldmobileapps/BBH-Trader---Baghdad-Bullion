@@ -117,6 +117,14 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
     final tradeStateReadProvider = ref.read(tradeProvider.notifier);
 
     final goldPriceStateWatchProvider = ref.watch(goldPriceProvider);
+    final liveBuyGramIqd =
+        goldPriceStateWatchProvider.value?.oneGramBuyingPriceInIQD ?? 0.0;
+    final liveSellGramIqd =
+        goldPriceStateWatchProvider.value?.oneGramSellingPriceInIQD ?? 0.0;
+    final canPendingOrderUseLivePrice = widget.gramData.tradeType == "Sell"
+        ? liveSellGramIqd > 0
+        : liveBuyGramIqd > 0;
+    final canUseLiveSellForDeal = liveSellGramIqd > 0;
     final isTakeProfitTrade =
         widget.gramData.tradeType == "Sell" &&
         widget.gramData.tradeStatus == "Pending";
@@ -750,11 +758,49 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                       ///Confirmation the cancellation
                       if (widget.gramData.tradeStatus == "Pending") ...[
                         isGramAmountPrice || isEditPrice
-                            ? LoaderButton(
+                            ? AbsorbPointer(
+                                absorbing: !canPendingOrderUseLivePrice,
+                                child: Opacity(
+                                  opacity:
+                                      canPendingOrderUseLivePrice ? 1.0 : 0.5,
+                                  child: LoaderButton(
                                 title: AppLocalizations.of(
                                   context,
                                 )!.deal_update_order, //"Update Order",
                                 onTap: () async {
+                                  final liveBuyCheck =
+                                      ref
+                                          .read(goldPriceProvider)
+                                          .value
+                                          ?.oneGramBuyingPriceInIQD ??
+                                      0.0;
+                                  final liveSellCheck =
+                                      ref
+                                          .read(goldPriceProvider)
+                                          .value
+                                          ?.oneGramSellingPriceInIQD ??
+                                      0.0;
+                                  if (widget.gramData.tradeType == "Sell" &&
+                                      liveSellCheck <= 0) {
+                                    Toasts.getErrorToast(
+                                      text: AppLocalizations.of(
+                                        context,
+                                      )!.error_loading_price,
+                                      gravity: ToastGravity.TOP,
+                                    );
+                                    return;
+                                  }
+                                  if (widget.gramData.tradeType == "Buy" &&
+                                      liveBuyCheck <= 0) {
+                                    Toasts.getErrorToast(
+                                      text: AppLocalizations.of(
+                                        context,
+                                      )!.error_loading_price,
+                                      gravity: ToastGravity.TOP,
+                                    );
+                                    return;
+                                  }
+
                                   final tradeType = widget.gramData.tradeType;
                                   final tradeStatus =
                                       widget.gramData.tradeStatus;
@@ -1042,6 +1088,8 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                     },
                                   );
                                 },
+                                  ),
+                                ),
                               )
                             : LoaderButton(
                                 title: AppLocalizations.of(
@@ -1235,7 +1283,11 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                           ConstPadding.sizeBoxWithHeight(height: 12),
 
                           /// Update Deal Position
-                          LoaderButton(
+                          AbsorbPointer(
+                            absorbing: !canUseLiveSellForDeal,
+                            child: Opacity(
+                              opacity: canUseLiveSellForDeal ? 1.0 : 0.5,
+                              child: LoaderButton(
                             title: AppLocalizations.of(
                               context,
                             )!.deal_update_position_btn, //"Update Deal Position",
@@ -1249,7 +1301,15 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                               final sellingPrice = goldPriceStateWatchProvider
                                   .value
                                   ?.oneGramSellingPriceInIQD;
-                              if (sellingPrice == null) return;
+                              if (sellingPrice == null || sellingPrice <= 0) {
+                                Toasts.getErrorToast(
+                                  text: AppLocalizations.of(
+                                    context,
+                                  )!.error_loading_price,
+                                  gravity: ToastGravity.TOP,
+                                );
+                                return;
+                              }
 
                               final String inputText = sellAtPriceController
                                   .text
@@ -1353,6 +1413,8 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                 );
                               }
                             },
+                              ),
+                            ),
                           ),
                           ConstPadding.sizeBoxWithHeight(height: 12),
                         ],
@@ -1553,7 +1615,11 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                           ConstPadding.sizeBoxWithHeight(height: 12),
 
                           /// Close Deal Button
-                          LoaderButton(
+                          AbsorbPointer(
+                            absorbing: !canUseLiveSellForDeal,
+                            child: Opacity(
+                              opacity: canUseLiveSellForDeal ? 1.0 : 0.5,
+                              child: LoaderButton(
                             title: AppLocalizations.of(
                               context,
                             )!.deal_close_section, //"Close Deal",
@@ -1570,6 +1636,15 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                 final sellingPrice = goldPriceStateWatchProvider
                                     .value
                                     ?.oneGramSellingPriceInIQD;
+                                if (sellingPrice == null || sellingPrice <= 0) {
+                                  Toasts.getErrorToast(
+                                    text: AppLocalizations.of(
+                                      context,
+                                    )!.error_loading_price,
+                                    gravity: ToastGravity.TOP,
+                                  );
+                                  return;
+                                }
                                 final kSellingPrice = double.parse(
                                   "$sellingPrice",
                                 );
@@ -1646,8 +1721,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                           tradeMoney: newTradeMoney,
                                           tradeMetal: tradeMetal,
                                           sellingPrice: double.parse(
-                                            sellingPrice?.toStringAsFixed(3) ??
-                                                "0.00",
+                                            sellingPrice.toStringAsFixed(3),
                                           ),
                                           context: context,
                                         )
@@ -1667,6 +1741,8 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                 );
                               }
                             },
+                              ),
+                            ),
                           ),
                         ],
                       ],

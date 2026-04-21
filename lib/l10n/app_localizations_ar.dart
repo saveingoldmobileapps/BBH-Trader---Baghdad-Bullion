@@ -1472,6 +1472,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sold => 'تم البيع';
 
   @override
+  String get purchased => 'تم الشراء';
+
+  @override
   String get invest => 'استثمر';
 
   @override

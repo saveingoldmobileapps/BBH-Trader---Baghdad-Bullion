@@ -143,8 +143,15 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
 
     /// states
     final tradeStateWatchProvider = ref.watch(tradeProvider);
-    //final goldPriceStateWatchProvider = ref.watch(goldPriceProvider);
+    final goldPriceState = ref.watch(goldPriceProvider);
+    ref.listen(goldPriceProvider, (_, __) => _updateCalculation());
     final mainStateWatchProvider = ref.watch(homeProvider);
+
+    final liveSellingIqd =
+        goldPriceState.value?.oneGramSellingPriceInIQD ?? 0.0;
+    final gramsPositive =
+        (double.tryParse(userInputController.text.trim()) ?? 0) > 0;
+    final canSubmitSell = liveSellingIqd > 0 && gramsPositive;
 
     /// Get wallet balance with proper null safety
     // final walletBalance =
@@ -226,10 +233,26 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
               ),
             ],
             ConstPadding.sizeBoxWithHeight(height: 24),
-            LoaderButton(
-              title: "Sell Gold",
-              isLoadingState: tradeStateWatchProvider.isButtonState,
-              onTap: () async {
+            AbsorbPointer(
+              absorbing: !canSubmitSell,
+              child: Opacity(
+                opacity: canSubmitSell ? 1.0 : 0.5,
+                child: LoaderButton(
+                  title: "Sell Gold",
+                  isLoadingState: tradeStateWatchProvider.isButtonState,
+                  onTap: () async {
+                final currentLiveSell =
+                    ref.read(goldPriceProvider).value?.oneGramSellingPriceInIQD ??
+                        0.0;
+                if (currentLiveSell <= 0) {
+                  if (!context.mounted) return;
+                  Toasts.getErrorToast(
+                    text: AppLocalizations.of(context)!.error_loading_price,
+                    gravity: ToastGravity.TOP,
+                  );
+                  return;
+                }
+
                 ///If email not verified.
                 if (!mainStateWatchProvider.isEmailVerified) {
                   await genericPopUpWidget(
@@ -569,6 +592,8 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                   }
                 }
               },
+                ),
+              ),
             ),
           ],
         ),

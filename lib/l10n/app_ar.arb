@@ -564,6 +564,7 @@
   "balanceAfterTransaction": "الرصيد بعد المعاملة",
   "transactionType": "نوع المعاملة",
   "sold": "تم البيع",
+  "purchased": "تم الشراء",
   "invest": "استثمار",
   "sigWallet": "محفظة SIG",
   "moneyIn": "إيداع",

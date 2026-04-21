@@ -8,6 +8,7 @@ import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/auth_screens/email_verify_code_screen.dart';
 import 'package:saveingold_fzco/presentation/screens/setting_screens/support_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
+import 'package:saveingold_fzco/presentation/sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
 import 'package:saveingold_fzco/presentation/widgets/pop_up_widget.dart';
 
 import '../../../data/models/esouq_model/GetAllProductResponse.dart';
@@ -139,6 +140,10 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
     final l10n = AppLocalizations.of(context)!;
     final lang = Localizations.localeOf(context).languageCode;
     final mainStateWatchProvider = ref.watch(homeProvider);
+    final goldPriceState = ref.watch(goldPriceProvider);
+    final liveBuyingPriceIqd =
+        goldPriceState.value?.oneGramBuyingPriceInIQD ?? 0.0;
+    final canBuyEsouq = liveBuyingPriceIqd > 0;
     sizes!.refreshSize(context);
 
     return Scaffold(
@@ -162,9 +167,14 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
         decoration: BoxDecoration(
           color: AppColors.greyScale1000.withOpacity(0.8),
         ),
-        child: GestureDetector(
+        child: AbsorbPointer(
+          absorbing: !canBuyEsouq,
+          child: Opacity(
+            opacity: canBuyEsouq ? 1.0 : 0.5,
+            child: GestureDetector(
           onTap: () async {
             // Logic for KYC and Navigation (Kept exactly as per your source)
+            if (!canBuyEsouq) return;
             if (!mainStateWatchProvider.isEmailVerified) {
               await genericPopUpWidget(
                 isLoadingState: false,
@@ -259,6 +269,8 @@ class _EsouqItemDetailScreenState extends ConsumerState<EsouqItemDetailScreen> {
                 color: Colors.white,
               ),
             ),
+          ),
+        ),
           ),
         ),
       ),

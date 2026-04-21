@@ -12,6 +12,7 @@ import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/esouq_screens/one_min_timer.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
+import 'package:saveingold_fzco/presentation/sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
 import 'package:saveingold_fzco/presentation/widgets/shimmers/shimmer_loader.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
@@ -417,6 +418,10 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
     ///provider
     final esouqStateWatchProvider = ref.watch(esouqProvider);
     final esouqStateReadProvider = ref.read(esouqProvider.notifier);
+    final goldPriceState = ref.watch(goldPriceProvider);
+    final liveBuyingPriceIqd =
+        goldPriceState.value?.oneGramBuyingPriceInIQD ?? 0.0;
+    final canConfirmEsouqOrder = liveBuyingPriceIqd > 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -734,12 +739,25 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                     : Container(),
 
                 /// confirm button
-                LoaderButton(
-                  title: AppLocalizations.of(
-                    context,
-                  )!.confirmPaymentBtn, //"Confirm Payment",
-                  isLoadingState: esouqStateWatchProvider.isButtonState,
-                  onTap: () async {
+                AbsorbPointer(
+                  absorbing: !canConfirmEsouqOrder,
+                  child: Opacity(
+                    opacity: canConfirmEsouqOrder ? 1.0 : 0.5,
+                    child: LoaderButton(
+                      title: AppLocalizations.of(
+                        context,
+                      )!.confirmPaymentBtn, //"Confirm Payment",
+                      isLoadingState: esouqStateWatchProvider.isButtonState,
+                      onTap: () async {
+                    final currentLiveBuying =
+                        ref.read(goldPriceProvider).value?.oneGramBuyingPriceInIQD ??
+                            0.0;
+                    if (currentLiveBuying <= 0) {
+                      Toasts.getErrorToast(
+                        text: AppLocalizations.of(context)!.error_loading_price,
+                      );
+                      return;
+                    }
                     if (_selectedItem == _deliveryMethod) {
                       if (_formKey.currentState?.validate() ?? false) {
                         var deliveryAddress =
@@ -897,6 +915,8 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                       // }
                     }
                   },
+                    ),
+                  ),
                 ),
 
                 ConstPadding.sizeBoxWithHeight(height: 16),

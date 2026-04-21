@@ -18,6 +18,7 @@ import '../../../feature_injection.dart';
 import '../../../screens/trade_screens/order_placed.dart';
 import '../../../widgets/pop_up_widget.dart';
 import '../gram_provider/gram_provider.dart';
+import '../sseGoldPriceProvider/sse_gold_price_provider.dart';
 import '../states/trade_state/trade_state.dart';
 
 part 'trade_provider.g.dart';
@@ -135,6 +136,18 @@ class Trade extends _$Trade {
     required BuildContext context,
   }) async {
     try {
+      final liveBuyingIqd =
+          ref.read(goldPriceProvider).value?.oneGramBuyingPriceInIQD ?? 0.0;
+      if (liveBuyingIqd <= 0) {
+        if (context.mounted) {
+          Toasts.getErrorToast(
+            text: AppLocalizations.of(context)!.error_loading_price,
+            gravity: ToastGravity.TOP,
+          );
+        }
+        return;
+      }
+
       /// Get user id from storage
       final userId = await LocalDatabase.instance.getUserId();
       // final refreshToken = await LocalDatabase.instance.read(
@@ -279,6 +292,18 @@ class Trade extends _$Trade {
     required BuildContext context,
   }) async {
     try {
+      final liveSellingIqd =
+          ref.read(goldPriceProvider).value?.oneGramSellingPriceInIQD ?? 0.0;
+      if (liveSellingIqd <= 0) {
+        if (context.mounted) {
+          Toasts.getErrorToast(
+            text: AppLocalizations.of(context)!.error_loading_price,
+            gravity: ToastGravity.TOP,
+          );
+        }
+        return;
+      }
+
       /// Get user id from storage
       final userId = await LocalDatabase.instance.getUserId();
       // final refreshToken = await LocalDatabase.instance.read(

@@ -310,11 +310,17 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: AbsorbPointer(
-                      absorbing: !_isValidAmount, // 👈 Absorb taps when invalid
+                      absorbing: !_isValidAmount ||
+                          (goldPriceState.value?.oneGramBuyingPriceInIQD ??
+                                  0) <=
+                              0,
                       child: Opacity(
-                        opacity: _isValidAmount
+                        opacity: _isValidAmount &&
+                                (goldPriceState.value?.oneGramBuyingPriceInIQD ??
+                                        0) >
+                                    0
                             ? 1.0
-                            : 0.5, // 👈 Visually show disabled state
+                            : 0.5,
                         child: LoaderButton(
                           title: l10n.buy_gold,
                           isLoadingState: tradeStateWatchProvider.isButtonState,
@@ -559,6 +565,17 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     dynamic mainStateWatchProvider,
     dynamic tradeStateWatchProvider,
   ) async {
+    final liveBuyingPriceIqd =
+        ref.read(goldPriceProvider).value?.oneGramBuyingPriceInIQD ?? 0.0;
+    if (liveBuyingPriceIqd <= 0) {
+      if (!context.mounted) return;
+      Toasts.getErrorToast(
+        text: AppLocalizations.of(context)!.error_loading_price,
+        gravity: ToastGravity.TOP,
+      );
+      return;
+    }
+
     // 1. Email Verification Check
     if (!mainStateWatchProvider.isEmailVerified) {
       await genericPopUpWidget(

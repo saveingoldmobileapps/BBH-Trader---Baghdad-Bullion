@@ -179,6 +179,9 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
     final gramState = ref.watch(gramProvider);
     final goldPriceState = ref.watch(goldPriceProvider);
     final mainStateWatchProvider = ref.watch(homeProvider);
+    final liveBuyingPriceIqd =
+        goldPriceState.value?.oneGramBuyingPriceInIQD ?? 0.0;
+    final canCheckout = liveBuyingPriceIqd > 0;
 
     if (goldPriceState.hasValue) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -428,9 +431,15 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  LoaderButton(
-                    title: l10n.checkout,
-                    onTap: () async => await _handleBuyNow(context),
+                  AbsorbPointer(
+                    absorbing: !canCheckout,
+                    child: Opacity(
+                      opacity: canCheckout ? 1.0 : 0.5,
+                      child: LoaderButton(
+                        title: l10n.checkout,
+                        onTap: () async => await _handleBuyNow(context),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -626,6 +635,16 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
     final quantity = num.tryParse(quantityText);
     if (quantity == null || quantity <= 0) {
       Toasts.getErrorToast(text: AppLocalizations.of(context)!.valid_quantitty);
+      return;
+    }
+
+    final liveBuyingPriceIqd =
+        ref.read(goldPriceProvider).value?.oneGramBuyingPriceInIQD ?? 0.0;
+    if (liveBuyingPriceIqd <= 0) {
+      if (!context.mounted) return;
+      Toasts.getErrorToast(
+        text: AppLocalizations.of(context)!.error_loading_price,
+      );
       return;
     }
 

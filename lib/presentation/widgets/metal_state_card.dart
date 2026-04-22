@@ -138,8 +138,9 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
   Widget _buildTitle(BuildContext context) {
     String title = "";
-    num quantity =widget.statement.paymentModel == "Invest" &&
-                        widget.statement.tradeType == "Sell" && widget.statement.debit != 0
+    num quantity = widget.statement.paymentModel == "Invest" 
+    && widget.statement.tradeType == "Sell" 
+    && widget.statement.debit != 0
         ? (widget.statement.debit ?? 0.0)
         : (widget.statement.credit ?? 0.0);
 

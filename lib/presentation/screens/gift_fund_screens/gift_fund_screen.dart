@@ -55,6 +55,21 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
   late String? selectedDealId = '';
   List? selectedIds;
   List<Map<String, dynamic>> selectedDealsData = [];
+
+  String _buildDealLabel(
+    BuildContext context,
+    dynamic deal, {
+    int fractionDigits = 2,
+  }) {
+    final tradeTypeLabel = deal.tradeType == "Buy"
+        ? AppLocalizations.of(context)!.buy
+        : AppLocalizations.of(context)!.sell;
+    final tradeMetal = (deal.tradeMetal ?? 0).toDouble().toStringAsFixed(
+      fractionDigits,
+    );
+    return "${deal.dealId} - $tradeTypeLabel ${tradeMetal}g ${AppLocalizations.of(context)!.g_Gold}";
+  }
+
   Future<String?> getUserEmail() async {
     return await LocalDatabase.instance.read(key: Strings.userEmail);
   }
@@ -766,10 +781,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                       context,
                                     )!.gift_select_gram, //"Select Gram Deal",
                                     items: filteredDeals
-                                        .map<String>(
-                                          (deal) =>
-                                              "${deal.dealId} - ${deal.tradeType == "Buy" ? AppLocalizations.of(context)!.buy : AppLocalizations.of(context)!.sell} ${deal.tradeMetal!.toStringAsFixed(2)}g ${AppLocalizations.of(context)!.g_Gold}",
-                                        )
+                                        .map<String>((deal) => _buildDealLabel(context, deal))
                                         .toList(),
                                     //items: filteredDeals
                                     //     .map<String>(
@@ -793,7 +805,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                                   (d) =>
                                                       d.dealId.toString() == id,
                                                 );
-                                            return "${deal.dealId} - ${deal.tradeType} ${deal.tradeMetal!.toStringAsFixed(3)}${AppLocalizations.of(context)!.g_Gold}";
+                                            return _buildDealLabel(context, deal);
                                           }).toList()
                                         : [],
                                     onChanged: (List<String> selectedList) {

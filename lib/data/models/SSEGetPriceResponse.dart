@@ -17,6 +17,7 @@ class Prices {
   num? _mDSellingPx;
   num? _lastLowSellingPrice;
   num? _lastHighBuyingPrice;
+  ExchangeRate? _exchangeRate;
   Prices({
     String? symbol,
     String? mDEntryType,
@@ -24,6 +25,7 @@ class Prices {
     num? lastHighBuyingPrice,
     num? mDSellingPx,
     num? lastLowSellingPrice,
+    ExchangeRate? exchangeRate,
   }) {
     if (symbol != null) {
       _symbol = symbol;
@@ -43,6 +45,9 @@ class Prices {
     if (mDSellingPx != null) {
       _mDSellingPx = mDSellingPx;
     }
+    if (exchangeRate != null) {
+      _exchangeRate = exchangeRate;
+    }
   }
 
   String? get symbol => _symbol;
@@ -59,6 +64,8 @@ class Prices {
       _lastHighBuyingPrice = lastHighBuyingPrice;
   num? get mDSellingPx => _mDSellingPx;
   set mDSellingPx(num? mDSellingPx) => _mDSellingPx = mDSellingPx;
+  ExchangeRate? get exchangeRate => _exchangeRate;
+  set exchangeRate(ExchangeRate? exchangeRate) => _exchangeRate = exchangeRate;
 
   Prices.fromJson(Map<String, dynamic> json) {
     _symbol = json['Symbol'];
@@ -67,6 +74,10 @@ class Prices {
     _mDSellingPx = json['MDSellingPx'];
     _lastLowSellingPrice = json['lastLowSellingPrice'];
     _lastHighBuyingPrice = json['lastHighBuyingPrice'];
+    _exchangeRate =
+        json['exchangeRate'] != null
+            ? ExchangeRate.fromJson(json['exchangeRate'])
+            : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -77,6 +88,37 @@ class Prices {
     data['MDSellingPx'] = _mDSellingPx;
     data['lastLowSellingPrice'] = _lastLowSellingPrice;
     data['lastHighBuyingPrice'] = _lastHighBuyingPrice;
+    if (_exchangeRate != null) {
+      data['exchangeRate'] = _exchangeRate!.toJson();
+    }
+    return data;
+  }
+}
+
+class ExchangeRate {
+  num? _buying;
+  num? _selling;
+
+  ExchangeRate({num? buying, num? selling}) {
+    if (buying != null) _buying = buying;
+    if (selling != null) _selling = selling;
+  }
+
+  num? get buying => _buying;
+  set buying(num? buying) => _buying = buying;
+
+  num? get selling => _selling;
+  set selling(num? selling) => _selling = selling;
+
+  ExchangeRate.fromJson(Map<String, dynamic> json) {
+    _buying = json['buying'];
+    _selling = json['selling'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['buying'] = _buying;
+    data['selling'] = _selling;
     return data;
   }
 }

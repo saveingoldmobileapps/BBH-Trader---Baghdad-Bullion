@@ -269,7 +269,7 @@ class CommonService {
     required double dirham,
     required double ounce,
   }) {
-    return ((ounceDollarPrice * dirham) / ounce);
+    return ((ounceDollarPrice / ounce)* dirham);
   }
 
   /// mask email address

@@ -91,7 +91,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
                             )
                           : const DecorationImage(
                               image: AssetImage(
-                                "assets/images/user_avatar.png",
+                                "assets/png/account_card_bg.png",
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -209,18 +209,21 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
               // 4. Max grams based on IQD balance
               goldPriceState.when(
                 data: (data) {
-                  final walletBalance = double.tryParse(
-                    mainStateWatchProvider
-                            .getHomeFeedResponse
-                            .payload
-                            ?.walletExists
-                            ?.moneyBalance
-                            ?.toString() ??
-                        '0',
-                  ) ?? 0.0;
+                  final walletBalance =
+                      double.tryParse(
+                        mainStateWatchProvider
+                                .getHomeFeedResponse
+                                .payload
+                                ?.walletExists
+                                ?.moneyBalance
+                                ?.toString() ??
+                            '0',
+                      ) ??
+                      0.0;
                   final pricePerGram = data.oneGramBuyingPriceInIQD;
-                  final maxGrams =
-                      pricePerGram > 0 ? (walletBalance / pricePerGram) : 0.0;
+                  final maxGrams = pricePerGram > 0
+                      ? (walletBalance / pricePerGram)
+                      : 0.0;
                   return Center(
                     child: GetGenericText(
                       text:
@@ -440,5 +443,4 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
       ],
     );
   }
-
 }

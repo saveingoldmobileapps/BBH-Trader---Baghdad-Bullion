@@ -86,6 +86,7 @@ class MoneyHistoryList {
     num? credit,
     num? debit,
     String? date,
+    num? grams,
     num? moneyBalance,
   }) {
     _id = id;
@@ -97,6 +98,7 @@ class MoneyHistoryList {
     _credit = credit;
     _debit = debit;
     _date = date;
+    _grams = grams;
     _moneyBalance = moneyBalance;
   }
 
@@ -110,6 +112,7 @@ class MoneyHistoryList {
     _credit = json['credit'];
     _debit = json['debit'];
     _date = json['date'];
+    _grams = json['grams'];
     _moneyBalance = json['moneyBalance'];
   }
 
@@ -122,6 +125,7 @@ class MoneyHistoryList {
   num? _credit;
   num? _debit;
   String? _date;
+  num? _grams;
   num? _moneyBalance;
 
   MoneyHistoryList copyWith({
@@ -134,6 +138,7 @@ class MoneyHistoryList {
     num? credit,
     num? debit,
     String? date,
+    num? grams,
     num? moneyBalance,
   }) =>
       MoneyHistoryList(
@@ -146,6 +151,7 @@ class MoneyHistoryList {
         credit: credit ?? _credit,
         debit: debit ?? _debit,
         date: date ?? _date,
+        grams: grams?? _grams,
         moneyBalance: moneyBalance ?? _moneyBalance,
       );
 
@@ -158,6 +164,7 @@ class MoneyHistoryList {
   num? get credit => _credit;
   num? get debit => _debit;
   String? get date => _date;
+  num? get grams => _grams;
   num? get moneyBalance => _moneyBalance;
 
   Map<String, dynamic> toJson() {
@@ -171,6 +178,7 @@ class MoneyHistoryList {
     map['credit'] = _credit;
     map['debit'] = _debit;
     map['date'] = _date;
+    map['grams'] = _grams;
     map['moneyBalance'] = _moneyBalance;
     return map;
   }

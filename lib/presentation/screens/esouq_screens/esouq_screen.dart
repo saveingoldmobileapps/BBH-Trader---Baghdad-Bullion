@@ -139,30 +139,30 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
           child: Column(
             children: [
               // --- NEW SEARCH BAR ---
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 8.0,
-                ),
-                child: Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1E1E1E),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white10),
-                  ),
-                  child: TextField(
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: l10n.gift_search,
-                      hintStyle: const TextStyle(color: Colors.grey),
-                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: 16.0,
+              //     vertical: 8.0,
+              //   ),
+              //   child: Container(
+              //     height: 50,
+              //     decoration: BoxDecoration(
+              //       color: const Color(0xFF1E1E1E),
+              //       borderRadius: BorderRadius.circular(12),
+              //       border: Border.all(color: Colors.white10),
+              //     ),
+              //     child: TextField(
+              //       style: const TextStyle(color: Colors.white),
+              //       decoration: InputDecoration(
+              //         hintText: l10n.gift_search,
+              //         hintStyle: const TextStyle(color: Colors.grey),
+              //         prefixIcon: const Icon(Icons.search, color: Colors.grey),
+              //         border: InputBorder.none,
+              //         contentPadding: const EdgeInsets.symmetric(vertical: 12),
+              //       ),
+              //     ),
+              //   ),
+              // ),
 
               Expanded(
                 child: RefreshIndicator(

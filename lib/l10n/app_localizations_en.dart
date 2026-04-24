@@ -18,7 +18,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get build => 'Build';
 
   @override
-  String get wealth => 'Wealth';
+  String get wealth => 'Wealth.';
 
   @override
   String get gs_subtitle =>
@@ -35,6 +35,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get new_to_bbh => 'I\'m new to BBH';
+
+  @override
+  String get sign_up_bbh => 'Sign up';
+
+  @override
+  String get login_des =>
+      'Trade, track, and grow your gold portfolio with real-time precision.';
+
+  @override
+  String get login_to_bbh => 'Login';
 
   @override
   String get exiting_to_bbh => 'I\'m an existing user';
@@ -2705,6 +2715,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get weight_10_tola => '10 Tola';
 
   @override
+  String get weight_125_grams => '125 Grams';
+
+  @override
   String get weight_250_grams => '250 Grams';
 
   @override
@@ -3018,6 +3031,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get metal_closed_at => 'Closed @';
+
+  @override
+  String get status_closed => 'Closed';
 
   @override
   String get buy_gold_grams_subtitle =>

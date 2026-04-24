@@ -214,10 +214,24 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
                       color: const Color(0xFFBBA473).withOpacity(0.5),
                     ),
                   ),
-                  child: Text(
+                  child: 
+                  Text(
                     (item.tradeStatus == "Opened")
                         ? AppLocalizations.of(context)!.grams_card_opened
-                        : (item.tradeStatus ?? ""),
+                        : (item.tradeStatus == "Pending")
+          ? AppLocalizations.of(context)!.pending: "",
+          //(item.tradeStatus ?? ""),
+  //                 Text(
+  // (item.tradeStatus == "opened")
+  //     ? AppLocalizations.of(context)!.grams_card_opened
+  //     : (item.tradeStatus == "Pending")
+  //         ? AppLocalizations.of(context)!.pending
+  //         : (item.tradeStatus == "closed")
+  //             ? AppLocalizations.of(context)!.status_closed
+  //             : AppLocalizations.of(context)!.not_available,
+
+
+
                     style: const TextStyle(
                       color: Color(0xFFBBA473),
                       fontSize: 12,

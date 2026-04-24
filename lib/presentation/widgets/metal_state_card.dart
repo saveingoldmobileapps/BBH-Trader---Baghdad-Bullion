@@ -138,8 +138,9 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
   Widget _buildTitle(BuildContext context) {
     String title = "";
-    num quantity =widget.statement.paymentModel == "Invest" &&
-                        widget.statement.tradeType == "Sell" && widget.statement.debit != 0
+    num quantity = widget.statement.paymentModel == "Invest" 
+    && widget.statement.tradeType == "Sell" 
+    && widget.statement.debit != 0
         ? (widget.statement.debit ?? 0.0)
         : (widget.statement.credit ?? 0.0);
 
@@ -217,9 +218,12 @@ class _MetalStatementCardState extends State<MetalStatementCard>
   final bool isOpened = status?.toLowerCase() == "opened";
 
   final displayText = isOpened
-      ? AppLocalizations.of(context)!.grams_card_opened//"FILLED"
-      : (status?.toUpperCase() ?? AppLocalizations.of(context)!.not_available);
-
+    ? AppLocalizations.of(context)!.grams_card_opened
+    : (status == "Closed")
+        ? AppLocalizations.of(context)!.status_closed
+        : (status == "pending")
+            ? AppLocalizations.of(context)!.pending
+            : AppLocalizations.of(context)!.not_available;
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     decoration: BoxDecoration(
@@ -228,7 +232,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
         color: isOpened ? const Color(0xFFBBA473) : Colors.white24,
       ),
     ),
-    child: Text(
+    child: Text( 
       displayText,
       style: TextStyle(
         color: isOpened ? const Color(0xFFBBA473) : Colors.white54,

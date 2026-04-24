@@ -280,7 +280,7 @@ class _MetalStatementDetailScreenState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GetGenericText(
-                    text: l10n.metal_closed_at,
+                    text: "33",//l10n.metal_closed_at,
                     fontSize: sizes!.responsiveFont(
                       phoneVal: 16,
                       tabletVal: 18,

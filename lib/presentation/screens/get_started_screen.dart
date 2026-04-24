@@ -163,7 +163,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
 
                   /// Subtitle
                   Text(
-                    AppLocalizations.of(context)!.gs_subtitle,
+                    AppLocalizations.of(context)!.login_des,
                     textAlign: Directionality.of(context) == TextDirection.rtl?TextAlign.right:TextAlign.left,
                     style: GoogleFonts.roboto(
                       fontSize: 14,
@@ -201,7 +201,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                         ),
                         child: Center(
                           child: Text(
-                            "${AppLocalizations.of(context)!.new_to_bbh}",//"I'm new to B&H",
+                            "${AppLocalizations.of(context)!.sign_up_bbh}",//"I'm new to B&H",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -237,7 +237,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                         );
                       },
                       child: Text(
-                       "${AppLocalizations.of(context)!.exiting_to_bbh}",// "I'm an existing user",
+                       "${AppLocalizations.of(context)!.login_to_bbh}",// "I'm an existing user",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

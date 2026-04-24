@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saveingold_fzco/core/decimal_text_input_formatter.dart';
 import 'package:saveingold_fzco/core/common_service.dart';
+import 'package:saveingold_fzco/presentation/widgets/input_formater.dart';
 
 import '../../../core/theme/const_colors.dart';
 import '../../../core/theme/get_generic_text_widget.dart';
@@ -48,38 +49,70 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
     }
   }
 
-  // Restored your original validation logic exactly
+  // // Restored your original validation logic exactly
   String? _validatePrice(String? value) {
-    if (value == null || value.isEmpty) {
-      return AppLocalizations.of(context)!.please_enter_target_price;
-    }
-
-    final enteredPrice = double.tryParse(value);
-    if (enteredPrice == null) {
-      return AppLocalizations.of(context)!.please_enter_valid_price;
-    }
-
-    final goldPriceState = ref.read(goldPriceProvider);
-    final currentPrices = goldPriceState.value;
-
-    if (currentPrices == null) {
-      return AppLocalizations.of(context)!.unable_to_fetch_current_prices;
-    }
-
-    final currentBuyingPrice = currentPrices.oneGramBuyingPriceInIQD;
-    final currentSellingPrice = currentPrices.oneGramSellingPriceInIQD;
-
-    if (side == "Buy") {
-      if (enteredPrice >= currentBuyingPrice) {
-        return "${AppLocalizations.of(context)!.buy_alert_below_current_price} (${CommonService.formatIQDForDisplay(currentBuyingPrice)})";
-      }
-    } else {
-      if (enteredPrice <= currentSellingPrice) {
-        return "${AppLocalizations.of(context)!.sell_alert_above_current_price} (${CommonService.formatIQDForDisplay(currentSellingPrice)})";
-      }
-    }
-    return null;
+  if (value == null || value.isEmpty) {
+    return AppLocalizations.of(context)!.please_enter_target_price;
   }
+
+  final enteredPrice = double.tryParse(value);
+  if (enteredPrice == null) {
+    return AppLocalizations.of(context)!.please_enter_valid_price;
+  }
+
+  final goldPriceState = ref.read(goldPriceProvider);
+  final currentPrices = goldPriceState.value;
+
+  if (currentPrices == null) {
+    return AppLocalizations.of(context)!.unable_to_fetch_current_prices;
+  }
+
+  final currentBuyingPrice = currentPrices.oneGramBuyingPriceInIQD;
+  final currentSellingPrice = currentPrices.oneGramSellingPriceInIQD;
+
+  if (side == "Buy") {
+    if (enteredPrice >= currentBuyingPrice) {
+      return "${AppLocalizations.of(context)!.buy_alert_below_current_price}\n(${CommonService.formatIQDForDisplay(currentBuyingPrice)})";
+    }
+  } else {
+    if (enteredPrice <= currentSellingPrice) {
+      return "${AppLocalizations.of(context)!.sell_alert_above_current_price}\n(${CommonService.formatIQDForDisplay(currentSellingPrice)})";
+    }
+  }
+
+  return null;
+}
+  // String? _validatePrice(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return AppLocalizations.of(context)!.please_enter_target_price;
+  //   }
+
+  //   final enteredPrice = double.tryParse(value);
+  //   if (enteredPrice == null) {
+  //     return AppLocalizations.of(context)!.please_enter_valid_price;
+  //   }
+
+  //   final goldPriceState = ref.read(goldPriceProvider);
+  //   final currentPrices = goldPriceState.value;
+
+  //   if (currentPrices == null) {
+  //     return AppLocalizations.of(context)!.unable_to_fetch_current_prices;
+  //   }
+
+  //   final currentBuyingPrice = currentPrices.oneGramBuyingPriceInIQD;
+  //   final currentSellingPrice = currentPrices.oneGramSellingPriceInIQD;
+
+  //   if (side == "Buy") {
+  //     if (enteredPrice >= currentBuyingPrice) {
+  //       return "${AppLocalizations.of(context)!.buy_alert_below_current_price} (${CommonService.formatIQDForDisplay(currentBuyingPrice)})";
+  //     }
+  //   } else {
+  //     if (enteredPrice <= currentSellingPrice) {
+  //       return "${AppLocalizations.of(context)!.sell_alert_above_current_price} (${CommonService.formatIQDForDisplay(currentSellingPrice)})";
+  //     }
+  //   }
+  //   return null;
+  // }
 
   void _updateSide(String? selectedLabel) {
     if (selectedLabel == null) return;
@@ -177,7 +210,10 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
               TextFormField(
                 controller: priceController,
                 validator: _validatePrice,
-                inputFormatters: [DecimalTextInputFormatter(decimalRange: 3)],
+                inputFormatters: [
+                            AmountInputFormatter(maxDigits: 6, decimalRange: 3),
+                          ],
+                //inputFormatters: [DecimalTextInputFormatter(decimalRange: 3)],
                 keyboardType: const TextInputType.numberWithOptions(
                   decimal: true,
                 ),

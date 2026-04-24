@@ -119,7 +119,7 @@ abstract class AppLocalizations {
   /// No description provided for @wealth.
   ///
   /// In en, this message translates to:
-  /// **'Wealth'**
+  /// **'Wealth.'**
   String get wealth;
 
   /// No description provided for @gs_subtitle.
@@ -151,6 +151,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I\'\'m new to BBH'**
   String get new_to_bbh;
+
+  /// No description provided for @sign_up_bbh.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up'**
+  String get sign_up_bbh;
+
+  /// No description provided for @login_des.
+  ///
+  /// In en, this message translates to:
+  /// **'Trade, track, and grow your gold portfolio with real-time precision.'**
+  String get login_des;
+
+  /// No description provided for @login_to_bbh.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login_to_bbh;
 
   /// No description provided for @exiting_to_bbh.
   ///
@@ -5178,6 +5196,12 @@ abstract class AppLocalizations {
   /// **'10 Tola'**
   String get weight_10_tola;
 
+  /// No description provided for @weight_125_grams.
+  ///
+  /// In en, this message translates to:
+  /// **'125 Grams'**
+  String get weight_125_grams;
+
   /// No description provided for @weight_250_grams.
   ///
   /// In en, this message translates to:
@@ -5747,6 +5771,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Closed @'**
   String get metal_closed_at;
+
+  /// No description provided for @status_closed.
+  ///
+  /// In en, this message translates to:
+  /// **'Closed'**
+  String get status_closed;
 
   /// No description provided for @buy_gold_grams_subtitle.
   ///

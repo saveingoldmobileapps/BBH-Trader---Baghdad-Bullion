@@ -118,16 +118,22 @@ Future<void> _startSSE({
 }) async {
   if (_isConnecting) return;
   _isConnecting = true;
+  getLocator<Logger>().i("SSE start requested");
   dynamic responseData;
   try {
     final hasInternet = await InternetConnection().hasInternetAccess;
+    getLocator<Logger>().i("SSE internet check: $hasInternet");
     if (!hasInternet) {
       Toasts.getErrorToast(text: "No Internet Connection");
+      getLocator<Logger>().w("SSE blocked: no internet");
       _scheduleReconnect(onData, onError);
       return;
     }
 
     final token = await LocalDatabase.instance.getLoginToken();
+    getLocator<Logger>().i(
+      "SSE token status: ${token == null || token.isEmpty ? 'missing' : 'available'}",
+    );
 
     final headers = {
       "Authorization": "Bearer $token",
@@ -135,14 +141,20 @@ Future<void> _startSSE({
       "Cache-Control": "no-cache",
       "Connection": "keep-alive",
     };
+    getLocator<Logger>().i(
+      "SSE subscribing to: ${ApiEndpoints.getGoldPriceApiUrl}",
+    );
 
-    const IQD = 1550.000; // Conversion rate from USD to IQD
-    const ounce = 31.10347; // Grams in a troy ounce
+    final ounce = CommonService.gramsPerTroyOunce;
 
     double lastSelling = 0.0;
     double lastBuying = 0.0;
     double lastLow = 0.0;
     double lastHigh = 0.0;
+    double lastBuyingExchangeRate = 0.0;
+    double lastSellingExchangeRate = 0.0;
+    double lastBuyingMargin = 0.0;
+    double lastSellingMargin = 0.0;
     Future<void> showMaxDurationPopup() async {
       final context = navigatorKey.currentContext;
       if (context == null) return;
@@ -169,9 +181,11 @@ Future<void> _startSSE({
           (event) {
             final raw = event.data;
             if (raw == null || raw.trim().isEmpty) {
+              getLocator<Logger>().w("SSE received empty payload");
               return;
             }
             _lastEventTime = DateTime.now();
+            getLocator<Logger>().d("SSE event received: ${raw.length} chars");
 
             try {
               // final decoded = jsonDecode(event.data ?? "{}");
@@ -193,25 +207,57 @@ Future<void> _startSSE({
               //   return;
               // }
               final List<dynamic> jsonList = jsonDecode(event.data ?? "[]");
+              getLocator<Logger>().d(
+                "SSE payload decoded, entries: ${jsonList.length}",
+              );
 
               final response = SSEGetGoldPriceResponse.fromJson(jsonList);
 
-              if (response.prices!.isEmpty) return;
+              if (response.prices!.isEmpty) {
+                getLocator<Logger>().w("SSE parsed but prices list is empty");
+                return;
+              }
 
               double sellingPx = 0.0;
               double buyingPx = 0.0;
               double lowPx = 0.0;
               double highPx = 0.0;
+              double sellingExchangeRate = 0.0;
+              double buyingExchangeRate = 0.0;
 
               for (final p in response.prices!.reversed) {
                 if (p.mDEntryType == "Bid") {
                   sellingPx = (p.mDSellingPx ?? 0).toDouble();
                   lowPx = (p.lastLowSellingPrice ?? 0).toDouble();
+
+                  final rate = (p.exchangeRate?.selling ?? 0).toDouble();
+                  if (rate > 0) {
+                    sellingExchangeRate = rate;
+                    lastSellingExchangeRate = rate;
+                  }
                 }
+
                 if (p.mDEntryType == "Offer") {
                   buyingPx = (p.mDBuyingPx ?? 0).toDouble();
                   highPx = (p.lastHighBuyingPrice ?? 0).toDouble();
+
+                  final rate = (p.exchangeRate?.buying ?? 0).toDouble();
+                  if (rate > 0) {
+                    buyingExchangeRate = rate;
+                    lastBuyingExchangeRate = rate;
+                  }
                 }
+
+                final m = p.margin;
+                if (m != null) {
+                  if (m.buying != null) {
+                    lastBuyingMargin = m.buying!.toDouble();
+                  }
+                  if (m.selling != null) {
+                    lastSellingMargin = m.selling!.toDouble();
+                  }
+                }
+
                 if (sellingPx != 0 && buyingPx != 0) break;
               }
 
@@ -220,42 +266,118 @@ Future<void> _startSSE({
               lowPx = lowPx == 0 ? lastLow : lowPx;
               highPx = highPx == 0 ? lastHigh : highPx;
 
+              sellingExchangeRate = sellingExchangeRate == 0
+                  ? lastSellingExchangeRate
+                  : sellingExchangeRate;
+              buyingExchangeRate = buyingExchangeRate == 0
+                  ? lastBuyingExchangeRate
+                  : buyingExchangeRate;
+
               lastSelling = sellingPx;
               lastBuying = buyingPx;
               lastLow = lowPx;
               lastHigh = highPx;
 
+              final buyingMargin = lastBuyingMargin;
+              final sellingMargin = lastSellingMargin;
+
+              getLocator<Logger>().i(
+                "SSE computed: sellOz=$sellingPx buyOz=$buyingPx low=$lowPx high=$highPx "
+                "buyRate=$buyingExchangeRate sellRate=$sellingExchangeRate "
+                "buyMargin=$buyingMargin sellMargin=$sellingMargin",
+              );
+
+              final oneGramBuyIqd = CommonService.oneGramBuyingPriceInIqd(
+                ounceUsd: buyingPx,
+                buyingMargin: buyingMargin,
+                exchangeBuyRate: buyingExchangeRate,
+                gramsPerOunce: ounce,
+              );
+              final oneGramSellIqd = CommonService.oneGramSellingPriceInIqd(
+                ounceUsd: sellingPx,
+                sellingMargin: sellingMargin,
+                exchangeSellingRate: sellingExchangeRate,
+                gramsPerOunce: ounce,
+              );
+
               final state = SSEGoldPriceState(
                 oneOunceDollarSellingPrice: sellingPx,
                 oneOunceDollarBuyingPrice: buyingPx,
-                lastLowSellingPrice: CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: lowPx,
-                  dirham: IQD,
-                  ounce: ounce,
+
+                oneGramSellingPriceInIQD: oneGramSellIqd,
+
+                oneGramBuyingPriceInIQD: oneGramBuyIqd,
+
+                oneOunceSellingPriceInIQD:
+                    CommonService.oneOunceSellingPriceInIqd(
+                      ounceUsd: sellingPx,
+                      sellingMargin: sellingMargin,
+                      exchangeSellingRate: sellingExchangeRate,
+                      gramsPerOunce: ounce,
+                    ),
+                oneOunceBuyingPriceInIQD:
+                    CommonService.oneOunceBuyingPriceInIqd(
+                      ounceUsd: buyingPx,
+                      buyingMargin: buyingMargin,
+                      exchangeBuyRate: buyingExchangeRate,
+                      gramsPerOunce: ounce,
+                    ),
+
+                lastLowSellingPrice: CommonService.oneGramSellingPriceInIqd(
+                  ounceUsd: lowPx,
+                  sellingMargin: sellingMargin,
+                  exchangeSellingRate: sellingExchangeRate,
+                  gramsPerOunce: ounce,
                 ),
-                lastHighBuyingPrice: CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: highPx,
-                  dirham: IQD,
-                  ounce: ounce,
+
+                lastHighBuyingPrice: CommonService.oneGramBuyingPriceInIqd(
+                  ounceUsd: highPx,
+                  buyingMargin: buyingMargin,
+                  exchangeBuyRate: buyingExchangeRate,
+                  gramsPerOunce: ounce,
                 ),
-                oneGramSellingPriceInIQD: CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: sellingPx,
-                  dirham: IQD,
-                  ounce: ounce,
-                ),
-                oneGramBuyingPriceInIQD: CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: buyingPx,
-                  dirham: IQD,
-                  ounce: ounce,
-                ),
-                oneOunceBuyingPriceInIQD: buyingPx * IQD,
-                oneOunceSellingPriceInIQD: sellingPx * IQD,
+
                 getGoldPriceResponse: response,
               );
+              // final state = SSEGoldPriceState(
+              //   oneOunceDollarSellingPrice: sellingPx,
+              //   oneOunceDollarBuyingPrice: buyingPx,
+              //   lastLowSellingPrice: CommonService.getOneGramPriceInIQD(
+              //     ounceDollarPrice: lowPx,
+              //     dirham: exchangeRate,
+              //     ounce: ounce,
+              //   ),
+              //   lastHighBuyingPrice: CommonService.getOneGramPriceInIQD(
+              //     ounceDollarPrice: highPx,
+              //     dirham: exchangeRate,
+              //     ounce: ounce,
+              //   ),
+              //   oneGramSellingPriceInIQD: CommonService.getOneGramPriceInIQD(
+              //     ounceDollarPrice: sellingPx,
+              //     dirham: exchangeRate,
+              //     ounce: ounce,
+              //   ),
+              //   oneGramBuyingPriceInIQD: CommonService.getOneGramPriceInIQD(
+              //     ounceDollarPrice: buyingPx,
+              //     dirham: exchangeRate,
+              //     ounce: ounce,
+              //   ),
+              //   oneOunceBuyingPriceInIQD: buyingPx * exchangeRate,
+              //   oneOunceSellingPriceInIQD: sellingPx * exchangeRate,
+              //   getGoldPriceResponse: response,
+              // );
 
+              print(
+                "SSE state emitted: gramBuy=${state.oneGramBuyingPriceInIQD} gramSell=${state.oneGramSellingPriceInIQD}",
+              );
+              print(
+                "Exchange Rates$buyingExchangeRate gramSell=$sellingExchangeRate",
+              );
               onData(state);
             } catch (e) {
-              getLocator<Logger>().e("SSE parse error: $e");
+              getLocator<Logger>().e(
+                "SSE parse error: $e | raw=${event.data}",
+              );
             }
           },
           onError: (e) {

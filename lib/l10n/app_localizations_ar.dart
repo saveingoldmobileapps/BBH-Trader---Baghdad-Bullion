@@ -37,6 +37,15 @@ class AppLocalizationsAr extends AppLocalizations {
   String get new_to_bbh => 'أنا مستخدم جديد في BBH';
 
   @override
+  String get sign_up_bbh => 'إنشاء حساب';
+
+  @override
+  String get login_des => 'تداول وتتبع ونمِّ محفظتك من الذهب بدقة لحظية.';
+
+  @override
+  String get login_to_bbh => 'تسجيل الدخول';
+
+  @override
   String get exiting_to_bbh => 'أنا مستخدم حالي';
 
   @override
@@ -2683,6 +2692,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get weight_10_tola => '10 توله';
 
   @override
+  String get weight_125_grams => '250 جرام';
+
+  @override
   String get weight_250_grams => '250 جرام';
 
   @override
@@ -2993,6 +3005,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get metal_closed_at => 'أُغلق عند';
 
   @override
+  String get status_closed => 'مغلق';
+
+  @override
   String get buy_gold_grams_subtitle => 'أدخل كمية الذهب بالغرامات للتداول';
 
   @override
@@ -3086,7 +3101,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get limit_amount => 'المبلغ';
 
   @override
-  String get gmt_time => 'GMT+3 الإجمالي';
+  String get gmt_time => 'توقيت غرينتش +3';
 
   @override
   String get will_notify => 'سنقوم بإشعارك عند تنفيذ طلبك';

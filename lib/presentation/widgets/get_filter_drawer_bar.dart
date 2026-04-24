@@ -25,12 +25,13 @@ class GetFilterDrawerBar extends StatefulWidget {
 class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
   static const String _castedBarType = 'Casted';
   static const String _mintedBarType = 'Minted';
+  static const String _allmintedAndCast = 'All';
 
   String? selectedUniqueWeight;
   String? selectedWeight;
   String? selectedWeightCategory;
-  String selectedBarType = _mintedBarType; // Default to match UI screenshot
-
+  // String selectedBarType = _mintedBarType; // Default to match UI screenshot
+  String selectedBarType = _allmintedAndCast; // Default = All
   final List<Map<String, dynamic>> weights = [
     {
       "text": AppLocalizations.of(navigatorKey.currentContext!)!.weight_1_gram,
@@ -116,6 +117,14 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
     {
       "text": AppLocalizations.of(
         navigatorKey.currentContext!,
+      )!.weight_125_grams,
+      "uniqueValue": "125Grams",
+      "value": "125",
+      "category": "Gram",
+    },
+    {
+      "text": AppLocalizations.of(
+        navigatorKey.currentContext!,
       )!.weight_250_grams,
       "uniqueValue": "250Grams",
       "value": "250",
@@ -142,7 +151,12 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
   @override
   Widget build(BuildContext context) {
     bool isFilterSelected = selectedWeight != null;
-    final allWeights = [...weights, ...castingWeights];
+    // final allWeights = [...weights, ...castingWeights];
+    final allWeights = selectedBarType == _castedBarType
+        ? castingWeights
+        : selectedBarType == _mintedBarType
+        ? weights
+        : [...weights, ...castingWeights]; // All // all weights
     final l10n = AppLocalizations.of(context)!;
 
     return Container(
@@ -272,46 +286,78 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                   const SizedBox(height: 16),
                   Row(
                     children: [
-                      _castedBarType,
-                      _mintedBarType,
-                    ].map((type) {
-                      bool isSelected = selectedBarType == type;
-                      final label = type == _castedBarType
-                          ? l10n.casting
-                          : l10n.minting;
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => selectedBarType = type),
-                          child: Container(
-                            margin: EdgeInsets.only(
-                              right: type == _castedBarType ? 12 : 0,
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? Colors.white.withOpacity(0.1)
-                                  : const Color(0xFF1E1E1E),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: isSelected
-                                    ? Colors.white24
-                                    : Colors.white.withOpacity(0.05),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                label,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                      _buildTypeButton(_allmintedAndCast),
+                      const SizedBox(width: 12),
+                      _buildTypeButton(_mintedBarType),
+                      const SizedBox(width: 12),
+                      _buildTypeButton(_castedBarType),
+                    ],
                   ),
+
+                  // Row(
+                  //   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children:
+                  //       [
+                  //         _allmintedAndCast,
+                  //         _mintedBarType,
+                  //         _castedBarType,
+                  //       ].map((type) {
+                  //         bool isSelected = selectedBarType == type;
+                  //         final label = type == _castedBarType
+                  //             ? l10n.casting
+                  //             : type == _mintedBarType
+                  //             ? l10n.minting
+                  //             : l10n.all; // 👈 add this key
+                  //         return Expanded(
+                  //           child: GestureDetector(
+                  //             // onTap: () => setState(() => selectedBarType = type),
+                  //             // onTap: () => setState(() {
+                  //             //   selectedBarType = type;
+
+                  //             //   /// Reset selection when switching
+                  //             //   selectedUniqueWeight = null;
+                  //             //   selectedWeight = null;
+                  //             //   selectedWeightCategory = null;
+                  //             // }),
+                  //             onTap: () => setState(() {
+                  //               selectedBarType = type;
+
+                  //               selectedUniqueWeight = null;
+                  //               selectedWeight = null;
+                  //               selectedWeightCategory = null;
+                  //             }),
+                  //             child: Container(
+                  //               margin: EdgeInsets.only(
+                  //                 right: type == _castedBarType ? 12 : 0,
+                  //               ),
+                  //               padding: const EdgeInsets.symmetric(
+                  //                 vertical: 14,
+                  //               ),
+                  //               decoration: BoxDecoration(
+                  //                 color: isSelected
+                  //                     ? Colors.white.withOpacity(0.1)
+                  //                     : const Color(0xFF1E1E1E),
+                  //                 borderRadius: BorderRadius.circular(10),
+                  //                 border: Border.all(
+                  //                   color: isSelected
+                  //                       ? Colors.white24
+                  //                       : Colors.white.withOpacity(0.05),
+                  //                 ),
+                  //               ),
+                  //               child: Center(
+                  //                 child: Text(
+                  //                   label,
+                  //                   style: const TextStyle(
+                  //                     color: Colors.white,
+                  //                     fontWeight: FontWeight.w500,
+                  //                   ),
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         );
+                  //       }).toList(),
+                  // ),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -364,6 +410,51 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTypeButton(String type) {
+    final l10n = AppLocalizations.of(context)!;
+    final isSelected = selectedBarType == type;
+
+    final label = type == _castedBarType
+        ? l10n.casting
+        : type == _mintedBarType
+        ? l10n.minting
+        : l10n.all;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() {
+          selectedBarType = type;
+          selectedUniqueWeight = null;
+          selectedWeight = null;
+          selectedWeightCategory = null;
+        }),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? Colors.white.withOpacity(0.1)
+                : const Color(0xFF1E1E1E),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected
+                  ? Colors.white24
+                  : Colors.white.withOpacity(0.05),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

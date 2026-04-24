@@ -555,7 +555,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
-        AmountInputFormatter(maxDigits: 6, decimalRange: 3),
+        AmountInputFormatter(maxDigits: 7, decimalRange: 3),
       ],
     );
   }

@@ -8,6 +8,7 @@ import 'package:saveingold_fzco/presentation/screens/fund_screens/add_fund_scree
 import 'package:saveingold_fzco/presentation/screens/withdraw_fund_screens/edit_card_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
+import 'package:saveingold_fzco/presentation/widgets/input_formater.dart';
 import 'package:saveingold_fzco/presentation/widgets/pop_up_widget.dart';
 import 'package:saveingold_fzco/presentation/widgets/text_form_field.dart';
 
@@ -226,9 +227,10 @@ class _WithdrawFundScreenState
                         context,
                       )!.amount, //"Amount",
                       controller: amountController,
+                      
                       inputFormatters: [
-                        DecimalTextInputFormatter(decimalRange: 3),
-                      ],
+                            AmountInputFormatter(maxDigits: 7, decimalRange: 3),
+                          ],
                       textInputType: TextInputType.numberWithOptions(
                         signed: true,
                         decimal: true,

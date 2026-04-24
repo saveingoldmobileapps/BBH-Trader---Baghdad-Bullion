@@ -263,6 +263,9 @@ class CommonService {
     }
   }
 
+  /// Troy ounces → grams (FIX/FICC convention).
+  static const double gramsPerTroyOunce = 31.10347;
+
   /// get once gram price in IQD
   static double getOneGramPriceInIQD({
     required double ounceDollarPrice,
@@ -270,6 +273,46 @@ class CommonService {
     required double ounce,
   }) {
     return ((ounceDollarPrice / ounce)* dirham);
+  }
+
+  /// One gram **buy** IQD: \((ounceUSD / G) + buyingMargin\) × exchangeBuyRate.
+  static double oneGramBuyingPriceInIqd({
+    required double ounceUsd,
+    required double buyingMargin,
+    required double exchangeBuyRate,
+    double gramsPerOunce = gramsPerTroyOunce,
+  }) {
+    return ((ounceUsd / gramsPerOunce) + buyingMargin) * exchangeBuyRate;
+  }
+
+  /// One gram **sell** IQD: \((ounceUSD / G) - sellingMargin\) × exchangeSellingRate.
+  static double oneGramSellingPriceInIqd({
+    required double ounceUsd,
+    required double sellingMargin,
+    required double exchangeSellingRate,
+    double gramsPerOunce = gramsPerTroyOunce,
+  }) {
+    return ((ounceUsd / gramsPerOunce) - sellingMargin) * exchangeSellingRate;
+  }
+
+  /// One troy ounce **buy** IQD (consistent with [oneGramBuyingPriceInIqd] × G).
+  static double oneOunceBuyingPriceInIqd({
+    required double ounceUsd,
+    required double buyingMargin,
+    required double exchangeBuyRate,
+    double gramsPerOunce = gramsPerTroyOunce,
+  }) {
+    return (ounceUsd + buyingMargin * gramsPerOunce) * exchangeBuyRate;
+  }
+
+  /// One troy ounce **sell** IQD (consistent with [oneGramSellingPriceInIqd] × G).
+  static double oneOunceSellingPriceInIqd({
+    required double ounceUsd,
+    required double sellingMargin,
+    required double exchangeSellingRate,
+    double gramsPerOunce = gramsPerTroyOunce,
+  }) {
+    return (ounceUsd - sellingMargin * gramsPerOunce) * exchangeSellingRate;
   }
 
   /// mask email address

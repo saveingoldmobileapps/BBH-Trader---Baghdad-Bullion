@@ -145,13 +145,16 @@ Future<void> _startSSE({
       "SSE subscribing to: ${ApiEndpoints.getGoldPriceApiUrl}",
     );
 
-    const ounce = 31.10347; // Grams in a troy ounce
+    final ounce = CommonService.gramsPerTroyOunce;
 
     double lastSelling = 0.0;
     double lastBuying = 0.0;
     double lastLow = 0.0;
     double lastHigh = 0.0;
-    double lastExchangeRate = 0.00;
+    double lastBuyingExchangeRate = 0.0;
+    double lastSellingExchangeRate = 0.0;
+    double lastBuyingMargin = 0.0;
+    double lastSellingMargin = 0.0;
     Future<void> showMaxDurationPopup() async {
       final context = navigatorKey.currentContext;
       if (context == null) return;
@@ -219,25 +222,6 @@ Future<void> _startSSE({
               double buyingPx = 0.0;
               double lowPx = 0.0;
               double highPx = 0.0;
-              double exchangeRate = 0.0;
-
-              // for (final p in response.prices!.reversed) {
-              //   if (p.mDEntryType == "Bid") {
-              //     sellingPx = (p.mDSellingPx ?? 0).toDouble();
-              //     lowPx = (p.lastLowSellingPrice ?? 0).toDouble();
-              //   }
-              //   if (p.mDEntryType == "Offer") {
-              //     buyingPx = (p.mDBuyingPx ?? 0).toDouble();
-              //     highPx = (p.lastHighBuyingPrice ?? 0).toDouble();
-              //   }
-              //   final liveRate =
-              //       (p.exchangeRate?.buying ?? p.exchangeRate?.selling ?? 0)
-              //           .toDouble();
-              //   if (liveRate > 0) {
-              //     exchangeRate = liveRate;
-              //   }
-              //   if (sellingPx != 0 && buyingPx != 0) break;
-              // }
               double sellingExchangeRate = 0.0;
               double buyingExchangeRate = 0.0;
 
@@ -246,10 +230,10 @@ Future<void> _startSSE({
                   sellingPx = (p.mDSellingPx ?? 0).toDouble();
                   lowPx = (p.lastLowSellingPrice ?? 0).toDouble();
 
-                  /// ✅ Selling uses SELLING exchange rate
                   final rate = (p.exchangeRate?.selling ?? 0).toDouble();
                   if (rate > 0) {
                     sellingExchangeRate = rate;
+                    lastSellingExchangeRate = rate;
                   }
                 }
 
@@ -257,10 +241,20 @@ Future<void> _startSSE({
                   buyingPx = (p.mDBuyingPx ?? 0).toDouble();
                   highPx = (p.lastHighBuyingPrice ?? 0).toDouble();
 
-                  /// ✅ Buying uses BUYING exchange rate
                   final rate = (p.exchangeRate?.buying ?? 0).toDouble();
                   if (rate > 0) {
                     buyingExchangeRate = rate;
+                    lastBuyingExchangeRate = rate;
+                  }
+                }
+
+                final m = p.margin;
+                if (m != null) {
+                  if (m.buying != null) {
+                    lastBuyingMargin = m.buying!.toDouble();
+                  }
+                  if (m.selling != null) {
+                    lastSellingMargin = m.selling!.toDouble();
                   }
                 }
 
@@ -271,57 +265,76 @@ Future<void> _startSSE({
               buyingPx = buyingPx == 0 ? lastBuying : buyingPx;
               lowPx = lowPx == 0 ? lastLow : lowPx;
               highPx = highPx == 0 ? lastHigh : highPx;
-              exchangeRate = exchangeRate == 0
-                  ? lastExchangeRate
-                  : exchangeRate;
-              getLocator<Logger>().i(
-                "SSE computed values: selling=$sellingPx buying=$buyingPx low=$lowPx high=$highPx exchangeRate=$exchangeRate",
-              );
+
+              sellingExchangeRate = sellingExchangeRate == 0
+                  ? lastSellingExchangeRate
+                  : sellingExchangeRate;
+              buyingExchangeRate = buyingExchangeRate == 0
+                  ? lastBuyingExchangeRate
+                  : buyingExchangeRate;
 
               lastSelling = sellingPx;
               lastBuying = buyingPx;
               lastLow = lowPx;
               lastHigh = highPx;
-              lastExchangeRate = exchangeRate;
-              sellingExchangeRate = sellingExchangeRate == 0
-                  ? lastExchangeRate
-                  : sellingExchangeRate;
 
-              buyingExchangeRate = buyingExchangeRate == 0
-                  ? lastExchangeRate
-                  : buyingExchangeRate;
+              final buyingMargin = lastBuyingMargin;
+              final sellingMargin = lastSellingMargin;
 
-              lastExchangeRate =
-                  buyingExchangeRate; // or keep separate if needed
+              getLocator<Logger>().i(
+                "SSE computed: sellOz=$sellingPx buyOz=$buyingPx low=$lowPx high=$highPx "
+                "buyRate=$buyingExchangeRate sellRate=$sellingExchangeRate "
+                "buyMargin=$buyingMargin sellMargin=$sellingMargin",
+              );
+
+              final oneGramBuyIqd = CommonService.oneGramBuyingPriceInIqd(
+                ounceUsd: buyingPx,
+                buyingMargin: buyingMargin,
+                exchangeBuyRate: buyingExchangeRate,
+                gramsPerOunce: ounce,
+              );
+              final oneGramSellIqd = CommonService.oneGramSellingPriceInIqd(
+                ounceUsd: sellingPx,
+                sellingMargin: sellingMargin,
+                exchangeSellingRate: sellingExchangeRate,
+                gramsPerOunce: ounce,
+              );
+
               final state = SSEGoldPriceState(
                 oneOunceDollarSellingPrice: sellingPx,
                 oneOunceDollarBuyingPrice: buyingPx,
 
-                oneGramSellingPriceInIQD: CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: sellingPx,
-                  dirham: sellingExchangeRate,
-                  ounce: ounce,
+                oneGramSellingPriceInIQD: oneGramSellIqd,
+
+                oneGramBuyingPriceInIQD: oneGramBuyIqd,
+
+                oneOunceSellingPriceInIQD:
+                    CommonService.oneOunceSellingPriceInIqd(
+                      ounceUsd: sellingPx,
+                      sellingMargin: sellingMargin,
+                      exchangeSellingRate: sellingExchangeRate,
+                      gramsPerOunce: ounce,
+                    ),
+                oneOunceBuyingPriceInIQD:
+                    CommonService.oneOunceBuyingPriceInIqd(
+                      ounceUsd: buyingPx,
+                      buyingMargin: buyingMargin,
+                      exchangeBuyRate: buyingExchangeRate,
+                      gramsPerOunce: ounce,
+                    ),
+
+                lastLowSellingPrice: CommonService.oneGramSellingPriceInIqd(
+                  ounceUsd: lowPx,
+                  sellingMargin: sellingMargin,
+                  exchangeSellingRate: sellingExchangeRate,
+                  gramsPerOunce: ounce,
                 ),
 
-                oneGramBuyingPriceInIQD: CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: buyingPx,
-                  dirham: buyingExchangeRate,
-                  ounce: ounce,
-                ),
-
-                oneOunceSellingPriceInIQD: sellingPx * sellingExchangeRate,
-                oneOunceBuyingPriceInIQD: buyingPx * buyingExchangeRate,
-
-                lastLowSellingPrice: CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: lowPx,
-                  dirham: sellingExchangeRate,
-                  ounce: ounce,
-                ),
-
-                lastHighBuyingPrice: CommonService.getOneGramPriceInIQD(
-                  ounceDollarPrice: highPx,
-                  dirham: buyingExchangeRate,
-                  ounce: ounce,
+                lastHighBuyingPrice: CommonService.oneGramBuyingPriceInIqd(
+                  ounceUsd: highPx,
+                  buyingMargin: buyingMargin,
+                  exchangeBuyRate: buyingExchangeRate,
+                  gramsPerOunce: ounce,
                 ),
 
                 getGoldPriceResponse: response,
@@ -358,7 +371,7 @@ Future<void> _startSSE({
                 "SSE state emitted: gramBuy=${state.oneGramBuyingPriceInIQD} gramSell=${state.oneGramSellingPriceInIQD}",
               );
               print(
-                "Exchange Rates${buyingExchangeRate} gramSell=${sellingExchangeRate}",
+                "Exchange Rates$buyingExchangeRate gramSell=$sellingExchangeRate",
               );
               onData(state);
             } catch (e) {

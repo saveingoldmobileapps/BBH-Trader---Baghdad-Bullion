@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
 
 class OrderPlacedScreen extends StatelessWidget {
   final String orderId;
@@ -22,19 +23,36 @@ class OrderPlacedScreen extends StatelessWidget {
     required this.total,
   });
 
-  String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
-    if (isoDate == null || isoDate.isEmpty) return '-';
-    try {
-      final parsed = DateTime.parse(isoDate);
-      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
-      final locale = Localizations.localeOf(context).languageCode == 'ar'
-          ? 'ar_IQ'
-          : 'en_IQ';
-      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
-    } catch (_) {
-      return isoDate;
-    }
-  }
+  // String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
+  //   if (isoDate == null || isoDate.isEmpty) return '-';
+  //   try {
+  //     final parsed = DateTime.parse(isoDate);
+  //     final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+  //     final locale = Localizations.localeOf(context).languageCode == 'ar'
+  //         ? 'ar_IQ'
+  //         : 'en_IQ';
+  //     return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
+  //   } catch (_) {
+  //     return isoDate;
+  //   }
+  // }
+//   String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
+//   if (isoDate == null || isoDate.isEmpty) return '-';
+//   try {
+//     final parsed = DateTime.parse(isoDate);
+
+//     // ✅ Convert to device local time
+//     final localTime = parsed.toLocal();
+
+//     final locale = Localizations.localeOf(context).languageCode == 'ar'
+//         ? 'ar'
+//         : 'en';
+
+//     return DateFormat('dd/MM/yyyy, HH:mm', locale).format(localTime);
+//   } catch (_) {
+//     return isoDate;
+//   }
+// }
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +125,8 @@ class OrderPlacedScreen extends StatelessWidget {
                     // _totalRow("GMT+3 Total", total),
                     _row(
                       AppLocalizations.of(context)!.limit_date_time,
-                      _formatIraqGregorianDateTime(dateTime, context),
+                      // _formatIraqGregorianDateTime(dateTime, context),
+                      DateTimeHelper.formatLocalDateTime(dateTime, context),
                       context,
                     ),
                     _badgeRow(

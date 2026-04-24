@@ -11,6 +11,7 @@ import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/screens/fund_screens/add_fund_screen.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/gift_provider/gift_fund_provider.dart';
+import 'package:saveingold_fzco/presentation/widgets/input_formater.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
 import '../../../core/validators.dart';
@@ -630,8 +631,8 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     labelText: AppLocalizations.of(context)!.amount, //"Amount",
                     controller: amountController,
                     inputFormatters: [
-                      DecimalTextInputFormatter(decimalRange: 3),
-                    ],
+                            AmountInputFormatter(maxDigits: 4, decimalRange: 3),
+                          ],
                     textInputType: TextInputType.numberWithOptions(
                       signed: true,
                       decimal: true,

@@ -9,6 +9,7 @@ import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/gram_provider/gram_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/trade_provider/trade_provider.dart';
+import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
 import 'package:saveingold_fzco/presentation/widgets/input_formater.dart';
 import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
 
@@ -48,19 +49,19 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
   final _focusAmountGramNode = FocusNode(); // Add FocusNode
   final _focusSellAtPriceNode = FocusNode(); // Add FocusNode
 
-  String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
-    if (isoDate == null || isoDate.isEmpty) return '-';
-    try {
-      final parsed = DateTime.parse(isoDate);
-      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
-      final locale = Localizations.localeOf(context).languageCode == 'ar'
-          ? 'ar_IQ'
-          : 'en_IQ';
-      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
-    } catch (_) {
-      return isoDate;
-    }
-  }
+  // String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
+  //   if (isoDate == null || isoDate.isEmpty) return '-';
+  //   try {
+  //     final parsed = DateTime.parse(isoDate);
+  //     final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+  //     final locale = Localizations.localeOf(context).languageCode == 'ar'
+  //         ? 'ar_IQ'
+  //         : 'en_IQ';
+  //     return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
+  //   } catch (_) {
+  //     return isoDate;
+  //   }
+  // }
 
   @override
   void initState() {
@@ -506,10 +507,11 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                             flex: 3,
                             child: GetGenericText(
                               text:
-                                  _formatIraqGregorianDateTime(
-                                    widget.gramData.createdAt?.toString(),
-                                    context,
-                                  ),
+                                  // _formatIraqGregorianDateTime(
+                                  //   widget.gramData.createdAt?.toString(),
+                                  //   context,
+                                  // ),
+                                   DateTimeHelper.formatLocalDateTime(widget.gramData.createdAt?.toString(), context),
                               // DateFormat('EEE, dd MMM yyyy HH:mm').format(
                               //   DateTime.parse(
                               //     widget.gramData.createdAt!.toString(),

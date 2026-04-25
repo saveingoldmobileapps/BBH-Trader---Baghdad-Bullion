@@ -10,6 +10,7 @@ import 'package:smart_auth/smart_auth.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../widgets/button_widget.dart';
 import '../../widgets/pop_up_widget.dart';
+import '../../widgets/whatsapp_otp_notice.dart';
 
 class UpdateAccountVerifyCodeScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
@@ -127,21 +128,7 @@ class _VerifyCodeScreenState
                   color: AppColors.grey6Color,
                 ).getAlign(),
                 ConstPadding.sizeBoxWithHeight(height: 8),
-                Directionality.of(context) == TextDirection.rtl?
-                GetGenericText(
-                  text:
-                  "${AppLocalizations.of(context)!.enter_verify_code_phone}\n \u200E ${CommonService.maskPhoneNumber(phoneNumber: widget.phoneNumber)}.",
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.neutral80,
-                ).getAlignRight():
-                GetGenericText(
-                  text:
-                  "${AppLocalizations.of(context)!.enter_verify_code_phone}\n \u200E \n${CommonService.maskPhoneNumber(phoneNumber: widget.phoneNumber)}.",
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.neutral80,
-                ).getAlign(),
+                WhatsappOtpNotice(phoneNumber: widget.phoneNumber),
                 // Directionality.of(context) == TextDirection.rtl
                 //     ? GetGenericText(
                 //         text:

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/data/models/history_model/GetMetalStatementsResponse.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../core/common_service.dart';
+import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
 
 class MetalStatementCard extends StatefulWidget {
   final VoidCallback onTap;
@@ -27,20 +27,6 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
   String _formatIqd(num? value) {
     return CommonService.formatIQDForDisplay(value ?? 0);
-  }
-
-  String _formatIraqDateTime(String? isoDate, BuildContext context) {
-    if (isoDate == null || isoDate.isEmpty) return 'N/A';
-    try {
-      final parsed = DateTime.parse(isoDate);
-      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
-      final locale = Localizations.localeOf(context).languageCode == 'ar'
-          ? 'ar_IQ'
-          : 'en_IQ';
-      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
-    } catch (_) {
-      return isoDate;
-    }
   }
 
   @override
@@ -96,7 +82,10 @@ class _MetalStatementCardState extends State<MetalStatementCard>
                 ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.grams_card_date_label,
-                  _formatIraqDateTime(widget.statement.date?.toString(), context),
+                  DateTimeHelper.formatLocalDateTime(
+                    widget.statement.date?.toString(),
+                    context,
+                  ),
                 ),
                 const Divider(color: Colors.white10, height: 24),
               ],
@@ -232,7 +221,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
         color: isOpened ? const Color(0xFFBBA473) : Colors.white24,
       ),
     ),
-    child: Text( 
+    child: Text(
       displayText,
       style: TextStyle(
         color: isOpened ? const Color(0xFFBBA473) : Colors.white54,

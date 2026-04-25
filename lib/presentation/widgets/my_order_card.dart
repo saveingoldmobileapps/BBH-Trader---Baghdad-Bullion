@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:saveingold_fzco/core/res_sizes/res.dart';
-import 'package:saveingold_fzco/core/theme/const_colors.dart';
-import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
 
 class MyOrderCard extends ConsumerWidget {
   final KAllOrders kAllOrders;
@@ -25,16 +21,10 @@ class MyOrderCard extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
-    String formattedDate = kAllOrders.createdAt != null
-        ? DateFormat(
-            'dd/MM/yyyy, HH:mm',
-            isArabic ? 'ar_IQ' : 'en_IQ',
-          ).format(
-            DateTime.parse(
-              kAllOrders.createdAt!,
-            ).toUtc().add(const Duration(hours: 3)),
-          )
-        : "Dec 18, 2024  •  2:45 PM";
+    final formattedDate = DateTimeHelper.formatLocalDateTime(
+      kAllOrders.createdAt,
+      context,
+    );
 
     // ✅ Get product name directly from the rawProductName map
     String getProductName() {
@@ -263,8 +253,9 @@ class MyOrderCard extends ConsumerWidget {
                   color: Colors.white,
                 ),
                 GetGenericText(
-                  text:
-                      "${l10n.iqd_currency} ${CommonService.formatIQDForDisplay(kAllOrders.grandTotal ?? 0)}",
+                  text: (kAllOrders.paymentMethod == 'Money')
+                      ? "${l10n.iqd_currency} ${CommonService.formatIQDForDisplay(kAllOrders.grandTotal ?? 0)}"
+                      : "${l10n.iqd_gram} ${CommonService.formatGramForDisplay(kAllOrders.grandTotal ?? 0)}",
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: AppColors.goldColor,

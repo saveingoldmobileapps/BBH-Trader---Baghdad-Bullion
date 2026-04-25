@@ -7,6 +7,7 @@ import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_prov
 import 'package:smart_auth/smart_auth.dart';
 
 import '../../../l10n/app_localizations.dart';
+import '../../widgets/whatsapp_otp_notice.dart';
 
 class GiftPhoneVerifyCodeScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
@@ -16,7 +17,7 @@ class GiftPhoneVerifyCodeScreen extends ConsumerStatefulWidget {
   final String receiverEmail;
   final String giftAmount;
   final String comment;
-  List<Map<String, dynamic>>? selectedDealsData;
+  final List<Map<String, dynamic>>? selectedDealsData;
 
   GiftPhoneVerifyCodeScreen({
     super.key,
@@ -139,13 +140,7 @@ class _GiftPhoneVerifyCodeScreenState
                     color: AppColors.grey6Color,
                   ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 8),
-                  GetGenericText(
-                    text:
-                        "${AppLocalizations.of(context)!.enter_verify_code_phone} ${CommonService.maskPhoneNumber(phoneNumber: widget.phoneNumber)}.",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.neutral80,
-                  ).getAlign(),
+                  WhatsappOtpNotice(phoneNumber: widget.phoneNumber),
                   ConstPadding.sizeBoxWithHeight(height: 100),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,

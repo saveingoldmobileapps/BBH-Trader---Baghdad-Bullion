@@ -5,8 +5,9 @@ class DateTimeHelper {
   /// Format ISO date to device local time
   static String formatLocalDateTime(
     String? isoDate,
-    BuildContext context,
-  ) {
+    BuildContext context, {
+    String pattern = 'dd/MM/yyyy, HH:mm',
+  }) {
     if (isoDate == null || isoDate.isEmpty) return '-';
 
     try {
@@ -19,7 +20,7 @@ class DateTimeHelper {
           ? 'ar'
           : 'en';
 
-      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(localTime);
+      return DateFormat(pattern, locale).format(localTime);
     } catch (_) {
       return isoDate;
     }

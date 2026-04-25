@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/widgets/auto_scale_text.dart';
+import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
 
 import '../../data/models/history_model/NewMoneyApiResponseModel.dart';
 
@@ -27,26 +27,8 @@ class MoneyStatementCard extends StatefulWidget {
 class _MoneyStatementCardState extends State<MoneyStatementCard> {
   bool isExpanded = false;
 
-  /// Until the API returns grams on money statements, show a fixed placeholder.
-  static const String _gramAmountPlaceholder = '50';
-
   String _formatIqd(num? value) {
     return CommonService.formatIqdCurrency(value ?? 0);
-  }
-
-  String _formatIraqDateTime(String? isoDate, BuildContext context) {
-    if (isoDate == null || isoDate.isEmpty)
-      return AppLocalizations.of(context)!.not_available;
-    try {
-      final parsed = DateTime.parse(isoDate);
-      final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
-      final locale = Localizations.localeOf(context).languageCode == 'ar'
-          ? 'ar_IQ'
-          : 'en_IQ';
-      return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
-    } catch (_) {
-      return isoDate;
-    }
   }
 
   @override
@@ -124,7 +106,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
               ),
             _buildDetailRow(
               widget.rtl ? "التاريخ والوقت" : l10n.dateTime,
-              _formatIraqDateTime(item.date, context),
+              DateTimeHelper.formatLocalDateTime(item.date, context),
             ),
             _buildDetailRow(
               widget.rtl ? "الرصيد بعد المعاملة" : l10n.balanceAfterTransaction,
@@ -141,7 +123,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    isExpanded 
+                    isExpanded
                         ? (widget.rtl ? "إظهار أقل" : l10n.see_less)
                         : (widget.rtl ? "تفاصيل أكثر" : l10n.see_details),
                     style: const TextStyle(
@@ -171,102 +153,118 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
   //   final l10n = AppLocalizations.of(context)!;
   //   final item = widget.data;
   //   final isRtl = widget.rtl;
-    
+
   //   // Get localized transaction type
   //   String transactionTypeText = getLocalizedTransactionType(context, item.transactionType);
-    
+
   //   // Handle debit (purchase/withdrawal)
   //   if (item.debit != null && item.debit! > 0) {
   //     final iqd = _formatIqd(double.tryParse(item.debit.toString()) ?? 0);
-      
+
   //     if (isRtl) {
   //       return "$transactionTypeText\n$iqd د.ع (مدين)";
   //     } else {
   //       return "$transactionTypeText: $iqd IQD (Debit)";
   //     }
   //   }
-    
+
   //   // Handle credit (sale/deposit)
   //   if (item.credit != null && item.credit! > 0) {
   //     final iqd = _formatIqd(double.tryParse(item.credit.toString()) ?? 0);
-      
+
   //     if (isRtl) {
   //       return "$transactionTypeText $iqd د.ع (دائن)";
   //     } else {
   //       return "$transactionTypeText: $iqd IQD (Credit)";
   //     }
   //   }
-    
+
   //   // Fallback: just show transaction type
   //   return transactionTypeText;
   // }
   String _moneyHistoryHeadline(BuildContext context) {
-  final l10n = AppLocalizations.of(context)!;
-  final item = widget.data;
-  final isRtl = widget.rtl;
+    final item = widget.data;
+    final isRtl = widget.rtl;
 
-  String transactionTypeText =
-      getLocalizedTransactionType(context, item.transactionType);
+    String transactionTypeText = getLocalizedTransactionType(
+      context,
+      item.transactionType,
+    );
 
-  final isSpecialModel =
-      item.paymentModel == "Invest" ;
+    final paymentModelLc = (item.paymentModel ?? '').toLowerCase().trim();
+    final transactionTypeLc = (item.transactionType ?? '').toLowerCase().trim();
+    final isAdminTransaction =
+        paymentModelLc == 'admin' ||
+        transactionTypeLc == 'admin' ||
+        paymentModelLc.contains('admin') ||
+        transactionTypeLc.contains('admin');
 
-  final esouqCheckout = item.paymentModel  == "BBH Wallet";
-  /// Extract grams (adjust field if your model differs)
-  final grams = item.grams ?? 0; // <-- update if needed
+    final isSpecialModel = item.paymentModel == "Invest";
 
-  /// Handle DEBIT (Buy / Withdrawal)
-  if (item.debit != null && item.debit! > 0) {
-    final iqd = _formatIqd(double.tryParse(item.debit.toString()) ?? 0);
+    final esouqCheckout = item.paymentModel == "BBH Wallet";
 
-    /// ✅ Special Case
-    if (isSpecialModel) {
+    /// Extract grams (adjust field if your model differs)
+    final grams = item.grams ?? 0; // <-- update if needed
+
+    // ✅ Admin deposit title override
+    if (isAdminTransaction && item.credit != null && item.credit! > 0) {
+      return isRtl
+          ? "تم إيداع المبلغ بواسطة المشرف"
+          : "Amount Deposited by Admin";
+    }
+
+    /// Handle DEBIT (Buy / Withdrawal)
+    if (item.debit != null && item.debit! > 0) {
+      final iqd = _formatIqd(double.tryParse(item.debit.toString()) ?? 0);
+
+      /// ✅ Special Case
+      if (isSpecialModel) {
+        if (isRtl) {
+          return "شراء:\n$iqd د.ع لتغطية شراء $grams غرام من الذهب";
+        } else {
+          return "Buy:\nIQD $iqd covering the purchase of $grams gram(s) of gold";
+        }
+      }
+      if (esouqCheckout) {
+        if (isRtl) {
+          return "الدفع عبر إي سوق:\n$iqd د.ع لتغطية شراء $grams غرام من الذهب";
+        } else {
+          return "Esouq Checkout:\nIQD $iqd ${item.transactionType} of $grams gram(s) of gold";
+        }
+      }
+
+      /// Default
       if (isRtl) {
-        return "شراء:\n$iqd د.ع لتغطية شراء $grams غرام من الذهب";
+        return "$transactionTypeText\n$iqd د.ع (مدين)";
       } else {
-        return "Buy:\nIQD $iqd covering the purchase of $grams gram(s) of gold";
+        return "$transactionTypeText: $iqd IQD (Debit)";
       }
     }
-    if (esouqCheckout) {
+
+    /// Handle CREDIT (Sell / Deposit)
+    if (item.credit != null && item.credit! > 0) {
+      final iqd = _formatIqd(double.tryParse(item.credit.toString()) ?? 0);
+
+      /// ✅ Special Case
+      if (isSpecialModel) {
+        if (isRtl) {
+          return "بيع:\n$iqd د.ع عائدات بيع $grams غرام من الذهب";
+        } else {
+          return "Sell:\nIQD $iqd being proceeds from the sale of $grams gram(s) of gold";
+        }
+      }
+
+      /// Default
       if (isRtl) {
-        return "الدفع عبر إي سوق:\n$iqd د.ع لتغطية شراء $grams غرام من الذهب";
+        return "$transactionTypeText $iqd د.ع (دائن)";
       } else {
-        return "Esouq Checkout:\nIQD $iqd covering the purchase of $grams gram(s) of gold";
+        return "$transactionTypeText: $iqd IQD (Credit)";
       }
     }
 
-    /// Default
-    if (isRtl) {
-      return "$transactionTypeText\n$iqd د.ع (مدين)";
-    } else {
-      return "$transactionTypeText: $iqd IQD (Debit)";
-    }
+    /// Fallback
+    return transactionTypeText;
   }
-
-  /// Handle CREDIT (Sell / Deposit)
-  if (item.credit != null && item.credit! > 0) {
-    final iqd = _formatIqd(double.tryParse(item.credit.toString()) ?? 0);
-
-    /// ✅ Special Case
-    if (isSpecialModel) {
-      if (isRtl) {
-        return "بيع:\n$iqd د.ع عائدات بيع $grams غرام من الذهب";
-      } else {
-        return "Sell:\nIQD $iqd being proceeds from the sale of $grams gram(s) of gold";
-      }
-    }
-
-    /// Default
-    if (isRtl) {
-      return "$transactionTypeText $iqd د.ع (دائن)";
-    } else {
-      return "$transactionTypeText: $iqd IQD (Credit)";
-    }
-  }
-
-  /// Fallback
-  return transactionTypeText;
-}
 
   Widget _buildDetailRow(String label, String value) {
     return Padding(

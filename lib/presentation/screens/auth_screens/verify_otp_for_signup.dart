@@ -9,6 +9,7 @@ import 'package:smart_auth/smart_auth.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../widgets/button_widget.dart';
+import '../../widgets/whatsapp_otp_notice.dart';
 
 class SignupVerifyCodeScreen extends ConsumerStatefulWidget {
   final String email;
@@ -119,14 +120,7 @@ class _VerifyCodeScreenState extends ConsumerState<SignupVerifyCodeScreen> {
                   color: AppColors.grey6Color,
                 ).getAlign(),
                 ConstPadding.sizeBoxWithHeight(height: 8),
-                GetGenericText(
-                  text:
-                      "${AppLocalizations.of(context)!.enter_verify_code_phone} ${CommonService.maskPhoneNumber(phoneNumber: widget.phoneNumber)}.",
-                      //"Enter the verify code you received on your phone number: ${CommonService.maskPhoneNumber(phoneNumber: widget.phoneNumber)}.",
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.neutral80,
-                ).getAlign(),
+                WhatsappOtpNotice(phoneNumber: widget.phoneNumber),
                 ConstPadding.sizeBoxWithHeight(height: 100),
                 Directionality(
                   // Specify direction if desired

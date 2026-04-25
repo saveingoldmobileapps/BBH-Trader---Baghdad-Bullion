@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
 import 'package:saveingold_fzco/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
+import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
 
 import '../../widgets/shimmers/shimmer_loader.dart';
 
@@ -232,16 +232,10 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
     final weightUnit = widget.kAllOrders.productId?.weightCategory ?? "Gram";
     final totalWeight = (widget.kAllOrders.quantity ?? 0) * (double.tryParse(weightPerUnit) ?? 0);
 
-    String formattedDate = widget.kAllOrders.createdAt != null
-        ? DateFormat(
-            'dd/MM/yyyy, HH:mm',
-            isArabic ? 'ar_IQ' : 'en_IQ',
-          ).format(
-            DateTime.parse(widget.kAllOrders.createdAt!)
-                .toUtc()
-                .add(const Duration(hours: 3)),
-          )
-        : "Dec 18, 2024  •  2:45 PM";
+    final formattedDate = DateTimeHelper.formatLocalDateTime(
+      widget.kAllOrders.createdAt,
+      context,
+    );
 
     return Scaffold(
       backgroundColor: AppColors.greyScale1000,
@@ -388,7 +382,7 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
                                         'Money'
                                     ? "${l10n.iqd_currency} ${CommonService.formatIQDForDisplay(widget.kAllOrders.grandTotal ?? 0)}"
                                           // "IQD ${widget.kAllOrders.grandTotal ?? '0.00'}":"",
-                                         : "${l10n.iqd_gram} ${CommonService.formatIQDForDisplay(widget.kAllOrders.grandTotal ?? 0)}",
+                                         : "${l10n.iqd_gram} ${CommonService.formatGramForDisplay(widget.kAllOrders.grandTotal ?? 0)}",
                                     //: "",
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,

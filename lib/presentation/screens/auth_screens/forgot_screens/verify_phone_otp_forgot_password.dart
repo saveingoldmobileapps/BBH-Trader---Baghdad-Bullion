@@ -7,6 +7,7 @@ import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_prov
 import 'package:smart_auth/smart_auth.dart';
 
 import '../../../../l10n/app_localizations.dart';
+import '../../../widgets/whatsapp_otp_notice.dart';
 
 class ForgotPhoneVerifyCodeScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
@@ -129,23 +130,7 @@ class _ForgotPhoneVerifyCodeScreenState
                     color: AppColors.grey6Color,
                   ).getAlign(),
                   ConstPadding.sizeBoxWithHeight(height: 8),
-                  Directionality.of(context) == TextDirection.rtl?
-                  GetGenericText(
-                    lines: 3,
-                    
-                    text:"${AppLocalizations.of(context)!.enter_verify_code_phone}\n\u202A ${CommonService.maskPhoneNumber(phoneNumber: widget.phoneNumber)}\u202C.",
-                        // "Enter the verify code you received on your phone number: ${CommonService.maskPhoneNumber(phoneNumber: widget.phoneNumber)}.",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.neutral80,
-                  ).getAlignRight():
-                  GetGenericText(
-                    text:"${AppLocalizations.of(context)!.enter_verify_code_phone} ${CommonService.maskPhoneNumber(phoneNumber: widget.phoneNumber)}.",
-                        // "Enter the verify code you received on your phone number: ${CommonService.maskPhoneNumber(phoneNumber: widget.phoneNumber)}.",
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.neutral80,
-                  ).getAlign(),
+                  WhatsappOtpNotice(phoneNumber: widget.phoneNumber),
                   ConstPadding.sizeBoxWithHeight(height: 100),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,

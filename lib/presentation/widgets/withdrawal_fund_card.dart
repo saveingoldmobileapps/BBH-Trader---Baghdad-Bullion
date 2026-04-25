@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/models/withdrawal_models/GetAllWithdrawalFundsResponse.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
 
 import '../../main.dart';
 
@@ -18,14 +18,11 @@ class WithdrawalFundCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // // Convert from UTC to local time
-    DateTime parsedDate = DateTime.parse("${kAllWithdraw.createdAt}").toLocal();
-
-    final String localeCode = Localizations.localeOf(context).languageCode;
-    String formattedDate = DateFormat(
-      'EEE, dd MMM yyyy, HH:mm',
-      localeCode == 'ar' ? 'ar' : 'en',
-    ).format(parsedDate);
+    final formattedDate = DateTimeHelper.formatLocalDateTime(
+      "${kAllWithdraw.createdAt}",
+      context,
+      pattern: 'EEE, dd MMM yyyy, HH:mm',
+    );
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: ShapeDecoration(

@@ -429,7 +429,9 @@ class Home extends _$Home {
               languageNotifier.updateLanguage(
                   language: CommonService.lang,
                   context: navigatorKey.currentContext!,
-                  isDashboard: false);
+                  isDashboard: false,
+                  showToast: false,
+                  navigateToHome: false);
             }
             getLocator<Logger>().i(
               "getUserProfileResponse: ${getUserProfileResponse.payload?.toJson()}",
@@ -594,10 +596,7 @@ class Home extends _$Home {
           break;
 
         case ServerResponseType.error:
-          ErrorResponse errorResponse = ErrorResponse.fromJson(
-            serverResponse.resultData,
-          );
-
+          ErrorResponse.fromJson(serverResponse.resultData);
           break;
         case ServerResponseType.exception:
           getLocator<Logger>().e(

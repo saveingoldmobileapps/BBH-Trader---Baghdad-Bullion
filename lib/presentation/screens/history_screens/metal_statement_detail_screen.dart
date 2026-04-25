@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/data/models/history_model/GetMetalStatementsResponse.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
 
 class MetalStatementDetailScreen extends ConsumerStatefulWidget {
   final MetalHistoryList statement;
@@ -111,15 +111,10 @@ class _MetalStatementDetailScreenState
                   ),
                   GetGenericText(
                     text: widget.statement.date != null
-                        ? DateFormat(
-                            'EEE, dd MMM yyyy, HH:mm',
-                            Localizations.localeOf(context).languageCode == 'ar'
-                                ? 'ar'
-                                : 'en',
-                          ).format(
-                            DateTime.parse(
-                              widget.statement.date.toString(),
-                            ).toLocal(),
+                        ? DateTimeHelper.formatLocalDateTime(
+                            widget.statement.date.toString(),
+                            context,
+                            pattern: 'EEE, dd MMM yyyy, HH:mm',
                           )
                         : AppLocalizations.of(context)!.na,
                     // DateFormat('EEE, dd MMM yyyy, HH:mm').format(
@@ -154,15 +149,10 @@ class _MetalStatementDetailScreenState
                   ),
                   GetGenericText(
                     text: widget.statement.date != null
-                        ? DateFormat(
-                            'EEE, dd MMM yyyy, HH:mm',
-                            Localizations.localeOf(context).languageCode == 'ar'
-                                ? 'ar'
-                                : 'en',
-                          ).format(
-                            DateTime.parse(
-                              widget.statement.date.toString(),
-                            ).toLocal(),
+                        ? DateTimeHelper.formatLocalDateTime(
+                            widget.statement.date.toString(),
+                            context,
+                            pattern: 'EEE, dd MMM yyyy, HH:mm',
                           )
                         : AppLocalizations.of(context)!.na,
 

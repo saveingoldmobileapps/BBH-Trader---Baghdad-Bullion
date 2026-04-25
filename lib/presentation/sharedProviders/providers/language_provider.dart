@@ -95,7 +95,8 @@ class LanguageState {
 class Language extends _$Language {
   @override
   LanguageState build() {
-    init();
+    // Language is preloaded in `main.dart` before `runApp()`.
+    // Avoid async initialization here to prevent double rebuilds on startup/login.
     return LanguageState(selectedLanguage: LanguageList.english);
   }
 
@@ -176,15 +177,15 @@ class Language extends _$Language {
     state = state.copyWith(languageCode: code);
     CommonService.lang = code;
     await LocalDatabase.instance.write(key: Strings.kLanguageCode, value: code);
-    String savedcode = await LocalDatabase.instance.read(
-      key: Strings.kLanguageCode,
-    );
+    await LocalDatabase.instance.read(key: Strings.kLanguageCode);
   }
 
   Future<void> updateLanguage({
     required String language,
     required BuildContext context,
     required bool isDashboard,
+    bool showToast = true,
+    bool navigateToHome = true,
   }) async {
     try {
       if (isDashboard) {
@@ -224,18 +225,22 @@ class Language extends _$Language {
             serverResponse.resultData,
           );
           setLanguage(code: language);
-          Toasts.getSuccessToast(
-            gravity: ToastGravity.TOP,
-            text: "${successResponse.payload?.message.toString()}",
-          );
-          if (!context.mounted) return;
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MainHomeScreen(),
-            ),
-            ((route) => false),
-          );
+          if (showToast) {
+            Toasts.getSuccessToast(
+              gravity: ToastGravity.TOP,
+              text: "${successResponse.payload?.message.toString()}",
+            );
+          }
+          if (navigateToHome) {
+            if (!context.mounted) return;
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MainHomeScreen(),
+              ),
+              ((route) => false),
+            );
+          }
 
           break;
 
@@ -247,10 +252,12 @@ class Language extends _$Language {
           getLocator<Logger>().e(
             "error: ${errorResponse.payload?.message.toString()}",
           );
-          Toasts.getErrorToast(
-            gravity: ToastGravity.TOP,
-            text: "${errorResponse.payload?.message.toString()}",
-          );
+          if (showToast) {
+            Toasts.getErrorToast(
+              gravity: ToastGravity.TOP,
+              text: "${errorResponse.payload?.message.toString()}",
+            );
+          }
           break;
 
         case ServerResponseType.exception:

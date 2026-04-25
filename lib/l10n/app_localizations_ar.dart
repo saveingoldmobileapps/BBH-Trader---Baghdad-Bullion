@@ -18,7 +18,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get build => 'رحلتك نحو';
 
   @override
-  String get wealth => 'الثروة';
+  String get wealth => '.الثروة';
 
   @override
   String get gs_subtitle =>

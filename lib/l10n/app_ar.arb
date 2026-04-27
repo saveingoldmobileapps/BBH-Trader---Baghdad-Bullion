@@ -18,6 +18,7 @@
 
   "@languageScreen": {},
   "app_lang": "لغة التطبيق",
+  "esouq_checkout_withdraw": "الدفع عبر إي-سوق",
 
   "@LoginScreen": {},
   "welcome_back": "مرحبًا بعودتك",
@@ -399,7 +400,7 @@
   "beneficiaryReq": "اسم المستفيد المطلوب",
   "iban": "رقم الآيبان",
   "ibanReq": "رقم حساب الآيبان المطلوب",
-  "ibanLength":"يجب أن يكون رقم الآيبان بين 23 و 30 حرفاً",
+  "ibanLength":"يجب أن يكون رقم الآيبان بين 21 و 34 حرفاً",
   "gram_price_script": "سعر الجرام 1",
   "withdrawBtn": "سحب",
   "withdrawSuccess": "تم سحب الأموال بنجاح",

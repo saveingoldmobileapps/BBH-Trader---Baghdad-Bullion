@@ -15,6 +15,7 @@
   "exiting_to_bbh": "I''m an existing user",
   "eng_title": "English",
   "arabic_title": "Arabic",
+  "esouq_checkout_withdraw": "E-Souq Checkout",
 
   "@languageScreen": {},
   "app_lang": "App Language",
@@ -393,7 +394,7 @@
   "beneficiaryReq": "Beneficiary name is required",
   "iban": "IBAN Number",
   "ibanReq": "IBAN Account number is required",
-  "ibanLength": "IBAN number must be between 23 and 30 characters",
+  "ibanLength": "IBAN number must be between 21 and 34 characters",
   "withdrawBtn": "Withdrawal",
   "withdrawSuccess": "Funds withdrawn successfully",
   "withdrawSuccessTitle": "Success!",

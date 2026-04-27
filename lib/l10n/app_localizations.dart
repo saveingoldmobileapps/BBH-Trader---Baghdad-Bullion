@@ -188,6 +188,12 @@ abstract class AppLocalizations {
   /// **'Arabic'**
   String get arabic_title;
 
+  /// No description provided for @esouq_checkout_withdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'E-Souq Checkout'**
+  String get esouq_checkout_withdraw;
+
   /// No description provided for @app_lang.
   ///
   /// In en, this message translates to:
@@ -2117,7 +2123,7 @@ abstract class AppLocalizations {
   /// No description provided for @ibanLength.
   ///
   /// In en, this message translates to:
-  /// **'IBAN number must be between 23 and 30 characters'**
+  /// **'IBAN number must be between 21 and 34 characters'**
   String get ibanLength;
 
   /// No description provided for @withdrawBtn.

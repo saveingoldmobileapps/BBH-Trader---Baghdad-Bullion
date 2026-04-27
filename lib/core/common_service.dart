@@ -136,7 +136,8 @@ class CommonService {
   if (isoDate == null || isoDate.isEmpty) return '-';
 
   try {
-    final parsed = DateTime.parse(isoDate);
+    final parsed = _tryParseDateTime(isoDate);
+    if (parsed == null) return isoDate;
     final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
 
     final isArabic =
@@ -181,6 +182,30 @@ class CommonService {
     return isoDate;
   }
 }
+
+  static DateTime? _tryParseDateTime(String input) {
+    try {
+      return DateTime.parse(input);
+    } catch (_) {}
+
+    const patterns = <String>[
+      "dd/MM/yyyy, hh:mm a",
+      "dd/MM/yyyy hh:mm a",
+      "MM/dd/yyyy, hh:mm a",
+      "MM/dd/yyyy hh:mm a",
+      "yyyy-MM-dd hh:mm a",
+      "yyyy-MM-dd, hh:mm a",
+      "dd-MM-yyyy, hh:mm a",
+      "dd-MM-yyyy hh:mm a",
+    ];
+
+    for (final p in patterns) {
+      try {
+        return DateFormat(p, "en_US").parseLoose(input);
+      } catch (_) {}
+    }
+    return null;
+  }
 
 
   static String getGreeting(String name, BuildContext context) {
@@ -252,7 +277,8 @@ class CommonService {
 
   static String formatDateTime(BuildContext context, String isoDate) {
     try {
-      DateTime parsedDate = DateTime.parse(isoDate).toLocal();
+      final parsedDate = _tryParseDateTime(isoDate)?.toLocal();
+      if (parsedDate == null) return isoDate;
       String locale = Localizations.localeOf(context).languageCode == 'ar'
           ? 'ar'
           : 'en';

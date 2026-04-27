@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
@@ -301,44 +302,83 @@ class _WithdrawFundScreenState
                       },
                     ),
                     ConstPadding.sizeBoxWithHeight(height: 16),
+                    // CommonTextFormField(
+                    //   title: "title",
+                    //   hintText: AppLocalizations.of(
+                    //     context,
+                    //   )!.iban, //"IBAN Number",
+                    //   labelText: AppLocalizations.of(
+                    //     context,
+                    //   )!.iban, //"IBAN Number",
+                    //   controller: ibanAccountNumberController,
+                    //   textInputType: TextInputType.text,
+                    //   validator: (value) {
+                    //     if (value == null || value.trim().isEmpty) {
+                    //       return AppLocalizations.of(
+                    //         context,
+                    //       )!.ibanReq; //"IBAN Account number is required";
+                    //     }
+
+                    //     final trimmed = value.trim();
+
+                    //     // Length between 23 and 30
+                    //     if (trimmed.length < 23 || trimmed.length > 30) {
+                    //       return AppLocalizations.of(
+                    //         context,
+                    //       )!.ibanLength; //"IBAN number must be between 23 and 30 characters";
+                    //     }
+
+                    //     // Must contain both letters and digits
+                    //     if (!RegExp(
+                    //       r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{23,30}$',
+                    //     ).hasMatch(trimmed)) {
+                    //       return AppLocalizations.of(
+                    //         context,
+                    //       )!.withdraw_alphabet_char; //"Must include both letters and digits";
+                    //     }
+
+                    //     return null;
+                    //   },
+                    // ),
                     CommonTextFormField(
-                      title: "title",
-                      hintText: AppLocalizations.of(
-                        context,
-                      )!.iban, //"IBAN Number",
-                      labelText: AppLocalizations.of(
-                        context,
-                      )!.iban, //"IBAN Number",
-                      controller: ibanAccountNumberController,
-                      textInputType: TextInputType.text,
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return AppLocalizations.of(
-                            context,
-                          )!.ibanReq; //"IBAN Account number is required";
-                        }
+  title: "title",
+  hintText: AppLocalizations.of(context)!.iban,
+  labelText: AppLocalizations.of(context)!.iban,
+  controller: ibanAccountNumberController,
+  textInputType: TextInputType.text,
 
-                        final trimmed = value.trim();
+  // 👉 Prevent typing more than 34 chars
+  inputFormatters: [
+    LengthLimitingTextInputFormatter(34),
+  ],
 
-                        // Length between 23 and 30
-                        if (trimmed.length < 23 || trimmed.length > 30) {
-                          return AppLocalizations.of(
-                            context,
-                          )!.ibanLength; //"IBAN number must be between 23 and 30 characters";
-                        }
+  validator: (value) {
+    if (value == null || value.trim().isEmpty) {
+      return AppLocalizations.of(context)!.ibanReq;
+    }
 
-                        // Must contain both letters and digits
-                        if (!RegExp(
-                          r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{23,30}$',
-                        ).hasMatch(trimmed)) {
-                          return AppLocalizations.of(
-                            context,
-                          )!.withdraw_alphabet_char; //"Must include both letters and digits";
-                        }
+    final trimmed = value.trim();
 
-                        return null;
-                      },
-                    ),
+    // 👉 Min 21, Max 34
+    if (trimmed.length < 21 || trimmed.length > 34) {
+      return AppLocalizations.of(context)!.ibanLength; 
+      // "IBAN must be between 21 and 34 characters"
+    }
+
+    // 👉 Must be alphanumeric only
+    if (!RegExp(r'^[A-Za-z0-9]+$').hasMatch(trimmed)) {
+      return AppLocalizations.of(context)!.withdraw_alphabet_char;
+    }
+
+    // 👉 Must contain both letters and digits
+    if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d)').hasMatch(trimmed)) {
+      return AppLocalizations.of(context)!.withdraw_alphabet_char;
+    }
+
+    return null;
+  },
+),
+                    
                     ConstPadding.sizeBoxWithHeight(height: 16),
 
                     // Add Card Button - Conditionally shown

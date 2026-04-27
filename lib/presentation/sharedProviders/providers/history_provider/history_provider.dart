@@ -263,11 +263,10 @@ class History extends _$History {
       // String? refreshToken = await LocalDatabase.instance.read(
       //   key: Strings.userRefreshToken,
       // );
-      statementData.sort((a, b) {
-        final dateA = DateTime.parse(a.date);
-        final dateB = DateTime.parse(b.date);
-        return dateA.compareTo(dateB);
-      });
+      // IMPORTANT: Don't mutate the same list used by UI state.
+      // Sorting in-place here causes the on-screen history order to flip
+      // immediately after tapping download.
+      final statementDataForExport = List<dynamic>.from(statementData);
 
       String? refreshToken = await SecureStorageService.instance
           .getRefreshToken();
@@ -277,7 +276,7 @@ class History extends _$History {
       }
       final requestBody = {
         "statementType": statementType,
-        "statementData": statementData,
+        "statementData": statementDataForExport,
       };
       final headers = {
         "authorization": "Bearer $refreshToken",

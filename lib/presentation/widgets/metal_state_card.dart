@@ -61,15 +61,30 @@ class _MetalStatementCardState extends State<MetalStatementCard>
               _buildMainInfo(context),
               if (isExpanded) ...[
                 const SizedBox(height: 12),
+                // _buildDetailRow(
+                //  widget.statement.paymentModel == "Invest" &&
+                //         widget.statement.tradeType == "Sell"? 
+                //         AppLocalizations.of(context)!.goldDebit
+                //         :AppLocalizations.of(context)!.goldCredit,
+                //         widget.statement.paymentModel == "Invest" 
+                //         && widget.statement.tradeType == "Sell"?
+                //         "${widget.statement.debit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}": "${widget.statement.credit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
+                // ),
                 _buildDetailRow(
-                 widget.statement.paymentModel == "Invest" &&
-                        widget.statement.tradeType == "Sell"? 
-                        AppLocalizations.of(context)!.goldDebit
-                        :AppLocalizations.of(context)!.goldCredit,
-                        widget.statement.paymentModel == "Invest" 
-                        && widget.statement.tradeType == "Sell"?
-                        "${widget.statement.debit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}": "${widget.statement.credit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
-                ),
+  (widget.statement.paymentModel == "Invest" &&
+          widget.statement.tradeType == "Sell") ||
+      (widget.statement.paymentModel == "BBH Wallet" &&
+          (widget.statement.debit ?? 0) > 0)
+      ? AppLocalizations.of(context)!.goldDebit
+      : AppLocalizations.of(context)!.goldCredit,
+
+  (widget.statement.paymentModel == "Invest" &&
+          widget.statement.tradeType == "Sell") ||
+      (widget.statement.paymentModel == "BBH Wallet" &&
+          (widget.statement.debit ?? 0) > 0)
+      ? "${widget.statement.debit?.toStringAsFixed(3) ?? '0.000'}${AppLocalizations.of(context)!.metal_g}"
+      : "${widget.statement.credit?.toStringAsFixed(3) ?? '0.000'}${AppLocalizations.of(context)!.metal_g}",
+),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.balanceAfterTransaction,
                   "${widget.statement.metalBalance?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
@@ -132,6 +147,9 @@ class _MetalStatementCardState extends State<MetalStatementCard>
     && widget.statement.debit != 0
         ? (widget.statement.debit ?? 0.0)
         : (widget.statement.credit ?? 0.0);
+        final bool isEsouqCheckout =
+      widget.statement.paymentModel == "BBH Wallet" &&
+      (widget.statement.debit ?? 0) > 0;
 
     switch (widget.statement.paymentModel) {
       case "Advance Payment":
@@ -156,7 +174,7 @@ class _MetalStatementCardState extends State<MetalStatementCard>
     }
 
     return Text(
-      "$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
+      isEsouqCheckout?"$title: ${widget.statement.debit!.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}":"$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
       style: const TextStyle(
         color: Colors.white,
         fontSize: 18,
@@ -165,22 +183,47 @@ class _MetalStatementCardState extends State<MetalStatementCard>
     );
   }
 
-  Widget _buildMainInfo(BuildContext context) {
-    final bool isSell = widget.statement.tradeType == "Sell";
-    String label = isSell
-        ? AppLocalizations.of(context)!.sold
-        : AppLocalizations.of(context)!.history_bought_label;
+//   Widget _buildMainInfo(BuildContext context) {
+//     final bool isSell = widget.statement.tradeType == "Sell";
+//     String label = isSell
+//         ? AppLocalizations.of(context)!.sold
+//         : AppLocalizations.of(context)!.history_bought_label;
+// final esouqCheckout = widget.statement.paymentModel == "BBH Wallet" &&
+//           (widget.statement.debit ?? 0) > 0;
 
-    num? price = isSell
-        ? widget.statement.sellingPrice
-        : widget.statement.buyingPrice;
+    
+//     num? price = isSell
+//         ? widget.statement.sellingPrice
+//         : widget.statement.buyingPrice;
 
-    return _buildDetailRow(
-      "$label ${AppLocalizations.of(context)!.at}",
-      "${AppLocalizations.of(context)!.idq} ${_formatIqd(price)} ${AppLocalizations.of(context)!.g_}",
-    );
-  }
+//     return _buildDetailRow(
+//       esouqCheckout?
+//       "":"$label ${AppLocalizations.of(context)!.at}",
+//       "${AppLocalizations.of(context)!.idq} ${_formatIqd(price)} ${AppLocalizations.of(context)!.g_}",
+//     );
+//   }
+ Widget _buildMainInfo(BuildContext context) {
+  final bool isSell = widget.statement.tradeType == "Sell";
 
+  final bool isEsouqCheckout =
+      widget.statement.paymentModel == "BBH Wallet" &&
+      (widget.statement.debit ?? 0) > 0;
+
+  String label = isEsouqCheckout
+      ? AppLocalizations.of(context)!.esouq_checkout_withdraw // 👈 add this key
+      : isSell
+          ? AppLocalizations.of(context)!.sold
+          : AppLocalizations.of(context)!.history_bought_label;
+
+  num? price = isSell
+      ? widget.statement.sellingPrice
+      : widget.statement.buyingPrice;
+
+  return isEsouqCheckout?_buildEsouqRow("$label",""): _buildDetailRow(
+   "$label ${AppLocalizations.of(context)!.at}",
+    "${AppLocalizations.of(context)!.idq} ${_formatIqd(price)} ${AppLocalizations.of(context)!.g_}",
+  );
+}
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -203,6 +246,29 @@ class _MetalStatementCardState extends State<MetalStatementCard>
       ),
     );
   }
+  Widget _buildEsouqRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(color: Colors.white54, fontSize: 14),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
   Widget _buildStatusChip(BuildContext context, String? status) {
   final bool isOpened = status?.toLowerCase() == "opened";
 

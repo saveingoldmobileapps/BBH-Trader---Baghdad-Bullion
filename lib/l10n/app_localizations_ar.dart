@@ -55,6 +55,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get arabic_title => 'العربية';
 
   @override
+  String get esouq_checkout_withdraw => 'الدفع عبر إي-سوق';
+
+  @override
   String get app_lang => 'لغة التطبيق';
 
   @override
@@ -1052,7 +1055,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ibanReq => 'رقم حساب الآيبان المطلوب';
 
   @override
-  String get ibanLength => 'يجب أن يكون رقم الآيبان بين 23 و 30 حرفاً';
+  String get ibanLength => 'يجب أن يكون رقم الآيبان بين 21 و 34 حرفاً';
 
   @override
   String get withdrawBtn => 'سحب';

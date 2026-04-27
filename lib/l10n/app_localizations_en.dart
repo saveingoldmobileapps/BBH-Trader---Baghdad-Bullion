@@ -56,6 +56,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get arabic_title => 'Arabic';
 
   @override
+  String get esouq_checkout_withdraw => 'E-Souq Checkout';
+
+  @override
   String get app_lang => 'App Language';
 
   @override
@@ -1061,7 +1064,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ibanReq => 'IBAN Account number is required';
 
   @override
-  String get ibanLength => 'IBAN number must be between 23 and 30 characters';
+  String get ibanLength => 'IBAN number must be between 21 and 34 characters';
 
   @override
   String get withdrawBtn => 'Withdrawal';

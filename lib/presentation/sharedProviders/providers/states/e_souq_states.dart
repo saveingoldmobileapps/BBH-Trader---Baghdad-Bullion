@@ -3,6 +3,8 @@ import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
 import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
 import 'package:saveingold_fzco/data/models/bank_models/BankBranchResponse.dart'
     show BankBranchesApiResponseModel;
+import 'package:saveingold_fzco/data/models/esouq_model/EsouqFilterModel.dart'
+    as filter;
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
 import 'package:saveingold_fzco/data/models/esouq_model/GetAllProductResponse.dart';
 
@@ -10,6 +12,7 @@ import '../../../../data/models/esouq_model/GetOrderDetailResponse.dart';
 
 class EsouqState {
   final List<AllProducts> products;
+  final List<filter.AllProducts> filterOptions;
   final List<KAllOrders> kAllOrders;
   final GetAllOrdersResponse getAllOrdersResponse;
   final BankBranchesApiResponseModel getAllBranchesResponse;
@@ -18,6 +21,7 @@ class EsouqState {
   final GetAllProductResponse getAllProductResponse;
   final GetOrderDetailResponse selectedOrder;
   final bool isLoading;
+  final bool isFilterLoading;
   final LoadingState loadingState;
   final bool isButtonState;
   final num page;
@@ -29,6 +33,7 @@ class EsouqState {
 
   EsouqState({
     this.products = const [],
+    this.filterOptions = const [],
     this.kAllOrders = const [],
     ErrorResponse? errorResponse,
     SuccessResponse? successResponse,
@@ -40,6 +45,7 @@ class EsouqState {
     this.selectedBranchId,
     this.loadingState = LoadingState.loading,
     this.isLoading = false,
+    this.isFilterLoading = false,
     this.isButtonState = false,
     this.page = 1,
     this.totalPages = 1,
@@ -55,6 +61,7 @@ class EsouqState {
 
   EsouqState copyWith({
     List<AllProducts>? products,
+    List<filter.AllProducts>? filterOptions,
     List<KAllOrders>? kAllOrders,
     BankBranchesApiResponseModel? getAllBranchesResponse,
     ErrorResponse? errorResponse,
@@ -63,6 +70,7 @@ class EsouqState {
     GetAllOrdersResponse? getAllOrdersResponse,
     GetOrderDetailResponse? selectedOrder,
     bool? isLoading,
+    bool? isFilterLoading,
     LoadingState? loadingState,
     bool? isButtonState,
     num? page,
@@ -74,6 +82,7 @@ class EsouqState {
   }) {
     return EsouqState(
       products: products ?? this.products,
+      filterOptions: filterOptions ?? this.filterOptions,
       kAllOrders: kAllOrders ?? this.kAllOrders,
       errorResponse: errorResponse ?? this.errorResponse,
       successResponse: successResponse ?? this.successResponse,
@@ -84,6 +93,7 @@ class EsouqState {
       getAllOrdersResponse: getAllOrdersResponse ?? this.getAllOrdersResponse,
       selectedOrder: selectedOrder ?? this.selectedOrder,
       isLoading: isLoading ?? this.isLoading,
+      isFilterLoading: isFilterLoading ?? this.isFilterLoading,
       loadingState: loadingState ?? this.loadingState,
       isButtonState: isButtonState ?? this.isButtonState,
       page: page ?? this.page,

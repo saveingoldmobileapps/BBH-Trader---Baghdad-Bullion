@@ -97,6 +97,15 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     return CommonService.formatIQDForDisplay(parsed);
   }
 
+  static const double _marketPriceTol = 0.01;
+
+  /// True when target-buy mode and entered price is empty, invalid, or above market.
+  bool _buyTargetAboveMarket(double liveBuyingPerGram) {
+    final t = double.tryParse(buyAtPriceController.text.trim());
+    if (t == null || t <= 0) return true;
+    return t > liveBuyingPerGram + _marketPriceTol;
+  }
+
   @override
   void dispose() {
     buyAtPriceController.dispose();
@@ -113,6 +122,11 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     final tradeStateWatchProvider = ref.watch(tradeProvider);
     final mainStateWatchProvider = ref.watch(homeProvider);
     final goldPriceState = ref.watch(goldPriceProvider);
+    final buyTargetInvalid = isBuyAtPriceStatus &&
+        goldPriceState.maybeWhen(
+          data: (data) => _buyTargetAboveMarket(data.oneGramBuyingPriceInIQD),
+          orElse: () => false,
+        );
     ref.listen(goldPriceProvider, (previous, next) {
       _updateCalculation();
     });
@@ -303,6 +317,27 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                         fontSize: 12,
                       ),
                     ),
+                    goldPriceState.when(
+                      data: (data) {
+                        if (!_buyTargetAboveMarket(
+                          data.oneGramBuyingPriceInIQD,
+                        )) {
+                          return const SizedBox.shrink();
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            l10n.invest_price_less_than_buying,
+                            style: GoogleFonts.inter(
+                              color: Colors.redAccent,
+                              fontSize: 12,
+                            ),
+                          ),
+                        );
+                      },
+                      loading: () => const SizedBox.shrink(),
+                      error: (_, __) => const SizedBox.shrink(),
+                    ),
                   ],
 
                   // const Spacer(),
@@ -311,11 +346,13 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     alignment: Alignment.bottomCenter,
                     child: AbsorbPointer(
                       absorbing: !_isValidAmount ||
+                          buyTargetInvalid ||
                           (goldPriceState.value?.oneGramBuyingPriceInIQD ??
                                   0) <=
                               0,
                       child: Opacity(
                         opacity: _isValidAmount &&
+                                !buyTargetInvalid &&
                                 (goldPriceState.value?.oneGramBuyingPriceInIQD ??
                                         0) >
                                     0
@@ -668,6 +705,18 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     final inputAmount = double.tryParse(calculatedValue) ?? 0.0;
     const tolerance = 0.01;
 
+    if (isBuyAtPriceStatus) {
+      final targetBuy =
+          double.tryParse(buyAtPriceController.text.trim()) ?? 0.0;
+      if (targetBuy > liveBuyingPriceIqd + tolerance) {
+        Toasts.getErrorToast(
+          text: AppLocalizations.of(context)!.invest_price_less_than_buying,
+          gravity: ToastGravity.TOP,
+        );
+        return;
+      }
+    }
+
     // Insufficient Real Balance
     if (!isDemo && (walletBalance + tolerance < inputAmount)) {
       await genericPopUpWidget(
@@ -741,6 +790,10 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
           ? _formatIqd(buyAtPriceController.text)
           : CommonService.formatIQDForDisplay(buyingPriceInOneGram),
       totalCost: _formatIqd(calculatedValue),
+      showCountdownTimer: !isBuyAtPriceStatus,
+      limitBuyPricePerGram: isBuyAtPriceStatus
+          ? double.tryParse(buyAtPriceController.text.trim())
+          : null,
       onConfirm: () async {
         await ref
             .read(tradeProvider.notifier)

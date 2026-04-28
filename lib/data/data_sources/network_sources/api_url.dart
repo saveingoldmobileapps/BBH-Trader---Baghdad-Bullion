@@ -121,6 +121,9 @@ class ApiEndpoints {
   static String get getAllEsouqProductsRequestApiUrl =>
       "$baseUrl/service/esouq/products/getAll/${CommonService.lang}";
 
+  static String get getEsouqFiltersApiUrl =>
+      "$baseUrl/service/esouq/subtype/getAll/${CommonService.lang}";
+
   static String get getAllEsouqOrdersUrlApiUrl =>
       "$baseUrl/service/esouq/order/getAll/${CommonService.lang}";
 

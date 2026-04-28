@@ -148,7 +148,11 @@ class _MetalStatementCardState extends State<MetalStatementCard>
         ? (widget.statement.debit ?? 0.0)
         : (widget.statement.credit ?? 0.0);
         final bool isEsouqCheckout =
-      widget.statement.paymentModel == "BBH Wallet" &&
+      (widget.statement.paymentModel == "BBH Wallet" || widget.statement.paymentModel == "محفظة سيف إن جولد")&&
+      (widget.statement.debit ?? 0) > 0;
+
+      final bool isgiftSent =
+      (widget.statement.paymentModel == "Gift Sent" ||widget.statement.paymentModel == "تم إرسال الهدية") &&
       (widget.statement.debit ?? 0) > 0;
 
     switch (widget.statement.paymentModel) {
@@ -172,15 +176,28 @@ class _MetalStatementCardState extends State<MetalStatementCard>
        //"Sold"
        :AppLocalizations.of(context)!.purchased;//"Purchased";
     }
+   
 
-    return Text(
-      isEsouqCheckout?"$title: ${widget.statement.debit!.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}":"$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-      ),
-    );
+  final bool useDebit = isEsouqCheckout || isgiftSent;
+
+  return Text(
+    useDebit
+        ? "$title: ${widget.statement.debit!.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}"
+        : "$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
+    style: const TextStyle(
+      color: Colors.white,
+      fontSize: 18,
+      fontWeight: FontWeight.bold,
+    ),
+  );
+    // return Text(
+    //   isEsouqCheckout?"$title: ${widget.statement.debit!.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}":"$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
+    //   style: const TextStyle(
+    //     color: Colors.white,
+    //     fontSize: 18,
+    //     fontWeight: FontWeight.bold,
+    //   ),
+    // );
   }
 
 //   Widget _buildMainInfo(BuildContext context) {
@@ -209,6 +226,12 @@ class _MetalStatementCardState extends State<MetalStatementCard>
       widget.statement.paymentModel == "BBH Wallet" &&
       (widget.statement.debit ?? 0) > 0;
 
+
+
+      final bool isgiftSent =
+      (widget.statement.paymentModel == "Gift Sent" ||widget.statement.paymentModel == "تم إرسال الهدية") &&
+      (widget.statement.debit ?? 0) > 0;
+
   String label = isEsouqCheckout
       ? AppLocalizations.of(context)!.esouq_checkout_withdraw // 👈 add this key
       : isSell
@@ -218,11 +241,19 @@ class _MetalStatementCardState extends State<MetalStatementCard>
   num? price = isSell
       ? widget.statement.sellingPrice
       : widget.statement.buyingPrice;
+      
+final bool useSpecialRow = isEsouqCheckout || isgiftSent;
 
-  return isEsouqCheckout?_buildEsouqRow("$label",""): _buildDetailRow(
-   "$label ${AppLocalizations.of(context)!.at}",
-    "${AppLocalizations.of(context)!.idq} ${_formatIqd(price)} ${AppLocalizations.of(context)!.g_}",
-  );
+final String finalLabel = isgiftSent
+    ? widget.statement.paymentModel.toString()//AppLocalizations.of(context)!.gift
+    : "$label";
+
+return useSpecialRow
+    ? _buildEsouqRow(finalLabel, "")
+    : _buildDetailRow(
+        "$label ${AppLocalizations.of(context)!.at}",
+        "${AppLocalizations.of(context)!.idq} ${_formatIqd(price)} ${AppLocalizations.of(context)!.g_}",
+      );
 }
   Widget _buildDetailRow(String label, String value) {
     return Padding(
@@ -247,6 +278,28 @@ class _MetalStatementCardState extends State<MetalStatementCard>
     );
   }
   Widget _buildEsouqRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(color: Colors.white54, fontSize: 14),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  Widget _buildGiftRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(

@@ -43,11 +43,6 @@ class Esouq extends _$Esouq {
     state = state.copyWith(loadingState: loadingState);
   }
 
-  String _formatIqd(String? value) {
-  final parsed = double.tryParse(value ?? '') ?? 0;
-  return CommonService.formatIQDForDisplay(parsed);
-}
-
   Future<void> fetchBankBranches({required String productId}) async {
     try {
       getLocator<Logger>().i("Starting fetchBankBranches...");
@@ -147,15 +142,16 @@ class Esouq extends _$Esouq {
     num paramLimit = 30,
     String? paramWeight,
     String? paramWeightCategory,
-    // Add this parameter
-    bool? reset,
+    String? shapeType,
+    String? shapeSubType,
+    bool reset = false,
   }) async {
     try {
       // Prevent multiple simultaneous fetches
       if (state.isLoading) return;
 
       /// Reset products list if reset is true
-      if (reset!) {
+      if (reset) {
         state = state.copyWith(isLoading: true);
         state = state.copyWith(products: []);
       }
@@ -179,13 +175,21 @@ class Esouq extends _$Esouq {
         queryParameters['paramWeightCategory'] = paramWeightCategory ?? "Gram";
       }
 
+      if (shapeType != null && shapeType.trim().isNotEmpty) {
+        queryParameters['shapeType'] = shapeType.trim();
+      }
+
+      if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+        queryParameters['shapeSubType'] = shapeSubType.trim();
+      }
+
       final headers = {
         "Content-Type": "application/json",
         "authorization": "Bearer $refreshToken",
       };
 
       getLocator<Logger>().i(
-        "paramPage: $paramPage | paramLimit: $paramLimit | paramWeight: $paramWeight | paramWeightCategory: $paramWeightCategory",
+        "paramPage: $paramPage | paramLimit: $paramLimit | paramWeight: $paramWeight | paramWeightCategory: $paramWeightCategory | shapeType: $shapeType | shapeSubType: $shapeSubType",
       );
 
       /// API call
@@ -445,15 +449,19 @@ class Esouq extends _$Esouq {
   Future<void> loadMoreProducts({
     String? paramWeight,
     String? paramWeightCategory,
+    String? shapeType,
+    String? shapeSubType,
   }) async {
     getLocator<Logger>().i(
-      "LoadMoreProducts: $paramWeight | $paramWeightCategory",
+      "LoadMoreProducts: $paramWeight | $paramWeightCategory | $shapeType | $shapeSubType",
     );
     if (state.hasNextPage && !state.isLoading) {
       await fetchEsouqProducts(
         paramPage: state.page + 1,
         paramWeight: paramWeight,
         paramWeightCategory: paramWeightCategory,
+        shapeType: shapeType,
+        shapeSubType: shapeSubType,
         reset: false,
       );
     }

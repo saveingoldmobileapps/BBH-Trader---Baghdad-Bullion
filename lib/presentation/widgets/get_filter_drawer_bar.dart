@@ -9,6 +9,8 @@ class GetFilterDrawerBar extends StatefulWidget {
   final Function(
     String? selectedWeight,
     String? selectedWeightCategory,
+    String? shapeType,
+    String? shapeSubType,
   )
   onApplyFilter;
 
@@ -26,10 +28,15 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
   static const String _castedBarType = 'Casted';
   static const String _mintedBarType = 'Minted';
   static const String _allmintedAndCast = 'All';
+  static const String _castingShapeType = 'Casting';
+  static const String _mintingShapeType = 'Minting';
+  static const String _shapeSubTypeBar = 'Bar';
+  static const String _shapeSubTypeCoin = 'Coin';
 
   String? selectedUniqueWeight;
   String? selectedWeight;
   String? selectedWeightCategory;
+  String? selectedShapeSubType;
   // String selectedBarType = _mintedBarType; // Default to match UI screenshot
   String selectedBarType = _allmintedAndCast; // Default = All
   final List<Map<String, dynamic>> weights = [
@@ -150,7 +157,6 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
 
   @override
   Widget build(BuildContext context) {
-    bool isFilterSelected = selectedWeight != null;
     // final allWeights = [...weights, ...castingWeights];
     final allWeights = selectedBarType == _castedBarType
         ? castingWeights
@@ -294,6 +300,26 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                     ],
                   ),
 
+                  if (selectedBarType == _mintedBarType) ...[
+                    const SizedBox(height: 24),
+                    Text(
+                      'Shape Sub Type',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        _buildSubTypeButton(_shapeSubTypeBar),
+                        const SizedBox(width: 12),
+                        _buildSubTypeButton(_shapeSubTypeCoin),
+                      ],
+                    ),
+                  ],
+
                   // Row(
                   //   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   //   children:
@@ -374,33 +400,42 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
             ),
             child: GestureDetector(
               onTap: () {
-                if (isFilterSelected) {
-                  widget.onApplyFilter(selectedWeight, selectedWeightCategory);
-                  Navigator.pop(context);
-                }
-              },
+                final String? shapeType = selectedBarType == _castedBarType
+                    ? _castingShapeType
+                    : selectedBarType == _mintedBarType
+                    ? _mintingShapeType
+                    : null;
+
+                final String? shapeSubType =
+                    shapeType == _mintingShapeType ? selectedShapeSubType : null;
+
+                widget.onApplyFilter(
+                  selectedWeight,
+                  selectedWeightCategory,
+                  shapeType,
+                  shapeSubType,
+                );
+                Navigator.pop(context);
+              },  
               child: Container(
                 height: 56,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
-                  gradient: isFilterSelected
-                      ? const LinearGradient(
-                          colors: [
-                            AppColors.goldColor,
-                            AppColors.goldLightColor,
-                          ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        )
-                      : null,
-                  color: isFilterSelected ? null : const Color(0xFF2A2A2A),
+                  gradient: const LinearGradient(
+                    colors: [
+                      AppColors.goldColor,
+                      AppColors.goldLightColor,
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
                 ),
                 child: Center(
                   child: Text(
                     l10n.apply_filters,
                     style: TextStyle(
-                      color: isFilterSelected ? Colors.black : Colors.white38,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -431,6 +466,7 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
           selectedUniqueWeight = null;
           selectedWeight = null;
           selectedWeightCategory = null;
+          selectedShapeSubType = null;
         }),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -448,6 +484,40 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
           child: Center(
             child: Text(
               label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubTypeButton(String subType) {
+    final isSelected = selectedShapeSubType == subType;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() {
+          selectedShapeSubType = subType;
+        }),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? Colors.white.withOpacity(0.1)
+                : const Color(0xFF1E1E1E),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: isSelected
+                  ? Colors.white24
+                  : Colors.white.withOpacity(0.05),
+            ),
+          ),
+          child: Center(
+            child: Text(
+              subType,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,

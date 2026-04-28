@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:saveingold_fzco/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../main.dart';
 
-class GetFilterDrawerBar extends StatefulWidget {
+class GetFilterDrawerBar extends ConsumerStatefulWidget {
   final VoidCallback onTap;
   final Function(
     String? selectedWeight,
@@ -21,10 +23,10 @@ class GetFilterDrawerBar extends StatefulWidget {
   });
 
   @override
-  State<GetFilterDrawerBar> createState() => _GetFilterDrawerBarState();
+  ConsumerState<GetFilterDrawerBar> createState() => _GetFilterDrawerBarState();
 }
 
-class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
+class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
   static const String _castedBarType = 'Casted';
   static const String _mintedBarType = 'Minted';
   static const String _allmintedAndCast = 'All';
@@ -39,131 +41,21 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
   String? selectedShapeSubType;
   // String selectedBarType = _mintedBarType; // Default to match UI screenshot
   String selectedBarType = _allmintedAndCast; // Default = All
-  final List<Map<String, dynamic>> weights = [
-    {
-      "text": AppLocalizations.of(navigatorKey.currentContext!)!.weight_1_gram,
-      "uniqueValue": "1Gram",
-      "value": "1",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(navigatorKey.currentContext!)!.weight_2_grams,
-      "uniqueValue": "2Grams",
-      "value": "2",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_2_5_grams,
-      "uniqueValue": "2.5Grams",
-      "value": "2.5",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(navigatorKey.currentContext!)!.weight_5_grams,
-      "uniqueValue": "5Grams",
-      "value": "5",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_10_grams,
-      "uniqueValue": "10Grams",
-      "value": "10",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_20_grams,
-      "uniqueValue": "20Grams",
-      "value": "20",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_half_ounce,
-      "uniqueValue": "1/2Ounce",
-      "value": "15.55",
-      "category": "Ounce",
-    },
-    {
-      "text": AppLocalizations.of(navigatorKey.currentContext!)!.weight_1_ounce,
-      "uniqueValue": "1Ounce",
-      "value": "1",
-      "category": "Ounce",
-    },
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_50_grams,
-      "uniqueValue": "50Grams",
-      "value": "50",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_100_grams,
-      "uniqueValue": "100Grams",
-      "value": "100",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(navigatorKey.currentContext!)!.weight_10_tola,
-      "uniqueValue": "10Tola",
-      "value": "10",
-      "category": "Tola",
-    },
-  ];
+  bool _filtersLoaded = false;
 
-  final castingWeights = [
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_125_grams,
-      "uniqueValue": "125Grams",
-      "value": "125",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_250_grams,
-      "uniqueValue": "250Grams",
-      "value": "250",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_500_grams,
-      "uniqueValue": "500Grams",
-      "value": "500",
-      "category": "Gram",
-    },
-    {
-      "text": AppLocalizations.of(
-        navigatorKey.currentContext!,
-      )!.weight_1_kilogram,
-      "uniqueValue": "1Kilogram",
-      "value": "1",
-      "category": "KG",
-    },
-  ];
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_filtersLoaded) return;
+    _filtersLoaded = true;
+    // Default: no subtype selected, no weights fetched until user chooses type.
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final allWeights = [...weights, ...castingWeights];
-    final allWeights = selectedBarType == _castedBarType
-        ? castingWeights
-        : selectedBarType == _mintedBarType
-        ? weights
-        : [...weights, ...castingWeights]; // All // all weights
     final l10n = AppLocalizations.of(context)!;
+    final esouqState = ref.watch(esouqProvider);
+    final filterOptions = esouqState.filterOptions;
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.92,
@@ -237,48 +129,55 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: allWeights.map((item) {
-                      bool isSelected =
-                          selectedUniqueWeight == item['uniqueValue'];
-                      return GestureDetector(
-                        onTap: () => setState(() {
-                          selectedUniqueWeight = item['uniqueValue'];
-                          selectedWeight = item['value'];
-                          selectedWeightCategory = item["category"];
-                        }),
-                        child: Container(
-                          width: (MediaQuery.of(context).size.width / 3) - 20,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? Colors.white
-                                : const Color(0xFF1E1E1E),
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: isSelected
-                                  ? Colors.white
-                                  : Colors.white.withOpacity(0.05),
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              item['text'],
-                              style: TextStyle(
-                                color: isSelected ? Colors.black : Colors.white,
-                                fontWeight: isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.normal,
-                                fontSize: 13,
+                  esouqState.isFilterLoading
+                      ? _buildWeightChipsShimmer(context)
+                      : Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: filterOptions.map((item) {
+                            final uniqueValue =
+                                '${item.weightFactor ?? ''}_${item.weightCategory ?? ''}_${item.id ?? ''}';
+                            final label =
+                                '${item.weightFactor ?? ''} ${item.weightCategory ?? ''}'
+                                    .trim();
+                            final isSelected = selectedUniqueWeight == uniqueValue;
+                            return GestureDetector(
+                              onTap: () => setState(() {
+                                selectedUniqueWeight = uniqueValue;
+                                selectedWeight = item.weightFactor;
+                                selectedWeightCategory = item.weightCategory;
+                              }),
+                              child: Container(
+                                width: (MediaQuery.of(context).size.width / 3) - 20,
+                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? Colors.white
+                                      : const Color(0xFF1E1E1E),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.05),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    label.isNotEmpty ? label : l10n.na,
+                                    style: TextStyle(
+                                      color:
+                                          isSelected ? Colors.black : Colors.white,
+                                      fontWeight: isSelected
+                                          ? FontWeight.w600
+                                          : FontWeight.normal,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          }).toList(),
                         ),
-                      );
-                    }).toList(),
-                  ),
 
                   const SizedBox(height: 32),
                   Text(
@@ -461,13 +360,33 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() {
-          selectedBarType = type;
-          selectedUniqueWeight = null;
-          selectedWeight = null;
-          selectedWeightCategory = null;
-          selectedShapeSubType = null;
-        }),
+        onTap: () async {
+          setState(() {
+            selectedBarType = type;
+            selectedUniqueWeight = null;
+            selectedWeight = null;
+            selectedWeightCategory = null;
+            selectedShapeSubType = null;
+          });
+
+          if (type == _castedBarType) {
+            await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
+                  subtype: 'casting',
+                  shapeSubType: _shapeSubTypeBar,
+                );
+          } else if (type == _mintedBarType) {
+            await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
+                  subtype: 'minting',
+                  shapeSubType: _shapeSubTypeBar,
+                );
+          } else {
+            // All -> clear filter options list
+            ref
+                .read(esouqProvider.notifier)
+                .fetchEsouqFilterOptions(subtype: 'minting', shapeSubType: _shapeSubTypeBar);
+            // We still keep list loaded (minting bar) so user can pick weight quickly if needed.
+          }
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
@@ -499,9 +418,20 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
     final isSelected = selectedShapeSubType == subType;
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() {
-          selectedShapeSubType = subType;
-        }),
+        onTap: () async {
+          setState(() {
+            selectedShapeSubType = subType;
+            selectedUniqueWeight = null;
+            selectedWeight = null;
+            selectedWeightCategory = null;
+          });
+          if (selectedBarType == _mintedBarType) {
+            await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
+                  subtype: 'minting',
+                  shapeSubType: subType,
+                );
+          }
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
@@ -525,6 +455,29 @@ class _GetFilterDrawerBarState extends State<GetFilterDrawerBar> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildWeightChipsShimmer(BuildContext context) {
+    final chipWidth = (MediaQuery.of(context).size.width / 3) - 20;
+    return Shimmer.fromColors(
+      baseColor: const Color(0xFF1E1E1E),
+      highlightColor: Colors.white24,
+      child: Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children: List.generate(9, (index) {
+          return Container(
+            width: chipWidth,
+            height: 44,
+            decoration: BoxDecoration(
+              color: const Color(0xFF2A2A2A),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white10),
+            ),
+          );
+        }),
       ),
     );
   }

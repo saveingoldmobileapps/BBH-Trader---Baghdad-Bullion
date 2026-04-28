@@ -26,6 +26,7 @@ export 'money_state_card.dart';
 export 'password_text_form_field.dart';
 export 'phone_text_form_field_with_icon.dart';
 export 'pop_up_widget.dart';
+export 'trade_confirm_dialog.dart';
 export 'text_form_field.dart';
 export 'text_form_field_with_icon.dart';
 export 'withdrawal_fund_card.dart';

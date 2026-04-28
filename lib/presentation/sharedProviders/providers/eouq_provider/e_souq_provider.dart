@@ -18,6 +18,7 @@ import '../../../../data/data_sources/network_sources/api_url.dart';
 import '../../../../data/data_sources/network_sources/dio_network_manager.dart';
 import '../../../../data/models/ErrorResponse.dart';
 import '../../../../data/models/bank_models/BankBranchResponse.dart';
+import '../../../../data/models/esouq_model/EsouqFilterModel.dart' as filter;
 import '../../../../data/models/esouq_model/GetAllProductResponse.dart';
 import '../../../../data/models/esouq_model/GetOrderDetailResponse.dart';
 import '../../../feature_injection.dart';
@@ -257,6 +258,67 @@ class Esouq extends _$Esouq {
       );
       getLocator<Logger>().e("Fetch Esouq Products Error: $e");
       state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> fetchEsouqFilterOptions({
+    required String subtype,
+    String? shapeSubType,
+  }) async {
+    try {
+      final refreshToken =
+          await SecureStorageService.instance.getRefreshToken();
+      if (refreshToken == null) {
+        state = state.copyWith(isFilterLoading: false, filterOptions: const []);
+        return;
+      }
+
+      state = state.copyWith(isFilterLoading: true);
+
+      final headers = {
+        "Content-Type": "application/json",
+        "authorization": "Bearer $refreshToken",
+      };
+
+      final Map<String, dynamic> queryParameters = {
+        'subtype': subtype,
+      };
+
+      if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+        queryParameters['shapesubtype'] = shapeSubType.trim();
+      }
+
+      final serverResponse = await DioNetworkManager().callAPI(
+        url: ApiEndpoints.getEsouqFiltersApiUrl,
+        parameters: queryParameters,
+        headers: headers,
+        httpMethod: HttpMethod.get,
+      );
+
+      switch (serverResponse.responseType) {
+        case ServerResponseType.success:
+          final filter.EsouqFilterModel response =
+              filter.EsouqFilterModel.fromJson(serverResponse.resultData);
+          state = state.copyWith(
+            filterOptions:
+                response.payload?.allProducts ?? const <filter.AllProducts>[],
+            isFilterLoading: false,
+          );
+          break;
+        case ServerResponseType.error:
+        case ServerResponseType.exception:
+          state = state.copyWith(
+            isFilterLoading: false,
+            filterOptions: const <filter.AllProducts>[],
+          );
+          break;
+      }
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      state = state.copyWith(
+        isFilterLoading: false,
+        filterOptions: const <filter.AllProducts>[],
+      );
     }
   }
 

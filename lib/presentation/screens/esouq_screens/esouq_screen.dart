@@ -23,6 +23,8 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
   final ScrollController _scrollController = ScrollController();
   String? selectedWeight;
   String? selectedWeightCategory;
+  String? selectedShapeType;
+  String? selectedShapeSubType;
 
   @override
   void initState() {
@@ -41,6 +43,8 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
           .fetchEsouqProducts(
             paramWeight: selectedWeight,
             paramWeightCategory: selectedWeightCategory,
+            shapeType: selectedShapeType,
+            shapeSubType: selectedShapeSubType,
             reset: true,
           );
     });
@@ -55,6 +59,8 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
           .loadMoreProducts(
             paramWeight: selectedWeight,
             paramWeightCategory: selectedWeightCategory,
+            shapeType: selectedShapeType,
+            shapeSubType: selectedShapeSubType,
           );
     }
   }
@@ -87,10 +93,12 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
       backgroundColor: AppColors.greyScale1000,
       drawer: GetFilterDrawerBar(
         onTap: () => Navigator.pop(context),
-        onApplyFilter: (weight, category) async {
+        onApplyFilter: (weight, category, shapeType, shapeSubType) async {
           setState(() {
             selectedWeight = weight;
             selectedWeightCategory = category;
+            selectedShapeType = shapeType;
+            selectedShapeSubType = shapeSubType;
           });
           await fetchESouqProductData();
         },

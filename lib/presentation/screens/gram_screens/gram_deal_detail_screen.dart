@@ -604,6 +604,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                               children: [
                                 ConstPadding.sizeBoxWithHeight(height: 10),
                                 CommonTextFormField(
+                                  
                                   focusNode: _focusSellAtPriceNode,
                                   title: "",
                                   hintText: AppLocalizations.of(
@@ -613,10 +614,15 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                     context,
                                   )!.deal_gram_price, //"Gram Price",
                                   controller: sellAtPriceController,
+                                  // inputFormatters: [
+                                  //   DecimalTextInputFormatter(decimalRange: 3),
+                                  //   //LengthLimitingTextInputFormatter(15),
+                                  // ],
                                   inputFormatters: [
-                                    DecimalTextInputFormatter(decimalRange: 3),
-                                    //LengthLimitingTextInputFormatter(15),
-                                  ],
+                                    AmountInputFormatter(
+                                      maxDigits: 4,
+                                      decimalRange: 3,
+                                    ),],
                                   textInputType:
                                       TextInputType.numberWithOptions(
                                         signed: true,
@@ -703,6 +709,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                               children: [
                                 ConstPadding.sizeBoxWithHeight(height: 10),
                                 CommonTextFormField(
+
                                   focusNode: _focusAmountGramNode,
                                   title: "",
                                   hintText: AppLocalizations.of(
@@ -713,9 +720,10 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   )!.deal_gram_amount, //"Gram Amount",
                                   controller: gramAmountController,
                                   inputFormatters: [
-                                    DecimalTextInputFormatter(decimalRange: 3),
-                                    //LengthLimitingTextInputFormatter(15),
-                                  ],
+                                    AmountInputFormatter(
+                                      maxDigits: 6,
+                                      decimalRange: 3,
+                                    ),],
                                   textInputType:
                                       TextInputType.numberWithOptions(
                                         signed: true,

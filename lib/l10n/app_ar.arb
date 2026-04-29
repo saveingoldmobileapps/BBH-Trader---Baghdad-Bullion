@@ -19,7 +19,8 @@
   "@languageScreen": {},
   "app_lang": "لغة التطبيق",
   "esouq_checkout_withdraw": "الدفع عبر إي-سوق",
-
+  "shape_sub_type": "نوع الشكل الفرعي",
+  "no_weight_available": "لا توجد خيارات وزن متاحة",
   "@LoginScreen": {},
   "welcome_back": "مرحبًا بعودتك",
   "welcome_back1": "مرحبًا بعودتك",
@@ -38,6 +39,8 @@
   "login_with_phone": "تسجيل الدخول عبر الهاتف",
   "login_with_email": "تسجيل الدخول عبر البريد الإلكتروني",
   "login_or": "أو",
+  "bar": "سبيكة",
+  "coin": "عملة",
 
   "@ForgotPasswordScreen": {},
   "forgotPassword_title": "نسيت كلمة المرور؟",

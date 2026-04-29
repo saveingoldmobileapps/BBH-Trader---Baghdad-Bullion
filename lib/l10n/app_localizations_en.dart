@@ -497,7 +497,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deposit_funds => 'Deposit Funds';
 
   @override
-  String get withdraw_requests => 'Withdraw Requests';
+  String get withdraw_requests => 'Withdrawal Request';
 
   @override
   String get my_orders => 'My Orders';
@@ -3037,6 +3037,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get status_closed => 'Closed';
+
+  @override
+  String get shape_sub_type => 'Shape Sub Type';
+
+  @override
+  String get no_weight_available => 'No weight options available';
+
+  @override
+  String get bar => 'Bar';
+
+  @override
+  String get coin => 'Coin';
 
   @override
   String get buy_gold_grams_subtitle =>

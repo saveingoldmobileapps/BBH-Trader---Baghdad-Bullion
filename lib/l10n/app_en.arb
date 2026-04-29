@@ -184,7 +184,7 @@
   "@SideMenu": {},
   "account_details": "Account Details",
   "deposit_funds": "Deposit Funds",
-  "withdraw_requests": "Withdraw Requests",
+  "withdraw_requests": "Withdrawal Request",
   "my_orders": "My Orders",
   "esouq": "Esouq",
   "gift": "Gift",
@@ -1220,6 +1220,11 @@
   "metal_opened_at": "Opened @",
   "metal_closed_at": "Closed @",
   "status_closed": "Closed",
+  "shape_sub_type": "Shape Sub Type",
+  "no_weight_available": "No weight options available",
+  "bar":"Bar",
+  "coin":"Coin",
+
 
   "buy_gold_grams_subtitle": "Enter the amount of gold in grams to trade",
   "grams_unit_lowercase": "grams",

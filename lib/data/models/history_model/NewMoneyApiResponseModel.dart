@@ -88,6 +88,7 @@ class MoneyHistoryList {
     String? date,
     num? grams,
     num? moneyBalance,
+    String? statusst
   }) {
     _id = id;
     _userId = userId;
@@ -100,6 +101,7 @@ class MoneyHistoryList {
     _date = date;
     _grams = grams;
     _moneyBalance = moneyBalance;
+    _statusst = statusst;
   }
 
   MoneyHistoryList.fromJson(dynamic json) {
@@ -114,6 +116,7 @@ class MoneyHistoryList {
     _date = json['date'];
     _grams = json['grams'];
     _moneyBalance = json['moneyBalance'];
+    _statusst = json['status'];
   }
 
   String? _id;
@@ -127,6 +130,7 @@ class MoneyHistoryList {
   String? _date;
   num? _grams;
   num? _moneyBalance;
+  String? _statusst;//= json['status'];
 
   MoneyHistoryList copyWith({
     String? id,
@@ -140,6 +144,7 @@ class MoneyHistoryList {
     String? date,
     num? grams,
     num? moneyBalance,
+    String? statusst
   }) =>
       MoneyHistoryList(
         id: id ?? _id,
@@ -153,6 +158,7 @@ class MoneyHistoryList {
         date: date ?? _date,
         grams: grams?? _grams,
         moneyBalance: moneyBalance ?? _moneyBalance,
+        statusst: _statusst ?? _statusst,
       );
 
   String? get id => _id;
@@ -166,6 +172,7 @@ class MoneyHistoryList {
   String? get date => _date;
   num? get grams => _grams;
   num? get moneyBalance => _moneyBalance;
+  String? get status => _statusst;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -180,6 +187,7 @@ class MoneyHistoryList {
     map['date'] = _date;
     map['grams'] = _grams;
     map['moneyBalance'] = _moneyBalance;
+    map['status'] = _statusst;
     return map;
   }
 }

@@ -61,30 +61,35 @@ class _MetalStatementCardState extends State<MetalStatementCard>
               _buildMainInfo(context),
               if (isExpanded) ...[
                 const SizedBox(height: 12),
+
                 // _buildDetailRow(
                 //  widget.statement.paymentModel == "Invest" &&
-                //         widget.statement.tradeType == "Sell"? 
+                //         widget.statement.tradeType == "Sell"?
                 //         AppLocalizations.of(context)!.goldDebit
                 //         :AppLocalizations.of(context)!.goldCredit,
-                //         widget.statement.paymentModel == "Invest" 
+                //         widget.statement.paymentModel == "Invest"
                 //         && widget.statement.tradeType == "Sell"?
                 //         "${widget.statement.debit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}": "${widget.statement.credit?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
                 // ),
                 _buildDetailRow(
-  (widget.statement.paymentModel == "Invest" &&
-          widget.statement.tradeType == "Sell") ||
-      (widget.statement.paymentModel == "BBH Wallet" &&
-          (widget.statement.debit ?? 0) > 0)
-      ? AppLocalizations.of(context)!.goldDebit
-      : AppLocalizations.of(context)!.goldCredit,
+                  (widget.statement.paymentModel == "Invest" &&
+                              widget.statement.tradeType == "Sell") ||
+                          (widget.statement.paymentModel == "BBH Wallet" &&
+                              (widget.statement.debit ?? 0) > 0) ||
+                          (widget.statement.paymentModel == "Gift Sent" &&
+                              (widget.statement.debit ?? 0) > 0)
+                      ? AppLocalizations.of(context)!.goldDebit
+                      : AppLocalizations.of(context)!.goldCredit,
 
-  (widget.statement.paymentModel == "Invest" &&
-          widget.statement.tradeType == "Sell") ||
-      (widget.statement.paymentModel == "BBH Wallet" &&
-          (widget.statement.debit ?? 0) > 0)
-      ? "${widget.statement.debit?.toStringAsFixed(3) ?? '0.000'}${AppLocalizations.of(context)!.metal_g}"
-      : "${widget.statement.credit?.toStringAsFixed(3) ?? '0.000'}${AppLocalizations.of(context)!.metal_g}",
-),
+                  (widget.statement.paymentModel == "Invest" &&
+                              widget.statement.tradeType == "Sell") ||
+                          (widget.statement.paymentModel == "BBH Wallet" &&
+                              (widget.statement.debit ?? 0) > 0) ||
+                          (widget.statement.paymentModel == "Gift Sent" &&
+                              (widget.statement.debit ?? 0) > 0)
+                      ? "${widget.statement.debit?.toStringAsFixed(3) ?? '0.000'}${AppLocalizations.of(context)!.metal_g}"
+                      : "${widget.statement.credit?.toStringAsFixed(3) ?? '0.000'}${AppLocalizations.of(context)!.metal_g}",
+                ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.balanceAfterTransaction,
                   "${widget.statement.metalBalance?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
@@ -92,8 +97,10 @@ class _MetalStatementCardState extends State<MetalStatementCard>
                 _buildDetailRow(
                   AppLocalizations.of(context)!.transactionType,
                   widget.rtl
-                      ? (widget.statement.paymentModelInArabic ?? AppLocalizations.of(context)!.not_available)
-                      : (widget.statement.paymentModel ?? AppLocalizations.of(context)!.not_available),
+                      ? (widget.statement.paymentModelInArabic ??
+                            "")//AppLocalizations.of(context)!.not_available)
+                      : (widget.statement.paymentModel ??
+                            "")//AppLocalizations.of(context)!.not_available),
                 ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.grams_card_date_label,
@@ -142,18 +149,21 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
   Widget _buildTitle(BuildContext context) {
     String title = "";
-    num quantity = widget.statement.paymentModel == "Invest" 
-    && widget.statement.tradeType == "Sell" 
-    && widget.statement.debit != 0
+    num quantity =
+        widget.statement.paymentModel == "Invest" &&
+            widget.statement.tradeType == "Sell" &&
+            widget.statement.debit != 0
         ? (widget.statement.debit ?? 0.0)
         : (widget.statement.credit ?? 0.0);
-        final bool isEsouqCheckout =
-      (widget.statement.paymentModel == "BBH Wallet" || widget.statement.paymentModel == "محفظة سيف إن جولد")&&
-      (widget.statement.debit ?? 0) > 0;
+    final bool isEsouqCheckout =
+        (widget.statement.paymentModel == "BBH Wallet" ||
+            widget.statement.paymentModel == "محفظة سيف إن جولد") &&
+        (widget.statement.debit ?? 0) > 0;
 
-      final bool isgiftSent =
-      (widget.statement.paymentModel == "Gift Sent" ||widget.statement.paymentModel == "تم إرسال الهدية") &&
-      (widget.statement.debit ?? 0) > 0;
+    final bool isgiftSent =
+        (widget.statement.paymentModel == "Gift Sent" ||
+            widget.statement.paymentModel == "تم إرسال الهدية") &&
+        (widget.statement.debit ?? 0) > 0;
 
     switch (widget.statement.paymentModel) {
       case "Advance Payment":
@@ -169,92 +179,65 @@ class _MetalStatementCardState extends State<MetalStatementCard>
       case "BBH Wallet":
         title = AppLocalizations.of(context)!.esouqPayment;
         break;
-        case "Invest":
-       title= widget.statement.paymentModel == "Invest" 
-       && widget.statement.tradeType == "Sell"? 
-       AppLocalizations.of(context)!.sold
-       //"Sold"
-       :AppLocalizations.of(context)!.purchased;//"Purchased";
+      case "Invest":
+        title =
+            widget.statement.paymentModel == "Invest" &&
+                widget.statement.tradeType == "Sell"
+            ? AppLocalizations.of(context)!.sold
+            //"Sold"
+            : AppLocalizations.of(context)!.purchased; //"Purchased";
     }
-   
 
-  final bool useDebit = isEsouqCheckout || isgiftSent;
+    final bool useDebit = isEsouqCheckout || isgiftSent;
 
-  return Text(
-    useDebit
-        ? "$title: ${widget.statement.debit!.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}"
-        : "$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
-    style: const TextStyle(
-      color: Colors.white,
-      fontSize: 18,
-      fontWeight: FontWeight.bold,
-    ),
-  );
-    // return Text(
-    //   isEsouqCheckout?"$title: ${widget.statement.debit!.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}":"$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
-    //   style: const TextStyle(
-    //     color: Colors.white,
-    //     fontSize: 18,
-    //     fontWeight: FontWeight.bold,
-    //   ),
-    // );
+    return Text(
+      useDebit
+          ? "$title: ${widget.statement.debit!.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}"
+          : "$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+      ),
+    );
   }
+  Widget _buildMainInfo(BuildContext context) {
+    final bool isSell = widget.statement.tradeType == "Sell";
 
-//   Widget _buildMainInfo(BuildContext context) {
-//     final bool isSell = widget.statement.tradeType == "Sell";
-//     String label = isSell
-//         ? AppLocalizations.of(context)!.sold
-//         : AppLocalizations.of(context)!.history_bought_label;
-// final esouqCheckout = widget.statement.paymentModel == "BBH Wallet" &&
-//           (widget.statement.debit ?? 0) > 0;
+    final bool isEsouqCheckout =
+        widget.statement.paymentModel == "BBH Wallet" &&
+        (widget.statement.debit ?? 0) > 0;
 
-    
-//     num? price = isSell
-//         ? widget.statement.sellingPrice
-//         : widget.statement.buyingPrice;
+    final bool isgiftSent =
+        (widget.statement.paymentModel == "Gift Sent" ||
+            widget.statement.paymentModel == "تم إرسال الهدية") &&
+        (widget.statement.debit ?? 0) > 0;
 
-//     return _buildDetailRow(
-//       esouqCheckout?
-//       "":"$label ${AppLocalizations.of(context)!.at}",
-//       "${AppLocalizations.of(context)!.idq} ${_formatIqd(price)} ${AppLocalizations.of(context)!.g_}",
-//     );
-//   }
- Widget _buildMainInfo(BuildContext context) {
-  final bool isSell = widget.statement.tradeType == "Sell";
+    String label = isEsouqCheckout
+        ? AppLocalizations.of(context)!
+              .esouq_checkout_withdraw // 👈 add this key
+        : isSell
+        ? AppLocalizations.of(context)!.sold
+        : AppLocalizations.of(context)!.history_bought_label;
 
-  final bool isEsouqCheckout =
-      widget.statement.paymentModel == "BBH Wallet" &&
-      (widget.statement.debit ?? 0) > 0;
+    num? price = isSell
+        ? widget.statement.sellingPrice
+        : widget.statement.buyingPrice;
 
+    final bool useSpecialRow = isEsouqCheckout || isgiftSent;
 
+    final String finalLabel = isgiftSent
+        ? widget.statement.paymentModel
+              .toString() //AppLocalizations.of(context)!.gift
+        : "$label";
 
-      final bool isgiftSent =
-      (widget.statement.paymentModel == "Gift Sent" ||widget.statement.paymentModel == "تم إرسال الهدية") &&
-      (widget.statement.debit ?? 0) > 0;
-
-  String label = isEsouqCheckout
-      ? AppLocalizations.of(context)!.esouq_checkout_withdraw // 👈 add this key
-      : isSell
-          ? AppLocalizations.of(context)!.sold
-          : AppLocalizations.of(context)!.history_bought_label;
-
-  num? price = isSell
-      ? widget.statement.sellingPrice
-      : widget.statement.buyingPrice;
-      
-final bool useSpecialRow = isEsouqCheckout || isgiftSent;
-
-final String finalLabel = isgiftSent
-    ? widget.statement.paymentModel.toString()//AppLocalizations.of(context)!.gift
-    : "$label";
-
-return useSpecialRow
-    ? _buildEsouqRow(finalLabel, "")
-    : _buildDetailRow(
-        "$label ${AppLocalizations.of(context)!.at}",
-        "${AppLocalizations.of(context)!.idq} ${_formatIqd(price)} ${AppLocalizations.of(context)!.g_}",
-      );
-}
+    return useSpecialRow
+        ? _buildEsouqRow(finalLabel, "")
+        : _buildDetailRow(
+            "$label ${AppLocalizations.of(context)!.at}",
+            "${AppLocalizations.of(context)!.idq} ${_formatIqd(price)} ${AppLocalizations.of(context)!.g_}",
+          );
+  }
   Widget _buildDetailRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -277,6 +260,7 @@ return useSpecialRow
       ),
     );
   }
+
   Widget _buildEsouqRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -299,6 +283,7 @@ return useSpecialRow
       ),
     );
   }
+
   Widget _buildGiftRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -321,35 +306,35 @@ return useSpecialRow
       ),
     );
   }
-  
-  Widget _buildStatusChip(BuildContext context, String? status) {
-  final bool isOpened = status?.toLowerCase() == "opened";
 
-  final displayText = isOpened
-    ? AppLocalizations.of(context)!.grams_card_opened
-    : (status == "Closed")
+  Widget _buildStatusChip(BuildContext context, String? status) {
+    final bool isOpened = status?.toLowerCase() == "opened";
+
+    final displayText = isOpened
+        ? AppLocalizations.of(context)!.grams_card_opened
+        : (status == "Closed")
         ? AppLocalizations.of(context)!.status_closed
         : (status == "pending")
-            ? AppLocalizations.of(context)!.pending
-            : AppLocalizations.of(context)!.not_available;
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(
-        color: isOpened ? const Color(0xFFBBA473) : Colors.white24,
+        ? AppLocalizations.of(context)!.pending
+        : "";//.of(context)!.not_available;
+    return displayText.isEmpty?SizedBox(): Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: isOpened ? const Color(0xFFBBA473) : Colors.white24,
+        ),
       ),
-    ),
-    child: Text(
-      displayText,
-      style: TextStyle(
-        color: isOpened ? const Color(0xFFBBA473) : Colors.white54,
-        fontSize: 10,
-        fontWeight: FontWeight.bold,
+      child: Text(
+        displayText,
+        style: TextStyle(
+          color: isOpened ? const Color(0xFFBBA473) : Colors.white54,
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   // Widget _buildStatusChip(BuildContext context, String? status) {
   //   final bool isOpened = status?.toLowerCase() == "opened";

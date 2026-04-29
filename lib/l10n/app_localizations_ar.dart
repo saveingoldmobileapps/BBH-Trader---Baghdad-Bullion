@@ -3011,6 +3011,18 @@ class AppLocalizationsAr extends AppLocalizations {
   String get status_closed => 'مغلق';
 
   @override
+  String get shape_sub_type => 'نوع الشكل الفرعي';
+
+  @override
+  String get no_weight_available => 'لا توجد خيارات وزن متاحة';
+
+  @override
+  String get bar => 'سبيكة';
+
+  @override
+  String get coin => 'عملة';
+
+  @override
   String get buy_gold_grams_subtitle => 'أدخل كمية الذهب بالغرامات للتداول';
 
   @override

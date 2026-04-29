@@ -42,7 +42,8 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
       selectedScript = existing.script ?? "1 Gram Price";
       side = existing.alertType ?? "Buy";
       condition = existing.condition!;
-      priceController.text = existing.price?.toString() ?? "";
+      priceController.text = existing.price != null ? existing.price!.toStringAsFixed(3) : "";
+      // priceController.text = existing.price?.toString() ?? "";
       alertTypeLabel = side == "Buy" ? "Buying price" : "Selling price";
     } else {
       condition = "Less";

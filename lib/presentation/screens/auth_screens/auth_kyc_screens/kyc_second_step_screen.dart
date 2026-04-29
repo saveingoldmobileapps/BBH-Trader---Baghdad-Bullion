@@ -611,11 +611,11 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
     try {
       /// Load keys from .env
       final shuftiProBaseUrl = dotenv.env['SHUFTIPRO_BASE_URL'];
-      final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
-      final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
+      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
+      // final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
 
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
+      final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
+      final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
       final shuftiProUUIDId = Directionality.of(context) == TextDirection.rtl
           ? dotenv.env['SHUFTIPRO_UUID_Ar']
           : dotenv.env['SHUFTIPRO_UUID_ID'];
@@ -698,8 +698,8 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
           "supported_types": [
             "passport",
             "id_card",
-            "driving_license",
-            "credit_or_debit_card",
+            // "driving_license",
+            // "credit_or_debit_card",
           ],
           "allow_multi_language": "1",
           "fetch_enhanced_data": "1",

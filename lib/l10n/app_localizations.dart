@@ -1037,7 +1037,7 @@ abstract class AppLocalizations {
   /// No description provided for @withdraw_requests.
   ///
   /// In en, this message translates to:
-  /// **'Withdraw Requests'**
+  /// **'Withdrawal Request'**
   String get withdraw_requests;
 
   /// No description provided for @my_orders.
@@ -5783,6 +5783,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Closed'**
   String get status_closed;
+
+  /// No description provided for @shape_sub_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Shape Sub Type'**
+  String get shape_sub_type;
+
+  /// No description provided for @no_weight_available.
+  ///
+  /// In en, this message translates to:
+  /// **'No weight options available'**
+  String get no_weight_available;
+
+  /// No description provided for @bar.
+  ///
+  /// In en, this message translates to:
+  /// **'Bar'**
+  String get bar;
+
+  /// No description provided for @coin.
+  ///
+  /// In en, this message translates to:
+  /// **'Coin'**
+  String get coin;
 
   /// No description provided for @buy_gold_grams_subtitle.
   ///

@@ -260,67 +260,276 @@ class Esouq extends _$Esouq {
       state = state.copyWith(isLoading: false);
     }
   }
-
-  Future<void> fetchEsouqFilterOptions({
-    required String subtype,
-    String? shapeSubType,
-  }) async {
-    try {
-      final refreshToken =
-          await SecureStorageService.instance.getRefreshToken();
-      if (refreshToken == null) {
-        state = state.copyWith(isFilterLoading: false, filterOptions: const []);
-        return;
-      }
-
-      state = state.copyWith(isFilterLoading: true);
-
-      final headers = {
-        "Content-Type": "application/json",
-        "authorization": "Bearer $refreshToken",
-      };
-
-      final Map<String, dynamic> queryParameters = {
-        'subtype': subtype,
-      };
-
-      if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
-        queryParameters['shapesubtype'] = shapeSubType.trim();
-      }
-
-      final serverResponse = await DioNetworkManager().callAPI(
-        url: ApiEndpoints.getEsouqFiltersApiUrl,
-        parameters: queryParameters,
-        headers: headers,
-        httpMethod: HttpMethod.get,
-      );
-
-      switch (serverResponse.responseType) {
-        case ServerResponseType.success:
-          final filter.EsouqFilterModel response =
-              filter.EsouqFilterModel.fromJson(serverResponse.resultData);
-          state = state.copyWith(
-            filterOptions:
-                response.payload?.allProducts ?? const <filter.AllProducts>[],
-            isFilterLoading: false,
-          );
-          break;
-        case ServerResponseType.error:
-        case ServerResponseType.exception:
-          state = state.copyWith(
-            isFilterLoading: false,
-            filterOptions: const <filter.AllProducts>[],
-          );
-          break;
-      }
-    } catch (e, stackTrace) {
-      await Sentry.captureException(e, stackTrace: stackTrace);
-      state = state.copyWith(
-        isFilterLoading: false,
-        filterOptions: const <filter.AllProducts>[],
-      );
+Future<void> fetchEsouqFilterOptions({
+  String? subtype,
+  String? shapeSubType,
+}) async {
+  try {
+    final refreshToken = await SecureStorageService.instance.getRefreshToken();
+    if (refreshToken == null) {
+      state = state.copyWith(isFilterLoading: false, filterOptions: const []);
+      return;
     }
+
+    state = state.copyWith(isFilterLoading: true);
+
+    final headers = {
+      "Content-Type": "application/json",
+      "authorization": "Bearer $refreshToken",
+    };
+
+    final Map<String, dynamic> queryParameters = {};
+
+    // Only add subtype to query parameters if it's provided
+    if (subtype != null && subtype.trim().isNotEmpty) {
+      queryParameters['subtype'] = subtype.trim();
+    }
+
+    // Add shapeSubType only for minting subtype
+    if (subtype == 'minting' && shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+      queryParameters['shapesubtype'] = shapeSubType.trim();
+    }
+
+    final serverResponse = await DioNetworkManager().callAPI(
+      url: ApiEndpoints.getEsouqFiltersApiUrl,
+      parameters: queryParameters,
+      headers: headers,
+      httpMethod: HttpMethod.get,
+    );
+
+    switch (serverResponse.responseType) {
+      case ServerResponseType.success:
+        final filter.EsouqFilterModel response =
+            filter.EsouqFilterModel.fromJson(serverResponse.resultData);
+        
+        List<filter.AllProducts> filteredProducts = [];
+        
+        if (response.payload?.allProducts != null) {
+          final allProducts = response.payload!.allProducts!;
+          
+          // If subtype is null or empty, return ALL products
+          if (subtype == null || subtype.trim().isEmpty) {
+            filteredProducts = allProducts;
+          } 
+          // Filter for casting products only
+          else if (subtype.toLowerCase() == 'casting') {
+            filteredProducts = allProducts.where((product) {
+              return product.shapeType?.toLowerCase() == 'casting';
+            }).toList();
+          } 
+          // Filter for minting products only
+          else if (subtype.toLowerCase() == 'minting') {
+            filteredProducts = allProducts.where((product) {
+              return product.shapeType?.toLowerCase() == 'minting';
+            }).toList();
+            
+            // Further filter by shapeSubType if provided (Bar or Coin)
+            if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+              filteredProducts = filteredProducts
+                  .where((product) => 
+                      product.shapeSubType?.toLowerCase() == shapeSubType.toLowerCase())
+                  .toList();
+            }
+          }
+        }
+        
+        // Remove duplicates based on weightFactor
+        final uniqueProducts = <String, filter.AllProducts>{};
+        for (var product in filteredProducts) {
+          if (product.weightFactor != null && !uniqueProducts.containsKey(product.weightFactor)) {
+            uniqueProducts[product.weightFactor!] = product;
+          }
+        }
+        
+        state = state.copyWith(
+          filterOptions: uniqueProducts.values.toList(),
+          isFilterLoading: false,
+        );
+        break;
+        
+      case ServerResponseType.error:
+      case ServerResponseType.exception:
+        state = state.copyWith(
+          isFilterLoading: false,
+          filterOptions: const [],
+        );
+        break;
+    }
+  } catch (e, stackTrace) {
+    await Sentry.captureException(e, stackTrace: stackTrace);
+    state = state.copyWith(
+      isFilterLoading: false,
+      filterOptions: const [],
+    );
   }
+}
+// Future<void> fetchEsouqFilterOptions({
+//   String? subtype,
+//   String? shapeSubType,
+// }) async {
+//   try {
+//     final refreshToken = await SecureStorageService.instance.getRefreshToken();
+//     if (refreshToken == null) {
+//       state = state.copyWith(isFilterLoading: false, filterOptions: const []);
+//       return;
+//     }
+
+//     state = state.copyWith(isFilterLoading: true);
+
+//     final headers = {
+//       "Content-Type": "application/json",
+//       "authorization": "Bearer $refreshToken",
+//     };
+
+//     final Map<String, dynamic> queryParameters = {};
+
+//     // Only add subtype to query parameters if it's provided
+//     if (subtype != null && subtype.trim().isNotEmpty) {
+//       queryParameters['subtype'] = subtype.trim();
+//     }
+
+//     // Add shapeSubType only for minting subtype
+//     if (subtype == 'minting' && shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+//       queryParameters['shapesubtype'] = shapeSubType.trim();
+//     }
+
+//     final serverResponse = await DioNetworkManager().callAPI(
+//       url: ApiEndpoints.getEsouqFiltersApiUrl,
+//       parameters: queryParameters,
+//       headers: headers,
+//       httpMethod: HttpMethod.get,
+//     );
+
+//     switch (serverResponse.responseType) {
+//       case ServerResponseType.success:
+//         final filter.EsouqFilterModel response =
+//             filter.EsouqFilterModel.fromJson(serverResponse.resultData);
+        
+//         List<filter.AllProducts> filteredProducts = [];
+        
+//         if (response.payload?.allProducts != null) {
+//           final allProducts = response.payload!.allProducts!;
+          
+//           // If subtype is null or empty, return all products (including those without shapeType)
+//           if (subtype == null || subtype.trim().isEmpty) {
+//             filteredProducts = allProducts;
+//           } 
+//           // Filter for casting products
+//           else if (subtype.toLowerCase() == 'casting') {
+//             filteredProducts = allProducts.where((product) {
+//               // Include products that have shapeType == 'Casting'
+//               // Also include products without shapeType? Based on your requirements
+//               return product.shapeType?.toLowerCase() == 'casting';
+//             }).toList();
+//           } 
+//           // Filter for minting products
+//           else if (subtype.toLowerCase() == 'minting') {
+//             filteredProducts = allProducts.where((product) {
+//               // Include products that have shapeType == 'Minting'
+//               return product.shapeType?.toLowerCase() == 'minting';
+//             }).toList();
+            
+//             // Further filter by shapeSubType if provided
+//             if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+//               filteredProducts = filteredProducts
+//                   .where((product) => 
+//                       product.shapeSubType?.toLowerCase() == shapeSubType.toLowerCase())
+//                   .toList();
+//             }
+//           }
+//         }
+        
+//         // Remove duplicates based on weightFactor
+//         final uniqueProducts = <String, filter.AllProducts>{};
+//         for (var product in filteredProducts) {
+//           if (product.weightFactor != null && !uniqueProducts.containsKey(product.weightFactor)) {
+//             uniqueProducts[product.weightFactor!] = product;
+//           }
+//         }
+        
+//         state = state.copyWith(
+//           filterOptions: uniqueProducts.values.toList(),
+//           isFilterLoading: false,
+//         );
+//         break;
+        
+//       case ServerResponseType.error:
+//       case ServerResponseType.exception:
+//         state = state.copyWith(
+//           isFilterLoading: false,
+//           filterOptions: const [],
+//         );
+//         break;
+//     }
+//   } catch (e, stackTrace) {
+//     await Sentry.captureException(e, stackTrace: stackTrace);
+//     state = state.copyWith(
+//       isFilterLoading: false,
+//       filterOptions: const [],
+//     );
+//   }
+// }
+  
+  // Future<void> fetchEsouqFilterOptions({
+  //   required String subtype,
+  //   String? shapeSubType,
+  // }) async {
+  //   try {
+  //     final refreshToken =
+  //         await SecureStorageService.instance.getRefreshToken();
+  //     if (refreshToken == null) {
+  //       state = state.copyWith(isFilterLoading: false, filterOptions: const []);
+  //       return;
+  //     }
+
+  //     state = state.copyWith(isFilterLoading: true);
+
+  //     final headers = {
+  //       "Content-Type": "application/json",
+  //       "authorization": "Bearer $refreshToken",
+  //     };
+
+  //     final Map<String, dynamic> queryParameters = {
+  //       'subtype': subtype,
+  //     };
+
+  //     if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+  //       queryParameters['shapesubtype'] = shapeSubType.trim();
+  //     }
+
+  //     final serverResponse = await DioNetworkManager().callAPI(
+  //       url: ApiEndpoints.getEsouqFiltersApiUrl,
+  //       parameters: queryParameters,
+  //       headers: headers,
+  //       httpMethod: HttpMethod.get,
+  //     );
+
+  //     switch (serverResponse.responseType) {
+  //       case ServerResponseType.success:
+  //         final filter.EsouqFilterModel response =
+  //             filter.EsouqFilterModel.fromJson(serverResponse.resultData);
+  //         state = state.copyWith(
+  //           filterOptions:
+  //               response.payload?.allProducts ?? const <filter.AllProducts>[],
+  //           isFilterLoading: false,
+  //         );
+  //         break;
+  //       case ServerResponseType.error:
+  //       case ServerResponseType.exception:
+  //         state = state.copyWith(
+  //           isFilterLoading: false,
+  //           filterOptions: const <filter.AllProducts>[],
+  //         );
+  //         break;
+  //     }
+  //   } catch (e, stackTrace) {
+  //     await Sentry.captureException(e, stackTrace: stackTrace);
+  //     state = state.copyWith(
+  //       isFilterLoading: false,
+  //       filterOptions: const <filter.AllProducts>[],
+  //     );
+  //   }
+  // }
 
   /// get eSouq order by id
   Future<void> getEsouqOrderById(String orderId) async {

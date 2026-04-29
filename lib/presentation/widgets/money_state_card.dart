@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saveingold_fzco/core/core_export.dart';
 import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:saveingold_fzco/main.dart';
 import 'package:saveingold_fzco/presentation/widgets/auto_scale_text.dart';
 import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
 
@@ -31,6 +32,113 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
     return CommonService.formatIqdCurrency(value ?? 0);
   }
 
+    Widget statusCard(String status) {
+    switch (status.toLowerCase()) {
+      case "rejected":
+        return rejectionCard();
+      case "approved":
+        return acceptanceCard();
+      case "Pending":
+        return pendingCard();//""//canceledCard();
+      default:
+        return NoStatus();
+    }
+  }
+  Widget pendingCard() {
+    return _statusContainer(
+      text: AppLocalizations.of(navigatorKey.currentContext!)!.pending,
+      bgColor: Color(0xFFE8B931),
+      textColor: Color(0xFF11271C),
+    );
+  }
+  Widget rejectionCard() {
+    return _statusContainer(
+      text: AppLocalizations.of(navigatorKey.currentContext!)!.rejected,
+      bgColor: AppColors.red900Color,
+      textColor: AppColors.red800Color,
+    );
+  }
+   Widget NoStatus() {
+    return Text("");
+  }
+  Widget acceptanceCard() {
+    return _statusContainer(
+      text: AppLocalizations.of(navigatorKey.currentContext!)!.approved,
+      bgColor: Color(0xFF34C759),
+      textColor: AppColors.green900Color,
+    );
+  }
+  Widget _statusContainer({
+    required String text,
+    required Color bgColor,
+    required Color textColor,
+  }) {
+    return Container(
+      width: sizes!.responsiveLandscapeWidth(
+        phoneVal: 70,
+        tabletVal: 90,
+        tabletLandscapeVal: 100,
+        isLandscape: sizes!.isLandscape(),
+      ),
+      height: sizes!.responsiveLandscapeHeight(
+        phoneVal: 24,
+        tabletVal: 34,
+        tabletLandscapeVal: 40,
+        isLandscape: sizes!.isLandscape(),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      decoration: ShapeDecoration(
+        color: bgColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
+      child: Center(
+        child: GetGenericText(
+          text: text,
+          fontSize: sizes!.responsiveFont(
+            phoneVal: 12,
+            tabletVal: 14,
+          ),
+          fontWeight: FontWeight.w700,
+          color: textColor,
+        ),
+      ),
+    );
+  }
+
+
+
+  // String _getLocalizedStatus(BuildContext context, String? status) {
+  //   final s = status?.toLowerCase().trim();
+
+  //   switch (s) {
+  //     case "approved":
+  //       return "تمت الموافقة";
+  //     case "rejected":
+  //       return "مرفوض";
+  //     case "pending":
+  //       return "قيد الانتظار";
+  //     default:
+  //       return status ?? "";
+  //   }
+  // }
+  String _getLocalizedStatus(BuildContext context, String? status) {
+  final l10n = AppLocalizations.of(context)!;
+  final s = status?.toLowerCase().trim();
+
+  switch (s) {
+    case "approved":
+      return l10n.approved;  // Use localized string
+    case "rejected":
+      return l10n.rejected;  // Use localized string
+    case "pending":
+      return l10n.pending;   // Use localized string
+    default:
+      return status ?? "";
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -50,18 +158,42 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Full-width headline; when debit/credit exist, IQD appears only in this line (no side column).
-          SizedBox(
-            width: double.infinity,
-            child: AutoScaleText(
-              text: _moneyHistoryHeadline(context),
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              /// LEFT → Title
+              Expanded(
+                child: AutoScaleText(
+                  text: _moneyHistoryHeadline(context),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  alignment: widget.rtl
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  maxLines: 3,
+                ),
               ),
-              alignment: widget.rtl? Alignment.centerRight: Alignment.centerLeft,
-              maxLines: item.credit != null || item.debit != null ? 6 : 4,
-            ),
+
+              /// RIGHT → Status
+              statusCard(item.status.toString()),
+              // AutoScaleText(
+              //   text: _getLocalizedStatus(
+              //     context,
+              //     item.status,
+              //   ), //item.status ?? '',
+              //   style: TextStyle(
+              //     color: statusCard(item.status.toString()),
+              //     fontSize: 13,
+              //     fontWeight: FontWeight.w600,
+              //   ),
+              //   alignment: widget.rtl
+              //       ? Alignment.centerLeft
+              //       : Alignment.centerRight,
+              // ),
+            ],
           ),
 
           // See Details Toggle
@@ -70,10 +202,15 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
           // Expandable Content logic
           if (isExpanded) ...[
             const Divider(color: Colors.white10, height: 24),
-            widget.rtl?
-            _buildDetailRow("المعرّف", item.transactionId ?? l10n.not_available)
-            :
-            _buildDetailRow("ID", item.transactionId ?? l10n.not_available),
+            widget.rtl
+                ? _buildDetailRow(
+                    "المعرّف",
+                    item.transactionId ?? "",//l10n.not_available,
+                  )
+                : _buildDetailRow(
+                    "ID",
+                    item.transactionId ?? l10n.not_available,
+                  ),
             // Add Transaction Type in both languages
             _buildDetailRow(
               widget.rtl ? "نوع المعاملة" : l10n.transactionType,
@@ -185,8 +322,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
   String _moneyHistoryHeadline(BuildContext context) {
     final item = widget.data;
     final isRtl = widget.rtl;
-
-    String transactionTypeText = getLocalizedTransactionType(
+    final String transactionTypeText = getLocalizedTransactionType(
       context,
       item.transactionType,
     );
@@ -203,6 +339,8 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
 
     final esouqCheckout = item.paymentModel == "BBH Wallet";
 
+    final withdrawAmounts = item.paymentModel == "Bank";
+
     /// Extract grams (adjust field if your model differs)
     final grams = item.grams ?? 0; // <-- update if needed
 
@@ -211,6 +349,15 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
       return isRtl
           ? "تم إيداع المبلغ بواسطة المشرف"
           : "Amount Deposited by Admin";
+    }
+
+    if (withdrawAmounts && (item.debit ?? 0) > 0) {
+      final amount = item.debit!.toStringAsFixed(3);
+
+      return isRtl
+          ? "سحب مبلغ :$amount ${AppLocalizations.of(context)!.iqd_currency} "
+          : "${AppLocalizations.of(context)!.withdraw_requests}: ${AppLocalizations.of(context)!.iqd_currency} $amount";
+          //"${item.transactionType} ${AppLocalizations.of(context)!.iqd_currency} $amount";
     }
 
     /// Handle DEBIT (Buy / Withdrawal)
@@ -298,7 +445,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
   }
 
   String getLocalizedTransactionType(BuildContext context, String? type) {
-    if (type == null) return AppLocalizations.of(context)!.not_available;
+    if (type == null) return "";//AppLocalizations.of(context)!.not_available;
     final isRtl = widget.rtl;
     if (!isRtl) return type;
 

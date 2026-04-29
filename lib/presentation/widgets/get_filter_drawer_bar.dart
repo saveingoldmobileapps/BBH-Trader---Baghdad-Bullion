@@ -39,8 +39,7 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
   String? selectedWeight;
   String? selectedWeightCategory;
   String? selectedShapeSubType;
-  // String selectedBarType = _mintedBarType; // Default to match UI screenshot
-  String selectedBarType = _allmintedAndCast; // Default = All
+  String selectedBarType = _allmintedAndCast;
   bool _filtersLoaded = false;
 
   @override
@@ -48,7 +47,14 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
     super.didChangeDependencies();
     if (_filtersLoaded) return;
     _filtersLoaded = true;
-    // Default: no subtype selected, no weights fetched until user chooses type.
+    
+    // Fetch ALL products by default (minting + casting)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
+        subtype: null, // null means fetch all products
+        shapeSubType: null,
+      );
+    });
   }
 
   @override
@@ -131,53 +137,67 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                   const SizedBox(height: 16),
                   esouqState.isFilterLoading
                       ? _buildWeightChipsShimmer(context)
-                      : Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children: filterOptions.map((item) {
-                            final uniqueValue =
-                                '${item.weightFactor ?? ''}_${item.weightCategory ?? ''}_${item.id ?? ''}';
-                            final label =
-                                '${item.weightFactor ?? ''} ${item.weightCategory ?? ''}'
-                                    .trim();
-                            final isSelected = selectedUniqueWeight == uniqueValue;
-                            return GestureDetector(
-                              onTap: () => setState(() {
-                                selectedUniqueWeight = uniqueValue;
-                                selectedWeight = item.weightFactor;
-                                selectedWeightCategory = item.weightCategory;
-                              }),
-                              child: Container(
-                                width: (MediaQuery.of(context).size.width / 3) - 20,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? Colors.white
-                                      : const Color(0xFF1E1E1E),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? Colors.white
-                                        : Colors.white.withOpacity(0.05),
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    label.isNotEmpty ? label : l10n.na,
-                                    style: TextStyle(
-                                      color:
-                                          isSelected ? Colors.black : Colors.white,
-                                      fontWeight: isSelected
-                                          ? FontWeight.w600
-                                          : FontWeight.normal,
-                                      fontSize: 13,
-                                    ),
+                      : filterOptions.isEmpty
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(32.0),
+                                child: Text(
+                                  AppLocalizations.of(context)!.no_weight_available,
+                                  //'No weight options available',
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 14,
                                   ),
                                 ),
                               ),
-                            );
-                          }).toList(),
-                        ),
+                            )
+                          : Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              children: filterOptions.map((item) {
+                                final uniqueValue =
+                                    '${item.weightFactor ?? ''}_${item.weightCategory ?? ''}_${item.id ?? ''}';
+                                final label =
+                                    '${item.weightFactor ?? ''} ${item.weightCategory ?? ''}'
+                                        .trim();
+                                final isSelected = selectedUniqueWeight == uniqueValue;
+                                return GestureDetector(
+                                  onTap: () => setState(() {
+                                    selectedUniqueWeight = uniqueValue;
+                                    selectedWeight = item.weightFactor;
+                                    selectedWeightCategory = item.weightCategory;
+                                  }),
+                                  child: Container(
+                                    width: (MediaQuery.of(context).size.width / 3) - 20,
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : const Color(0xFF1E1E1E),
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(
+                                        color: isSelected
+                                            ? Colors.white
+                                            : Colors.white.withOpacity(0.05),
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        label.isNotEmpty ? label : l10n.na,
+                                        style: TextStyle(
+                                          color:
+                                              isSelected ? Colors.black : Colors.white,
+                                          fontWeight: isSelected
+                                              ? FontWeight.w600
+                                              : FontWeight.normal,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
 
                   const SizedBox(height: 32),
                   Text(
@@ -202,7 +222,8 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                   if (selectedBarType == _mintedBarType) ...[
                     const SizedBox(height: 24),
                     Text(
-                      'Shape Sub Type',
+                      AppLocalizations.of(context)!.shape_sub_type,
+                      //'Shape Sub Type',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -218,71 +239,6 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                       ],
                     ),
                   ],
-
-                  // Row(
-                  //   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children:
-                  //       [
-                  //         _allmintedAndCast,
-                  //         _mintedBarType,
-                  //         _castedBarType,
-                  //       ].map((type) {
-                  //         bool isSelected = selectedBarType == type;
-                  //         final label = type == _castedBarType
-                  //             ? l10n.casting
-                  //             : type == _mintedBarType
-                  //             ? l10n.minting
-                  //             : l10n.all; // 👈 add this key
-                  //         return Expanded(
-                  //           child: GestureDetector(
-                  //             // onTap: () => setState(() => selectedBarType = type),
-                  //             // onTap: () => setState(() {
-                  //             //   selectedBarType = type;
-
-                  //             //   /// Reset selection when switching
-                  //             //   selectedUniqueWeight = null;
-                  //             //   selectedWeight = null;
-                  //             //   selectedWeightCategory = null;
-                  //             // }),
-                  //             onTap: () => setState(() {
-                  //               selectedBarType = type;
-
-                  //               selectedUniqueWeight = null;
-                  //               selectedWeight = null;
-                  //               selectedWeightCategory = null;
-                  //             }),
-                  //             child: Container(
-                  //               margin: EdgeInsets.only(
-                  //                 right: type == _castedBarType ? 12 : 0,
-                  //               ),
-                  //               padding: const EdgeInsets.symmetric(
-                  //                 vertical: 14,
-                  //               ),
-                  //               decoration: BoxDecoration(
-                  //                 color: isSelected
-                  //                     ? Colors.white.withOpacity(0.1)
-                  //                     : const Color(0xFF1E1E1E),
-                  //                 borderRadius: BorderRadius.circular(10),
-                  //                 border: Border.all(
-                  //                   color: isSelected
-                  //                       ? Colors.white24
-                  //                       : Colors.white.withOpacity(0.05),
-                  //                 ),
-                  //               ),
-                  //               child: Center(
-                  //                 child: Text(
-                  //                   label,
-                  //                   style: const TextStyle(
-                  //                     color: Colors.white,
-                  //                     fontWeight: FontWeight.w500,
-                  //                   ),
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         );
-                  //       }).toList(),
-                  // ),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -333,7 +289,7 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                 child: Center(
                   child: Text(
                     l10n.apply_filters,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -370,21 +326,23 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
           });
 
           if (type == _castedBarType) {
+            // Fetch ONLY casting products (bars only)
             await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
                   subtype: 'casting',
-                  shapeSubType: _shapeSubTypeBar,
+                  shapeSubType: null,
                 );
           } else if (type == _mintedBarType) {
+            // Fetch ONLY minting products (all: bars and coins)
             await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
                   subtype: 'minting',
-                  shapeSubType: _shapeSubTypeBar,
+                  shapeSubType: null, // null shows all minting products
                 );
           } else {
-            // All -> clear filter options list
-            ref
-                .read(esouqProvider.notifier)
-                .fetchEsouqFilterOptions(subtype: 'minting', shapeSubType: _shapeSubTypeBar);
-            // We still keep list loaded (minting bar) so user can pick weight quickly if needed.
+            // ALL - fetch all products (minting + casting + others)
+            await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
+                  subtype: null,
+                  shapeSubType: null,
+                );
           }
         },
         child: Container(
@@ -416,6 +374,17 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
 
   Widget _buildSubTypeButton(String subType) {
     final isSelected = selectedShapeSubType == subType;
+
+    final l10n = AppLocalizations.of(context)!;
+    //final isSelected = selectedShapeSubType == subType;
+    
+    // Get translated text for Bar and Coin
+    String displayText = subType;
+    if (subType == _shapeSubTypeBar) {
+      displayText = l10n.bar; // Add 'bar' to your app_localizations
+    } else if (subType == _shapeSubTypeCoin) {
+      displayText = l10n.coin; // Add 'coin' to your app_localizations
+    }
     return Expanded(
       child: GestureDetector(
         onTap: () async {
@@ -426,6 +395,7 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
             selectedWeightCategory = null;
           });
           if (selectedBarType == _mintedBarType) {
+            // Fetch minting products filtered by specific shape sub type (Bar or Coin)
             await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
                   subtype: 'minting',
                   shapeSubType: subType,
@@ -447,7 +417,7 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
           ),
           child: Center(
             child: Text(
-              subType,
+              displayText,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,

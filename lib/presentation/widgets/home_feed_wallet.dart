@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/models/home_models/GetHomeFeedResponse.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/models/home_models/GetHomeFeedResponse.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 
 class HomeFeedWallet extends StatelessWidget {
   final bool isHiddenBalance;

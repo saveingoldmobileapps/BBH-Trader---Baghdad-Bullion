@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/widgets/documets_camera.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/widgets/documets_camera.dart';
 
 import '../../../../../core/theme/const_colors.dart';
 import '../../../../sharedProviders/providers/kyc_provider.dart/kyc_provider.dart';

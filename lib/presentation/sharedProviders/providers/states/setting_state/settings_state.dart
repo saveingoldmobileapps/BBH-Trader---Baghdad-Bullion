@@ -1,4 +1,4 @@
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
 
 import '../../../../../data/models/ErrorResponse.dart';
 import '../../../../../data/models/time_zone/time_zone_model.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/main.dart';
-import 'package:saveingold_fzco/presentation/widgets/auto_scale_text.dart';
-import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/main.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/auto_scale_text.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/global_time.dart';
 
 import '../../data/models/history_model/NewMoneyApiResponseModel.dart';
 

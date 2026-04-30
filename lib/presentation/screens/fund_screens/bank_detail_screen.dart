@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/main_home_screens/main_home_screen.dart';
-import 'package:saveingold_fzco/presentation/widgets/bank_text_form_field.dart';
-import 'package:saveingold_fzco/presentation/widgets/loader_button.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/main_home_screens/main_home_screen.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/bank_text_form_field.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/loader_button.dart';
 
 class BankDetailScreen extends ConsumerStatefulWidget {
   const BankDetailScreen({super.key});

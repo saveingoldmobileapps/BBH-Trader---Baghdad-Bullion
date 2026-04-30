@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
 
 import '../../l10n/app_localizations.dart';
 

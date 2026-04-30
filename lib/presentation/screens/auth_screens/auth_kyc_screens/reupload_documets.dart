@@ -6,16 +6,16 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:saveingold_fzco/core/theme/const_colors.dart';
-import 'package:saveingold_fzco/core/theme/const_padding.dart';
-import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
-import 'package:saveingold_fzco/presentation/feature_injection.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/kyc_provider.dart/kyc_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/search_drop_down.dart';
-import 'package:saveingold_fzco/presentation/widgets/text_form_field.dart';
-import 'package:saveingold_fzco/presentation/widgets/text_form_field_with_icon.dart';
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
+import 'package:baghdad_bullion_house/core/theme/const_padding.dart';
+import 'package:baghdad_bullion_house/core/theme/get_generic_text_widget.dart';
+import 'package:baghdad_bullion_house/presentation/feature_injection.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/auth_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/kyc_provider.dart/kyc_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/search_drop_down.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/text_form_field.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/text_form_field_with_icon.dart';
 
 class ReUploadScreen extends ConsumerStatefulWidget {
   const ReUploadScreen({super.key});

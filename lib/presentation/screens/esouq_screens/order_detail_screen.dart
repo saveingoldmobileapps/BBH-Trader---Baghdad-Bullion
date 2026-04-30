@@ -1,9 +1,9 @@
 // import 'package:cached_network_image/cached_network_image.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:saveingold_fzco/core/core_export.dart';
-// import 'package:saveingold_fzco/presentation/screens/main_home_screens/main_home_screen.dart';
-// import 'package:saveingold_fzco/presentation/widgets/loader_button.dart';
+// import 'package:baghdad_bullion_house/core/core_export.dart';
+// import 'package:baghdad_bullion_house/presentation/screens/main_home_screens/main_home_screen.dart';
+// import 'package:baghdad_bullion_house/presentation/widgets/loader_button.dart';
 
 // import '../../../data/models/esouq_model/GetAllProductResponse.dart';
 

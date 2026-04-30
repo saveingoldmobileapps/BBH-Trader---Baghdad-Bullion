@@ -1,7 +1,7 @@
-import 'package:saveingold_fzco/core/enums/loading_state.dart';
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
-import 'package:saveingold_fzco/data/models/withdrawal_models/GetAllWithdrawalFundsResponse.dart';
+import 'package:baghdad_bullion_house/core/enums/loading_state.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/withdrawal_models/GetAllWithdrawalFundsResponse.dart';
 
 import '../../../../../data/models/bank_models/BankCardReponse.dart';
 

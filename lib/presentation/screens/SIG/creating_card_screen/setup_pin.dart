@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
 import 'package:pinput/pinput.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
 
 import '../../../../l10n/app_localizations.dart';
 

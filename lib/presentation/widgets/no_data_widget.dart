@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:saveingold_fzco/core/res_sizes/res.dart';
+import 'package:baghdad_bullion_house/core/res_sizes/res.dart';
 
 import '../../core/theme/const_colors.dart';
 import '../../core/theme/const_padding.dart';

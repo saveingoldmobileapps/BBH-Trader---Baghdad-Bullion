@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/core/validators.dart';
-import 'package:saveingold_fzco/presentation/widgets/loader_button.dart';
-import 'package:saveingold_fzco/presentation/widgets/text_form_field.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/validators.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/loader_button.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/text_form_field.dart';
 
 import '../../../../l10n/app_localizations.dart';
 import '../../../sharedProviders/providers/auth_provider.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/presentation/screens/SIG/creating_card_screen/sig_card_ui.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/presentation/screens/SIG/creating_card_screen/sig_card_ui.dart';
 
 class CreatingCardScreen extends ConsumerStatefulWidget {
   const CreatingCardScreen({super.key});

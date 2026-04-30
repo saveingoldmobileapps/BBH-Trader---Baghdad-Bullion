@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:saveingold_fzco/core/theme/const_colors.dart';
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
 
 import '../../../../../core/theme/const_padding.dart';
 import '../../../../sharedProviders/providers/auth_provider.dart';

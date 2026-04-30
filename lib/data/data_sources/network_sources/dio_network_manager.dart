@@ -11,12 +11,12 @@ import 'package:dio/io.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/main.dart';
-import 'package:saveingold_fzco/presentation/feature_injection.dart';
-import 'package:saveingold_fzco/presentation/screens/get_started_screen.dart';
-import 'package:saveingold_fzco/presentation/widgets/pop_up_widget.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/main.dart';
+import 'package:baghdad_bullion_house/presentation/feature_injection.dart';
+import 'package:baghdad_bullion_house/presentation/screens/get_started_screen.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/pop_up_widget.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 

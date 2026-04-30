@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/presentation/screens/fund_screens/bank_detail_screen.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/presentation/screens/fund_screens/bank_detail_screen.dart';
 
 class SelectBankScreen extends ConsumerStatefulWidget {
   const SelectBankScreen({super.key});

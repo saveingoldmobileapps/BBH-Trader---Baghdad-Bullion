@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
 
 class CollectionBranchCard extends StatelessWidget {
   final String branchName;

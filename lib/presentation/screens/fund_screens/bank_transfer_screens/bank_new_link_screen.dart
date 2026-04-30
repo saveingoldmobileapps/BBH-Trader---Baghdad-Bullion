@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:saveingold_fzco/presentation/widgets/loader_arrow_button.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/loader_arrow_button.dart';
 
 import '../../../../core/core_export.dart';
 

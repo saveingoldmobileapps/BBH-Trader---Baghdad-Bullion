@@ -3,11 +3,11 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/direct_transfer/direct_transfer_get_started.dart';
-import 'package:saveingold_fzco/presentation/screens/setting_screens/support_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/direct_transfer/direct_transfer_get_started.dart';
+import 'package:baghdad_bullion_house/presentation/screens/setting_screens/support_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
 
 import '../../widgets/widget_export.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
 
 class MarketCloseScreen extends StatelessWidget {
   const MarketCloseScreen({super.key});

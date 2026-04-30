@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:saveingold_fzco/core/res_sizes/res.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/core/res_sizes/res.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 
 class CreateAccountText extends StatelessWidget {
   final VoidCallback onTap;

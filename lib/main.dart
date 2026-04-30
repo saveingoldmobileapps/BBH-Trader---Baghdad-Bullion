@@ -10,11 +10,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/core/push_notification_service/firebase_push_notification_service.dart';
-import 'package:saveingold_fzco/firebase_options.dart';
-import 'package:saveingold_fzco/l10n/L10n.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/language_provider.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/push_notification_service/firebase_push_notification_service.dart';
+import 'package:baghdad_bullion_house/firebase_options.dart';
+import 'package:baghdad_bullion_house/l10n/L10n.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'data/data_sources/network_sources/network_export.dart';
@@ -341,7 +341,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     return MaterialApp(
       key: key,
-      title: 'SaveInGold',
+      title: 'Baghdad Bullion House',
       locale: locale,
       navigatorKey: navigatorKey,
       localizationsDelegates: [

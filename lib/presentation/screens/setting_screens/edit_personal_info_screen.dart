@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/widgets/profile_image.dart';
-import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/profile_image.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/widget_export.dart';
 
 import '../../sharedProviders/providers/auth_provider.dart';
 import '../../sharedProviders/providers/home_provider.dart';

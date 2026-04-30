@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:saveingold_fzco/core/extensions/extensions.dart';
-import 'package:saveingold_fzco/main.dart';
+import 'package:baghdad_bullion_house/core/extensions/extensions.dart';
+import 'package:baghdad_bullion_house/main.dart';
 
 import '../l10n/app_localizations.dart';
 

@@ -1094,6 +1094,12 @@ abstract class AppLocalizations {
   /// **'No E-Souq products are available at the moment.'**
   String get no_esouq_product;
 
+  /// No description provided for @pending_sell.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending Sell'**
+  String get pending_sell;
+
   /// No description provided for @customer_support_title.
   ///
   /// In en, this message translates to:

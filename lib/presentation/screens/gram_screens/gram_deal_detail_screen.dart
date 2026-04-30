@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/core/decimal_text_input_formatter.dart';
-import 'package:saveingold_fzco/data/models/gram_balance/GramApiResponseModel.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/gram_provider/gram_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/trade_provider/trade_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
-import 'package:saveingold_fzco/presentation/widgets/input_formater.dart';
-import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/decimal_text_input_formatter.dart';
+import 'package:baghdad_bullion_house/data/models/gram_balance/GramApiResponseModel.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/gram_provider/gram_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/trade_provider/trade_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/global_time.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/input_formater.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/widget_export.dart';
 
 import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
 import '../../widgets/shimmers/shimmer_loader.dart';
@@ -209,11 +209,11 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                           Expanded(
                             child: GetGenericText(
                               text:
-                                  "${widget.gramData.tradeType == "Sell" ? AppLocalizations.of(context)!.sold : AppLocalizations.of(context)!.deal_buy_order} ${widget.gramData.tradeMetal!.toStringAsFixed(3)} ${AppLocalizations.of(context)!.g_Gold}",
+                                  "${widget.gramData.tradeType == "Sell" && widget.gramData.tradeStatus == "Pending"? AppLocalizations.of(context)!.pending_sell : widget.gramData.tradeType == "Sell"?AppLocalizations.of(context)!.sold : AppLocalizations.of(context)!.deal_buy_order} ${widget.gramData.tradeMetal!.toStringAsFixed(3)} ${AppLocalizations.of(context)!.g_Gold}",
                               // "${widget.gramData.tradeType == "Sell" ? "Sold" : "Buy Order"} ${widget.gramData.tradeMetal!.toStringAsFixed(2)}g Gold",
                               fontSize: sizes!.responsiveFont(
-                                phoneVal: 20,
-                                tabletVal: 24,
+                                phoneVal: 15,
+                                tabletVal: 20,
                               ), //20,
                               fontWeight: FontWeight.w700,
                               color: AppColors.grey5Color,
@@ -620,7 +620,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   // ],
                                   inputFormatters: [
                                     AmountInputFormatter(
-                                      maxDigits: 4,
+                                      maxDigits: 6,
                                       decimalRange: 3,
                                     ),],
                                   textInputType:
@@ -721,7 +721,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   controller: gramAmountController,
                                   inputFormatters: [
                                     AmountInputFormatter(
-                                      maxDigits: 6,
+                                      maxDigits: 4,
                                       decimalRange: 3,
                                     ),],
                                   textInputType:

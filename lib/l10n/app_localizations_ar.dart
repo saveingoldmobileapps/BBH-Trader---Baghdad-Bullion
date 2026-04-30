@@ -521,6 +521,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get no_esouq_product => 'لا توجد منتجات E-Souq متاحة حالياً.';
 
   @override
+  String get pending_sell => 'بيع قيد الانتظار';
+
+  @override
   String get customer_support_title => 'دعم العملاء';
 
   @override

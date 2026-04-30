@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/reupload_documets.dart'
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/reupload_documets.dart'
     show ReUploadScreen;
 
 import '../../../../core/res_sizes/res.dart';

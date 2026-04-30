@@ -1,11 +1,11 @@
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
-import 'package:saveingold_fzco/data/models/LoginResponse.dart';
-import 'package:saveingold_fzco/data/models/RefreshTokenResponse.dart';
-import 'package:saveingold_fzco/data/models/RegisterResponse.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
-import 'package:saveingold_fzco/data/models/UploadResidencyResponse.dart';
-import 'package:saveingold_fzco/data/models/get_all_country/GetAllCountryResponseModel.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/data/models/LoginResponse.dart';
+import 'package:baghdad_bullion_house/data/models/RefreshTokenResponse.dart';
+import 'package:baghdad_bullion_house/data/models/RegisterResponse.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/UploadResidencyResponse.dart';
+import 'package:baghdad_bullion_house/data/models/get_all_country/GetAllCountryResponseModel.dart';
 
 class AuthState {
   final ErrorResponse errorResponse;

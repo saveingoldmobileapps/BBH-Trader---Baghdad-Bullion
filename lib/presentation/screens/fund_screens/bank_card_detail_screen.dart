@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/presentation/widgets/loader_button.dart';
-import 'package:saveingold_fzco/presentation/widgets/text_form_field.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/loader_button.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/text_form_field.dart';
 
 class BankCardDetailScreen extends ConsumerStatefulWidget {
   const BankCardDetailScreen({super.key});

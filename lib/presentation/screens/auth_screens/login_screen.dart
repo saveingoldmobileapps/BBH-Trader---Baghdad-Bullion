@@ -3,15 +3,15 @@ import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/l10n/app_localizations_en.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/widgets/no_copy_paste_format.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/register_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/setting_provider/check_device_security.dart';
-import 'package:saveingold_fzco/presentation/widgets/button_widget.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations_en.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/widgets/no_copy_paste_format.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/register_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/auth_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/setting_provider/check_device_security.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/button_widget.dart';
 
 import 'forgot_screens/forgot_password_screen.dart';
 

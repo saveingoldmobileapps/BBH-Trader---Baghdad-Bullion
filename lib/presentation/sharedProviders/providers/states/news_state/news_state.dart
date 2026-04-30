@@ -1,5 +1,5 @@
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
-import 'package:saveingold_fzco/data/models/news_models/NewsAllResponseModel.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/news_models/NewsAllResponseModel.dart';
 
 import '../../../../../data/models/ErrorResponse.dart';
 

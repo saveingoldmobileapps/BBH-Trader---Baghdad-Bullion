@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
-import 'package:saveingold_fzco/data/data_sources/network_sources/api_url.dart';
-import 'package:saveingold_fzco/data/data_sources/network_sources/dio_network_manager.dart';
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart';
+import 'package:baghdad_bullion_house/data/data_sources/network_sources/api_url.dart';
+import 'package:baghdad_bullion_house/data/data_sources/network_sources/dio_network_manager.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../data/data_sources/local_database/secure_database.dart';

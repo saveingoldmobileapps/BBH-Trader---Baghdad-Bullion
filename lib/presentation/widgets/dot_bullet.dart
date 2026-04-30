@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:saveingold_fzco/core/res_sizes/res.dart';
+import 'package:baghdad_bullion_house/core/res_sizes/res.dart';
 
 class DotBullet extends StatelessWidget {
   const DotBullet({super.key});

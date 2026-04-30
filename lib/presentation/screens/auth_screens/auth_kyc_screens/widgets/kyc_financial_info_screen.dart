@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:saveingold_fzco/core/theme/const_colors.dart';
-import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/widgets/documets_selection_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/kyc_provider.dart/kyc_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/text_form_field.dart';
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
+import 'package:baghdad_bullion_house/core/theme/get_generic_text_widget.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/widgets/documets_selection_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/kyc_provider.dart/kyc_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/text_form_field.dart';
 
 import '../../../../../core/theme/const_padding.dart';
 import '../../../../widgets/search_drop_down.dart';

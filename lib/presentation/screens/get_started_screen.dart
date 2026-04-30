@@ -2,10 +2,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/register_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/language_provider.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/register_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
 import 'auth_screens/login_screen.dart';
 
 class GetStartedScreen extends ConsumerStatefulWidget {

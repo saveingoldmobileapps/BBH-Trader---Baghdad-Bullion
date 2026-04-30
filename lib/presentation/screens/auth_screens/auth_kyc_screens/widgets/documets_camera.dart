@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/theme/const_colors.dart';
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
 
 import '../../../../../core/res_sizes/res.dart';
 import '../../../../../core/theme/get_generic_text_widget.dart'

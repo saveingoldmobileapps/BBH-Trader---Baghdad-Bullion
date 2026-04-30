@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/setting_screens/setting_screen.dart';
-import 'package:saveingold_fzco/presentation/widgets/pop_up_widget.dart' show genericPopUpWidget;
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/setting_screens/setting_screen.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/pop_up_widget.dart' show genericPopUpWidget;
 
 class UpgradeAccountPopup {
   static Future<void> show({

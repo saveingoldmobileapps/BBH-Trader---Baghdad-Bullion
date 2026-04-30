@@ -1,7 +1,7 @@
+import 'package:baghdad_bullion_house/presentation/screens/alerts/add_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:saveingold_fzco/presentation/screens/alerts/add_alert.dart';
 
 import '../../../core/enums/loading_state.dart';
 import '../../../core/theme/const_colors.dart';

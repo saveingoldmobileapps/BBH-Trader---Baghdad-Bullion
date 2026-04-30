@@ -6,15 +6,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 // import 'package:latlong2/latlong.dart';
 // import 'package:location/location.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/models/esouq_model/GetAllProductResponse.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/esouq_screens/one_min_timer.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/shimmers/shimmer_loader.dart';
-import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/models/esouq_model/GetAllProductResponse.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/esouq_screens/one_min_timer.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/auth_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/shimmers/shimmer_loader.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/widget_export.dart';
 
 class OrderCheckoutScreen extends ConsumerStatefulWidget {
   final AllProducts product;

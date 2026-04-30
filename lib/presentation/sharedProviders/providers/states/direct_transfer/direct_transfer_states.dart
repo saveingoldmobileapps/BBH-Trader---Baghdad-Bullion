@@ -1,7 +1,7 @@
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
-import 'package:saveingold_fzco/data/models/direct_transfer/BankDetailResponse.dart';
-import 'package:saveingold_fzco/data/models/direct_transfer/DirectTransferBankResponse.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/direct_transfer/BankDetailResponse.dart';
+import 'package:baghdad_bullion_house/data/models/direct_transfer/DirectTransferBankResponse.dart';
 
 class DirectTransferState {
   final List<AllBanks> allBanks;

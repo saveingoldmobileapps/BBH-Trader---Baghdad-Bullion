@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 
 import '../../../core/res_sizes/res.dart';
 import '../../../core/theme/const_colors.dart';

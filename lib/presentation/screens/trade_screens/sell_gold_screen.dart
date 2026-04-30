@@ -5,18 +5,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/core/decimal_text_input_formatter.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/kyc_first_step_screen.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/kyc_second_step_screen.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/email_verify_code_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/trade_provider/trade_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/live_price_container.dart';
-import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/decimal_text_input_formatter.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/kyc_first_step_screen.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/kyc_second_step_screen.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/email_verify_code_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/trade_provider/trade_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/live_price_container.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/widget_export.dart';
 
 import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import '../main_home_screens/trade_screen.dart';
 
 class SellGoldScreen extends ConsumerStatefulWidget {

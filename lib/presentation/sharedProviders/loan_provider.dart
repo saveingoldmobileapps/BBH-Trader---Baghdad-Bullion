@@ -2,10 +2,10 @@ import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:saveingold_fzco/data/data_sources/network_sources/api_url.dart';
-import 'package:saveingold_fzco/data/data_sources/network_sources/dio_network_manager.dart';
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
-import 'package:saveingold_fzco/presentation/feature_injection.dart';
+import 'package:baghdad_bullion_house/data/data_sources/network_sources/api_url.dart';
+import 'package:baghdad_bullion_house/data/data_sources/network_sources/dio_network_manager.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/presentation/feature_injection.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../core/enums/loading_state.dart';

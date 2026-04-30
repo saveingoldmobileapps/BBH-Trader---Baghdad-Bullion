@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 
 import '../../../core/theme/const_colors.dart';
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/news_provider/news_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/all_home_news_card.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/news_provider/news_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/all_home_news_card.dart';
 
 import '../../widgets/no_data_widget.dart';
 import '../../widgets/shimmers/shimmer_loader.dart';

@@ -1,9 +1,9 @@
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/models/AppUpdateResponseModel.dart';
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
-import 'package:saveingold_fzco/data/models/home_models/GetHomeFeedResponse.dart';
-import 'package:saveingold_fzco/data/models/user_models/GetUserProfileResponse.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/models/AppUpdateResponseModel.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/home_models/GetHomeFeedResponse.dart';
+import 'package:baghdad_bullion_house/data/models/user_models/GetUserProfileResponse.dart';
 class HomeState {
   final ErrorResponse errorResponse;
   final SuccessResponse successResponse;

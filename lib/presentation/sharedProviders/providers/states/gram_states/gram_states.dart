@@ -1,6 +1,6 @@
-import 'package:saveingold_fzco/core/enums/loading_state.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
-import 'package:saveingold_fzco/data/models/gram_balance/GramApiResponseModel.dart';
+import 'package:baghdad_bullion_house/core/enums/loading_state.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/gram_balance/GramApiResponseModel.dart';
 
 import '../../../../../data/models/ErrorResponse.dart';
 

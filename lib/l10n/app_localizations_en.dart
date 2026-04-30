@@ -528,6 +528,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'No E-Souq products are available at the moment.';
 
   @override
+  String get pending_sell => 'Pending Sell';
+
+  @override
   String get customer_support_title => 'Customer Support';
 
   @override

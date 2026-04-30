@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/esouq_screens/esouq_item_detail_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/shimmers/shimmer_loader.dart';
-import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/esouq_screens/esouq_item_detail_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/eouq_provider/e_souq_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/shimmers/shimmer_loader.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/widget_export.dart';
 
 import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
 import '../../widgets/no_data_widget.dart';

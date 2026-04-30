@@ -3,13 +3,13 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:saveingold_fzco/core/push_notification_service/firebase_push_notification_service.dart';
-import 'package:saveingold_fzco/core/sound_services.dart';
-import 'package:saveingold_fzco/core/sounds/app_sounds.dart';
-import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart'
+import 'package:baghdad_bullion_house/core/push_notification_service/firebase_push_notification_service.dart';
+import 'package:baghdad_bullion_house/core/sound_services.dart';
+import 'package:baghdad_bullion_house/core/sounds/app_sounds.dart';
+import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart'
     show LocalDatabase;
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/main.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp_unilink/whatsapp_unilink.dart';
 

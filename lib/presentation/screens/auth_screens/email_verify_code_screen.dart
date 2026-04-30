@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
 import 'package:pinput/pinput.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/change_email_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/home_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/language_provider.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/change_email_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/auth_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../widgets/button_widget.dart';

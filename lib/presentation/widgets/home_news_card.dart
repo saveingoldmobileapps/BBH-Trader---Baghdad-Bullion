@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/models/home_models/GetHomeFeedResponse.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/models/home_models/GetHomeFeedResponse.dart';
 import '../../l10n/app_localizations.dart';
 
 class HomeNewsCard extends StatelessWidget {

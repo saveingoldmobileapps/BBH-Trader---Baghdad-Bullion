@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 
 import '../../core/theme/const_colors.dart';
 import '../../core/theme/get_generic_text_widget.dart';

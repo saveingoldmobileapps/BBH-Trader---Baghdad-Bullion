@@ -1,9 +1,7 @@
+import 'package:baghdad_bullion_house/core/common_service.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/input_formater.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/decimal_text_input_formatter.dart';
-import 'package:saveingold_fzco/core/common_service.dart';
-import 'package:saveingold_fzco/presentation/widgets/input_formater.dart';
-
 import '../../../core/theme/const_colors.dart';
 import '../../../core/theme/get_generic_text_widget.dart';
 import '../../../data/models/alert_model/AlertModelResponse.dart';

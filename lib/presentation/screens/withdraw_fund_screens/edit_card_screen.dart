@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/widgets/loader_arrow_button.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/loader_arrow_button.dart';
 
 import '../../../data/models/bank_models/BankCardReponse.dart';
 import '../../sharedProviders/providers/withdraw_provider/withdraw_provider.dart';

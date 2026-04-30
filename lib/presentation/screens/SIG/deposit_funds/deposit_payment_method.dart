@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/presentation/screens/SIG/deposit_funds/sig_payment_method_ui.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/presentation/screens/SIG/deposit_funds/sig_payment_method_ui.dart';
 
 class SigSelectPaymentMethod extends ConsumerStatefulWidget {
   const SigSelectPaymentMethod({super.key});

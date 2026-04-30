@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:saveingold_fzco/data/models/history_model/GetMetalStatementsResponse.dart';
+import 'package:baghdad_bullion_house/data/models/history_model/GetMetalStatementsResponse.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../core/common_service.dart';
-import 'package:saveingold_fzco/presentation/widgets/global_time.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/global_time.dart';
 
 class MetalStatementCard extends StatefulWidget {
   final VoidCallback onTap;

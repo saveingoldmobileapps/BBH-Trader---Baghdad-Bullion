@@ -4,8 +4,8 @@ import 'dart:io' show Platform;
 import 'package:app_settings/app_settings.dart' as app_settings;
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/presentation/widgets/pop_up_widget.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/pop_up_widget.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 

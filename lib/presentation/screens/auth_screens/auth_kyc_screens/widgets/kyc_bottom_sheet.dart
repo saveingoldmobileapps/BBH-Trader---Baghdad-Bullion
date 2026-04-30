@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:saveingold_fzco/core/theme/const_colors.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/widgets/kyc_financial_info_screen.dart';
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/widgets/kyc_financial_info_screen.dart';
 
 import '../../../../../core/theme/const_padding.dart';
 

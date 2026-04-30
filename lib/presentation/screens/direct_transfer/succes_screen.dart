@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:saveingold_fzco/core/enums/loading_state.dart';
-import 'package:saveingold_fzco/core/extensions/extensions.dart';
-import 'package:saveingold_fzco/core/res_sizes/res.dart';
-import 'package:saveingold_fzco/core/theme/const_colors.dart';
-import 'package:saveingold_fzco/core/theme/const_padding.dart';
-import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/gift_provider/gift_fund_provider.dart';
+import 'package:baghdad_bullion_house/core/enums/loading_state.dart';
+import 'package:baghdad_bullion_house/core/extensions/extensions.dart';
+import 'package:baghdad_bullion_house/core/res_sizes/res.dart';
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
+import 'package:baghdad_bullion_house/core/theme/const_padding.dart';
+import 'package:baghdad_bullion_house/core/theme/get_generic_text_widget.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/gift_provider/gift_fund_provider.dart';
 import '../../widgets/shimmers/shimmer_loader.dart';
 import '../main_home_screens/main_home_screen.dart';
 

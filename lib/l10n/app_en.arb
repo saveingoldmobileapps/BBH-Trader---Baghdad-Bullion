@@ -194,6 +194,7 @@
   "logout": "Logout",
   "e_souq": "Esouq",
   "no_esouq_product": "No E-Souq products are available at the moment.",
+  "pending_sell":"Pending Sell",
 
   "@CustomerSupport": {},
   "customer_support_title": "Customer Support",

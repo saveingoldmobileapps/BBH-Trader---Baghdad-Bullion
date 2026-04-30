@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:saveingold_fzco/presentation/widgets/loader_arrow_button.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/loader_arrow_button.dart';
 
 import '../../../../core/core_export.dart';
 import '../success_placeholder_screen.dart';

@@ -1,5 +1,5 @@
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
 
 class ShuftiProState {
   final ErrorResponse errorResponse;

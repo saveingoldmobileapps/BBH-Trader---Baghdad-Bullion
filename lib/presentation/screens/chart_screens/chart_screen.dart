@@ -3,7 +3,7 @@
 // import 'package:fl_chart/fl_chart.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:saveingold_fzco/core/core_export.dart';
+// import 'package:baghdad_bullion_house/core/core_export.dart';
 //
 // import '../../../data/models/gold_price_model/CurrentGoldPriceModel.dart';
 // import '../../sharedProviders/providers/gold_price_provider/gold_price_provider.dart';

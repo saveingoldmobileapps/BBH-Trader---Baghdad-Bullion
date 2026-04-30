@@ -1,9 +1,9 @@
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/core/sound_services.dart';
-import 'package:saveingold_fzco/core/sounds/app_sounds.dart';
-import 'package:saveingold_fzco/data/models/history_model/GetMetalStatementsResponse.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/sound_services.dart';
+import 'package:baghdad_bullion_house/core/sounds/app_sounds.dart';
+import 'package:baghdad_bullion_house/data/models/history_model/GetMetalStatementsResponse.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../data/data_sources/local_database/local_database.dart';

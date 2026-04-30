@@ -1,15 +1,17 @@
 import 'dart:io';
 
+import 'package:baghdad_bullion_house/core/enums/loading_state.dart';
+import 'package:baghdad_bullion_house/core/res_sizes/res.dart';
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/gram_screens/gram_deal_detail_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/gram_provider/gram_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/get_drawer_bar.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/gram_balance_card.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/shimmers/shimmer_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/gram_screens/gram_deal_detail_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/gram_provider/gram_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/shimmers/shimmer_loader.dart';
-import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
-
 import '../../../data/data_sources/local_database/local_database.dart';
 import '../../sharedProviders/providers/home_provider.dart';
 import '../../sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
@@ -48,23 +50,50 @@ class _GramScreenState extends ConsumerState<GramScreen> {
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
-    final gramStateWatchProvider = ref.watch(gramProvider);
-    final goldPriceState = ref.watch(goldPriceProvider);
-    final l10n = AppLocalizations.of(context)!;
-    final mainStateWatchProvider = ref.watch(homeProvider);
-    // Logic: Calculate total grams for the large display
-    double totalGrams = 0;
-    if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
+//     final gramStateWatchProvider = ref.watch(gramProvider);
+//     final goldPriceState = ref.watch(goldPriceProvider);
+//     final l10n = AppLocalizations.of(context)!;
+//     final mainStateWatchProvider = ref.watch(homeProvider);
+//     // Logic: Calculate total grams for the large display
+//     double totalGrams = 0;
+//     if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
+//   for (var item in gramStateWatchProvider.gramApiResponseModel.payload!) {
+
+//     // Skip if status is pending
+//     if (item.tradeStatus?.toLowerCase() == "pending" && item.tradeStatus?.toLowerCase() == "true") {
+//       //continue;
+//     }
+
+//     totalGrams += (item.tradeMetal ?? 0);
+//   }
+// }
+sizes!.refreshSize(context);
+final gramStateWatchProvider = ref.watch(gramProvider);
+final goldPriceState = ref.watch(goldPriceProvider);
+final l10n = AppLocalizations.of(context)!;
+final mainStateWatchProvider = ref.watch(homeProvider);
+
+// Logic: Calculate total grams for the large display
+double totalGrams = 0;
+if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
   for (var item in gramStateWatchProvider.gramApiResponseModel.payload!) {
-
-    // Skip if status is pending
-    if (item.tradeStatus?.toLowerCase() == "pending") {
-      continue;
+    
+    // Check if this is a "buy at price" order
+    final isBuyAtPriceOrder = item.buyAtPrice != null || 
+                               item.buyAtPriceStatus == true ||
+                               (item.tradeType?.toLowerCase() == "buy" && item.buyAtPriceStatus == true);
+    
+    if (isBuyAtPriceOrder) {
+      print('Skipping buy at price order: ${item.id}');
+      continue; // Don't add this to total
     }
-
+    
     totalGrams += (item.tradeMetal ?? 0);
+    print('Adding ${item.tradeMetal} grams from order: ${item.id}');
   }
 }
+
+print('Total grams (excluding buy at price orders): $totalGrams');
 
     return Scaffold(
       key: _scaffoldKey,

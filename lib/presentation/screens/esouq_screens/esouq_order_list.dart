@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:saveingold_fzco/core/extensions/extensions.dart';
-import 'package:saveingold_fzco/core/res_sizes/res.dart';
-import 'package:saveingold_fzco/core/theme/const_colors.dart';
-import 'package:saveingold_fzco/core/theme/const_padding.dart';
-import 'package:saveingold_fzco/core/theme/get_generic_text_widget.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/loan_request_screens/add_loan_request_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/loan_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/no_data_widget.dart';
+import 'package:baghdad_bullion_house/core/extensions/extensions.dart';
+import 'package:baghdad_bullion_house/core/res_sizes/res.dart';
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
+import 'package:baghdad_bullion_house/core/theme/const_padding.dart';
+import 'package:baghdad_bullion_house/core/theme/get_generic_text_widget.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/loan_request_screens/add_loan_request_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/loan_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/no_data_widget.dart';
 
 import '../../../core/enums/loading_state.dart';
 import '../../../data/models/bank_models/GetAllLoanResponse.dart';

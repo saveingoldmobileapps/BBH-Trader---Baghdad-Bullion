@@ -1,7 +1,7 @@
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
-import 'package:saveingold_fzco/data/models/bank_models/BankBranchResponse.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/bank_models/BankBranchResponse.dart';
 
 
 class BankBranchState {

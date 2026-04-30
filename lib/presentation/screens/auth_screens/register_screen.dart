@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/login_screen.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/auth_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/already_have_account.dart';
-import 'package:saveingold_fzco/presentation/widgets/demo_animated_text.dart';
-import 'package:saveingold_fzco/presentation/widgets/signup_phone_text_field.dart';
-import 'package:saveingold_fzco/presentation/widgets/term_conditions.dart';
-import 'package:saveingold_fzco/presentation/widgets/widget_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/login_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/auth_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/already_have_account.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/demo_animated_text.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/signup_phone_text_field.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/term_conditions.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/widget_export.dart';
 
 import '../../widgets/deposit_amount_dropdown.dart';
 

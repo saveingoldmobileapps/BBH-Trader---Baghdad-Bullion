@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:saveingold_fzco/core/extensions/extensions.dart';
-import 'package:saveingold_fzco/presentation/widgets/shimmers/shimmer_loader.dart';
+import 'package:baghdad_bullion_house/core/extensions/extensions.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/shimmers/shimmer_loader.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 

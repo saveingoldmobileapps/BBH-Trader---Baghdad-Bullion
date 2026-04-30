@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/models/news_models/NewsAllResponseModel.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/models/news_models/NewsAllResponseModel.dart';
 
 import '../../l10n/app_localizations.dart';
 

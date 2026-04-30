@@ -1,4 +1,4 @@
-import 'package:saveingold_fzco/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
 
 class ApiEndpoints {
   // Base URL is fetched dynamically from EnvUtils

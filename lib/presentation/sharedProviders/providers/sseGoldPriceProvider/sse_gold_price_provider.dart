@@ -7,11 +7,11 @@ import 'package:flutter_client_sse/flutter_client_sse.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:saveingold_fzco/core/enums/loading_state.dart';
-import 'package:saveingold_fzco/core/theme/const_toasts.dart';
-import 'package:saveingold_fzco/data/data_sources/local_database/local_database.dart';
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/core/enums/loading_state.dart';
+import 'package:baghdad_bullion_house/core/theme/const_toasts.dart';
+import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
 
 import '../../../../core/common_service.dart';
 import '../../../../data/data_sources/network_sources/api_url.dart';

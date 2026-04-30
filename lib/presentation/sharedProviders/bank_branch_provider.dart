@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:saveingold_fzco/core/enums/loading_state.dart';
-import 'package:saveingold_fzco/data/models/bank_models/BankBranchResponse.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/loan_provider.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/states/bank_branch_state.dart';
+import 'package:baghdad_bullion_house/core/enums/loading_state.dart';
+import 'package:baghdad_bullion_house/data/models/bank_models/BankBranchResponse.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/loan_provider.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/states/bank_branch_state.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../core/theme/const_toasts.dart';

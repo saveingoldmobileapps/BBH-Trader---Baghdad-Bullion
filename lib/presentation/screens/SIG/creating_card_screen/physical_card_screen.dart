@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/presentation/screens/SIG/creating_card_screen/almost_there_screen.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/presentation/screens/SIG/creating_card_screen/almost_there_screen.dart';
 
 import '../../../widgets/text_form_field.dart';
 

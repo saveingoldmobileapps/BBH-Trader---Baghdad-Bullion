@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:saveingold_fzco/core/sound_services.dart';
-import 'package:saveingold_fzco/core/sounds/app_sounds.dart';
-import 'package:saveingold_fzco/core/theme/const_toasts.dart';
-import 'package:saveingold_fzco/data/data_sources/network_sources/api_url.dart';
-import 'package:saveingold_fzco/data/data_sources/network_sources/dio_network_manager.dart';
-import 'package:saveingold_fzco/l10n/app_localizations.dart';
-import 'package:saveingold_fzco/presentation/screens/auth_screens/auth_kyc_screens/reupload_infromation.dart';
-import 'package:saveingold_fzco/presentation/screens/main_home_screens/main_home_screen.dart';
+import 'package:baghdad_bullion_house/core/sound_services.dart';
+import 'package:baghdad_bullion_house/core/sounds/app_sounds.dart';
+import 'package:baghdad_bullion_house/core/theme/const_toasts.dart';
+import 'package:baghdad_bullion_house/data/data_sources/network_sources/api_url.dart';
+import 'package:baghdad_bullion_house/data/data_sources/network_sources/dio_network_manager.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/reupload_infromation.dart';
+import 'package:baghdad_bullion_house/presentation/screens/main_home_screens/main_home_screen.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../data/data_sources/local_database/secure_database.dart';

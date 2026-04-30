@@ -1,12 +1,12 @@
-import 'package:saveingold_fzco/core/enums/loading_state.dart';
-import 'package:saveingold_fzco/data/models/ErrorResponse.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
-import 'package:saveingold_fzco/data/models/bank_models/BankBranchResponse.dart'
+import 'package:baghdad_bullion_house/core/enums/loading_state.dart';
+import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/bank_models/BankBranchResponse.dart'
     show BankBranchesApiResponseModel;
-import 'package:saveingold_fzco/data/models/esouq_model/EsouqFilterModel.dart'
+import 'package:baghdad_bullion_house/data/models/esouq_model/EsouqFilterModel.dart'
     as filter;
-import 'package:saveingold_fzco/data/models/esouq_model/GetAllOrdersResponse.dart';
-import 'package:saveingold_fzco/data/models/esouq_model/GetAllProductResponse.dart';
+import 'package:baghdad_bullion_house/data/models/esouq_model/GetAllOrdersResponse.dart';
+import 'package:baghdad_bullion_house/data/models/esouq_model/GetAllProductResponse.dart';
 
 import '../../../../data/models/esouq_model/GetOrderDetailResponse.dart';
 

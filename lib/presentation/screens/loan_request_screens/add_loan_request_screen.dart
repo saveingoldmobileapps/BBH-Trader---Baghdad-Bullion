@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/core/decimal_text_input_formatter.dart';
-import 'package:saveingold_fzco/presentation/sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
-import 'package:saveingold_fzco/presentation/widgets/loader_button.dart';
-import 'package:saveingold_fzco/presentation/widgets/search_drop_down.dart';
-import 'package:saveingold_fzco/presentation/widgets/text_form_field.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/decimal_text_input_formatter.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/loader_button.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/search_drop_down.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/text_form_field.dart';
 
 import '../../sharedProviders/bank_branch_provider.dart';
 import '../../widgets/shimmers/shimmer_loader.dart';

@@ -1,6 +1,6 @@
-import 'package:saveingold_fzco/core/core_export.dart';
-import 'package:saveingold_fzco/data/models/SuccessResponse.dart';
-import 'package:saveingold_fzco/data/models/history_model/GetMetalStatementsResponse.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:baghdad_bullion_house/data/models/history_model/GetMetalStatementsResponse.dart';
 
 import '../../../../../data/models/ErrorResponse.dart';
 import '../../../../../data/models/history_model/NewMoneyApiResponseModel.dart';

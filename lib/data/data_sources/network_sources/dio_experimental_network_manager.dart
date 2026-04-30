@@ -9,7 +9,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:logger/logger.dart';
-import 'package:saveingold_fzco/presentation/feature_injection.dart';
+import 'package:baghdad_bullion_house/presentation/feature_injection.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'api_url.dart';

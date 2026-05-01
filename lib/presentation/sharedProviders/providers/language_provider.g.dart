@@ -6,20 +6,57 @@ part of 'language_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$languageHash() => r'93da250942122c72c25b41644a4d8d9c786352ce';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [Language].
 @ProviderFor(Language)
-final languageProvider =
-    AutoDisposeNotifierProvider<Language, LanguageState>.internal(
-  Language.new,
-  name: r'languageProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$languageHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final languageProvider = LanguageProvider._();
 
-typedef _$Language = AutoDisposeNotifier<LanguageState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class LanguageProvider
+    extends $NotifierProvider<Language, LanguageState> {
+  LanguageProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'languageProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$languageHash();
+
+  @$internal
+  @override
+  Language create() => Language();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(LanguageState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<LanguageState>(value),
+    );
+  }
+}
+
+String _$languageHash() => r'bbb1fc45d32c3f17ad9fc43c0639a6873c167ba0';
+
+abstract class _$Language extends $Notifier<LanguageState> {
+  LanguageState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<LanguageState, LanguageState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<LanguageState, LanguageState>,
+              LanguageState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

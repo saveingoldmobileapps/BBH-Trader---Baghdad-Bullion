@@ -80,7 +80,7 @@ bool _isConnecting = false;
 /// ---------------------------------------------------------------------------
 
 @riverpod
-Stream<SSEGoldPriceState> goldPrice(GoldPriceRef ref) {
+Stream<SSEGoldPriceState> goldPrice(Ref ref) {
   final controller = StreamController<SSEGoldPriceState>();
   _startSSE(
     onData: (state) {

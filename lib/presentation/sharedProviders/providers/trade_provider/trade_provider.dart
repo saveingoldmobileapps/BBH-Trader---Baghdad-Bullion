@@ -400,7 +400,7 @@ class Trade extends _$Trade {
   }
 
   /// update trade deal position
-  Future<void> updateTradeDealPosition({
+  Future<bool> updateTradeDealPosition({
     required num dealId,
     required num tradeMoney,
     required num tradeMetal,
@@ -418,6 +418,9 @@ class Trade extends _$Trade {
       // );
       String? refreshToken = await SecureStorageService.instance
           .getRefreshToken();
+
+      if (!ref.mounted) return false;
+
       // Set button loading state
       state = state.copyWith(isButtonState: true);
       final headers = {
@@ -429,7 +432,7 @@ class Trade extends _$Trade {
       if (refreshToken == null) {
         getLocator<Logger>().e("No refresh token found!");
         state = state.copyWith(isButtonState: false);
-        return;
+        return false;
       }
 
       final body = {
@@ -453,6 +456,8 @@ class Trade extends _$Trade {
         body: body,
       );
 
+      if (!ref.mounted) return false;
+
       // Handle API Response
       switch (serverResponse.responseType) {
         case ServerResponseType.success:
@@ -460,7 +465,7 @@ class Trade extends _$Trade {
             serverResponse.resultData,
           );
 
-          if (!context.mounted) return;
+          if (!context.mounted || !ref.mounted) return false;
           SoundPlayer().playSound(AppSounds.pendinOrderSound);
 
           state = state.copyWith(
@@ -470,15 +475,17 @@ class Trade extends _$Trade {
           getLocator<Logger>().i(
             "updateTradeDealPositionSuccess: ${successResponse.payload?.message}",
           );
-          break;
+          return true;
 
         case ServerResponseType.error:
           ErrorResponse errorResponse = ErrorResponse.fromJson(
             serverResponse.resultData,
           );
-          state = state.copyWith(
-            errorResponse: errorResponse,
-          );
+          if (ref.mounted) {
+            state = state.copyWith(
+              errorResponse: errorResponse,
+            );
+          }
           Toasts.getErrorToast(
             gravity: ToastGravity.TOP,
             text: "${errorResponse.payload?.message}",
@@ -486,13 +493,13 @@ class Trade extends _$Trade {
           getLocator<Logger>().e(
             "updateTradeDealPositionError: ${errorResponse.payload?.message}",
           );
-          break;
+          return false;
 
         case ServerResponseType.exception:
           getLocator<Logger>().e(
             "Exception: ${serverResponse.resultData}",
           );
-          break;
+          return false;
       }
     } catch (e, stackTrace) {
       await Sentry.captureException(
@@ -500,14 +507,16 @@ class Trade extends _$Trade {
         stackTrace: stackTrace,
       );
       getLocator<Logger>().e("Create Trade Error: $e");
+      return false;
     } finally {
-      // Reset button loading state
-      state = state.copyWith(isButtonState: false);
+      if (ref.mounted) {
+        state = state.copyWith(isButtonState: false);
+      }
     }
   }
 
   /// close trade deal
-  Future<void> closeTradeDeal({
+  Future<bool> closeTradeDeal({
     required num dealId,
     required num tradeMoney,
     required num tradeMetal,
@@ -525,6 +534,9 @@ class Trade extends _$Trade {
       // );
       String? refreshToken = await SecureStorageService.instance
           .getRefreshToken();
+
+      if (!ref.mounted) return false;
+
       final headers = {
         "Authorization": "Bearer $refreshToken",
         "Content-Type": "application/json",
@@ -534,7 +546,7 @@ class Trade extends _$Trade {
       if (refreshToken == null) {
         getLocator<Logger>().e("No refresh token found!");
         state = state.copyWith(isButtonState: false);
-        return;
+        return false;
       }
 
       final body = {
@@ -557,6 +569,8 @@ class Trade extends _$Trade {
         body: body,
       );
 
+      if (!ref.mounted) return false;
+
       // Handle API Response
       switch (serverResponse.responseType) {
         case ServerResponseType.success:
@@ -564,11 +578,13 @@ class Trade extends _$Trade {
             serverResponse.resultData,
           );
 
-          if (!context.mounted) return;
+          if (!context.mounted || !ref.mounted) return false;
           SoundPlayer().playSound(AppSounds.pendinOrderSound);
 
           /// reload fetch gram balance list
           await ref.read(gramProvider.notifier).getUserGramBalance();
+
+          if (!ref.mounted) return false;
 
           getLocator<Logger>().i(
             "closeTradeDeal: ${successResponse.payload?.message}",
@@ -578,18 +594,19 @@ class Trade extends _$Trade {
             gravity: ToastGravity.TOP,
             text: "${successResponse.payload?.message}",
           );
-          ref.read(gramProvider.notifier).getUserGramBalance();
           state = state.copyWith(isButtonState: false);
-          break;
+          return true;
 
         case ServerResponseType.error:
           ErrorResponse errorResponse = ErrorResponse.fromJson(
             serverResponse.resultData,
           );
-          state = state.copyWith(
-            errorResponse: errorResponse,
-            isButtonState: false,
-          );
+          if (ref.mounted) {
+            state = state.copyWith(
+              errorResponse: errorResponse,
+              isButtonState: false,
+            );
+          }
           Toasts.getErrorToast(
             gravity: ToastGravity.TOP,
             text: "${errorResponse.payload?.message}",
@@ -597,14 +614,16 @@ class Trade extends _$Trade {
           getLocator<Logger>().e(
             "closeTradeDealError: ${errorResponse.payload?.message}",
           );
-          break;
+          return false;
 
         case ServerResponseType.exception:
           getLocator<Logger>().e(
             "Exception: ${serverResponse.resultData}",
           );
-          state = state.copyWith(isButtonState: false);
-          break;
+          if (ref.mounted) {
+            state = state.copyWith(isButtonState: false);
+          }
+          return false;
       }
     } catch (e, stackTrace) {
       await Sentry.captureException(
@@ -612,9 +631,11 @@ class Trade extends _$Trade {
         stackTrace: stackTrace,
       );
       getLocator<Logger>().e("Create Trade Error: $e");
+      return false;
     } finally {
-      // Reset button loading state
-      state = state.copyWith(isButtonState: false);
+      if (ref.mounted) {
+        state = state.copyWith(isButtonState: false);
+      }
     }
   }
 }

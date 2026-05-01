@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bank_branch_provider.dart';
+part of 'notification_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,51 +9,51 @@ part of 'bank_branch_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(BankBranch)
-final bankBranchProvider = BankBranchProvider._();
+@ProviderFor(Notification)
+final notificationProvider = NotificationProvider._();
 
-final class BankBranchProvider
-    extends $NotifierProvider<BankBranch, BankBranchState> {
-  BankBranchProvider._()
+final class NotificationProvider
+    extends $NotifierProvider<Notification, NotificationState> {
+  NotificationProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'bankBranchProvider',
+        name: r'notificationProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$bankBranchHash();
+  String debugGetCreateSourceHash() => _$notificationHash();
 
   @$internal
   @override
-  BankBranch create() => BankBranch();
+  Notification create() => Notification();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(BankBranchState value) {
+  Override overrideWithValue(NotificationState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<BankBranchState>(value),
+      providerOverride: $SyncValueProvider<NotificationState>(value),
     );
   }
 }
 
-String _$bankBranchHash() => r'f404778878661b82e17c61ccc3d49770c0609d26';
+String _$notificationHash() => r'a6524450df93260948928b02a06488af025a9b03';
 
-abstract class _$BankBranch extends $Notifier<BankBranchState> {
-  BankBranchState build();
+abstract class _$Notification extends $Notifier<NotificationState> {
+  NotificationState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<BankBranchState, BankBranchState>;
+    final ref = this.ref as $Ref<NotificationState, NotificationState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<BankBranchState, BankBranchState>,
-              BankBranchState,
+              AnyNotifier<NotificationState, NotificationState>,
+              NotificationState,
               Object?,
               Object?
             >;

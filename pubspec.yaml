@@ -2,7 +2,7 @@ name: baghdad_bullion_house
 description: "Baghdad Bullion House"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -16,10 +16,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+1
+version: 1.0.5+30
 
 environment:
-  sdk: ^3.8.0
+  sdk: ^3.11.0
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -35,43 +35,43 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   intl: any
   timeago: ^3.7.1
-  connectivity_plus: ^6.1.4
-  internet_connection_checker_plus: ^2.7.2
-  app_settings: ^6.1.1
+  connectivity_plus: ^7.1.1
+  internet_connection_checker_plus: ^2.9.1+2
+  app_settings: ^7.0.0
   cached_network_image: ^3.4.1
   url_launcher: ^6.3.2
 
   # State Management
-  flutter_riverpod: ^2.6.1
-  riverpod_annotation: ^2.6.1
+  flutter_riverpod: ^3.3.1
+  riverpod_annotation: ^4.0.2
   # flutter_map: ^8.2.1
 
-  dio: ^5.8.0+1
+  dio: ^5.9.2
   logging: ^1.3.0
-  logger: ^2.6.1
+  logger: ^2.7.0
 
   # Dependency injection
-  get_it: ^8.0.3
-  country_code_picker: ^3.0.0
+  get_it: ^9.2.1
+  country_code_picker: ^3.4.1
 
   #version
 
-  package_info_plus: ^8.0.0
+  package_info_plus: ^9.0.1
 
   # Dotenv
-  flutter_dotenv: ^5.2.1
-  google_fonts: ^6.2.1
+  flutter_dotenv: ^6.0.1
+  google_fonts: ^8.1.0
   get_storage: ^2.1.1
-  fluttertoast: ^8.2.12
-  flutter_svg: ^2.2.0
-  flutter_secure_storage: ^9.2.4
+  fluttertoast: ^9.0.0
+  flutter_svg: ^2.2.4
+  flutter_secure_storage: ^10.0.0
 
-  pinput: ^5.0.1
+  pinput: ^6.0.2
   smart_auth: ^3.2.0
 
-  file_picker: ^10.2.0
-  image_picker: ^1.1.2
-  flutter_native_splash: ^2.4.6
+  file_picker: ^11.0.2
+  image_picker: ^1.2.2
+  flutter_native_splash: ^2.4.7
   share_plus: ^11.0.0
 
   whatsapp_unilink: ^2.1.0
@@ -80,24 +80,23 @@ dependencies:
   device_info_plus: ^11.5.0
 
   network_info_plus: ^5.0.0
-  carousel_slider: ^5.1.1
+  carousel_slider: ^5.1.2
   shimmer: ^3.0.0
 
   #  firebase notification setup
-  firebase_core: ^3.15.2
-  firebase_messaging: ^15.2.10
-  flutter_local_notifications: ^19.3.1
-  firebase_crashlytics: ^4.3.10
+  firebase_core: ^4.7.0
+  firebase_messaging: ^16.2.0
+  flutter_local_notifications: ^21.0.0
+  firebase_crashlytics: ^5.2.0
 
   otp_timer_button: ^1.1.1
   # signature: ^6.3.0
-  # google_ml_kit: 
-
+  # google_ml_kit:
 
   # Fingerprint/FaceScan FaceID/TouchID
-  local_auth: ^2.3.0
+  local_auth: ^3.0.1
   fl_chart: ^1.0.0
-  lottie: 
+  lottie:
 
   # KYC ShuftiPro
   shuftipro_onsite_sdk: ^1.0.12
@@ -111,7 +110,7 @@ dependencies:
 
   #  sentry flutter
   sentry_flutter: ^9.5.0
-  flutter_stripe: ^11.5.0
+  flutter_stripe: ^12.6.0
 
   #  Lean Technology
   lean_sdk_flutter: ^3.0.8
@@ -123,14 +122,12 @@ dependencies:
 
   #for text Animation
   animated_text_kit: ^4.2.2
-  camera: ^0.11.2
+  camera: ^0.12.0+1
   chewie: ^1.13.0
   intl_phone_number_input: ^0.7.5
   in_app_review: ^2.0.11
   socket_io_client: ^3.1.3
   flutter_staggered_grid_view: ^0.7.0
-  flutter_gen: ^5.13.0+1
-
 
 dev_dependencies:
   sentry_dart_plugin: ^3.1.1
@@ -144,11 +141,9 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
-  custom_lint: ^0.7.0
-  riverpod_lint: ^2.6.3
-  riverpod_generator: ^2.6.3
+  riverpod_generator: ^4.0.3
   build_runner: ^2.4.15
-  freezed: ^2.4.4
+  freezed: ^3.2.5
   change_app_package_name: ^1.5.0
 
 flutter_launcher_icons:
@@ -156,8 +151,7 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/png/launcher_icon.png"
-  min_sdk_android: 21 
-  # android min sdk min:16, default 21
+  min_sdk_android: 21 # android min sdk min:16, default 21
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

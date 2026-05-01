@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bank_branch_provider.dart';
+part of 'e_souq_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,51 +9,50 @@ part of 'bank_branch_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(BankBranch)
-final bankBranchProvider = BankBranchProvider._();
+@ProviderFor(Esouq)
+final esouqProvider = EsouqProvider._();
 
-final class BankBranchProvider
-    extends $NotifierProvider<BankBranch, BankBranchState> {
-  BankBranchProvider._()
+final class EsouqProvider extends $NotifierProvider<Esouq, EsouqState> {
+  EsouqProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'bankBranchProvider',
+        name: r'esouqProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$bankBranchHash();
+  String debugGetCreateSourceHash() => _$esouqHash();
 
   @$internal
   @override
-  BankBranch create() => BankBranch();
+  Esouq create() => Esouq();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(BankBranchState value) {
+  Override overrideWithValue(EsouqState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<BankBranchState>(value),
+      providerOverride: $SyncValueProvider<EsouqState>(value),
     );
   }
 }
 
-String _$bankBranchHash() => r'f404778878661b82e17c61ccc3d49770c0609d26';
+String _$esouqHash() => r'a10fd33857c0dee11fdf86d4b79d7859a71c0601';
 
-abstract class _$BankBranch extends $Notifier<BankBranchState> {
-  BankBranchState build();
+abstract class _$Esouq extends $Notifier<EsouqState> {
+  EsouqState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<BankBranchState, BankBranchState>;
+    final ref = this.ref as $Ref<EsouqState, EsouqState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<BankBranchState, BankBranchState>,
-              BankBranchState,
+              AnyNotifier<EsouqState, EsouqState>,
+              EsouqState,
               Object?,
               Object?
             >;

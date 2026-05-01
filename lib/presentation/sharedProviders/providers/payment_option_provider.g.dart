@@ -6,21 +6,57 @@ part of 'payment_option_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$paymentOptionHash() => r'a9eeb95a44bc4414352c74dc1a4b005fb0607839';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [PaymentOption].
 @ProviderFor(PaymentOption)
-final paymentOptionProvider =
-    AutoDisposeNotifierProvider<PaymentOption, PaymentOptionState>.internal(
-  PaymentOption.new,
-  name: r'paymentOptionProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$paymentOptionHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final paymentOptionProvider = PaymentOptionProvider._();
 
-typedef _$PaymentOption = AutoDisposeNotifier<PaymentOptionState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class PaymentOptionProvider
+    extends $NotifierProvider<PaymentOption, PaymentOptionState> {
+  PaymentOptionProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'paymentOptionProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$paymentOptionHash();
+
+  @$internal
+  @override
+  PaymentOption create() => PaymentOption();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PaymentOptionState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PaymentOptionState>(value),
+    );
+  }
+}
+
+String _$paymentOptionHash() => r'7cc191ca1b1c8aa8321a9912c1f1fa0085c97c7f';
+
+abstract class _$PaymentOption extends $Notifier<PaymentOptionState> {
+  PaymentOptionState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<PaymentOptionState, PaymentOptionState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<PaymentOptionState, PaymentOptionState>,
+              PaymentOptionState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

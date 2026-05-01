@@ -20,7 +20,7 @@ import '../../../screens/auth_screens/auth_kyc_screens/kyc_second_step_screen.da
 import '../../../widgets/pop_up_widget.dart';
 import '../states/shufti_pro_state.dart';
 
-part 'shuftiProProvider.g.dart';
+part 'shufti_pro_provider.g.dart';
 
 @riverpod
 class ShuftiPro extends _$ShuftiPro {

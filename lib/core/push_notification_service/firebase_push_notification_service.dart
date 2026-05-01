@@ -164,10 +164,10 @@ class FirebasePushNotificationService {
         // FIX: Don't show a local notification on iOS
         if (Platform.isAndroid) {
           flutterLocalNotificationsPlugin.show(
-            notification.hashCode,
-            notification.title,
-            notification.body,
-            NotificationDetails(
+            id: notification.hashCode,
+            title: notification.title,
+            body: notification.body,
+            notificationDetails: NotificationDetails(
               android: AndroidNotificationDetails(
                 channel.id,
                 channel.name,
@@ -293,7 +293,7 @@ class FirebasePushNotificationService {
 
     /// Local Notification Service
     await flutterLocalNotificationsPlugin.initialize(
-      settings,
+      settings: settings,
       onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
       // onSelectNotification: onSelectNotification,
     );

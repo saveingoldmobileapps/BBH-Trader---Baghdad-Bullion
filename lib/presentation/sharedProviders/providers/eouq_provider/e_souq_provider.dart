@@ -25,7 +25,7 @@ import '../../../feature_injection.dart';
 import '../../../screens/esouq_screens/esouq_success.dart';
 import '../states/e_souq_states.dart';
 
-part 'eSouqProvider.g.dart';
+part 'e_souq_provider.g.dart';
 
 @riverpod
 class Esouq extends _$Esouq {

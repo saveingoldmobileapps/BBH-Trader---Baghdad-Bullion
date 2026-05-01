@@ -27,7 +27,7 @@ android {
     }
     namespace = "com.baghdadbullion.bbhtrader"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973" //flutter.ndkVersion
+    ndkVersion = "28.2.13676358" //flutter.ndkVersion
 
     compileOptions {
         // Flag to enable support for the new language APIs
@@ -48,8 +48,8 @@ android {
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 26 //flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 1 //flutter.versionCode
-        versionName = "1.0.0" //flutter.versionName
+        versionCode = 30 //flutter.versionCode
+        versionName = "1.0.5" //flutter.versionName
         multiDexEnabled true
     }
 

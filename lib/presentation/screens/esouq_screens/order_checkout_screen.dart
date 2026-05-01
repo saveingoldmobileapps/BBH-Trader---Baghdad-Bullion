@@ -298,7 +298,7 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
   // }
   Future<void> _pickFileFromStorage() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
+      FilePickerResult? result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
       );

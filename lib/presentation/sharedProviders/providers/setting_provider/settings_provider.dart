@@ -14,7 +14,7 @@ import '../../../../data/models/time_zone/time_zone_model.dart';
 import '../../../feature_injection.dart';
 import '../states/setting_state/settings_state.dart';
 
-part 'settingsProvider.g.dart';
+part 'settings_provider.g.dart';
 
 @riverpod
 class Settings extends _$Settings {

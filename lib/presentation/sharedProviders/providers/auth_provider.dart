@@ -232,10 +232,8 @@ class Auth extends _$Auth {
       // Authenticate using Face Unlock
       final bool didAuthenticate = await _localAuth.authenticate(
         localizedReason: 'Scan your face to login',
-        options: const AuthenticationOptions(
-          biometricOnly: true, // Only allow biometrics (no PIN/pattern)
-          stickyAuth: true, // Keeps authentication active until resolved
-        ),
+        biometricOnly: true,
+        persistAcrossBackgrounding: true,
       );
 
       if (didAuthenticate) {
@@ -337,11 +335,8 @@ class Auth extends _$Auth {
         // If no biometrics available, fallback to passcode
         final bool didAuthenticate = await _localAuth.authenticate(
           localizedReason: 'Authenticate using device passcode',
-          options: const AuthenticationOptions(
-            biometricOnly: false,
-            stickyAuth: true,
-            useErrorDialogs: true,
-          ),
+          biometricOnly: false,
+          persistAcrossBackgrounding: true,
         );
 
         if (didAuthenticate) {
@@ -396,11 +391,8 @@ class Auth extends _$Auth {
       // Try biometric authentication
       final bool didAuthenticate = await _localAuth.authenticate(
         localizedReason: 'Authenticate using biometrics',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          stickyAuth: true,
-          useErrorDialogs: true,
-        ),
+        biometricOnly: true,
+        persistAcrossBackgrounding: true,
       );
 
       if (didAuthenticate) {
@@ -482,9 +474,7 @@ class Auth extends _$Auth {
         // Message shown to the user
         localizedReason: 'Scan your fingerprint to login',
         // Only allow biometric authentication (no PIN/pattern)
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-        ),
+        biometricOnly: true,
       );
 
       if (didAuthenticate) {
@@ -1202,9 +1192,7 @@ class Auth extends _$Auth {
       // Authenticate the user
       final bool didAuthenticate = await _localAuth.authenticate(
         localizedReason: 'Scan your fingerprint to update your email',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-        ),
+        biometricOnly: true,
       );
 
       if (didAuthenticate) {
@@ -1277,10 +1265,8 @@ class Auth extends _$Auth {
       // Authenticate using Face Unlock
       final bool didAuthenticate = await _localAuth.authenticate(
         localizedReason: 'Scan your face to update your email',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          stickyAuth: true,
-        ),
+        biometricOnly: true,
+        persistAcrossBackgrounding: true,
       );
 
       if (didAuthenticate) {

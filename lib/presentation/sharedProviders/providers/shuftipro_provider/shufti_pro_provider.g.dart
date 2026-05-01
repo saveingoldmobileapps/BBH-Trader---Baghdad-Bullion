@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bank_branch_provider.dart';
+part of 'shufti_pro_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,51 +9,51 @@ part of 'bank_branch_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(BankBranch)
-final bankBranchProvider = BankBranchProvider._();
+@ProviderFor(ShuftiPro)
+final shuftiProProvider = ShuftiProProvider._();
 
-final class BankBranchProvider
-    extends $NotifierProvider<BankBranch, BankBranchState> {
-  BankBranchProvider._()
+final class ShuftiProProvider
+    extends $NotifierProvider<ShuftiPro, ShuftiProState> {
+  ShuftiProProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'bankBranchProvider',
+        name: r'shuftiProProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$bankBranchHash();
+  String debugGetCreateSourceHash() => _$shuftiProHash();
 
   @$internal
   @override
-  BankBranch create() => BankBranch();
+  ShuftiPro create() => ShuftiPro();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(BankBranchState value) {
+  Override overrideWithValue(ShuftiProState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<BankBranchState>(value),
+      providerOverride: $SyncValueProvider<ShuftiProState>(value),
     );
   }
 }
 
-String _$bankBranchHash() => r'f404778878661b82e17c61ccc3d49770c0609d26';
+String _$shuftiProHash() => r'fa15ebabc5590ccd264557c104f21b66eccb5ca9';
 
-abstract class _$BankBranch extends $Notifier<BankBranchState> {
-  BankBranchState build();
+abstract class _$ShuftiPro extends $Notifier<ShuftiProState> {
+  ShuftiProState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<BankBranchState, BankBranchState>;
+    final ref = this.ref as $Ref<ShuftiProState, ShuftiProState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<BankBranchState, BankBranchState>,
-              BankBranchState,
+              AnyNotifier<ShuftiProState, ShuftiProState>,
+              ShuftiProState,
               Object?,
               Object?
             >;

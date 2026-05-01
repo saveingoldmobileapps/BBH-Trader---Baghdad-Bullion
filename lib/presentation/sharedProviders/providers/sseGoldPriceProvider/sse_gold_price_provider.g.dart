@@ -6,23 +6,56 @@ part of 'sse_gold_price_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$goldPriceHash() => r'3400486fc1f0beffde8556f4fa118d84280eaf25';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// ---------------------------------------------------------------------------
+/// RIVERPOD PROVIDER
+/// ---------------------------------------------------------------------------
 
-/// Riverpod provider for exposing a stream of SSEGoldPriceState
-///
-/// Copied from [goldPrice].
 @ProviderFor(goldPrice)
-final goldPriceProvider = AutoDisposeStreamProvider<SSEGoldPriceState>.internal(
-  goldPrice,
-  name: r'goldPriceProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$goldPriceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final goldPriceProvider = GoldPriceProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef GoldPriceRef = AutoDisposeStreamProviderRef<SSEGoldPriceState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+/// ---------------------------------------------------------------------------
+/// RIVERPOD PROVIDER
+/// ---------------------------------------------------------------------------
+
+final class GoldPriceProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<SSEGoldPriceState>,
+          SSEGoldPriceState,
+          Stream<SSEGoldPriceState>
+        >
+    with
+        $FutureModifier<SSEGoldPriceState>,
+        $StreamProvider<SSEGoldPriceState> {
+  /// ---------------------------------------------------------------------------
+  /// RIVERPOD PROVIDER
+  /// ---------------------------------------------------------------------------
+  GoldPriceProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'goldPriceProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$goldPriceHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<SSEGoldPriceState> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<SSEGoldPriceState> create(Ref ref) {
+    return goldPrice(ref);
+  }
+}
+
+String _$goldPriceHash() => r'a6bb1d06800af3db9ec61d86457528e4159659e2';

@@ -117,7 +117,7 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
       if (!mounted) return;
       final lim = widget.limitBuyPricePerGram;
       if (lim == null) return;
-      final data = ref.read(goldPriceProvider).valueOrNull;
+      final data = ref.read(goldPriceProvider).asData?.value;
       if (data != null) {
         _maybeInvalidateLimitBuy(data.oneGramBuyingPriceInIQD);
       }

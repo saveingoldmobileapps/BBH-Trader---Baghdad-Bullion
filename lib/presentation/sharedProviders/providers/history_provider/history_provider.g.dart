@@ -6,20 +6,56 @@ part of 'history_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$historyHash() => r'1177ba3bd0d3102fc4aa660ff6341e25a5565e35';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [History].
 @ProviderFor(History)
-final historyProvider =
-    AutoDisposeNotifierProvider<History, HistoryState>.internal(
-  History.new,
-  name: r'historyProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$historyHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final historyProvider = HistoryProvider._();
 
-typedef _$History = AutoDisposeNotifier<HistoryState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class HistoryProvider extends $NotifierProvider<History, HistoryState> {
+  HistoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'historyProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$historyHash();
+
+  @$internal
+  @override
+  History create() => History();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(HistoryState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<HistoryState>(value),
+    );
+  }
+}
+
+String _$historyHash() => r'0882c5061bfe906288c35f7076f899f156c5ab33';
+
+abstract class _$History extends $Notifier<HistoryState> {
+  HistoryState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<HistoryState, HistoryState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<HistoryState, HistoryState>,
+              HistoryState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

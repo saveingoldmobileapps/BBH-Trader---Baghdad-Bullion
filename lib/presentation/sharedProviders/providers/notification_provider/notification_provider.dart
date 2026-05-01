@@ -10,7 +10,7 @@ import '../../../../data/models/notificationModels/GetAllNotificationsResponse.d
 import '../../../feature_injection.dart';
 import '../states/notification_state/notification_states.dart';
 
-part 'notificationProvider.g.dart';
+part 'notification_provider.g.dart';
 
 @riverpod
 class Notification extends _$Notification {

@@ -112,7 +112,7 @@ class Gram extends _$Gram {
   }
 
   /// cancel order
-  Future<void> cancelTradeOrder({
+  Future<bool> cancelTradeOrder({
     required String orderId,
 
     required BuildContext context,
@@ -150,7 +150,7 @@ class Gram extends _$Gram {
             responseData,
           );
 
-          if (!context.mounted) return;
+          if (!context.mounted) return false;
           SoundPlayer().playSound(AppSounds.pendinOrderSound);
 
           state = state.copyWith(
@@ -161,7 +161,7 @@ class Gram extends _$Gram {
           );
 
           setButtonState(false);
-          break;
+          return true;
 
         case ServerResponseType.error:
           ErrorResponse errorResponse = ErrorResponse.fromJson(
@@ -171,14 +171,14 @@ class Gram extends _$Gram {
           getLocator<Logger>().e(
             "error: ${errorResponse.payload?.message.toString()}",
           );
-          break;
+          return false;
 
         case ServerResponseType.exception:
           getLocator<Logger>().e(
             "Exception: ${serverResponse.resultData}",
           );
           setButtonState(false);
-          break;
+          return false;
       }
     } catch (e, stackTrace) {
       await Sentry.captureException(
@@ -187,10 +187,11 @@ class Gram extends _$Gram {
       );
       getLocator<Logger>().e("Fetch User Statements Error: $e");
       setButtonState(false);
+      return false;
     }
   }
 
-  Future<void> updateBuyOrder({
+  Future<bool> updateBuyOrder({
     required BuildContext context,
     required num dealId,
     required String tradeMoney,
@@ -235,7 +236,7 @@ class Gram extends _$Gram {
 
           getLocator<Logger>().i("Sending body to server: $body");
 
-          if (!context.mounted) return;
+          if (!context.mounted) return false;
           SoundPlayer().playSound(AppSounds.pendinOrderSound);
 
           state = state.copyWith(
@@ -248,7 +249,7 @@ class Gram extends _$Gram {
           Toasts.getSuccessToast(
             text: "${successResponse.payload?.message.toString()}",
           );
-          break;
+          return true;
 
         case ServerResponseType.error:
           ErrorResponse errorResponse = ErrorResponse.fromJson(
@@ -260,13 +261,13 @@ class Gram extends _$Gram {
           getLocator<Logger>().e(
             "error: ${errorResponse.payload?.message.toString()}",
           );
-          break;
+          return false;
 
         case ServerResponseType.exception:
           getLocator<Logger>().e(
             "Exception: ${serverResponse.resultData}",
           );
-          break;
+          return false;
       }
     } catch (e, stackTrace) {
       await Sentry.captureException(
@@ -274,14 +275,15 @@ class Gram extends _$Gram {
         stackTrace: stackTrace,
       );
       getLocator<Logger>().e("Update Buy Order Error: $e");
+      return false;
     } finally {
       setButtonState(false);
     }
   }
 
-  Future<void> updateSellOrder({
+  Future<bool> updateSellOrder({
     required BuildContext context,
-    
+
     required String tradeId,
     required num dealId,
     required String tradeMoney,
@@ -326,9 +328,9 @@ class Gram extends _$Gram {
           );
           getLocator<Logger>().i("Sending sell body to server: $body");
 
-          if (!context.mounted) return;
+          if (!context.mounted) return false;
 
-            SoundPlayer().playSound(AppSounds.pendinOrderSound);
+          SoundPlayer().playSound(AppSounds.pendinOrderSound);
 
           state = state.copyWith(
             successResponse: successResponse,
@@ -341,7 +343,7 @@ class Gram extends _$Gram {
           Toasts.getSuccessToast(
             text: "${successResponse.payload?.message.toString()}",
           );
-          break;
+          return true;
 
         case ServerResponseType.error:
           ErrorResponse errorResponse = ErrorResponse.fromJson(
@@ -355,13 +357,13 @@ class Gram extends _$Gram {
           getLocator<Logger>().e(
             "error: ${errorResponse.payload?.message.toString()}",
           );
-          break;
+          return false;
 
         case ServerResponseType.exception:
           getLocator<Logger>().e(
             "Exception: ${serverResponse.resultData}",
           );
-          break;
+          return false;
       }
     } catch (e, stackTrace) {
       await Sentry.captureException(
@@ -369,6 +371,7 @@ class Gram extends _$Gram {
         stackTrace: stackTrace,
       );
       getLocator<Logger>().e("Update Sell Order Error: $e");
+      return false;
     } finally {
       setButtonState(false);
     }

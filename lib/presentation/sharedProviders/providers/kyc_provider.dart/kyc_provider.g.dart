@@ -6,19 +6,56 @@ part of 'kyc_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kYCHash() => r'6fcca2a7727ac8f080091c281c0183ae4604e582';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [KYC].
 @ProviderFor(KYC)
-final kYCProvider = AutoDisposeNotifierProvider<KYC, KYCState>.internal(
-  KYC.new,
-  name: r'kYCProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$kYCHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final kYCProvider = KYCProvider._();
 
-typedef _$KYC = AutoDisposeNotifier<KYCState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class KYCProvider extends $NotifierProvider<KYC, KYCState> {
+  KYCProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'kYCProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$kYCHash();
+
+  @$internal
+  @override
+  KYC create() => KYC();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KYCState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KYCState>(value),
+    );
+  }
+}
+
+String _$kYCHash() => r'2c3ce45cfe5b4e3c0fc0f2ea0a44993dc83d18a1';
+
+abstract class _$KYC extends $Notifier<KYCState> {
+  KYCState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<KYCState, KYCState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<KYCState, KYCState>,
+              KYCState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

@@ -1171,6 +1171,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                             onNoPress: () => Navigator.pop(context),
                             onYesPress: () async => Navigator.pop(context),
                           );
+                          
                         }
                         return;
                       }

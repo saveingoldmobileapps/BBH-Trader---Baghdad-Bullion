@@ -6,20 +6,56 @@ part of 'alert_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$alertAllHash() => r'c51838e68662ab668ff30a047d0c972ecd85011c';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [AlertAll].
 @ProviderFor(AlertAll)
-final alertAllProvider =
-    AutoDisposeNotifierProvider<AlertAll, AlertState>.internal(
-  AlertAll.new,
-  name: r'alertAllProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$alertAllHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final alertAllProvider = AlertAllProvider._();
 
-typedef _$AlertAll = AutoDisposeNotifier<AlertState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class AlertAllProvider extends $NotifierProvider<AlertAll, AlertState> {
+  AlertAllProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'alertAllProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$alertAllHash();
+
+  @$internal
+  @override
+  AlertAll create() => AlertAll();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AlertState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AlertState>(value),
+    );
+  }
+}
+
+String _$alertAllHash() => r'bab746c180968cf6e0a8d80c621699c803eaed1d';
+
+abstract class _$AlertAll extends $Notifier<AlertState> {
+  AlertState build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AlertState, AlertState>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AlertState, AlertState>,
+              AlertState,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

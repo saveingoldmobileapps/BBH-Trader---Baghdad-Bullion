@@ -10,7 +10,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../../../../data/data_sources/local_database/secure_database.dart';
 import '../../../feature_injection.dart';
 
-part 'newsProvider.g.dart';
+part 'news_provider.g.dart';
 
 @riverpod
 class NewsAll extends _$NewsAll {

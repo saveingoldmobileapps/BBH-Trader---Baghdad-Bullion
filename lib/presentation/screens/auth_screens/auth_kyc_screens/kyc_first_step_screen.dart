@@ -417,7 +417,7 @@ class _KycFirstStepScreenState extends ConsumerState<KycFirstStepScreen> {
   // Function to pick a PDF file
   Future<void> _pickPdf() async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
+      FilePickerResult? result = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf'], // Restrict to PDF files
       );

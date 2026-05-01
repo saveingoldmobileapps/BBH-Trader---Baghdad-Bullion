@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bank_branch_provider.dart';
+part of 'settings_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,51 +9,51 @@ part of 'bank_branch_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(BankBranch)
-final bankBranchProvider = BankBranchProvider._();
+@ProviderFor(Settings)
+final settingsProvider = SettingsProvider._();
 
-final class BankBranchProvider
-    extends $NotifierProvider<BankBranch, BankBranchState> {
-  BankBranchProvider._()
+final class SettingsProvider
+    extends $NotifierProvider<Settings, SettingsState> {
+  SettingsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'bankBranchProvider',
+        name: r'settingsProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$bankBranchHash();
+  String debugGetCreateSourceHash() => _$settingsHash();
 
   @$internal
   @override
-  BankBranch create() => BankBranch();
+  Settings create() => Settings();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(BankBranchState value) {
+  Override overrideWithValue(SettingsState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<BankBranchState>(value),
+      providerOverride: $SyncValueProvider<SettingsState>(value),
     );
   }
 }
 
-String _$bankBranchHash() => r'f404778878661b82e17c61ccc3d49770c0609d26';
+String _$settingsHash() => r'113805bf1313fb0dd6cb9e27a90913db8d013ff6';
 
-abstract class _$BankBranch extends $Notifier<BankBranchState> {
-  BankBranchState build();
+abstract class _$Settings extends $Notifier<SettingsState> {
+  SettingsState build();
   @$mustCallSuper
   @override
   void runBuild() {
-    final ref = this.ref as $Ref<BankBranchState, BankBranchState>;
+    final ref = this.ref as $Ref<SettingsState, SettingsState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<BankBranchState, BankBranchState>,
-              BankBranchState,
+              AnyNotifier<SettingsState, SettingsState>,
+              SettingsState,
               Object?,
               Object?
             >;

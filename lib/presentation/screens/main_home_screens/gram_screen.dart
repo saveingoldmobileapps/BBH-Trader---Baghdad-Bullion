@@ -48,49 +48,59 @@ class _GramScreenState extends ConsumerState<GramScreen> {
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
-    //     final gramStateWatchProvider = ref.watch(gramProvider);
-    //     final goldPriceState = ref.watch(goldPriceProvider);
-    //     final l10n = AppLocalizations.of(context)!;
-    //     final mainStateWatchProvider = ref.watch(homeProvider);
-    //     // Logic: Calculate total grams for the large display
-    //     double totalGrams = 0;
-    //     if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
-    //   for (var item in gramStateWatchProvider.gramApiResponseModel.payload!) {
+    // sizes!.refreshSize(context);
+    // final gramStateWatchProvider = ref.watch(gramProvider);
+    // final goldPriceState = ref.watch(goldPriceProvider);
+    // final l10n = AppLocalizations.of(context)!;
+    // final mainStateWatchProvider = ref.watch(homeProvider);
 
-    //     // Skip if status is pending
-    //     if (item.tradeStatus?.toLowerCase() == "pending" && item.tradeStatus?.toLowerCase() == "true") {
-    //       //continue;
+    // // Logic: Calculate total grams for the large display
+    // double totalGrams = 0;
+    // if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
+    //   for (var item in gramStateWatchProvider.gramApiResponseModel.payload!) {
+    //     // Check if this is a "buy at price" order
+    //     final isBuyAtPriceOrder =
+    //         item.buyAtPrice != null ||
+    //         item.buyAtPriceStatus == true ||
+    //         (item.tradeType?.toLowerCase() == "buy" &&
+    //             item.buyAtPriceStatus == true);
+
+    //     if (isBuyAtPriceOrder) {
+    //       print('Skipping buy at price order: ${item.id}');
+    //       continue; // Don't add this to total
     //     }
 
     //     totalGrams += (item.tradeMetal ?? 0);
+    //     print('Adding ${item.tradeMetal} grams from order: ${item.id}');
     //   }
     // }
     sizes!.refreshSize(context);
-    final gramStateWatchProvider = ref.watch(gramProvider);
-    final goldPriceState = ref.watch(goldPriceProvider);
-    final l10n = AppLocalizations.of(context)!;
-    final mainStateWatchProvider = ref.watch(homeProvider);
+final gramStateWatchProvider = ref.watch(gramProvider);
+final goldPriceState = ref.watch(goldPriceProvider);
+final l10n = AppLocalizations.of(context)!;
+final mainStateWatchProvider = ref.watch(homeProvider);
 
-    // Logic: Calculate total grams for the large display
-    double totalGrams = 0;
-    if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
-      for (var item in gramStateWatchProvider.gramApiResponseModel.payload!) {
-        // Check if this is a "buy at price" order
-        final isBuyAtPriceOrder =
-            item.buyAtPrice != null ||
-            item.buyAtPriceStatus == true ||
-            (item.tradeType?.toLowerCase() == "buy" &&
-                item.buyAtPriceStatus == true);
-
-        if (isBuyAtPriceOrder) {
-          print('Skipping buy at price order: ${item.id}');
-          continue; // Don't add this to total
-        }
-
+// Logic: Calculate total grams for the large display
+double totalGrams = 0;
+// double totalGrams = 0;
+if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
+  for (var item in gramStateWatchProvider.gramApiResponseModel.payload!) {
+    // Only consider Opened or Filled orders (active/completed)
+    if (item.tradeStatus == "Opened" || item.tradeType == "Sell") {
+      
+      if (item.tradeType?.toLowerCase() == "buy" || item.tradeType?.toLowerCase() == "sell") {
+        // Buy adds grams
         totalGrams += (item.tradeMetal ?? 0);
-        print('Adding ${item.tradeMetal} grams from order: ${item.id}');
+        print('BUY: Added ${item.tradeMetal}g from order: ${item.id}');
+      } 
+      else if (item.tradeType?.toLowerCase() == "sell") {
+        // Sell subtracts grams
+        totalGrams -= (item.tradeMetal ?? 0);
+        print('SELL: Subtracted ${item.tradeMetal}g from order: ${item.id}');
       }
     }
+  }
+}
 
     print('Total grams (excluding buy at price orders): $totalGrams');
 

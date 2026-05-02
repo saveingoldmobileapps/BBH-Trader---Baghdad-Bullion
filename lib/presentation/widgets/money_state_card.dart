@@ -347,8 +347,8 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
     // ✅ Admin deposit title override
     if (isAdminTransaction && item.credit != null && item.credit! > 0) {
       return isRtl
-          ? "تم إيداع المبلغ بواسطة المشرف"
-          : "Amount Deposited by Admin";
+          ? "${item.transactionTypeInAr.toString()}: ${item.credit!.toStringAsFixed(3)} ${AppLocalizations.of(context)!.iqd_currency} "//"تم إيداع المبلغ بواسطة المشرف"
+          : "${item.transactionType.toString()}: ${item.credit!.toStringAsFixed(3)} ${AppLocalizations.of(context)!.iqd_currency} ";//"Amount Deposited by Admin";
     }
 
     if (withdrawAmounts && (item.debit ?? 0) > 0) {

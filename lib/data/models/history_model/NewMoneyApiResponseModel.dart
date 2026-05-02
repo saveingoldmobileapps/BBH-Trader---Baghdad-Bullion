@@ -81,6 +81,7 @@ class MoneyHistoryList {
     String? userId,
     String? transactionId,
     String? transactionType,
+    String? transactionTypeInAr,
     String? paymentModel,
     String? paymentModelInArabic,
     num? credit,
@@ -94,6 +95,7 @@ class MoneyHistoryList {
     _userId = userId;
     _transactionId = transactionId;
     _transactionType = transactionType;
+    _transactionTypeInAr = transactionTypeInAr;
     _paymentModel = paymentModel;
     _paymentModelInArabic = paymentModelInArabic;
     _credit = credit;
@@ -109,6 +111,7 @@ class MoneyHistoryList {
     _userId = json['userId'];
     _transactionId = json['transactionId'];
     _transactionType = json['transactionType'];
+    _transactionTypeInAr = json['transactionTypeInAr'];
     _paymentModel = json['paymentModel'];
     _paymentModelInArabic = json['paymentModelInArabic'];
     _credit = json['credit'];
@@ -123,6 +126,7 @@ class MoneyHistoryList {
   String? _userId;
   String? _transactionId;
   String? _transactionType;
+  String? _transactionTypeInAr;
   String? _paymentModel;
   String?_paymentModelInArabic;
   num? _credit;
@@ -137,6 +141,7 @@ class MoneyHistoryList {
     String? userId,
     String? transactionId,
     String? transactionType,
+    String? transactionTypeInAr,
     String? paymentModel,
     String? paymentModelInArabic,
     num? credit,
@@ -151,6 +156,7 @@ class MoneyHistoryList {
         userId: userId ?? _userId,
         transactionId: transactionId ?? _transactionId,
         transactionType: transactionType ?? _transactionType,
+        transactionTypeInAr: transactionTypeInAr ??_transactionTypeInAr,
         paymentModel: paymentModel ?? _paymentModel,
         paymentModelInArabic: paymentModelInArabic ?? _paymentModelInArabic,
         credit: credit ?? _credit,
@@ -165,6 +171,7 @@ class MoneyHistoryList {
   String? get userId => _userId;
   String? get transactionId => _transactionId;
   String? get transactionType => _transactionType;
+  String? get transactionTypeInAr => _transactionTypeInAr;
   String? get paymentModel => _paymentModel;
   String? get paymentModelInArabic=> _paymentModelInArabic;
   num? get credit => _credit;
@@ -180,6 +187,7 @@ class MoneyHistoryList {
     map['userId'] = _userId;
     map['transactionId'] = _transactionId;
     map['transactionType'] = _transactionType;
+    map['transactionTypeInAr'] = _transactionTypeInAr;
     map['paymentModel'] = _paymentModel;
     map['paymentModelInArabic'] = _paymentModelInArabic;
     map['credit'] = _credit;

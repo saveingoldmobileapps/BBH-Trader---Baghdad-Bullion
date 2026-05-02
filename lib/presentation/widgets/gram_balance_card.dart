@@ -29,10 +29,10 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
   String getPrice({required Payload gramList}) {
     if (gramList.tradeType == 'Buy') {
       final price = gramList.buyAtPrice ?? gramList.buyingPrice;
-      return price?.toStringAsFixed(3) ?? '';
+      return price != null ? CommonService.formatIqdCurrency(price) : '';
     } else {
       final price = gramList.sellAtProfit ?? gramList.sellingPrice;
-      return price?.toStringAsFixed(3) ?? '';
+      return price != null ? CommonService.formatIqdCurrency(price) : '';
     }
   }
 
@@ -73,7 +73,7 @@ class _GramBalanceCardState extends ConsumerState<GramBalanceCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${item.tradeMetal?.toStringAsFixed(3)} ${AppLocalizations.of(context)!.g_Gold}",
+                  "${CommonService.formatGramForDisplay(item.tradeMetal)} ${AppLocalizations.of(context)!.g_Gold}",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,

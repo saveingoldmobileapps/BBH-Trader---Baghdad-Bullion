@@ -208,8 +208,8 @@ class Trade extends _$Trade {
             context,
             MaterialPageRoute(
               builder: (_) {
-                final amountFormatted = (tradeMetal.toDouble())
-                    .toStringAsFixed(3);
+                final amountFormatted =
+                    CommonService.formatGramForDisplay(tradeMetal);
                 final targetPriceValue = buyAtPriceStatus
                     ? (num.tryParse('$buyAtPrice') ?? 0)
                     : buyingPrice;

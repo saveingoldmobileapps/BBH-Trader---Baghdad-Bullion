@@ -227,7 +227,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
                   return Center(
                     child: GetGenericText(
                       text:
-                          "${AppLocalizations.of(context)!.max_grams_note} ${maxGrams.toStringAsFixed(3)}",
+                          "${AppLocalizations.of(context)!.max_grams_note} ${CommonService.formatGramForDisplay(maxGrams)}",
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: AppColors.grey4Color,

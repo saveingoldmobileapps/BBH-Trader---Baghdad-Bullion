@@ -58,4 +58,4 @@ final class GoldPriceProvider
   }
 }
 
-String _$goldPriceHash() => r'a6bb1d06800af3db9ec61d86457528e4159659e2';
+String _$goldPriceHash() => r'7e99f2a7446af35813cd830df1a7e47c205b9cb0';

@@ -223,17 +223,20 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                                   : "",
                               itemPrice: itemPrice,
                               oneGramPrice: oneGramBuyingPriceInIQD
-                                  .toStringAsFixed(3),
+                                  .round()
+                                  .toString(),
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EsouqItemDetailScreen(
                                       product: product,
-                                      productPrice: eSouqProductPrice
-                                          .toStringAsFixed(3),
-                                      oneGramPriceInIQD: oneGramBuyingPriceInIQD
-                                          .toStringAsFixed(3),
+                                      productPrice:
+                                          eSouqProductPrice.round().toString(),
+                                      oneGramPriceInIQD:
+                                          oneGramBuyingPriceInIQD
+                                              .round()
+                                              .toString(),
                                     ),
                                   ),
                                 );

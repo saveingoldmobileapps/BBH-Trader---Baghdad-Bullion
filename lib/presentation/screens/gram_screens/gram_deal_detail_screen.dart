@@ -214,7 +214,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                       ? AppLocalizations.of(context)!.pending_sell
                                       : widget.gramData.tradeType == "Sell"
                                       ? AppLocalizations.of(context)!.sold
-                                      : AppLocalizations.of(context)!.deal_buy_order} ${widget.gramData.tradeMetal!.toStringAsFixed(3)} ${AppLocalizations.of(context)!.g_Gold}",
+                                      : AppLocalizations.of(context)!.deal_buy_order} ${CommonService.formatGramForDisplay(widget.gramData.tradeMetal)} ${AppLocalizations.of(context)!.g_Gold}",
                               // "${widget.gramData.tradeType == "Sell" ? "Sold" : "Buy Order"} ${widget.gramData.tradeMetal!.toStringAsFixed(2)}g Gold",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 15,
@@ -303,8 +303,7 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                       ConstPadding.sizeBoxWithHeight(height: 12),
                       widget.gramData.tradeType == "Sell"
                           ? Row(
-                              
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
@@ -351,7 +350,6 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                       /// Sell/Buy at Price
                       Row(
-
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -427,7 +425,6 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                       // ),
                       /// Current Price
                       Row(
-
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -482,7 +479,6 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                       /// Trade Money
                       Row(
-
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -572,35 +568,43 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                       //   ],
                       // ),
                       // Date & Time Row
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    Expanded(
-      child: GetGenericText(
-        text: AppLocalizations.of(context)!.dateTime,
-        fontSize: sizes!.responsiveFont(phoneVal: 16, tabletVal: 18),
-        fontWeight: FontWeight.w400,
-        color: AppColors.grey3Color,
-        lines: 2,
-      ),
-    ),
-    SizedBox(width: sizes!.widthRatio * 8),
-    Flexible(  // Changed from Expanded to Flexible
-      child: GetGenericText(
-        text: DateTimeHelper.formatLocalDateTime(
-          widget.gramData.createdAt?.toString(),
-          context,
-        ),
-        fontSize: sizes!.responsiveFont(phoneVal: 14, tabletVal: 16),
-        fontWeight: FontWeight.w600,
-        color: AppColors.grey5Color,
-        lines: 3,
-        textAlign: TextAlign.end, // Add this to align text to the right
-      ),
-    ),
-  ],
-),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: GetGenericText(
+                              text: AppLocalizations.of(context)!.dateTime,
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 2,
+                            ),
+                          ),
+                          SizedBox(width: sizes!.widthRatio * 8),
+                          Flexible(
+                            // Changed from Expanded to Flexible
+                            child: GetGenericText(
+                              text: DateTimeHelper.formatLocalDateTime(
+                                widget.gramData.createdAt?.toString(),
+                                context,
+                              ),
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 14,
+                                tabletVal: 16,
+                              ),
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.grey5Color,
+                              lines: 3,
+                              textAlign: TextAlign
+                                  .end, // Add this to align text to the right
+                            ),
+                          ),
+                        ],
+                      ),
                       ConstPadding.sizeBoxWithHeight(height: 12),
                       Divider(
                         color: AppColors.greyScale900,
@@ -627,8 +631,7 @@ Row(
 
                         /// Edit Price
                         Row(
-
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
@@ -695,7 +698,6 @@ Row(
                                   inputFormatters: [
                                     AmountInputFormatter(
                                       maxDigits: 6,
-                                      decimalRange: 3,
                                     ),
                                   ],
                                   textInputType:
@@ -734,8 +736,7 @@ Row(
 
                         /// Edit Price
                         Row(
-
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
@@ -796,9 +797,10 @@ Row(
                                   )!.deal_gram_amount, //"Gram Amount",
                                   controller: gramAmountController,
                                   inputFormatters: [
-                                    AmountInputFormatter(
+                                    DecimalAmountInputFormatter(
                                       maxDigits: 4,
-                                      decimalRange: 3,
+                                      decimalRange: 3
+
                                     ),
                                   ],
                                   textInputType:
@@ -1281,8 +1283,7 @@ Row(
 
                         /// Take Profit
                         Row(
-
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
@@ -1346,7 +1347,6 @@ Row(
                                   inputFormatters: [
                                     AmountInputFormatter(
                                       maxDigits: 6,
-                                      decimalRange: 3,
                                     ),
                                   ],
                                   textInputType:
@@ -1555,7 +1555,6 @@ Row(
 
                         /// Close Deal
                         Row(
-
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Expanded(
@@ -1711,7 +1710,6 @@ Row(
                                   inputFormatters: [
                                     AmountInputFormatter(
                                       maxDigits: 4,
-                                      decimalRange: 3,
                                     ),
                                   ],
                                   textInputType:

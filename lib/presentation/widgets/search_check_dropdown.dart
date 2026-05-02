@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 
+import '../../core/core_export.dart';
 import '../../core/theme/const_colors.dart';
 import '../../core/theme/get_generic_text_widget.dart';
 
@@ -202,7 +203,7 @@ class _FullScreenMultiSelectState extends State<FullScreenMultiSelect> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '${AppLocalizations.of(context)!.you_already_have} ${_currentTotal.toStringAsFixed(3)}${AppLocalizations.of(context)!.which_meet_or_exceed} ${widget.gramBalanceEqual.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g}',
+            '${AppLocalizations.of(context)!.you_already_have} ${CommonService.formatGramForDisplay(_currentTotal)}${AppLocalizations.of(context)!.which_meet_or_exceed} ${CommonService.formatGramForDisplay(widget.gramBalanceEqual)}${AppLocalizations.of(context)!.metal_g}',
 
             // 'You already have ${_currentTotal.toStringAsFixed(2)}g, which meets or exceeds your target of ${widget.gramBalanceEqual.toStringAsFixed(2)}g',
           ),
@@ -315,14 +316,14 @@ class _FullScreenMultiSelectState extends State<FullScreenMultiSelect> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${AppLocalizations.of(context)!.selected}: ${_currentTotal.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g}',
+                    '${AppLocalizations.of(context)!.selected}: ${CommonService.formatGramForDisplay(_currentTotal)}${AppLocalizations.of(context)!.metal_g}',
                     style: TextStyle(
                       color: AppColors.greyScale900,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    '${AppLocalizations.of(context)!.target} ${widget.gramBalanceEqual.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g}',
+                    '${AppLocalizations.of(context)!.target} ${CommonService.formatGramForDisplay(widget.gramBalanceEqual)}${AppLocalizations.of(context)!.metal_g}',
                     style: TextStyle(
                       color: AppColors.greyScale900,
                       fontWeight: FontWeight.bold,

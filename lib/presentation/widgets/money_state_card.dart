@@ -239,7 +239,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
             if (item.grams != null && item.grams! > 0)
               _buildDetailRow(
                 widget.rtl ? "الجرامات" : "Grams",
-                "${item.grams} ${widget.rtl ? "جرام" : "gram"}",
+                "${CommonService.formatGramForDisplay(item.grams)} ${widget.rtl ? "جرام" : "gram"}",
               ),
             _buildDetailRow(
               widget.rtl ? "التاريخ والوقت" : l10n.dateTime,
@@ -342,17 +342,21 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
     final withdrawAmounts = item.paymentModel == "Bank";
 
     /// Extract grams (adjust field if your model differs)
-    final grams = item.grams ?? 0; // <-- update if needed
+    final grams = CommonService.formatGramForDisplay(item.grams);
 
     // ✅ Admin deposit title override
     if (isAdminTransaction && item.credit != null && item.credit! > 0) {
+      final l10n = AppLocalizations.of(context)!;
+      final txLabel = getLocalizedTransactionType(context, item.transactionType);
+      final amount = CommonService.formatIqdCurrency(item.credit);
+      final currency = l10n.iqd_currency;
       return isRtl
-          ? "${item.transactionTypeInAr.toString()}: ${item.credit!.toStringAsFixed(3)} ${AppLocalizations.of(context)!.iqd_currency} "//"تم إيداع المبلغ بواسطة المشرف"
-          : "${item.transactionType.toString()}: ${item.credit!.toStringAsFixed(3)} ${AppLocalizations.of(context)!.iqd_currency} ";//"Amount Deposited by Admin";
+          ? "$txLabel: $amount $currency تم إيداع المبلغ بواسطة المشرف"
+          : "$txLabel: $amount $currency Amount deposited by admin";
     }
 
     if (withdrawAmounts && (item.debit ?? 0) > 0) {
-      final amount = item.debit!.toStringAsFixed(3);
+      final amount = CommonService.formatIqdCurrency(item.debit);
 
       return isRtl
           ? "سحب مبلغ :$amount ${AppLocalizations.of(context)!.iqd_currency} "
@@ -376,7 +380,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
         if (isRtl) {
           return "الدفع عبر إي سوق:\n$iqd د.ع لتغطية شراء $grams غرام من الذهب";
         } else {
-          return "Esouq Checkout:\nIQD $iqd ${item.transactionType} of $grams gram(s) of gold";
+          return "Esouq Checkout:\nIQD $iqd ${getLocalizedTransactionType(context, item.transactionType)} of $grams gram(s) of gold";
         }
       }
 
@@ -444,49 +448,61 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
     );
   }
 
+  /// Maps API `transactionType` strings to [AppLocalizations] so Arabic (and English)
+  /// labels stay correct when the API omits `transactionTypeInAr`.
   String getLocalizedTransactionType(BuildContext context, String? type) {
-    if (type == null) return "";//AppLocalizations.of(context)!.not_available;
-    final isRtl = widget.rtl;
-    if (!isRtl) return type;
+    if (type == null || type.trim().isEmpty) return "";
+    final l10n = AppLocalizations.of(context)!;
+    final compact =
+        type.trim().toLowerCase().replaceAll(RegExp(r'\s+'), '');
 
-    switch (type) {
-      case "CreditIn":
-      case "Credit In":
-        return "إضافة رصيد";
-      case "Money in":
-        return "إيداع";
-      case "Money out":
-        return "سحب";
-      case "CreditOut":
-      case "Credit Out":
-        return "خصم رصيد";
-      case "Deposit":
-        return "إيداع";
-      case "Withdraw":
-        return "سحب";
-      case "Adjustment":
-        return "تعديل";
-      case "LoanCreditOut":
-      case "Loan Credit Out":
-        return "سحب قرض";
-      case "Cashback":
-        return "استرداد نقدي";
-      case "Referral Cashback":
-        return "استرداد نقدي للإحالة";
-      case "Covering the Purchase":
-        return "تغطية الشراء";
-      case "Proceeds from the Sale":
-        return "عائدات البيع";
-      case "Invest":
-        return "استثمار";
-      case "WithdrawInvest":
-        return "سحب استثمار";
-      case "Transfer":
-        return "تحويل";
-      case "Received":
-        return "استلام";
+    switch (compact) {
+      case "creditin":
+        return l10n.money_tx_credit_in;
+      case "moneyin":
+        return l10n.money_tx_money_in;
+      case "moneyout":
+        return l10n.money_tx_money_out;
+      case "creditout":
+        return l10n.money_tx_credit_out;
+      case "deposit":
+        return l10n.money_tx_deposit;
+      case "withdraw":
+        return l10n.money_tx_withdraw;
+      case "adjustment":
+        return l10n.money_tx_adjustment;
+      case "loancreditout":
+        return l10n.money_tx_loan_credit_out;
+      case "cashback":
+        return l10n.money_tx_cashback;
+      case "referralcashback":
+        return l10n.money_tx_referral_cashback;
+      case "coveringthepurchase":
+        return l10n.money_tx_covering_purchase;
+      case "proceedsfromthesale":
+        return l10n.money_tx_proceeds_sale;
+      case "invest":
+        return l10n.money_tx_invest;
+      case "withdrawinvest":
+        return l10n.money_tx_withdraw_invest;
+      case "transfer":
+        return l10n.money_tx_transfer;
+      case "received":
+        return l10n.money_tx_received;
+      case "failedtransferadjustment":
+        return l10n.money_tx_failed_transfer_adjustment;
+      case "reward":
+        return l10n.money_tx_reward;
+      case "gift":
+        return l10n.money_tx_gift;
+      case "giftsent":
+        return l10n.money_tx_gift_sent;
+      case "giftreceived":
+        return l10n.money_tx_gift_received;
+      case "temporarycredit":
+        return l10n.money_tx_temporary_credit;
       default:
-        return type; // Return original if no mapping found
+        return type.trim();
     }
   }
 }

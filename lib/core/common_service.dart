@@ -88,38 +88,35 @@ class CommonService {
     bool useArabic = false,
   }) {
     final amountInDouble = double.tryParse(amount) ?? 0.0;
+    final rounded = amountInDouble.round();
 
     final formatter = NumberFormat(
-      "#,##0.000",
+      "#,##0",
       useArabic ? "ar_IQ" : "en_US",
     );
 
-    return formatter.format(amountInDouble);
+    return formatter.format(rounded);
   }
 
-  /// **App-wide IQD amount formatting** — thousand separators, up to 3 fractional digits.
+  /// **App-wide IQD amount formatting** — thousand separators, rounded to whole IQD (no decimals).
   /// Use this (or [formatIQDForDisplay]) for every IQD number shown in the UI.
-  // static String formatIqdCurrency(num? value) {
-  //   final amount = (value ?? 0).toDouble();
-  //   return NumberFormat("#,##0.###", "en_US").format(amount);
-  // }
-  static String formatIqdCurrency(num? value) {
-  final amount = (value ?? 0).toDouble();
-  return NumberFormat("#,##0.000", "en_US").format(amount);
-}
+  static String formatIqdCurrency(num? value, {bool useArabic = false}) {
+    final rounded = (value ?? 0).round();
+    return NumberFormat("#,##0", useArabic ? "ar_IQ" : "en_US").format(rounded);
+  }
 
   /// Same as [formatIqdCurrency]; kept for existing call sites.
   static String formatIQDForDisplay(num? value) => formatIqdCurrency(value);
 
-  /// Format price for compact display (e.g. 2K, 3.5K, 1M) - for UI where full numbers are too big.
+  /// Format price for compact display (e.g. 2K, 1M) — based on rounded whole units.
   static String formatPriceCompact(num? value) {
-    final amount = (value ?? 0).toDouble();
-    if (amount == 0) return "0";
-    final compact = NumberFormat.compact(locale: "en_US").format(amount);
+    final rounded = (value ?? 0).round();
+    if (rounded == 0) return "0";
+    final compact = NumberFormat.compact(locale: "en_US").format(rounded);
     return compact.replaceAll('k', 'K').replaceAll('m', 'M').replaceAll('b', 'B');
   }
 
-  /// Format gram balance for display - handles large values with thousand separators.
+  /// Gram / metal amounts for UI — whole grams with grouping, no decimals.
   static String formatGramForDisplay(num? value) {
     final amount = (value ?? 0).toDouble();
     if (amount == 0) return "0.00";
@@ -128,6 +125,11 @@ class CommonService {
     }
     return amount.toStringAsFixed(3);
   }
+  //  static String formatGramForDisplay(num? value) {
+  //   final rounded = (value ?? 0).round();
+  //   if (rounded == 0) return "0";
+  //   return NumberFormat("#,##0", "en_US").format(rounded);
+  // }
   static String formatIraqDateTime(
   String? isoDate,
   BuildContext context, {
@@ -495,16 +497,15 @@ class CommonService {
   }
 
   static String convertToShortNum({required double num}) {
-    if (num < 1000) {
-      return num.toStringAsFixed(
-        3,
-      ); // Ensures two decimal places for smaller numbers
-    } else if (num < 1000000) {
-      return '${(num / 1000).toStringAsFixed(3)}K'; // Three decimal places for thousands
-    } else if (num < 1000000000) {
-      return '${(num / 1000000).toStringAsFixed(3)}M'; // Three decimal places for millions
+    final n = num.round();
+    if (n < 1000) {
+      return n.toString();
+    } else if (n < 1000000) {
+      return '${(n / 1000).round()}K';
+    } else if (n < 1000000000) {
+      return '${(n / 1000000).round()}M';
     } else {
-      return num.toStringAsFixed(3); // Shows full value for numbers < 1M
+      return n.toString();
     }
   }
 
@@ -526,9 +527,9 @@ class CommonService {
     required BuildContext context,
   }) {
     if (num < 1000) {
-      return '${num.toStringAsFixed(3)} ${AppLocalizations.of(context)!.metal_g}';
+      return '${num.round()} ${AppLocalizations.of(context)!.metal_g}';
     } else {
-      return '${(num / 1000).toStringAsFixed(3)} kg';
+      return '${(num / 1000).round()} kg';
     }
   }
 
@@ -537,16 +538,13 @@ class CommonService {
     required double grams,
   }) {
     if (grams < 3.8) {
-      // 1 tola is approximately equal to 11.66 grams, but in gold, 1 tola is equal to 11.66/1000 = 0.01166 kg, that is 11.66 grams
-      return (grams * 1000 / 11.66).toStringAsFixed(3);
+      return (grams * 1000 / 11.66).round().toString();
     } else if (grams < 28.35) {
-      // 1 ounce is equal to 28.35 grams
-      return (grams / 28.35).toStringAsFixed(3);
+      return (grams / 28.35).round().toString();
     } else if (grams < 1000) {
-      return grams.toStringAsFixed(3);
+      return grams.round().toString();
     } else {
-      // return grams.toStringAsFixed(2);
-      return (grams / 1000).toStringAsFixed(3);
+      return (grams / 1000).round().toString();
     }
   }
 
@@ -711,18 +709,15 @@ class CommonService {
   }
 
   static String formatNumber({required double number}) {
-    if (number >= 1e9) {
-      // Convert to billions (B)
-      return '${(number / 1e9).toStringAsFixed(3)}B';
-    } else if (number >= 1e6) {
-      // Convert to millions (M)
-      return '${(number / 1e6).toStringAsFixed(3)}M';
-    } else if (number >= 1e3) {
-      // Convert to thousands (K)
-      return '${(number / 1e3).toStringAsFixed(3)}K';
+    final n = number.round();
+    if (n >= 1e9) {
+      return '${(n / 1e9).round()}B';
+    } else if (n >= 1e6) {
+      return '${(n / 1e6).round()}M';
+    } else if (n >= 1e3) {
+      return '${(n / 1e3).round()}K';
     } else {
-      // Return the number as is if it's less than 1,000
-      return number.toStringAsFixed(3);
+      return n.toString();
     }
   }
 }

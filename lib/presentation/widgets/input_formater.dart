@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart';
 
-class AmountInputFormatter extends TextInputFormatter {
+class DecimalAmountInputFormatter extends TextInputFormatter {
   final int maxDigits;
   final int decimalRange;
 
-  AmountInputFormatter({
+  DecimalAmountInputFormatter({
     required this.maxDigits,
     this.decimalRange = 3,
   });
@@ -21,5 +21,38 @@ class AmountInputFormatter extends TextInputFormatter {
       return newValue;
     }
     return oldValue;
+  }
+}
+
+class AmountInputFormatter extends TextInputFormatter {
+  final int maxDigits;
+
+  AmountInputFormatter({
+    required this.maxDigits,
+  });
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final text = newValue.text;
+
+    // ❌ Block decimal
+    if (text.contains('.')) {
+      return oldValue;
+    }
+
+    // ❌ Allow only digits
+    if (!RegExp(r'^\d*$').hasMatch(text)) {
+      return oldValue;
+    }
+
+    // ❌ Max length
+    if (text.length > maxDigits) {
+      return oldValue;
+    }
+
+    return newValue;
   }
 }

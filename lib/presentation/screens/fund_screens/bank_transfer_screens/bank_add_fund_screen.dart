@@ -1,8 +1,8 @@
+import 'package:baghdad_bullion_house/presentation/widgets/loader_arrow_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:baghdad_bullion_house/presentation/widgets/loader_arrow_button.dart';
 
 import '../../../../core/core_export.dart';
 import '../success_placeholder_screen.dart';
@@ -16,12 +16,12 @@ class BankAddFundScreen extends ConsumerStatefulWidget {
 
 class _BankAddFundScreenState extends ConsumerState<BankAddFundScreen> {
   final TextEditingController _controller = TextEditingController();
-  final NumberFormat _currencyFormat = NumberFormat("#,##0.00", "en_US");
-  final NumberFormat formatter = NumberFormat("#,##0.00", "en_US");
+  final NumberFormat _currencyFormat = NumberFormat("#,##0", "en_US");
+  final NumberFormat formatter = NumberFormat("#,##0", "en_US");
 
   final _formKey = GlobalKey<FormState>();
 
-  String formatted = "0.00";
+  String formatted = "0";
 
   @override
   void initState() {
@@ -41,21 +41,19 @@ class _BankAddFundScreenState extends ConsumerState<BankAddFundScreen> {
   void _onChanged() {
     String raw = _controller.text.replaceAll(",", "");
     if (raw.isEmpty) {
-      setState(() => formatted = "0.00");
+      setState(() => formatted = "0");
       return;
     }
 
-    double? value = double.tryParse(raw);
-    if (value != null) {
-      if (value > 99999.99) {
-        value = 99999.99;
-      }
+    final parsed = double.tryParse(raw);
+    if (parsed != null) {
+      double capped = parsed > 999999 ? 999999 : parsed;
       setState(() {
-        formatted = _currencyFormat.format(value);
+        formatted = _currencyFormat.format(capped.round());
       });
     } else {
       setState(() {
-        formatted = "0.00";
+        formatted = "0";
       });
     }
   }
@@ -130,7 +128,7 @@ class _BankAddFundScreenState extends ConsumerState<BankAddFundScreen> {
                           color: Colors.white,
                         ),
                         decoration: InputDecoration(
-                          hintText: "0.00",
+                          hintText: "0",
                           hintStyle: TextStyle(
                             color: Colors.white30,
                             fontSize: sizes!.fontRatio * 56,

@@ -227,7 +227,7 @@ class MyOrderCard extends ConsumerWidget {
                     ),
                     const SizedBox(height: 4),
                     GetGenericText(
-                      text: "${totalWeight.toStringAsFixed(2)} $weightUnit",
+                      text: "${CommonService.formatGramForDisplay(totalWeight)} $weightUnit",
                       fontSize: 14,
                       color: AppColors.goldColor,
                       fontWeight: FontWeight.w600,

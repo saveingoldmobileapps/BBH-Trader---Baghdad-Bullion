@@ -38,13 +38,12 @@ class NewMoneyApiResponseModel {
     num? code,
     String? message,
     List<MoneyHistoryList>? payload,
-  }) =>
-      NewMoneyApiResponseModel(
-        status: status ?? _status,
-        code: code ?? _code,
-        message: message ?? _message,
-        payload: payload ?? _payload,
-      );
+  }) => NewMoneyApiResponseModel(
+    status: status ?? _status,
+    code: code ?? _code,
+    message: message ?? _message,
+    payload: payload ?? _payload,
+  );
   String? get status => _status;
   num? get code => _code;
   String? get message => _message;
@@ -89,7 +88,7 @@ class MoneyHistoryList {
     String? date,
     num? grams,
     num? moneyBalance,
-    String? statusst
+    String? statusst,
   }) {
     _id = id;
     _userId = userId;
@@ -128,13 +127,13 @@ class MoneyHistoryList {
   String? _transactionType;
   String? _transactionTypeInAr;
   String? _paymentModel;
-  String?_paymentModelInArabic;
+  String? _paymentModelInArabic;
   num? _credit;
   num? _debit;
   String? _date;
   num? _grams;
   num? _moneyBalance;
-  String? _statusst;//= json['status'];
+  String? _statusst; //= json['status'];
 
   MoneyHistoryList copyWith({
     String? id,
@@ -149,23 +148,22 @@ class MoneyHistoryList {
     String? date,
     num? grams,
     num? moneyBalance,
-    String? statusst
-  }) =>
-      MoneyHistoryList(
-        id: id ?? _id,
-        userId: userId ?? _userId,
-        transactionId: transactionId ?? _transactionId,
-        transactionType: transactionType ?? _transactionType,
-        transactionTypeInAr: transactionTypeInAr ??_transactionTypeInAr,
-        paymentModel: paymentModel ?? _paymentModel,
-        paymentModelInArabic: paymentModelInArabic ?? _paymentModelInArabic,
-        credit: credit ?? _credit,
-        debit: debit ?? _debit,
-        date: date ?? _date,
-        grams: grams?? _grams,
-        moneyBalance: moneyBalance ?? _moneyBalance,
-        statusst: _statusst ?? _statusst,
-      );
+    String? statusst,
+  }) => MoneyHistoryList(
+    id: id ?? _id,
+    userId: userId ?? _userId,
+    transactionId: transactionId ?? _transactionId,
+    transactionType: transactionType ?? _transactionType,
+    transactionTypeInAr: transactionTypeInAr ?? _transactionTypeInAr,
+    paymentModel: paymentModel ?? _paymentModel,
+    paymentModelInArabic: paymentModelInArabic ?? _paymentModelInArabic,
+    credit: credit ?? _credit,
+    debit: debit ?? _debit,
+    date: date ?? _date,
+    grams: grams ?? _grams,
+    moneyBalance: moneyBalance ?? _moneyBalance,
+    statusst: _statusst ?? _statusst,
+  );
 
   String? get id => _id;
   String? get userId => _userId;
@@ -173,7 +171,7 @@ class MoneyHistoryList {
   String? get transactionType => _transactionType;
   String? get transactionTypeInAr => _transactionTypeInAr;
   String? get paymentModel => _paymentModel;
-  String? get paymentModelInArabic=> _paymentModelInArabic;
+  String? get paymentModelInArabic => _paymentModelInArabic;
   num? get credit => _credit;
   num? get debit => _debit;
   String? get date => _date;

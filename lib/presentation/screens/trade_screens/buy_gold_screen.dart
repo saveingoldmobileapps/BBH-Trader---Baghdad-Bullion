@@ -215,7 +215,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                             //errorText: _isValidAmount ? null : 'Amount must be greater than zero', // 👈 Show error if invalid
                           ),
                           inputFormatters: [
-                            AmountInputFormatter(maxDigits: 4, decimalRange: 3),
+                            DecimalAmountInputFormatter(maxDigits: 4,),
                           ],
                           onChanged: (value) {
                             // Validate on each change
@@ -273,7 +273,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                       return Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
-                          "${l10n.max_grams_note} ${maxGrams.toStringAsFixed(3)}",
+                          "${l10n.max_grams_note} ${CommonService.formatGramForDisplay(maxGrams)}",
                           style: GoogleFonts.inter(
                             color: Colors.white54,
                             fontSize: 13,
@@ -592,7 +592,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
-        AmountInputFormatter(maxDigits: 6, decimalRange: 3),
+        AmountInputFormatter(maxDigits: 6,),
       ],
     );
   }

@@ -273,7 +273,7 @@ class _AddLoadRequestScreenState extends ConsumerState<EditLoanRequestScreen> {
                               ConstPadding.sizeBoxWithHeight(height: 8),
                               GetGenericText(
                                 text:
-                                    "Hold Metal = ${_metalHold.toStringAsFixed(3)} grams",
+                                    "Hold Metal = ${CommonService.formatGramForDisplay(_metalHold)} grams",
                                 fontSize: sizes!.responsiveFont(
                                   phoneVal: 12,
                                   tabletVal: 14,

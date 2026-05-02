@@ -54,7 +54,7 @@ import 'states/auth_state.dart';
 
 part 'auth_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Auth extends _$Auth {
   @override
   AuthState build() {
@@ -72,6 +72,21 @@ class Auth extends _$Auth {
   /// set button state
   void setButtonState(bool buttonState) {
     state = state.copyWith(isButtonState: buttonState);
+  }
+
+  /// After async gaps, [Ref.mounted] can throw once this notifier is disposed.
+  bool _isAuthNotifierMounted() {
+    try {
+      return ref.mounted;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  void _trySetButtonState(bool buttonState) {
+    try {
+      state = state.copyWith(isButtonState: buttonState);
+    } catch (_) {}
   }
 
   /// set upload image state
@@ -4667,10 +4682,12 @@ class Auth extends _$Auth {
     required String userId,
   }) async {
     try {
-      setButtonState(true);
+      _trySetButtonState(true);
 
       String? refreshToken = await SecureStorageService.instance
           .getRefreshToken();
+
+      if (!_isAuthNotifierMounted()) return;
 
       final headers = {
         "Authorization": "Bearer $refreshToken",
@@ -4688,27 +4705,35 @@ class Auth extends _$Auth {
         headers: headers,
       );
 
+      if (!_isAuthNotifierMounted()) return;
+
       switch (serverResponse.responseType) {
         case ServerResponseType.success:
           final responseData = serverResponse.resultData;
-          
-        SocketService().disconnect();
+
+          SocketService().disconnect();
 
           SuccessResponse successResponse = SuccessResponse.fromJson(
             responseData,
           );
 
-          if (!context.mounted) return;
-
-          state = state.copyWith(successResponse: successResponse);
+          try {
+            state = state.copyWith(
+              successResponse: successResponse,
+              isButtonState: false,
+            );
+          } catch (_) {}
 
           getLocator<Logger>().i(
             "Logout Success: ${successResponse.payload?.toJson()}",
           );
 
+          if (!context.mounted) return;
+
           await CommonService.logoutUser(context: context);
-          setButtonState(false);
-          break;
+          // Navigation clears the tree; authProvider is often disposed here — do not use ref/state after this.
+
+          return;
 
         case ServerResponseType.error:
           ErrorResponse errorResponse = ErrorResponse.fromJson(
@@ -4719,19 +4744,21 @@ class Auth extends _$Auth {
           getLocator<Logger>().e(
             "Logout Error: ${errorResponse.payload?.message}",
           );
+          _trySetButtonState(false);
           break;
 
         case ServerResponseType.exception:
           getLocator<Logger>().e(
             "Logout Exception: ${serverResponse.resultData}",
           );
+          _trySetButtonState(false);
           break;
       }
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       getLocator<Logger>().e("Logout Exception: $e");
-    } finally {}
-    setButtonState(false);
+      _trySetButtonState(false);
+    }
   }
 
   // Future<void> logoutUser({

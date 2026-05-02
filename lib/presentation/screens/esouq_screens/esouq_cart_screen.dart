@@ -35,10 +35,6 @@ class EsouqCartScreen extends ConsumerStatefulWidget {
   @override
   ConsumerState createState() => _EsouqCartScreenState();
 }
-  String _formatIqd(String? value) {
-  final parsed = double.tryParse(value ?? '') ?? 0;
-  return CommonService.formatIQDForDisplay(parsed);
-}
 
 class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
   static const String _moneyMethod = "Money";
@@ -269,7 +265,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          "${l10n.idq_currency} ${_formatIqd(finalGoldPrice.toStringAsFixed(3))}",
+                                          "${l10n.idq_currency} ${CommonService.formatIQDForDisplay(finalGoldPrice)}",
                                           style: const TextStyle(
                                             color: Color(0xFFBBA473),
                                             fontSize: 14,
@@ -403,7 +399,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                               _selectedPaymentMethod == _moneyMethod
                                   ? GetGenericText(
                                       text:
-                                          "${_formatIqd((totalGrandGoldPayableCharges - deliveryCharges).toStringAsFixed(3))} ${AppLocalizations.of(context)!.idq_currency}",
+                                          "${CommonService.formatIQDForDisplay(totalGrandGoldPayableCharges - deliveryCharges)} ${AppLocalizations.of(context)!.idq_currency}",
                                       fontSize: sizes!.responsiveFont(
                                         phoneVal: 16,
                                         tabletVal: 20,
@@ -412,7 +408,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                       color: AppColors.grey6Color,
                                     )
                                   : GetGenericText(
-                                      text: "${(gramBalanceEqual).toStringAsFixed(3)} ${AppLocalizations.of(context)!.esouq_gram_balance}",
+                                      text: "${CommonService.formatGramForDisplay(gramBalanceEqual)} ${AppLocalizations.of(context)!.esouq_gram_balance}",
                                       fontSize: sizes!.responsiveFont(
                                         phoneVal: 16,
                                         tabletVal: 20,
@@ -464,7 +460,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
             ),
           ),
           Text(
-            "${AppLocalizations.of(context)!.idq_currency} ${_formatIqd(value.toStringAsFixed(3))}",
+            "${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIQDForDisplay(value)}",
             style: TextStyle(
               color: Colors.white,
               fontSize: isTotal ? 16 : 14,
@@ -536,7 +532,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
               final dealItems = List<String>.from(
                 filteredDeals.map(
                   (deal) =>
-                      "${deal.dealId} - ${deal.tradeMetal!.toStringAsFixed(3)} ${l10n.g_Gold}",
+                      "${deal.dealId} - ${CommonService.formatGramForDisplay(deal.tradeMetal)} ${l10n.g_Gold}",
                 ),
               );
               // Pass full item strings (matching items) so dialog shows them as checked
@@ -546,7 +542,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                           .map((id) {
                             for (var d in filteredDeals) {
                               if (d.dealId.toString() == id.toString()) {
-                                return "${d.dealId} - ${d.tradeMetal!.toStringAsFixed(3)} ${l10n.g_Gold}";
+                                return "${d.dealId} - ${CommonService.formatGramForDisplay(d.tradeMetal)} ${l10n.g_Gold}";
                               }
                             }
                             return null;

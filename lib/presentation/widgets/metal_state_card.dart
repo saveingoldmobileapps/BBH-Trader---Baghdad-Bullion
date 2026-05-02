@@ -87,12 +87,12 @@ class _MetalStatementCardState extends State<MetalStatementCard>
                               (widget.statement.debit ?? 0) > 0) ||
                           (widget.statement.paymentModel == "Gift Sent" &&
                               (widget.statement.debit ?? 0) > 0)
-                      ? "${widget.statement.debit?.toStringAsFixed(3) ?? '0.000'}${AppLocalizations.of(context)!.metal_g}"
-                      : "${widget.statement.credit?.toStringAsFixed(3) ?? '0.000'}${AppLocalizations.of(context)!.metal_g}",
+                      ? "${CommonService.formatGramForDisplay(widget.statement.debit)}${AppLocalizations.of(context)!.metal_g}"
+                      : "${CommonService.formatGramForDisplay(widget.statement.credit)}${AppLocalizations.of(context)!.metal_g}",
                 ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.balanceAfterTransaction,
-                  "${widget.statement.metalBalance?.toStringAsFixed(3) ?? '0.00'}${AppLocalizations.of(context)!.metal_g}",
+                  "${CommonService.formatGramForDisplay(widget.statement.metalBalance)}${AppLocalizations.of(context)!.metal_g}",
                 ),
                 _buildDetailRow(
                   AppLocalizations.of(context)!.transactionType,
@@ -192,8 +192,8 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
     return Text(
       useDebit
-          ? "$title: ${widget.statement.debit!.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}"
-          : "$title: ${quantity.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
+          ? "$title: ${CommonService.formatGramForDisplay(widget.statement.debit)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}"
+          : "$title: ${CommonService.formatGramForDisplay(quantity)}${AppLocalizations.of(context)!.metal_g} ${AppLocalizations.of(context)!.gold}",
       style: const TextStyle(
         color: Colors.white,
         fontSize: 18,

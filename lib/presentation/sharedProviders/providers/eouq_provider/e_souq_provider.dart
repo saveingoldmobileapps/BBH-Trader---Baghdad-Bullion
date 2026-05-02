@@ -1030,8 +1030,8 @@ Future<void> fetchEsouqFilterOptions({
           final String productInfo = "$goldQuantity × $productName";
 
           final String totalPaid = paymentMethod == "Money"
-              ? "${l10n.idq_currency} ${double.parse(payableGrandTotal).toStringAsFixed(3)}"
-              : "${double.parse(payableGrandTotal).toStringAsFixed(3)} ${l10n.metal_g}";
+              ? "${l10n.idq_currency} ${CommonService.formatIqdCurrency(double.parse(payableGrandTotal))}"
+              : "${CommonService.formatGramForDisplay(double.parse(payableGrandTotal))} ${l10n.metal_g}";
 
           Navigator.pushReplacement(
             context,

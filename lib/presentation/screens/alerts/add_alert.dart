@@ -40,7 +40,8 @@ class _CreateAlertScreenState extends ConsumerState<CreateAlertScreen> {
       selectedScript = existing.script ?? "1 Gram Price";
       side = existing.alertType ?? "Buy";
       condition = existing.condition!;
-      priceController.text = existing.price != null ? existing.price!.toStringAsFixed(3) : "";
+      priceController.text =
+          existing.price != null ? existing.price!.round().toString() : "";
       // priceController.text = existing.price?.toString() ?? "";
       alertTypeLabel = side == "Buy" ? "Buying price" : "Selling price";
     } else {
@@ -228,7 +229,7 @@ void _updateSide(String? selectedLabel) {
                 validator: _validatePrice,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 inputFormatters: [
-                            AmountInputFormatter(maxDigits: 6, decimalRange: 3),
+                            AmountInputFormatter(maxDigits: 6,),
                           ],
                 //inputFormatters: [DecimalTextInputFormatter(decimalRange: 3)],
                 keyboardType: const TextInputType.numberWithOptions(

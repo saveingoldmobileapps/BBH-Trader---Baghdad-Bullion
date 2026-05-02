@@ -349,7 +349,7 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
                                 ConstPadding.sizeBoxWithHeight(height: 8),
                                 GetGenericText(
                                   text:
-                                      "Hold Metal = ${_metalHolded.toStringAsFixed(3)} grams",
+                                      "Hold Metal = ${CommonService.formatGramForDisplay(_metalHolded)} grams",
                                   fontSize: sizes!.responsiveFont(
                                     phoneVal: 12,
                                     tabletVal: 14,
@@ -390,7 +390,7 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
                                 "amount ${amountController.text.toString()}",
                               );
                               debugPrint(
-                                " hold metal${_metalHolded.toStringAsFixed(4)}",
+                                " hold metal${CommonService.formatGramForDisplay(_metalHolded)}",
                               );
 
                               // Remove focus to close the keyboard

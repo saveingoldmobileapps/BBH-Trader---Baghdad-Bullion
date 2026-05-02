@@ -430,7 +430,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get plz_enter_valid_phone => 'Please enter a valid phone number';
 
   @override
-  String get agreement_prefix => 'By Creating Account, I agree to SaveInGold ';
+  String get agreement_prefix =>
+      'By Creating Account, I agree to Baghdad Bullion House ';
 
   @override
   String get terms_and_conditions => 'Terms & Conditions';
@@ -1527,6 +1528,73 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get money_st => 'Money Statement';
+
+  @override
+  String get money_tx_credit_in => 'Credit In';
+
+  @override
+  String get money_tx_money_in => 'Money in';
+
+  @override
+  String get money_tx_money_out => 'Money out';
+
+  @override
+  String get money_tx_credit_out => 'Credit Out';
+
+  @override
+  String get money_tx_deposit => 'Deposit';
+
+  @override
+  String get money_tx_withdraw => 'Withdraw';
+
+  @override
+  String get money_tx_adjustment => 'Adjustment';
+
+  @override
+  String get money_tx_loan_credit_out => 'Loan Credit Out';
+
+  @override
+  String get money_tx_cashback => 'Cashback';
+
+  @override
+  String get money_tx_referral_cashback => 'Referral Cashback';
+
+  @override
+  String get money_tx_covering_purchase => 'Covering the Purchase';
+
+  @override
+  String get money_tx_proceeds_sale => 'Proceeds from the Sale';
+
+  @override
+  String get money_tx_invest => 'Invest';
+
+  @override
+  String get money_tx_withdraw_invest => 'WithdrawInvest';
+
+  @override
+  String get money_tx_transfer => 'Transfer';
+
+  @override
+  String get money_tx_received => 'Received';
+
+  @override
+  String get money_tx_failed_transfer_adjustment =>
+      'Failed Transfer Adjustment';
+
+  @override
+  String get money_tx_reward => 'Reward';
+
+  @override
+  String get money_tx_gift => 'Gift';
+
+  @override
+  String get money_tx_gift_sent => 'Gift Sent';
+
+  @override
+  String get money_tx_gift_received => 'Gift Received';
+
+  @override
+  String get money_tx_temporary_credit => 'Temporary Credit';
 
   @override
   String money_history_gram_purchase_line(String iqd, String grams) {

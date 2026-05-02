@@ -1,8 +1,8 @@
 import 'package:baghdad_bullion_house/presentation/screens/alerts/add_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
+import '../../../core/core_export.dart';
 import '../../../core/enums/loading_state.dart';
 import '../../../core/theme/const_colors.dart';
 import '../../../core/theme/get_generic_text_widget.dart';
@@ -300,20 +300,18 @@ class _AlertItemCard extends ConsumerWidget {
               _row(
                 AppLocalizations.of(context)!.gram_current_price,
                 //"Current Price",
-                "${AppLocalizations.of(context)!.idq_currency} ${NumberFormat("#,##0.000").format(currentPrice)}",
-                //"IQD ${NumberFormat("#,##0.00").format(currentPrice)}",
+                "${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIqdCurrency(currentPrice)}",
                 Colors.white,
               ),
               _row(
                 AppLocalizations.of(context)!.gram_target_price,
                 //"Target Price",
-                "${AppLocalizations.of(context)!.idq_currency} ${NumberFormat("#,##0.000").format(targetPrice)}",
-                //"IQD ${NumberFormat("#,##0.000").format(targetPrice)}",
+                "${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIqdCurrency(targetPrice)}",
                 const Color(0xFFC5A358),
               ),
               _row(
                 AppLocalizations.of(context)!.active_difference,
-                "${difference >= 0 ? '+' : ''}${AppLocalizations.of(context)!.idq_currency} ${NumberFormat("#,##0.000").format(difference)}",
+                "${difference >= 0 ? '+' : ''}${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIqdCurrency(difference)}",
                 diffColor,
               ),
               const Divider(color: Colors.white10, height: 24),

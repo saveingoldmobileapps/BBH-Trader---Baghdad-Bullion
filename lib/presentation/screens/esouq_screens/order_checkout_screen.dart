@@ -55,11 +55,6 @@ class OrderCheckoutScreen extends ConsumerStatefulWidget {
   ConsumerState createState() => _OrderCheckoutScreenState();
 }
 
-  String _formatIqd(String? value) {
-  final parsed = double.tryParse(value ?? '') ?? 0;
-  return CommonService.formatIQDForDisplay(parsed);
-}
-
 class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
   // Initial selected value
   static const String _deliveryMethod = 'Delivery';
@@ -619,8 +614,8 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                               children: [
                                 GetGenericText(
                                   text: _selectedItem == _deliveryMethod
-                                      ? "${_formatIqd((widget.deliveryCharges).toStringAsFixed(3))} ${AppLocalizations.of(context)!.idq_currency}"
-                                      : "${collectionTotal.toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}",
+                                      ? "${CommonService.formatIQDForDisplay(widget.deliveryCharges)} ${AppLocalizations.of(context)!.idq_currency}"
+                                      : "${CommonService.formatIQDForDisplay(collectionTotal)} ${AppLocalizations.of(context)!.idq_currency}",
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.grey6Color,
@@ -664,11 +659,11 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                           GetGenericText(
                             text: _selectedItem == _deliveryMethod
                                 ? widget.paymentMethod == "Money"
-                                      ? "${_formatIqd((withDeliveryCharges).toStringAsFixed(3))} ${AppLocalizations.of(context)!.idq_currency}"
-                                      : "${_formatIqd((withDeliveryCharges).toStringAsFixed(3))} ${AppLocalizations.of(context)!.grams}"
+                                      ? "${CommonService.formatIQDForDisplay(withDeliveryCharges)} ${AppLocalizations.of(context)!.idq_currency}"
+                                      : "${CommonService.formatGramForDisplay(withDeliveryCharges)} ${AppLocalizations.of(context)!.grams}"
                                 : widget.paymentMethod == "Money"
-                                ? "${_formatIqd(collectionTotal.toStringAsFixed(3))} ${AppLocalizations.of(context)!.idq_currency}"
-                                : "${_formatIqd(collectionTotal.toStringAsFixed(3))} ${AppLocalizations.of(context)!.grams}",
+                                ? "${CommonService.formatIQDForDisplay(collectionTotal)} ${AppLocalizations.of(context)!.idq_currency}"
+                                : "${CommonService.formatGramForDisplay(collectionTotal)} ${AppLocalizations.of(context)!.grams}",
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                             color: AppColors.grey6Color,
@@ -712,8 +707,8 @@ class _OrderCheckoutScreenState extends ConsumerState<OrderCheckoutScreen> {
                               children: [
                                 GetGenericText(
                                   text: _selectedItem == _deliveryMethod
-                                      ? "${widget.totalCharges.toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}"
-                                      : "${collectionCharges.toStringAsFixed(3)} ${AppLocalizations.of(context)!.idq_currency}",
+                                      ? "${CommonService.formatIQDForDisplay(widget.totalCharges)} ${AppLocalizations.of(context)!.idq_currency}"
+                                      : "${CommonService.formatIQDForDisplay(collectionCharges)} ${AppLocalizations.of(context)!.idq_currency}",
                                   //collectionTotal.toStringAsFixed(2),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,

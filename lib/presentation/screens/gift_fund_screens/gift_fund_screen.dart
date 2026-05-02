@@ -59,15 +59,12 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
 
   String _buildDealLabel(
     BuildContext context,
-    dynamic deal, {
-    int fractionDigits = 2,
-  }) {
+    dynamic deal,
+  ) {
     final tradeTypeLabel = deal.tradeType == "Buy"
         ? AppLocalizations.of(context)!.buy
         : AppLocalizations.of(context)!.sell;
-    final tradeMetal = (deal.tradeMetal ?? 0).toDouble().toStringAsFixed(
-      fractionDigits,
-    );
+    final tradeMetal = CommonService.formatGramForDisplay(deal.tradeMetal);
     return "${deal.dealId} - $tradeTypeLabel ${tradeMetal}g ${AppLocalizations.of(context)!.g_Gold}";
   }
 
@@ -631,7 +628,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     labelText: AppLocalizations.of(context)!.amount, //"Amount",
                     controller: amountController,
                     inputFormatters: [
-                            AmountInputFormatter(maxDigits: 4, decimalRange: 3),
+                            AmountInputFormatter(maxDigits: 4,),
                           ],
                     textInputType: TextInputType.numberWithOptions(
                       signed: true,
@@ -797,7 +794,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                     hint: quantity <= 0
                                         ? AppLocalizations.of(context)!
                                               .gift_enter_qu //"Enter valid quantity first"
-                                        : "${AppLocalizations.of(context)!.gift_please_choose} ${totalAvailableGrams.toStringAsFixed(3)}${AppLocalizations.of(context)!.metal_g})",
+                                        : "${AppLocalizations.of(context)!.gift_please_choose} ${CommonService.formatGramForDisplay(totalAvailableGrams)}${AppLocalizations.of(context)!.metal_g})",
                                     gramBalanceEqual: quantity,
                                     selectedItems: selectedIds != null
                                         ? selectedIds!.map((id) {
@@ -1339,7 +1336,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                               context,
                             )!.insufficient_gram_title, //"Insufficient Gram Selection",
                             subtitle:
-                                "${AppLocalizations.of(context)!.ins_firt}$totalSelectedAmount ${AppLocalizations.of(context)!.ins_sec}$enteredAmount ${AppLocalizations.of(context)!.ins_th}",
+                                "${AppLocalizations.of(context)!.ins_firt}${CommonService.formatGramForDisplay(totalSelectedAmount)} ${AppLocalizations.of(context)!.ins_sec}${CommonService.formatGramForDisplay(enteredAmount)} ${AppLocalizations.of(context)!.ins_th}",
                             noButtonTitle: "",
                             isLoadingState: false,
                             onNoPress: () => Navigator.pop(context),

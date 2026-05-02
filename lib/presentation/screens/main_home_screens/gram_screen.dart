@@ -262,7 +262,7 @@ if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
                       textBaseline: TextBaseline.alphabetic,
                       children: [
                         Text(
-                          totalGrams.toStringAsFixed(3),
+                          CommonService.formatGramForDisplay(totalGrams),
                           style: const TextStyle(
                             color: AppColors.primaryGold500,
                             fontSize: 60,

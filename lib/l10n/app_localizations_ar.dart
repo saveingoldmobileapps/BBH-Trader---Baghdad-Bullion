@@ -425,7 +425,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get plz_enter_valid_phone => 'يرجى إدخال رقم هاتف صالح';
 
   @override
-  String get agreement_prefix => 'بإنشائي حسابًا، أوافق على ';
+  String get agreement_prefix =>
+      ' بإنشائي حسابًا، أوافق على دار بغداد للسبائك الذهبية والفضية';
 
   @override
   String get terms_and_conditions => 'الشروط والأحكام';
@@ -1515,6 +1516,72 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get money_st => 'كشف الحساب المالي';
+
+  @override
+  String get money_tx_credit_in => 'إضافة رصيد';
+
+  @override
+  String get money_tx_money_in => 'إيداع نقدي';
+
+  @override
+  String get money_tx_money_out => 'سحب نقدي';
+
+  @override
+  String get money_tx_credit_out => 'خصم رصيد';
+
+  @override
+  String get money_tx_deposit => 'إيداع';
+
+  @override
+  String get money_tx_withdraw => 'سحب';
+
+  @override
+  String get money_tx_adjustment => 'تعديل';
+
+  @override
+  String get money_tx_loan_credit_out => 'سحب قرض';
+
+  @override
+  String get money_tx_cashback => 'استرداد نقدي';
+
+  @override
+  String get money_tx_referral_cashback => 'استرداد نقدي للإحالة';
+
+  @override
+  String get money_tx_covering_purchase => 'تغطية عملية الشراء';
+
+  @override
+  String get money_tx_proceeds_sale => 'عائدات البيع';
+
+  @override
+  String get money_tx_invest => 'استثمار';
+
+  @override
+  String get money_tx_withdraw_invest => 'سحب استثمار';
+
+  @override
+  String get money_tx_transfer => 'تحويل';
+
+  @override
+  String get money_tx_received => 'استلام';
+
+  @override
+  String get money_tx_failed_transfer_adjustment => 'تسوية تحويل فاشل';
+
+  @override
+  String get money_tx_reward => 'مكافأة';
+
+  @override
+  String get money_tx_gift => 'هدية';
+
+  @override
+  String get money_tx_gift_sent => 'إرسال هدية';
+
+  @override
+  String get money_tx_gift_received => 'استلام هدية';
+
+  @override
+  String get money_tx_temporary_credit => 'ائتمان مؤقت';
 
   @override
   String money_history_gram_purchase_line(String iqd, String grams) {

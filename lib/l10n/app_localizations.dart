@@ -905,7 +905,7 @@ abstract class AppLocalizations {
   /// No description provided for @agreement_prefix.
   ///
   /// In en, this message translates to:
-  /// **'By Creating Account, I agree to SaveInGold '**
+  /// **'By Creating Account, I agree to Baghdad Bullion House '**
   String get agreement_prefix;
 
   /// No description provided for @terms_and_conditions.
@@ -3031,6 +3031,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Money Statement'**
   String get money_st;
+
+  /// No description provided for @money_tx_credit_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit In'**
+  String get money_tx_credit_in;
+
+  /// No description provided for @money_tx_money_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Money in'**
+  String get money_tx_money_in;
+
+  /// No description provided for @money_tx_money_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Money out'**
+  String get money_tx_money_out;
+
+  /// No description provided for @money_tx_credit_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit Out'**
+  String get money_tx_credit_out;
+
+  /// No description provided for @money_tx_deposit.
+  ///
+  /// In en, this message translates to:
+  /// **'Deposit'**
+  String get money_tx_deposit;
+
+  /// No description provided for @money_tx_withdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get money_tx_withdraw;
+
+  /// No description provided for @money_tx_adjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjustment'**
+  String get money_tx_adjustment;
+
+  /// No description provided for @money_tx_loan_credit_out.
+  ///
+  /// In en, this message translates to:
+  /// **'Loan Credit Out'**
+  String get money_tx_loan_credit_out;
+
+  /// No description provided for @money_tx_cashback.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashback'**
+  String get money_tx_cashback;
+
+  /// No description provided for @money_tx_referral_cashback.
+  ///
+  /// In en, this message translates to:
+  /// **'Referral Cashback'**
+  String get money_tx_referral_cashback;
+
+  /// No description provided for @money_tx_covering_purchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Covering the Purchase'**
+  String get money_tx_covering_purchase;
+
+  /// No description provided for @money_tx_proceeds_sale.
+  ///
+  /// In en, this message translates to:
+  /// **'Proceeds from the Sale'**
+  String get money_tx_proceeds_sale;
+
+  /// No description provided for @money_tx_invest.
+  ///
+  /// In en, this message translates to:
+  /// **'Invest'**
+  String get money_tx_invest;
+
+  /// No description provided for @money_tx_withdraw_invest.
+  ///
+  /// In en, this message translates to:
+  /// **'WithdrawInvest'**
+  String get money_tx_withdraw_invest;
+
+  /// No description provided for @money_tx_transfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Transfer'**
+  String get money_tx_transfer;
+
+  /// No description provided for @money_tx_received.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get money_tx_received;
+
+  /// No description provided for @money_tx_failed_transfer_adjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed Transfer Adjustment'**
+  String get money_tx_failed_transfer_adjustment;
+
+  /// No description provided for @money_tx_reward.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward'**
+  String get money_tx_reward;
+
+  /// No description provided for @money_tx_gift.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift'**
+  String get money_tx_gift;
+
+  /// No description provided for @money_tx_gift_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift Sent'**
+  String get money_tx_gift_sent;
+
+  /// No description provided for @money_tx_gift_received.
+  ///
+  /// In en, this message translates to:
+  /// **'Gift Received'**
+  String get money_tx_gift_received;
+
+  /// No description provided for @money_tx_temporary_credit.
+  ///
+  /// In en, this message translates to:
+  /// **'Temporary Credit'**
+  String get money_tx_temporary_credit;
 
   /// Money tab — gram buy (credit / money in); grams placeholder until API provides value
   ///

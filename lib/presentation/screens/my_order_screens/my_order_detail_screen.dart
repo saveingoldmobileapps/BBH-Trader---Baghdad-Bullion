@@ -330,7 +330,7 @@ class _OrderDetailScreenState extends ConsumerState<MyOrderDetailScreen> {
                           /// ✅ Total Weight Row
                           _buildSummaryRow(
                             isArabic ? "الوزن الإجمالي" : "Total Weight",
-                            "${totalWeight.toStringAsFixed(2)} ${weightUnit == "Gram" ? (isArabic ? "جرام" : "g") : weightUnit}",
+                            "${CommonService.formatGramForDisplay(totalWeight)} ${weightUnit == "Gram" ? (isArabic ? "جرام" : "g") : weightUnit}",
                             isItem: true,
                           ),
                           

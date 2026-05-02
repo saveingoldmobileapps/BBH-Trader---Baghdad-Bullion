@@ -165,7 +165,7 @@
 
 
   "@LegalText": {},
-  "agreement_prefix": "بإنشائي حسابًا، أوافق على ",
+  "agreement_prefix": " بإنشائي حسابًا، أوافق على دار بغداد للسبائك الذهبية والفضية",
   "terms_and_conditions": "الشروط والأحكام",
   "agreement_and": " و ",
   "privacy_policy": "سياسة الخصوصية",
@@ -583,6 +583,29 @@
   "dateTime": "التاريخ والوقت",
   "metal_st" : "كشف المعادن",
   "money_st" : "كشف الحساب المالي",
+
+  "money_tx_credit_in": "إضافة رصيد",
+  "money_tx_money_in": "إيداع نقدي",
+  "money_tx_money_out": "سحب نقدي",
+  "money_tx_credit_out": "خصم رصيد",
+  "money_tx_deposit": "إيداع",
+  "money_tx_withdraw": "سحب",
+  "money_tx_adjustment": "تعديل",
+  "money_tx_loan_credit_out": "سحب قرض",
+  "money_tx_cashback": "استرداد نقدي",
+  "money_tx_referral_cashback": "استرداد نقدي للإحالة",
+  "money_tx_covering_purchase": "تغطية عملية الشراء",
+  "money_tx_proceeds_sale": "عائدات البيع",
+  "money_tx_invest": "استثمار",
+  "money_tx_withdraw_invest": "سحب استثمار",
+  "money_tx_transfer": "تحويل",
+  "money_tx_received": "استلام",
+  "money_tx_failed_transfer_adjustment": "تسوية تحويل فاشل",
+  "money_tx_reward": "مكافأة",
+  "money_tx_gift": "هدية",
+  "money_tx_gift_sent": "إرسال هدية",
+  "money_tx_gift_received": "استلام هدية",
+  "money_tx_temporary_credit": "ائتمان مؤقت",
 
   "@money_history_gram_purchase_line": {
     "description": "Money tab — gram buy (credit / money in); grams placeholder until API provides value",

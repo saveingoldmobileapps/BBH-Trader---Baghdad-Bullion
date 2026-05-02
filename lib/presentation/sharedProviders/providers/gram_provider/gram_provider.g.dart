@@ -40,7 +40,7 @@ final class GramProvider extends $NotifierProvider<Gram, GramState> {
   }
 }
 
-String _$gramHash() => r'918807fcae197c75a428f246c6ed79d274972ec6';
+String _$gramHash() => r'186455c7c65877016ec83fe33bb1abd759e8d67c';
 
 abstract class _$Gram extends $Notifier<GramState> {
   GramState build();

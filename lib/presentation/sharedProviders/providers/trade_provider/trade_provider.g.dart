@@ -40,7 +40,7 @@ final class TradeProvider extends $NotifierProvider<Trade, TradeState> {
   }
 }
 
-String _$tradeHash() => r'877aba817381476ffc9c1ebed7f49ee055b2b40c';
+String _$tradeHash() => r'df0cc63132846293985690e935e6d1eb1ba35f13';
 
 abstract class _$Trade extends $Notifier<TradeState> {
   TradeState build();

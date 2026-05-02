@@ -73,7 +73,7 @@ class CommonService {
   // }) {
   //   final amountInDouble = double.tryParse(amount) ?? 0.0;
   //   if (amountInDouble >= 10000) {
-  //     return "${(amountInDouble / 1000).toStringAsFixed(3)}K"; // Keep 3 decimal places in large values
+  //     return "${(amountInDouble / 1000).toStringAsFixed(3)..round()}K"; // Keep 3 decimal places in large values
   //   }
 
   //   final formatter = NumberFormat("#,##0.00", "en_US");

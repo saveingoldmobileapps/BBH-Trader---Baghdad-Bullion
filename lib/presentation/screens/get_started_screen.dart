@@ -1,3 +1,4 @@
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/on_board_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -248,6 +249,37 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                   ),
 
                   const Spacer(),
+                   SizedBox(
+                    width: double.infinity,
+                    height: 54,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Color(0xff74540E),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const OnboardingScreen(),
+                          ),
+                        );
+                      },
+                      child: Text("Bank",
+                       //"${AppLocalizations.of(context)!.login_to_bbh}",// "I'm an existing user",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.whiteColor,
+                        ),
+                      ),
+                    ),
+                  ),
+
                 ],
               ),
             ),

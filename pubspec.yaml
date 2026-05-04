@@ -175,6 +175,18 @@ flutter:
     - .env
     - assets/lottie/Presize_Maintenance.json
     - assets/lottie/Confetti.json
+
+  fonts:
+  - family: DINNextArabic
+    fonts:
+      - asset: assets/fonts/din_next_arabic_light.ttf
+        weight: 300
+      - asset: assets/fonts/din_next_arabic_regular.ttf
+        weight: 400
+      - asset: assets/fonts/din_next_arabic_medium.ttf
+        weight: 500
+      # - asset: assets/fonts/din_next_arabic_bold.ttf  # If you have it
+      #   weight: 700
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
@@ -204,6 +216,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+  
 
 sentry:
   upload_debug_symbols: true

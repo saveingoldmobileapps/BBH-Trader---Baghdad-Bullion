@@ -57,15 +57,32 @@ class CommonService {
     final calculatedAmount = (double.tryParse(amount) ?? 0) * 100;
     return calculatedAmount.toInt().toString();
   }
-
-  /// calculate weight price
   static double calculateWeightPrice({
-    required String? weightFactor,
-    required double oneGramSellingPrice,
-  }) {
-    final weight = double.tryParse(weightFactor ?? "0.0") ?? 0.0;
-    return double.parse((weight * oneGramSellingPrice).toStringAsFixed(3));
-  }
+  required String? weightFactor,
+  required double oneGramSellingPrice,
+}) {
+  final weight = double.tryParse(weightFactor ?? "0.0") ?? 0.0;
+
+  final value = weight * oneGramSellingPrice;
+  final roundedValue = value.round();
+
+  final lastTwoDigits = roundedValue % 100;
+  final base = roundedValue - lastTwoDigits;
+
+  final finalValue = lastTwoDigits >= 50
+      ? base + 100
+      : base;
+
+  return finalValue.toDouble();
+}
+  /// calculate weight price
+  // static double calculateWeightPrice({
+  //   required String? weightFactor,
+  //   required double oneGramSellingPrice,
+  // }) {
+  //   final weight = double.tryParse(weightFactor ?? "0.0") ?? 0.0;
+  //   return double.parse((weight * oneGramSellingPrice).toStringAsFixed(3));
+  // }
 
   /// format currency
   // static String formatCurrency({
@@ -105,8 +122,23 @@ class CommonService {
     return NumberFormat("#,##0", useArabic ? "ar_IQ" : "en_US").format(rounded);
   }
 
+  static String roundingFormatIqdCurrency(num? value, {bool useArabic = false}) {
+  final val = (value ?? 0).round();
+
+  final lastTwoDigits = val % 100;
+  final base = val - lastTwoDigits;
+
+  final rounded = lastTwoDigits >= 50
+      ? base + 100
+      : base;
+
+  return NumberFormat("#,##0", useArabic ? "ar_IQ" : "en_US")
+      .format(rounded);
+}
+
   /// Same as [formatIqdCurrency]; kept for existing call sites.
-  static String formatIQDForDisplay(num? value) => formatIqdCurrency(value);
+  static String formatIQDForDisplay(num? value) => roundingFormatIqdCurrency(value);
+static String roundingformatIQDForDisplay(num? value) => roundingFormatIqdCurrency(value);
 
   /// Format price for compact display (e.g. 2K, 1M) — based on rounded whole units.
   static String formatPriceCompact(num? value) {

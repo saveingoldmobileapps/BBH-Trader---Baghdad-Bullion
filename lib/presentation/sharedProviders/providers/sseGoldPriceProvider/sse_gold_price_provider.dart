@@ -287,17 +287,34 @@ Future<void> _startSSE({
                 "buyMargin=$buyingMargin sellMargin=$sellingMargin",
               );
 
-              final oneGramBuyIqd = CommonService.oneGramBuyingPriceInIqd(
-                ounceUsd: buyingPx,
-                buyingMargin: buyingMargin,
-                exchangeBuyRate: buyingExchangeRate,
-                gramsPerOunce: ounce,
+              // final oneGramBuyIqd = CommonService.oneGramBuyingPriceInIqd(
+              //   ounceUsd: buyingPx,
+              //   buyingMargin: buyingMargin,
+              //   exchangeBuyRate: buyingExchangeRate,
+              //   gramsPerOunce: ounce,
+              // );
+              // final oneGramSellIqd = CommonService.oneGramSellingPriceInIqd(
+              //   ounceUsd: sellingPx,
+              //   sellingMargin: sellingMargin,
+              //   exchangeSellingRate: sellingExchangeRate,
+              //   gramsPerOunce: ounce,
+              // );
+              final oneGramBuyIqd = roundToNearestHundred(
+                CommonService.oneGramBuyingPriceInIqd(
+                  ounceUsd: buyingPx,
+                  buyingMargin: buyingMargin,
+                  exchangeBuyRate: buyingExchangeRate,
+                  gramsPerOunce: ounce,
+                ),
               );
-              final oneGramSellIqd = CommonService.oneGramSellingPriceInIqd(
-                ounceUsd: sellingPx,
-                sellingMargin: sellingMargin,
-                exchangeSellingRate: sellingExchangeRate,
-                gramsPerOunce: ounce,
+
+              final oneGramSellIqd = roundToNearestHundred(
+                CommonService.oneGramSellingPriceInIqd(
+                  ounceUsd: sellingPx,
+                  sellingMargin: sellingMargin,
+                  exchangeSellingRate: sellingExchangeRate,
+                  gramsPerOunce: ounce,
+                ),
               );
 
               final state = SSEGoldPriceState(
@@ -339,33 +356,6 @@ Future<void> _startSSE({
 
                 getGoldPriceResponse: response,
               );
-              // final state = SSEGoldPriceState(
-              //   oneOunceDollarSellingPrice: sellingPx,
-              //   oneOunceDollarBuyingPrice: buyingPx,
-              //   lastLowSellingPrice: CommonService.getOneGramPriceInIQD(
-              //     ounceDollarPrice: lowPx,
-              //     dirham: exchangeRate,
-              //     ounce: ounce,
-              //   ),
-              //   lastHighBuyingPrice: CommonService.getOneGramPriceInIQD(
-              //     ounceDollarPrice: highPx,
-              //     dirham: exchangeRate,
-              //     ounce: ounce,
-              //   ),
-              //   oneGramSellingPriceInIQD: CommonService.getOneGramPriceInIQD(
-              //     ounceDollarPrice: sellingPx,
-              //     dirham: exchangeRate,
-              //     ounce: ounce,
-              //   ),
-              //   oneGramBuyingPriceInIQD: CommonService.getOneGramPriceInIQD(
-              //     ounceDollarPrice: buyingPx,
-              //     dirham: exchangeRate,
-              //     ounce: ounce,
-              //   ),
-              //   oneOunceBuyingPriceInIQD: buyingPx * exchangeRate,
-              //   oneOunceSellingPriceInIQD: sellingPx * exchangeRate,
-              //   getGoldPriceResponse: response,
-              // );
 
               print(
                 "SSE state emitted: gramBuy=${state.oneGramBuyingPriceInIQD} gramSell=${state.oneGramSellingPriceInIQD}",
@@ -456,6 +446,14 @@ void stopSSE() {
   _isConnecting = false; // 🔥 prevents stuck state
 
   getLocator<Logger>().i("SSE stopped");
+}
+
+double roundToNearestHundred(num value) {
+  final val = value.round();
+  final lastTwo = val % 100;
+  final base = val - lastTwo;
+
+  return lastTwo >= 50 ? (base + 100).toDouble() : base.toDouble();
 }
 
 // void stopSSE() {

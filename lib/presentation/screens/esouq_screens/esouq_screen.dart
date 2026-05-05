@@ -210,9 +210,11 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                               weightFactor: product.weightFactor,
                               oneGramSellingPrice: oneGramBuyingPriceInIQD,
                          );
-                            final itemPrice =
-                             CommonService.formatCurrency(amount: eSouqProductPrice.toString(),
-  );
+                            // final itemPrice =
+                            //  CommonService.formatCurrency(amount: eSouqProductPrice.toString(),
+  //);                        
+
+  final itemPrice =CommonService.roundingFormatIqdCurrency(double.tryParse(eSouqProductPrice.toString()) ?? 0);
                             final title = product.localizedProductName(lang);
                             
 
@@ -232,7 +234,7 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                                     builder: (context) => EsouqItemDetailScreen(
                                       product: product,
                                       productPrice:
-                                          eSouqProductPrice.round().toString(),
+                                          eSouqProductPrice.toString(),
                                       oneGramPriceInIQD:
                                           oneGramBuyingPriceInIQD
                                               .round()

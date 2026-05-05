@@ -93,7 +93,10 @@ class EsouqItemCard extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: GetGenericText(
                         text:
-                            "${l10n.idq_currency} ${CommonService.formatIqdCurrency(double.tryParse(oneGramPrice) ?? 0)}${l10n.g_}",
+                        //"${l10n.idq_currency} ${CommonService.roundingFormatIqdCurrency(double.tryParse(oneGramPrice) ?? 0)}${l10n.g_}",
+                        
+                          //  "${l10n.idq_currency} ${CommonService.formatIqdCurrency(double.tryParse(oneGramPrice) ?? 0)}${l10n.g_}",
+                        "${l10n.idq_currency} $oneGramPrice${l10n.g_}",
                         fontSize: 8,
                         color: Colors.grey,
                         fontWeight: FontWeight.normal,

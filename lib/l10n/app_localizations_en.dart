@@ -1320,7 +1320,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterHouseNo => 'Please enter a house number';
 
   @override
-  String get emiratesHill => 'Emirates Hill First';
+  String get emiratesHill => 'Residential Area';
 
   @override
   String get please_enter_area => 'Please enter an area';
@@ -1329,10 +1329,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get will_notify_you => 'We\'ll notify you when your order is executed';
 
   @override
-  String get dubai_title => 'Dubai';
+  String get dubai_title => 'Baghdad';
 
   @override
-  String get list_of_emirates => 'Please enter an emirate';
+  String get list_of_emirates => 'Please enter City Name';
 
   @override
   String get nominate_recipient => 'Nominate a Recipient';
@@ -1344,7 +1344,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upload_residency_esoq => 'Upload residency Proof';
 
   @override
-  String get nominee_id => 'Please upload the Emirates Id of Your Nominee';
+  String get nominee_id =>
+      'Please upload the National ID or Housing Card of your nominee';
 
   @override
   String get branch_name => 'Branch Name';
@@ -1373,7 +1374,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get area => 'Area';
 
   @override
-  String get emirate => 'Emirate';
+  String get emirate => 'City Name';
 
   @override
   String get nominateRecipient => 'Nominate a Recipient';

@@ -265,7 +265,8 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
-                                          "${l10n.idq_currency} ${CommonService.formatIQDForDisplay(finalGoldPrice)}",
+                                          "${l10n.idq_currency} ${widget.productPrice}",
+                                          //"${l10n.idq_currency} ${CommonService.formatIQDForDisplay(finalGoldPrice)}",
                                           style: const TextStyle(
                                             color: Color(0xFFBBA473),
                                             fontSize: 14,

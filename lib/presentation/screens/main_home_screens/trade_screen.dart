@@ -388,6 +388,20 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
                 fontWeight: FontWeight.w600,
               ),
             ),
+
+            const SizedBox(height: 4),
+            Text(
+              l10n.price_iqd_per_gram(
+                CommonService.roundingformatIQDForDisplay(price),
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             const SizedBox(height: 2),
             Text(
               l10n.ounce_price_iqd(

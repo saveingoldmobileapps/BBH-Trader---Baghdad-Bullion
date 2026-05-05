@@ -62,6 +62,8 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
     final l10n = AppLocalizations.of(context)!;
     final esouqState = ref.watch(esouqProvider);
     final filterOptions = esouqState.filterOptions;
+    final isArabic =
+        Localizations.localeOf(context).languageCode == 'ar';
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.92,
@@ -155,6 +157,7 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                               spacing: 10,
                               runSpacing: 10,
                               children: filterOptions.map((item) {
+                                // CHANGED: Use weightFactorNum instead of weightFactor
                                 final uniqueValue =
                                     '${item.weightFactor ?? ''}_${item.weightCategory ?? ''}_${item.id ?? ''}';
                                 final label =
@@ -164,7 +167,7 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                                 return GestureDetector(
                                   onTap: () => setState(() {
                                     selectedUniqueWeight = uniqueValue;
-                                    selectedWeight = item.weightFactor;
+                                    selectedWeight = item.weightFactor?.toString();
                                     selectedWeightCategory = item.weightCategory;
                                   }),
                                   child: Container(
@@ -183,7 +186,8 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        label.isNotEmpty ? label : l10n.na,
+                                        // label.isNotEmpty ? label : l10n.na,
+                                       isArabic?item.productName!.ar.toString():item.productName!.en.toString(),
                                         style: TextStyle(
                                           color:
                                               isSelected ? Colors.black : Colors.white,

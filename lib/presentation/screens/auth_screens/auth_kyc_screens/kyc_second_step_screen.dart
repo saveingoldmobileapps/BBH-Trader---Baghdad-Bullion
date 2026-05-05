@@ -698,8 +698,8 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
           "supported_types": [
             "passport",
             "id_card",
-            // "driving_license",
-            // "credit_or_debit_card",
+            //"driving_license",
+            //"credit_or_debit_card",
           ],
           "allow_multi_language": "1",
           "fetch_enhanced_data": "1",

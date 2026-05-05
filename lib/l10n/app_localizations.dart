@@ -2621,7 +2621,7 @@ abstract class AppLocalizations {
   /// No description provided for @emiratesHill.
   ///
   /// In en, this message translates to:
-  /// **'Emirates Hill First'**
+  /// **'Residential Area'**
   String get emiratesHill;
 
   /// No description provided for @please_enter_area.
@@ -2639,13 +2639,13 @@ abstract class AppLocalizations {
   /// No description provided for @dubai_title.
   ///
   /// In en, this message translates to:
-  /// **'Dubai'**
+  /// **'Baghdad'**
   String get dubai_title;
 
   /// No description provided for @list_of_emirates.
   ///
   /// In en, this message translates to:
-  /// **'Please enter an emirate'**
+  /// **'Please enter City Name'**
   String get list_of_emirates;
 
   /// No description provided for @nominate_recipient.
@@ -2669,7 +2669,7 @@ abstract class AppLocalizations {
   /// No description provided for @nominee_id.
   ///
   /// In en, this message translates to:
-  /// **'Please upload the Emirates Id of Your Nominee'**
+  /// **'Please upload the National ID or Housing Card of your nominee'**
   String get nominee_id;
 
   /// No description provided for @branch_name.
@@ -2723,7 +2723,7 @@ abstract class AppLocalizations {
   /// No description provided for @emirate.
   ///
   /// In en, this message translates to:
-  /// **'Emirate'**
+  /// **'City Name'**
   String get emirate;
 
   /// No description provided for @nominateRecipient.

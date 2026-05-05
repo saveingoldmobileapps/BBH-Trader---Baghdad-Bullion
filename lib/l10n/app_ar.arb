@@ -498,15 +498,17 @@
 
   "enterHouseNo": "يرجى إدخال رقم المنزل",
   "enter_street_address":"يرجى إدخال عنوان الشارع",
-  "emiratesHill": "تلال الإمارات الأولى",
+  "emiratesHill": "المنطقة السكنية",
 "please_enter_area": "يرجى إدخال المنطقة",
 "will_notify_you": "سنقوم بإبلاغك عندما يتم تنفيذ طلبك",
-"dubai_title": "دبي",
-"list_of_emirates": "يرجى إدخال الإمارة",
+
+"dubai_title": "بغداد",
+
+"list_of_emirates": "يرجى إدخال اسم المدينة",
 "nominate_recipient": "تعيين المستلم",
 "nominee_name": "اسم المرشح",
 "upload_residency_esoq": "تحميل إثبات الإقامة",
-"nominee_id":"يرجى تحميل بطاقة هوية الإمارات للمُرشح الخاص بك",
+"nominee_id": "يرجى تحميل بطاقة الهوية الوطنية أو بطاقة السكن للمرشح",
 "branch_name": "اسم الفرع",
 "no_branch_available": "لا توجد فروع متاحة.",
   "no_collection_point_available": "لا يوجد نقطة استلام متاحة",
@@ -519,7 +521,7 @@
 
 
   "area": "المنطقة",
-  "emirate": "الإمارة",
+  "emirate": "اسم المدينة",
   "nominateRecipient": "تعيين مستلم",
   "deliveryCharges": "رسوم التوصيل",
   "toPay": "المبلغ المستحق",

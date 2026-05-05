@@ -1309,7 +1309,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get enterHouseNo => 'يرجى إدخال رقم المنزل';
 
   @override
-  String get emiratesHill => 'تلال الإمارات الأولى';
+  String get emiratesHill => 'المنطقة السكنية';
 
   @override
   String get please_enter_area => 'يرجى إدخال المنطقة';
@@ -1318,10 +1318,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get will_notify_you => 'سنقوم بإبلاغك عندما يتم تنفيذ طلبك';
 
   @override
-  String get dubai_title => 'دبي';
+  String get dubai_title => 'بغداد';
 
   @override
-  String get list_of_emirates => 'يرجى إدخال الإمارة';
+  String get list_of_emirates => 'يرجى إدخال اسم المدينة';
 
   @override
   String get nominate_recipient => 'تعيين المستلم';
@@ -1333,7 +1333,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get upload_residency_esoq => 'تحميل إثبات الإقامة';
 
   @override
-  String get nominee_id => 'يرجى تحميل بطاقة هوية الإمارات للمُرشح الخاص بك';
+  String get nominee_id =>
+      'يرجى تحميل بطاقة الهوية الوطنية أو بطاقة السكن للمرشح';
 
   @override
   String get branch_name => 'اسم الفرع';
@@ -1361,7 +1362,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get area => 'المنطقة';
 
   @override
-  String get emirate => 'الإمارة';
+  String get emirate => 'اسم المدينة';
 
   @override
   String get nominateRecipient => 'تعيين مستلم';

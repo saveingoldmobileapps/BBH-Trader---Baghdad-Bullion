@@ -94,7 +94,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
 
   String _formatIqd(String value) {
     final parsed = double.tryParse(value) ?? 0.0;
-    return CommonService.formatIQDForDisplay(parsed);
+    return CommonService.roundingFormatIqdCurrency(parsed);
   }
 
   static const double _marketPriceTol = 0.01;

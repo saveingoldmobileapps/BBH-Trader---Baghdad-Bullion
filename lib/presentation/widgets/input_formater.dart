@@ -56,3 +56,36 @@ class AmountInputFormatter extends TextInputFormatter {
     return newValue;
   }
 }
+class RoundedAmountInputFormatter extends TextInputFormatter {
+  final int maxDigits;
+
+  RoundedAmountInputFormatter({this.maxDigits = 6});
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String text = newValue.text;
+
+    // 1. keep digits only
+    text = text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // 2. limit length
+    if (text.length > maxDigits) {
+      text = text.substring(0, maxDigits);
+    }
+
+    if (text.isEmpty) {
+      return const TextEditingValue(text: '');
+    }
+
+    // ⚠️ IMPORTANT:
+    // Do NOT aggressively round while typing (this breaks input UX)
+
+    return TextEditingValue(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+}

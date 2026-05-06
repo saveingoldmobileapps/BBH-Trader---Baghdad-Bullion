@@ -1,7 +1,5 @@
-import 'package:baghdad_bullion_house/core/res_sizes/res.dart';
 import 'package:baghdad_bullion_house/core/theme/app_fonts.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/before_we_begin_screen.dart';
-import 'package:baghdad_bullion_house/presentation/screens/auth_screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatelessWidget {
@@ -10,7 +8,7 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F1E8),
+      backgroundColor: const Color(0xFFF6F0E2),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -28,7 +26,7 @@ class OnboardingScreen extends StatelessWidget {
                     // BAGHDAD BULLION HOUSE Header
                     _buildHeader(),
                     const SizedBox(height: 24),
-                    // Arabic text
+                    // Arabic texts
                     _buildArabicText(),
                     // const Divider(height: 40, thickness: 1.5,),
                     Center(
@@ -63,14 +61,14 @@ class OnboardingScreen extends StatelessWidget {
                     // Begin Onboarding Button
                     _buildOnboardingButton(context),
                     const SizedBox(height: 15),
-                    Center(
+                    const Center(
                       child: Text(
-                        "Tap to start, Approx 6 min",
-
+                        'Tap to start. Approx. 6 minutes.',
                         style: TextStyle(
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: Color(0xFF666666),
+                          height: 1.35,
                         ),
                       ),
                     ),
@@ -112,7 +110,7 @@ class OnboardingScreen extends StatelessWidget {
             fontWeight: FontWeight.w300, // Bold
             fontSize: 32,
             letterSpacing: 1.5,
-            color: const Color(0xFF1A1A1A),
+            color: Color(0xFF1A1A1A),
           ),
         ),
         Text(
@@ -140,7 +138,7 @@ class OnboardingScreen extends StatelessWidget {
 
   Widget _buildArabicText() {
     return const Text(
-      'دار بغداد لصياغة الذهب و القضة والسبائك الذهبية',
+      'دار بغداد لصياغة الذهب و الفضة والسبائك الذهبية',
       style: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w500,
@@ -392,7 +390,7 @@ class OnboardingScreen extends StatelessWidget {
           // );
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: Color(0xFF0D2B4B),
+          backgroundColor: const Color(0xFF16243C),
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(

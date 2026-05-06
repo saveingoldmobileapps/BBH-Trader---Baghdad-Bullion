@@ -29,7 +29,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
   bool isExpanded = false;
 
   String _formatIqd(num? value) {
-    return CommonService.formatIqdCurrency(value ?? 0);
+    return CommonService.roundingFormatIqdCurrency(value ?? 0);
   }
 
     Widget statusCard(String status) {
@@ -348,7 +348,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
     if (isAdminTransaction && item.credit != null && item.credit! > 0) {
       final l10n = AppLocalizations.of(context)!;
       final txLabel = getLocalizedTransactionType(context, item.transactionType);
-      final amount = CommonService.formatIqdCurrency(item.credit);
+      final amount = CommonService.roundingFormatIqdCurrency(item.credit);
       final currency = l10n.iqd_currency;
       return isRtl
           ? "$txLabel: $amount $currency تم إيداع المبلغ بواسطة المشرف"
@@ -356,8 +356,12 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
     }
 
     if (withdrawAmounts && (item.debit ?? 0) > 0) {
-      final amount = CommonService.formatIqdCurrency(item.debit);
+      final amount = CommonService.roundingFormatIqdCurrency(item.debit);
+     
 
+     //1:Making charges should be (making charge * quantity) * exchangebuy
+     //2:E-Souq please check 1kg not filtering and in 20 it comes 15 and 20
+     //
       return isRtl
           ? "سحب مبلغ :$amount ${AppLocalizations.of(context)!.iqd_currency} "
           : "${AppLocalizations.of(context)!.withdraw_requests}: ${AppLocalizations.of(context)!.iqd_currency} $amount";

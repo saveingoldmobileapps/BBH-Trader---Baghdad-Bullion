@@ -300,18 +300,18 @@ class _AlertItemCard extends ConsumerWidget {
               _row(
                 AppLocalizations.of(context)!.gram_current_price,
                 //"Current Price",
-                "${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIqdCurrency(currentPrice)}",
+                "${AppLocalizations.of(context)!.idq_currency} ${CommonService.roundingFormatIqdCurrency(currentPrice)}",
                 Colors.white,
               ),
               _row(
                 AppLocalizations.of(context)!.gram_target_price,
                 //"Target Price",
-                "${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIqdCurrency(targetPrice)}",
+                "${AppLocalizations.of(context)!.idq_currency} ${CommonService.roundingFormatIqdCurrency(targetPrice)}",
                 const Color(0xFFC5A358),
               ),
               _row(
                 AppLocalizations.of(context)!.active_difference,
-                "${difference >= 0 ? '+' : ''}${AppLocalizations.of(context)!.idq_currency} ${CommonService.formatIqdCurrency(difference)}",
+                "${difference >= 0 ? '+' : ''}${AppLocalizations.of(context)!.idq_currency} ${CommonService.roundingFormatIqdCurrency(difference)}",
                 diffColor,
               ),
               const Divider(color: Colors.white10, height: 24),

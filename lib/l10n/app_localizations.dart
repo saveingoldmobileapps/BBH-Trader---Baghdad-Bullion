@@ -170,6 +170,12 @@ abstract class AppLocalizations {
   /// **'Login'**
   String get login_to_bbh;
 
+  /// No description provided for @bank_client_onboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Al-Taif bank onboarding'**
+  String get bank_client_onboarding;
+
   /// No description provided for @exiting_to_bbh.
   ///
   /// In en, this message translates to:

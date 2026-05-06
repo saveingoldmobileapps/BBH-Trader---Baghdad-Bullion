@@ -47,6 +47,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login_to_bbh => 'Login';
 
   @override
+  String get bank_client_onboarding => 'Al-Taif bank onboarding';
+
+  @override
   String get exiting_to_bbh => 'I\'m an existing user';
 
   @override

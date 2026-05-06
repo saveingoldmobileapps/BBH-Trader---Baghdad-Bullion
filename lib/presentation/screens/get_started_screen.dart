@@ -1,5 +1,4 @@
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/on_board_screen.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -42,9 +41,6 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
     //final languageState = ref.watch(languageProvider);
     final languageNotifier = ref.read(languageProvider.notifier);
 
-    /// Determine the direction of the arrow based on the current locale
-    bool isRtl = languageNotifier.isRtl();
-
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (bool didPop, Object? result) {
@@ -54,7 +50,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
         } else {
           // Show a confirmation dialog before allowing the pop
           showDialog(
-            context: result as BuildContext,
+            context: context,
             builder: (context) => AlertDialog(
               title: Text('Confirm Exit'),
               content: Text('Are you sure you want to exit?'),
@@ -109,7 +105,8 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                         ),
                         const SizedBox(width: 6),
                         Switch.adaptive(
-                          activeColor: AppColors.primaryGold500,
+                          activeThumbColor: AppColors.primaryGold500,
+                          activeTrackColor: AppColors.primaryGold500.withValues(alpha: 0.35),
                           value: !isEnglish,
                           onChanged: (_) {
                             languageNotifier.toggleLanguage(context);
@@ -150,7 +147,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
 
                   /// Title
                   Text(
-                    "${AppLocalizations.of(context)!.your_gold}",//"Your Gold\nYour Wealth.",
+                    AppLocalizations.of(context)!.your_gold, //"Your Gold\nYour Wealth.",
                     textAlign: Directionality.of(context) == TextDirection.rtl?TextAlign.right:TextAlign.left,
                     style: GoogleFonts.roboto(
                       fontSize: 40,
@@ -202,7 +199,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                         ),
                         child: Center(
                           child: Text(
-                            "${AppLocalizations.of(context)!.sign_up_bbh}",//"I'm new to B&H",
+                            AppLocalizations.of(context)!.sign_up_bbh, //"I'm new to B&H",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
@@ -238,7 +235,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                         );
                       },
                       child: Text(
-                       "${AppLocalizations.of(context)!.login_to_bbh}",// "I'm an existing user",
+                        AppLocalizations.of(context)!.login_to_bbh, // "I'm an existing user",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -249,10 +246,10 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                   ),
 
                   const Spacer(),
-                   SizedBox(
+                  SizedBox(
                     width: double.infinity,
                     height: 54,
-                    child: OutlinedButton(
+                    child: OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(
                           color: Color(0xff74540E),
@@ -269,8 +266,13 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                           ),
                         );
                       },
-                      child: Text("Bank",
-                       //"${AppLocalizations.of(context)!.login_to_bbh}",// "I'm an existing user",
+                      icon: const Icon(
+                        Icons.account_balance_rounded,
+                        color: AppColors.whiteColor,
+                        size: 22,
+                      ),
+                      label: Text(
+                        AppLocalizations.of(context)!.bank_client_onboarding,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,

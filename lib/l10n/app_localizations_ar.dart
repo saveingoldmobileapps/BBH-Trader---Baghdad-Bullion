@@ -46,6 +46,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get login_to_bbh => 'تسجيل الدخول';
 
   @override
+  String get bank_client_onboarding => 'انضمام بنك الطيف';
+
+  @override
   String get exiting_to_bbh => 'أنا مستخدم حالي';
 
   @override

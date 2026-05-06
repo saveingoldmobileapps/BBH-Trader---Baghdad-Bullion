@@ -122,18 +122,72 @@ class CommonService {
     return NumberFormat("#,##0", useArabic ? "ar_IQ" : "en_US").format(rounded);
   }
 
-  static String roundingFormatIqdCurrency(num? value, {bool useArabic = false}) {
+//   static String roundingFormatIqdCurrency(num? value, {bool useArabic = false}) {
+//   final val = (value ?? 0).round();
+
+//   final lastTwoDigits = val % 100;
+//   final base = val - lastTwoDigits;
+
+//   final rounded = lastTwoDigits >= 50
+//       ? base + 100
+//       : base;
+
+//   return NumberFormat("#,##0", useArabic ? "ar_IQ" : "en_US")
+//       .format(rounded);
+// }
+static String roundingFormatIqdCurrency(
+  num? value, {
+  bool useArabic = false,
+}) {
   final val = (value ?? 0).round();
 
-  final lastTwoDigits = val % 100;
-  final base = val - lastTwoDigits;
+  int rounded;
 
-  final rounded = lastTwoDigits >= 50
-      ? base + 100
-      : base;
+  // 🔹 Handle small values (less than 100)
+  // if (val < 100) {
+  //   final tens = (val / 10).floor() * 10;
+  //   final remainder = val % 10;
 
-  return NumberFormat("#,##0", useArabic ? "ar_IQ" : "en_US")
-      .format(rounded);
+  //   if (remainder < 5) {
+  //     rounded = tens;
+  //   } else {
+  //     rounded = tens + 10;
+  //   }
+
+  //   // Special rule: force 45–49 → 50
+  //   if (val >= 45 && val < 50) {
+  //     rounded = 50;
+  //   }
+
+  //   // Special rule: 40–44 stays 40
+  //   if (val >= 40 && val < 45) {
+  //     rounded = 40;
+  //   }
+  // }
+  if (val < 100) {
+  final tens = (val ~/ 10) * 10;
+  final remainder = val % 10;
+
+  rounded = remainder < 5 ? tens : tens + 10;
+}
+
+  // 🔹 Handle 100+
+  else {
+    final remainder = val % 100;
+
+    if (val >= 150) {
+      // force jump rule
+      rounded = ((val / 100).ceil()) * 100;
+    } else {
+      // normal 100 rounding
+      rounded = val - remainder;
+    }
+  }
+
+  return NumberFormat(
+    "#,##0",
+    useArabic ? "ar_IQ" : "en_US",
+  ).format(rounded);
 }
 
   /// Same as [formatIqdCurrency]; kept for existing call sites.

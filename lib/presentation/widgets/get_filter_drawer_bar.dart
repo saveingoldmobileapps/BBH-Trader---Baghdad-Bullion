@@ -42,6 +42,30 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
   String selectedBarType = _allmintedAndCast;
   bool _filtersLoaded = false;
 
+  String? _normalizeWeightForApi({
+    required String? weight,
+    required String? category,
+  }) {
+    if (weight == null || weight.trim().isEmpty) return weight;
+    if (category == null || category.trim().isEmpty) return weight.trim();
+
+    final c = category.trim().toLowerCase();
+    final w = double.tryParse(weight.trim());
+    if (w == null) return weight.trim();
+
+    // API expects: when category is KG, send the value in KG (e.g. 1), not grams (1000)
+    if (c == 'kg' || c == 'kgs' || c.contains('kg')) {
+      final kg = w / 1000.0;
+      if (kg.isNaN || kg.isInfinite) return weight.trim();
+      final asInt = kg.round();
+      if ((kg - asInt).abs() < 1e-9) return asInt.toString();
+      final s = kg.toStringAsFixed(3);
+      return s.replaceFirst(RegExp(r'\.?0+$'), '');
+    }
+
+    return weight.trim();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -160,9 +184,6 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                                 // CHANGED: Use weightFactorNum instead of weightFactor
                                 final uniqueValue =
                                     '${item.weightFactor ?? ''}_${item.weightCategory ?? ''}_${item.id ?? ''}';
-                                final label =
-                                    '${item.weightFactor ?? ''} ${item.weightCategory ?? ''}'
-                                        .trim();
                                 final isSelected = selectedUniqueWeight == uniqueValue;
                                 return GestureDetector(
                                   onTap: () => setState(() {
@@ -268,8 +289,12 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                 final String? shapeSubType =
                     shapeType == _mintingShapeType ? selectedShapeSubType : null;
 
+                final normalizedWeight = _normalizeWeightForApi(
+                  weight: selectedWeight,
+                  category: selectedWeightCategory,
+                );
                 widget.onApplyFilter(
-                  selectedWeight,
+                  normalizedWeight,
                   selectedWeightCategory,
                   shapeType,
                   shapeSubType,

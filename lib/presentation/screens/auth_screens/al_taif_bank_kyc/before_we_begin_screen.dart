@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../auth_kyc_screens/kyc_second_step_screen.dart';
+
 /// Al-Taif / BBH bank client onboarding — steps 1–12 (matches BBH digital pack prototype).
 class BBHOnboardingScreen extends StatefulWidget {
   const BBHOnboardingScreen({super.key});
@@ -348,8 +350,9 @@ class _BBHOnboardingScreenState extends State<BBHOnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Steps 1–12 completed. Ready for document capture.')),
+      // After step 12, continue directly into identity verification (ShuftiPro flow).
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const KycSecondStepScreen()),
       );
     }
   }

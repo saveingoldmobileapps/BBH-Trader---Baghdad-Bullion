@@ -396,7 +396,7 @@ class _BankDetailsScreenState extends ConsumerState<BankDetailsScreen> {
 
                         /// launch whatsapp
                         await CommonService.openWhatsappUrl(
-                          phoneNumber: "+97524378778",
+                          phoneNumber: "+9647871111112",
                           message: message,
                         );
                       },

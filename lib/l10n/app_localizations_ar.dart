@@ -1249,6 +1249,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get totalCharges => 'إجمالي الرسوم';
 
   @override
+  String get outside_iraq => ' (خارج جمهورية العراق)';
+
+  @override
   String get grandTotal => 'الإجمالي الكلي';
 
   @override

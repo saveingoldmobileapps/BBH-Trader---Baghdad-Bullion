@@ -121,6 +121,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
     final goldPriceState = ref.watch(goldPriceProvider);
     final oneGramBuyingPriceInIQD =
         goldPriceState.value?.oneGramBuyingPriceInIQD ?? 0.0;
+    final exchangeBuyRate = goldPriceState.value?.exchangeBuyRate ?? 0.0;
     setState(() {
       final quantity =
           double.tryParse(goldQuantityController.text.trim()) ?? 1.0;
@@ -139,26 +140,36 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
       final fixPricingT4b = oneGramBuyingPriceInIQD;
 
       finalGoldPrice = weightFactor * fixPricingT4b * quantity;
-      final totalMakingCharges = makingChargesValue * quantity;
-      final totalVatTax = totalMakingCharges * 0.05;
+      final effectiveExchangeBuy = exchangeBuyRate > 0 ? exchangeBuyRate : 1.0;
+      final totalMakingCharges =
+          (makingChargesValue * quantity) * effectiveExchangeBuy;
+      // final totalVatTax = totalMakingCharges * 0.05;
 
       totalGrandGoldPayableCharges =
           finalGoldPrice +
           totalMakingCharges +
-          totalVatTax +
-          (premiumDiscount * quantity) +
+          //totalVatTax +
+          (goldPremium) +
           deliveryChargesValue;
       totalChargeBeforeGoldPrice =
           totalMakingCharges +
-          totalVatTax +
-          (premiumDiscount * quantity) +
+          //totalVatTax +
+          goldPremium +
           deliveryChargesValue;
 
-      goldPremium = premiumDiscount * quantity;
+      goldPremium = (premiumDiscount* quantity) * effectiveExchangeBuy;
       makingCharges = totalMakingCharges;
       deliveryCharges = deliveryChargesValue;
-      valueAtTax = totalVatTax;
+      //valueAtTax = totalVatTax;
       gramBalanceEqual = weightFactor * quantity;
+
+      debugPrint(
+        "[eSouq-1 calc] qty=$quantity weightFactor=$weightFactor "
+        "oneGramBuyIQD=$oneGramBuyingPriceInIQD exchangeBuy=$effectiveExchangeBuy "
+        "makingChargeRaw=$makingChargesValue makingChargeTotal=$totalMakingCharges "
+       // "vat(5%)=$totalVatTax premiumTotal=${goldPremium} delivery=$deliveryChargesValue "
+        "goldPriceTotal=$finalGoldPrice totalCharges=$totalChargeBeforeGoldPrice grandTotal=$totalGrandGoldPayableCharges",
+      );
     });
   }
 
@@ -353,7 +364,7 @@ class _EsouqCartScreenState extends ConsumerState<EsouqCartScreen> {
                                   const SizedBox(height: 20),
                                   _buildChargeRow(l10n.premium, goldPremium),
                                   _buildChargeRow(l10n.making, makingCharges),
-                                  _buildChargeRow(l10n.vat, valueAtTax),
+                                  //_buildChargeRow(l10n.vat, valueAtTax),
                                   _buildChargeRow(l10n.delivery, deliveryCharges),
                                   const Divider(
                                     color: Colors.white10,

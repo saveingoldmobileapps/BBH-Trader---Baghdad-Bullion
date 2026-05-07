@@ -35,6 +35,12 @@ class SSEGoldPriceState {
   final double lastLowSellingPrice;
   final double lastHighBuyingPrice;
 
+  /// USD→IQD exchange rates coming from SSE payload
+  /// - `exchangeBuyRate`: used for converting costs into IQD at buy rate
+  /// - `exchangeSellRate`: used for converting at sell rate
+  final double exchangeBuyRate;
+  final double exchangeSellRate;
+
   final double oneGramBuyingPriceInIQD;
   final double oneGramSellingPriceInIQD;
 
@@ -56,6 +62,8 @@ class SSEGoldPriceState {
     this.oneOunceDollarBuyingPrice = 0.0,
     this.lastLowSellingPrice = 0.0,
     this.lastHighBuyingPrice = 0.0,
+    this.exchangeBuyRate = 0.0,
+    this.exchangeSellRate = 0.0,
     this.loadingState = LoadingState.loading,
     this.isLoading = false,
   }) : currentGoldPriceModel = currentGoldPriceModel ?? CurrentGoldPriceModel(),
@@ -320,6 +328,9 @@ Future<void> _startSSE({
               final state = SSEGoldPriceState(
                 oneOunceDollarSellingPrice: sellingPx,
                 oneOunceDollarBuyingPrice: buyingPx,
+
+                exchangeBuyRate: buyingExchangeRate,
+                exchangeSellRate: sellingExchangeRate,
 
                 oneGramSellingPriceInIQD: oneGramSellIqd,
 

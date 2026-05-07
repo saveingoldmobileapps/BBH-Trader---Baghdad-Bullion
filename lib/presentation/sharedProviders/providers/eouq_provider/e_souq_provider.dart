@@ -1,7 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:baghdad_bullion_house/core/common_service.dart';
 import 'package:baghdad_bullion_house/core/enums/loading_state.dart';
 import 'package:baghdad_bullion_house/core/sound_services.dart';
@@ -10,6 +6,10 @@ import 'package:baghdad_bullion_house/core/theme/const_toasts.dart';
 import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
 import 'package:baghdad_bullion_house/data/models/esouq_model/GetAllOrdersResponse.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../data/data_sources/local_database/local_database.dart';
@@ -260,216 +260,224 @@ class Esouq extends _$Esouq {
       state = state.copyWith(isLoading: false);
     }
   }
-Future<void> fetchEsouqFilterOptions({
-  String? subtype,
-  String? shapeSubType,
-}) async {
-  try {
-    final refreshToken = await SecureStorageService.instance.getRefreshToken();
-    if (refreshToken == null) {
-      state = state.copyWith(isFilterLoading: false, filterOptions: const []);
-      return;
-    }
 
-    state = state.copyWith(isFilterLoading: true);
+  Future<void> fetchEsouqFilterOptions({
+    String? subtype,
+    String? shapeSubType,
+  }) async {
+    try {
+      final refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
+      if (refreshToken == null) {
+        state = state.copyWith(isFilterLoading: false, filterOptions: const []);
+        return;
+      }
 
-    final headers = {
-      "Content-Type": "application/json",
-      "authorization": "Bearer $refreshToken",
-    };
+      state = state.copyWith(isFilterLoading: true);
 
-    final Map<String, dynamic> queryParameters = {};
+      final headers = {
+        "Content-Type": "application/json",
+        "authorization": "Bearer $refreshToken",
+      };
 
-    // Only add subtype to query parameters if it's provided
-    if (subtype != null && subtype.trim().isNotEmpty) {
-      queryParameters['subtype'] = subtype.trim();
-    }
+      final Map<String, dynamic> queryParameters = {};
 
-    // Add shapeSubType only for minting subtype
-    if (subtype == 'minting' && shapeSubType != null && shapeSubType.trim().isNotEmpty) {
-      queryParameters['shapesubtype'] = shapeSubType.trim();
-    }
+      // Only add subtype to query parameters if it's provided
+      if (subtype != null && subtype.trim().isNotEmpty) {
+        queryParameters['subtype'] = subtype.trim();
+      }
 
-    final serverResponse = await DioNetworkManager().callAPI(
-      url: ApiEndpoints.getEsouqFiltersApiUrl,
-      parameters: queryParameters,
-      headers: headers,
-      httpMethod: HttpMethod.get,
-    );
+      // Add shapeSubType only for minting subtype
+      if (subtype == 'minting' &&
+          shapeSubType != null &&
+          shapeSubType.trim().isNotEmpty) {
+        queryParameters['shapesubtype'] = shapeSubType.trim();
+      }
 
-    switch (serverResponse.responseType) {
-      case ServerResponseType.success:
-        final filter.EsouqFilterModel response =
-            filter.EsouqFilterModel.fromJson(serverResponse.resultData);
-        
-        List<filter.AllProducts> filteredProducts = [];
-        
-        if (response.payload?.allProducts != null) {
-          final allProducts = response.payload!.allProducts!;
-          
-          // If subtype is null or empty, return ALL products
-          if (subtype == null || subtype.trim().isEmpty) {
-            filteredProducts = allProducts;
-          } 
-          // Filter for casting products only
-          else if (subtype.toLowerCase() == 'casting') {
-            filteredProducts = allProducts.where((product) {
-              return product.shapeType?.toLowerCase() == 'casting';
-            }).toList();
-          } 
-          // Filter for minting products only
-          else if (subtype.toLowerCase() == 'minting') {
-            filteredProducts = allProducts.where((product) {
-              return product.shapeType?.toLowerCase() == 'minting';
-            }).toList();
-            
-            // Further filter by shapeSubType if provided (Bar or Coin)
-            if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
-              filteredProducts = filteredProducts
-                  .where((product) => 
-                      product.shapeSubType?.toLowerCase() == shapeSubType.toLowerCase())
-                  .toList();
+      final serverResponse = await DioNetworkManager().callAPI(
+        url: ApiEndpoints.getEsouqFiltersApiUrl,
+        parameters: queryParameters,
+        headers: headers,
+        httpMethod: HttpMethod.get,
+      );
+
+      switch (serverResponse.responseType) {
+        case ServerResponseType.success:
+          final filter.EsouqFilterModel response =
+              filter.EsouqFilterModel.fromJson(serverResponse.resultData);
+
+          List<filter.AllProducts> filteredProducts = [];
+
+          if (response.payload?.allProducts != null) {
+            final allProducts = response.payload!.allProducts!;
+
+            // If subtype is null or empty, return ALL products
+            if (subtype == null || subtype.trim().isEmpty) {
+              filteredProducts = allProducts;
+            }
+            // Filter for casting products only
+            else if (subtype.toLowerCase() == 'casting') {
+              filteredProducts = allProducts.where((product) {
+                return product.shapeType?.toLowerCase() == 'casting';
+              }).toList();
+            }
+            // Filter for minting products only
+            else if (subtype.toLowerCase() == 'minting') {
+              filteredProducts = allProducts.where((product) {
+                return product.shapeType?.toLowerCase() == 'minting';
+              }).toList();
+
+              // Further filter by shapeSubType if provided (Bar or Coin)
+              if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+                filteredProducts = filteredProducts
+                    .where(
+                      (product) =>
+                          product.shapeSubType?.toLowerCase() ==
+                          shapeSubType.toLowerCase(),
+                    )
+                    .toList();
+              }
             }
           }
-        }
-        
-        // Remove duplicates based on weightFactor
-        final uniqueProducts = <String, filter.AllProducts>{};
-        for (var product in filteredProducts) {
-          if (product.weightFactor != null && !uniqueProducts.containsKey(product.weightFactor)) {
-            uniqueProducts[product.weightFactor!] = product;
+
+          // Remove duplicates based on weightFactor
+          final uniqueProducts = <String, filter.AllProducts>{};
+          for (var product in filteredProducts) {
+            if (product.weightFactor != null &&
+                !uniqueProducts.containsKey(product.weightFactor)) {
+              uniqueProducts[product.weightFactor!] = product;
+            }
           }
-        }
-        
-        state = state.copyWith(
-          filterOptions: uniqueProducts.values.toList(),
-          isFilterLoading: false,
-        );
-        break;
-        
-      case ServerResponseType.error:
-      case ServerResponseType.exception:
-        state = state.copyWith(
-          isFilterLoading: false,
-          filterOptions: const [],
-        );
-        break;
+
+          state = state.copyWith(
+            filterOptions: uniqueProducts.values.toList(),
+            isFilterLoading: false,
+          );
+          break;
+
+        case ServerResponseType.error:
+        case ServerResponseType.exception:
+          state = state.copyWith(
+            isFilterLoading: false,
+            filterOptions: const [],
+          );
+          break;
+      }
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      state = state.copyWith(
+        isFilterLoading: false,
+        filterOptions: const [],
+      );
     }
-  } catch (e, stackTrace) {
-    await Sentry.captureException(e, stackTrace: stackTrace);
-    state = state.copyWith(
-      isFilterLoading: false,
-      filterOptions: const [],
-    );
   }
-}
-// Future<void> fetchEsouqFilterOptions({
-//   String? subtype,
-//   String? shapeSubType,
-// }) async {
-//   try {
-//     final refreshToken = await SecureStorageService.instance.getRefreshToken();
-//     if (refreshToken == null) {
-//       state = state.copyWith(isFilterLoading: false, filterOptions: const []);
-//       return;
-//     }
+  // Future<void> fetchEsouqFilterOptions({
+  //   String? subtype,
+  //   String? shapeSubType,
+  // }) async {
+  //   try {
+  //     final refreshToken = await SecureStorageService.instance.getRefreshToken();
+  //     if (refreshToken == null) {
+  //       state = state.copyWith(isFilterLoading: false, filterOptions: const []);
+  //       return;
+  //     }
 
-//     state = state.copyWith(isFilterLoading: true);
+  //     state = state.copyWith(isFilterLoading: true);
 
-//     final headers = {
-//       "Content-Type": "application/json",
-//       "authorization": "Bearer $refreshToken",
-//     };
+  //     final headers = {
+  //       "Content-Type": "application/json",
+  //       "authorization": "Bearer $refreshToken",
+  //     };
 
-//     final Map<String, dynamic> queryParameters = {};
+  //     final Map<String, dynamic> queryParameters = {};
 
-//     // Only add subtype to query parameters if it's provided
-//     if (subtype != null && subtype.trim().isNotEmpty) {
-//       queryParameters['subtype'] = subtype.trim();
-//     }
+  //     // Only add subtype to query parameters if it's provided
+  //     if (subtype != null && subtype.trim().isNotEmpty) {
+  //       queryParameters['subtype'] = subtype.trim();
+  //     }
 
-//     // Add shapeSubType only for minting subtype
-//     if (subtype == 'minting' && shapeSubType != null && shapeSubType.trim().isNotEmpty) {
-//       queryParameters['shapesubtype'] = shapeSubType.trim();
-//     }
+  //     // Add shapeSubType only for minting subtype
+  //     if (subtype == 'minting' && shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+  //       queryParameters['shapesubtype'] = shapeSubType.trim();
+  //     }
 
-//     final serverResponse = await DioNetworkManager().callAPI(
-//       url: ApiEndpoints.getEsouqFiltersApiUrl,
-//       parameters: queryParameters,
-//       headers: headers,
-//       httpMethod: HttpMethod.get,
-//     );
+  //     final serverResponse = await DioNetworkManager().callAPI(
+  //       url: ApiEndpoints.getEsouqFiltersApiUrl,
+  //       parameters: queryParameters,
+  //       headers: headers,
+  //       httpMethod: HttpMethod.get,
+  //     );
 
-//     switch (serverResponse.responseType) {
-//       case ServerResponseType.success:
-//         final filter.EsouqFilterModel response =
-//             filter.EsouqFilterModel.fromJson(serverResponse.resultData);
-        
-//         List<filter.AllProducts> filteredProducts = [];
-        
-//         if (response.payload?.allProducts != null) {
-//           final allProducts = response.payload!.allProducts!;
-          
-//           // If subtype is null or empty, return all products (including those without shapeType)
-//           if (subtype == null || subtype.trim().isEmpty) {
-//             filteredProducts = allProducts;
-//           } 
-//           // Filter for casting products
-//           else if (subtype.toLowerCase() == 'casting') {
-//             filteredProducts = allProducts.where((product) {
-//               // Include products that have shapeType == 'Casting'
-//               // Also include products without shapeType? Based on your requirements
-//               return product.shapeType?.toLowerCase() == 'casting';
-//             }).toList();
-//           } 
-//           // Filter for minting products
-//           else if (subtype.toLowerCase() == 'minting') {
-//             filteredProducts = allProducts.where((product) {
-//               // Include products that have shapeType == 'Minting'
-//               return product.shapeType?.toLowerCase() == 'minting';
-//             }).toList();
-            
-//             // Further filter by shapeSubType if provided
-//             if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
-//               filteredProducts = filteredProducts
-//                   .where((product) => 
-//                       product.shapeSubType?.toLowerCase() == shapeSubType.toLowerCase())
-//                   .toList();
-//             }
-//           }
-//         }
-        
-//         // Remove duplicates based on weightFactor
-//         final uniqueProducts = <String, filter.AllProducts>{};
-//         for (var product in filteredProducts) {
-//           if (product.weightFactor != null && !uniqueProducts.containsKey(product.weightFactor)) {
-//             uniqueProducts[product.weightFactor!] = product;
-//           }
-//         }
-        
-//         state = state.copyWith(
-//           filterOptions: uniqueProducts.values.toList(),
-//           isFilterLoading: false,
-//         );
-//         break;
-        
-//       case ServerResponseType.error:
-//       case ServerResponseType.exception:
-//         state = state.copyWith(
-//           isFilterLoading: false,
-//           filterOptions: const [],
-//         );
-//         break;
-//     }
-//   } catch (e, stackTrace) {
-//     await Sentry.captureException(e, stackTrace: stackTrace);
-//     state = state.copyWith(
-//       isFilterLoading: false,
-//       filterOptions: const [],
-//     );
-//   }
-// }
-  
+  //     switch (serverResponse.responseType) {
+  //       case ServerResponseType.success:
+  //         final filter.EsouqFilterModel response =
+  //             filter.EsouqFilterModel.fromJson(serverResponse.resultData);
+
+  //         List<filter.AllProducts> filteredProducts = [];
+
+  //         if (response.payload?.allProducts != null) {
+  //           final allProducts = response.payload!.allProducts!;
+
+  //           // If subtype is null or empty, return all products (including those without shapeType)
+  //           if (subtype == null || subtype.trim().isEmpty) {
+  //             filteredProducts = allProducts;
+  //           }
+  //           // Filter for casting products
+  //           else if (subtype.toLowerCase() == 'casting') {
+  //             filteredProducts = allProducts.where((product) {
+  //               // Include products that have shapeType == 'Casting'
+  //               // Also include products without shapeType? Based on your requirements
+  //               return product.shapeType?.toLowerCase() == 'casting';
+  //             }).toList();
+  //           }
+  //           // Filter for minting products
+  //           else if (subtype.toLowerCase() == 'minting') {
+  //             filteredProducts = allProducts.where((product) {
+  //               // Include products that have shapeType == 'Minting'
+  //               return product.shapeType?.toLowerCase() == 'minting';
+  //             }).toList();
+
+  //             // Further filter by shapeSubType if provided
+  //             if (shapeSubType != null && shapeSubType.trim().isNotEmpty) {
+  //               filteredProducts = filteredProducts
+  //                   .where((product) =>
+  //                       product.shapeSubType?.toLowerCase() == shapeSubType.toLowerCase())
+  //                   .toList();
+  //             }
+  //           }
+  //         }
+
+  //         // Remove duplicates based on weightFactor
+  //         final uniqueProducts = <String, filter.AllProducts>{};
+  //         for (var product in filteredProducts) {
+  //           if (product.weightFactor != null && !uniqueProducts.containsKey(product.weightFactor)) {
+  //             uniqueProducts[product.weightFactor!] = product;
+  //           }
+  //         }
+
+  //         state = state.copyWith(
+  //           filterOptions: uniqueProducts.values.toList(),
+  //           isFilterLoading: false,
+  //         );
+  //         break;
+
+  //       case ServerResponseType.error:
+  //       case ServerResponseType.exception:
+  //         state = state.copyWith(
+  //           isFilterLoading: false,
+  //           filterOptions: const [],
+  //         );
+  //         break;
+  //     }
+  //   } catch (e, stackTrace) {
+  //     await Sentry.captureException(e, stackTrace: stackTrace);
+  //     state = state.copyWith(
+  //       isFilterLoading: false,
+  //       filterOptions: const [],
+  //     );
+  //   }
+  // }
+
   // Future<void> fetchEsouqFilterOptions({
   //   required String subtype,
   //   String? shapeSubType,
@@ -1022,10 +1030,12 @@ Future<void> fetchEsouqFilterOptions({
             localeName,
           ).format(DateTime.now());
 
-          final String localizedName =
-              product.localizedProductName(CommonService.lang).trim();
-          final String productName =
-              localizedName.isNotEmpty ? localizedName : l10n.gold;
+          final String localizedName = product
+              .localizedProductName(CommonService.lang)
+              .trim();
+          final String productName = localizedName.isNotEmpty
+              ? localizedName
+              : l10n.gold;
 
           final String productInfo = "$goldQuantity × $productName";
 

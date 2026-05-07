@@ -781,89 +781,67 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       );
       return;
     }
+    final rawPrice = num.tryParse(buyAtPriceController.text.trim()) ?? 0;
+
+final roundedPrice = num.parse(
+  CommonService.roundingFormatIqdCurrency(rawPrice, useArabic: false)
+      .replaceAll(',', ''),
+);
+await showConfirmTradeDialog(
+  context: context,
+  isLimitOrder: isBuyAtPriceStatus,
+  amountGrams: userInputController.text.trim(),
+  targetPrice: isBuyAtPriceStatus
+      ? _formatIqd(roundedPrice.toString()) // ✅ use rounded
+      : CommonService.formatIQDForDisplay(buyingPriceInOneGram),
+  totalCost: _formatIqd(calculatedValue),
+  showCountdownTimer: !isBuyAtPriceStatus,
+  limitBuyPricePerGram: isBuyAtPriceStatus
+      ? roundedPrice.toDouble() // ✅ use rounded
+      : null,
+  onConfirm: () async {
+    await ref.read(tradeProvider.notifier).userCanBuyGold(
+      context: context,
+      tradeMoney: num.tryParse(calculatedValue) ?? 0,
+      tradeMetal: num.tryParse(userInputController.text.trim()) ?? 0,
+      buyAtPriceStatus: isBuyAtPriceStatus,
+      buyAtPrice: isBuyAtPriceStatus
+          ? roundedPrice // ✅ use rounded here
+          : null,
+      buyingPrice: buyingPriceInOneGram,
+    );
+  },
+);
 
     // Open Confirmation Dialog
-    await showConfirmTradeDialog(
-      context: context,
-      isLimitOrder: isBuyAtPriceStatus,
-      amountGrams: userInputController.text.trim(),
-      targetPrice: isBuyAtPriceStatus
-          ? _formatIqd(buyAtPriceController.text)
-          : CommonService.formatIQDForDisplay(buyingPriceInOneGram),
-      totalCost: _formatIqd(calculatedValue),
-      showCountdownTimer: !isBuyAtPriceStatus,
-      limitBuyPricePerGram: isBuyAtPriceStatus
-          ? double.tryParse(buyAtPriceController.text.trim())
-          : null,
-      onConfirm: () async {
-        await ref
-            .read(tradeProvider.notifier)
-            .userCanBuyGold(
-              context: context,
-              tradeMoney: num.tryParse(calculatedValue) ?? 0,
-              tradeMetal: num.tryParse(userInputController.text.trim()) ?? 0,
-              buyAtPriceStatus: isBuyAtPriceStatus,
-              buyAtPrice: isBuyAtPriceStatus
-                  ? num.tryParse(buyAtPriceController.text)
-                  : null,
-              buyingPrice: buyingPriceInOneGram,
-            );
-      },
-    );
-
-    // await genericPopUpLivePriceWidget(
-    //   autoCloseAfterSeconds: 5,
+    // await showConfirmTradeDialog(
     //   context: context,
-    //   heading: AppLocalizations.of(context)!.confirmation,
-    //   subtitle: isBuyAtPriceStatus
-    //       ? AppLocalizations.of(context)!.place_order_confirm
-    //       : AppLocalizations.of(
-    //           context,
-    //         )!.invest_confirmation_message(userInputController.text.trim()),
-    //   noButtonTitle: AppLocalizations.of(context)!.cancel,
-    //   yesButtonTitle: isBuyAtPriceStatus
-    //       ? AppLocalizations.of(context)!.place_order
-    //       : AppLocalizations.of(context)!.confirm_purchase,
-    //   isLoadingState: tradeStateWatchProvider.isButtonState,
-    //   onNoPress: () => Navigator.pop(context),
-    //   onYesPress: () async {
-    //     Navigator.pop(context);
+    //   isLimitOrder: isBuyAtPriceStatus,
+    //   amountGrams: userInputController.text.trim(),
+    //   targetPrice: isBuyAtPriceStatus
+    //       ? _formatIqd(buyAtPriceController.text)
+    //       : CommonService.formatIQDForDisplay(buyingPriceInOneGram),
+    //   totalCost: _formatIqd(calculatedValue),
+    //   showCountdownTimer: !isBuyAtPriceStatus,
+    //   limitBuyPricePerGram: isBuyAtPriceStatus
+    //       ? double.tryParse(buyAtPriceController.text.trim())
+    //       : null,
+    //   onConfirm: () async {
     //     await ref
     //         .read(tradeProvider.notifier)
     //         .userCanBuyGold(
     //           context: context,
-    //           tradeMoney: num.tryParse(calculatedValue) ?? 0.0,
-    //           tradeMetal: num.tryParse(userInputController.text.trim()) ?? 0.0,
+    //           tradeMoney: num.tryParse(calculatedValue) ?? 0,
+    //           tradeMetal: num.tryParse(userInputController.text.trim()) ?? 0,
     //           buyAtPriceStatus: isBuyAtPriceStatus,
     //           buyAtPrice: isBuyAtPriceStatus
-    //               ? num.tryParse(buyAtPriceController.text.trim())
+    //               ? num.tryParse(buyAtPriceController.text)
     //               : null,
     //           buyingPrice: buyingPriceInOneGram,
     //         );
-    //     userInputController.clear();
-    //     buyAtPriceController.clear();
-    //     setState(() {
-    //       calculatedValue = '0.00';
-    //       isBuyAtPriceStatus = false;
-    //     });
     //   },
-    //   livePriceWidget: Consumer(
-    //     builder: (context, ref, _) {
-    //       final goldPriceState = ref.watch(goldPriceProvider);
-    //       return goldPriceState.when(
-    //         data: (data) => GetGenericText(
-    //           text:
-    //               '${AppLocalizations.of(context)!.buy_gold_pop} ${data.oneGramBuyingPriceInIQD.toStringAsFixed(2)} ${AppLocalizations.of(context)!.idq_currency}',
-    //           fontSize: 18,
-    //           fontWeight: FontWeight.w600,
-    //           color: AppColors.primaryGold500,
-    //           textAlign: TextAlign.center,
-    //         ).getChildCenter(),
-    //         loading: () => const CircularProgressIndicator(),
-    //         error: (_, __) => const Text("Error"),
-    //       );
-    //     },
-    //   ),
     // );
+
+
   }
 }

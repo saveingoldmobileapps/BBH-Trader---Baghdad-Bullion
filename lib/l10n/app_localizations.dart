@@ -2498,6 +2498,12 @@ abstract class AppLocalizations {
   /// **'Total Charges'**
   String get totalCharges;
 
+  /// No description provided for @outside_iraq.
+  ///
+  /// In en, this message translates to:
+  /// **' (Outside Iraq)'**
+  String get outside_iraq;
+
   /// No description provided for @grandTotal.
   ///
   /// In en, this message translates to:

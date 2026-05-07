@@ -230,7 +230,7 @@ class _WithdrawFundScreenState
                       controller: amountController,
                       
                       inputFormatters: [
-                            AmountInputFormatter(maxDigits: 7,),
+                            AmountInputFormatter(maxDigits: 8,),
                           ],
                       textInputType: TextInputType.numberWithOptions(
                         signed: true,

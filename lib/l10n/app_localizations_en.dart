@@ -1259,6 +1259,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get totalCharges => 'Total Charges';
 
   @override
+  String get outside_iraq => ' (Outside Iraq)';
+
+  @override
   String get grandTotal => 'Grand Total';
 
   @override

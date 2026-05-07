@@ -357,11 +357,7 @@ class _MoneyStatementCardState extends State<MoneyStatementCard> {
 
     if (withdrawAmounts && (item.debit ?? 0) > 0) {
       final amount = CommonService.roundingFormatIqdCurrency(item.debit);
-     
 
-     //1:Making charges should be (making charge * quantity) * exchangebuy
-     //2:E-Souq please check 1kg not filtering and in 20 it comes 15 and 20
-     //
       return isRtl
           ? "سحب مبلغ :$amount ${AppLocalizations.of(context)!.iqd_currency} "
           : "${AppLocalizations.of(context)!.withdraw_requests}: ${AppLocalizations.of(context)!.iqd_currency} $amount";

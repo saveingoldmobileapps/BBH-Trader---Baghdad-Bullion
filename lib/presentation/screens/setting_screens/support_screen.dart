@@ -63,432 +63,560 @@ class _SupportScreenState extends ConsumerState<SupportScreen> {
           color: AppColors.greyScale1000,
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              ConstPadding.sizeBoxWithHeight(height: 24),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ConstPadding.sizeBoxWithHeight(height: 24),
 
-              /// Live chat section
-              Directionality.of(context) == TextDirection.rtl
-                  ? Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/live_chat_icon.svg",
-                            height: sizes!.responsiveHeight(
-                              phoneVal: 24,
-                              tabletVal: 32,
+                /// Live chat section
+                Directionality.of(context) == TextDirection.rtl
+                    ? Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/svg/live_chat_icon.svg",
+                              height: sizes!.responsiveHeight(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
+                              width: sizes!.responsiveWidth(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
                             ),
-                            width: sizes!.responsiveWidth(
-                              phoneVal: 24,
-                              tabletVal: 32,
-                            ),
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.email_us_title, //"Email Us",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
-                            ),
-                            //sizes!.isPhone ? 16 : 18,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.grey5Color,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          // GetGenericText(
-
-                          //   text: AppLocalizations.of(context)!.email_us_desc,
-                          //   //"Need instant help? Start an Email Us with our team, available 24/7!",
-                          //   fontSize: sizes!.responsiveFont(
-                          //     phoneVal: 14,
-                          //     tabletVal: 16,
-                          //   ),
-                          //   fontWeight: FontWeight.w400,
-                          //   color: AppColors.grey3Color,
-                          // ),
-                          GetGenericText(
-                            text: AppLocalizations.of(context)!.email_us_desc,
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 14,
-                              tabletVal: 16,
-                            ),
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
-                            lines: 4, // <- limit to 3 lines
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GestureDetector(
-                            onTap: () async {
-                              await CommonService.openEmailApp(
-                                emailAddress:
-                                    "mobileapp@baghdadbullionhouse.com",
-                              );
-                            },
-                            child: GetGenericText(
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
                               text: AppLocalizations.of(
                                 context,
-                              )!.email_now, //"Email Now",
+                              )!.email_us_title, //"Email Us",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              //sizes!.isPhone ? 16 : 18,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.grey5Color,
+                            ),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            // GetGenericText(
+
+                            //   text: AppLocalizations.of(context)!.email_us_desc,
+                            //   //"Need instant help? Start an Email Us with our team, available 24/7!",
+                            //   fontSize: sizes!.responsiveFont(
+                            //     phoneVal: 14,
+                            //     tabletVal: 16,
+                            //   ),
+                            //   fontWeight: FontWeight.w400,
+                            //   color: AppColors.grey3Color,
+                            // ),
+                            GetGenericText(
+                              text: AppLocalizations.of(context)!.email_us_desc,
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 14,
                                 tabletVal: 16,
                               ),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryGold500,
-                              isUnderline: true,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 4, // <- limit to 3 lines
                             ),
-                          ),
-                        ],
-                      ),
-                    ).getAlignRight()
-                  : Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/live_chat_icon.svg",
-                            height: sizes!.responsiveHeight(
-                              phoneVal: 24,
-                              tabletVal: 32,
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GestureDetector(
+                              onTap: () async {
+                                await CommonService.openEmailApp(
+                                  emailAddress:
+                                      "we.care@baghdadbullionhouse.com",
+                                );
+                              },
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.email_now, //"Email Now",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 14,
+                                  tabletVal: 16,
+                                ),
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primaryGold500,
+                                isUnderline: true,
+                              ),
                             ),
-                            width: sizes!.responsiveWidth(
-                              phoneVal: 24,
-                              tabletVal: 32,
+                          ],
+                        ),
+                      ).getAlignRight()
+                    : Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/svg/live_chat_icon.svg",
+                              height: sizes!.responsiveHeight(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
+                              width: sizes!.responsiveWidth(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
                             ),
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.email_us_title, //"Email Us",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
-                            ),
-                            //sizes!.isPhone ? 16 : 18,
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.grey5Color,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(context)!.email_us_desc,
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 14,
-                              tabletVal: 16,
-                            ),
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
-                            lines: 4, // <- limit to 3 lines
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GestureDetector(
-                            onTap: () async {
-                              await CommonService.openEmailApp(
-                                emailAddress:
-                                    "mobileapp@baghdadbullionhouse.com",
-                              );
-                            },
-                            child: GetGenericText(
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
                               text: AppLocalizations.of(
                                 context,
-                              )!.email_now, //"Email Now",
+                              )!.email_us_title, //"Email Us",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              //sizes!.isPhone ? 16 : 18,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.grey5Color,
+                            ),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
+                              text: AppLocalizations.of(context)!.email_us_desc,
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 14,
                                 tabletVal: 16,
                               ),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryGold500,
-                              isUnderline: true,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 4, // <- limit to 3 lines
                             ),
-                          ),
-                        ],
-                      ),
-                    ).getAlign(),
-              ConstPadding.sizeBoxWithHeight(height: 16),
-              Divider(
-                color: AppColors.greyScale900,
-                thickness: 1.5,
-              ),
-              ConstPadding.sizeBoxWithHeight(height: 16),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GestureDetector(
+                              onTap: () async {
+                                await CommonService.openEmailApp(
+                                  emailAddress:
+                                      "we.care@baghdadbullionhouse.com",
+                                );
+                              },
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.email_now, //"Email Now",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 14,
+                                  tabletVal: 16,
+                                ),
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primaryGold500,
+                                isUnderline: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).getAlign(),
+                ConstPadding.sizeBoxWithHeight(height: 16),
+                Divider(
+                  color: AppColors.greyScale900,
+                  thickness: 1.5,
+                ),
+                ConstPadding.sizeBoxWithHeight(height: 16),
 
-              /// Call us section
-              Directionality.of(context) == TextDirection.rtl
-                  ? Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/call_icon.svg",
-                            height: sizes!.responsiveHeight(
-                              phoneVal: 24,
-                              tabletVal: 32,
+                /// Call us section
+                Directionality.of(context) == TextDirection.rtl
+                    ? Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/svg/call_icon.svg",
+                              height: sizes!.responsiveHeight(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
+                              width: sizes!.responsiveWidth(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
                             ),
-                            width: sizes!.responsiveWidth(
-                              phoneVal: 24,
-                              tabletVal: 32,
-                            ),
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.call_us_title, //"Call Us",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
-                            ),
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.grey5Color,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(context)!.call_us_desc,
-                            //"Speak directly with one of our support representatives, available Monday to Friday, 9:00 AM - 6:00 PM (Your Time Zone).",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 14,
-                              tabletVal: 16,
-                            ),
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
-                            lines: 4,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GestureDetector(
-                            onTap: () async {
-                              await CommonService.openCallingUrl(
-                                phoneNumber: "6810",
-                              );
-                            },
-                            child: GetGenericText(
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
                               text: AppLocalizations.of(
                                 context,
-                              )!.call_now, //"Call Now",
+                              )!.call_us_title, //"Call Us",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.grey5Color,
+                            ),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
+                              text: AppLocalizations.of(context)!.call_us_desc,
+                              //"Speak directly with one of our support representatives, available Monday to Friday, 9:00 AM - 6:00 PM (Your Time Zone).",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 14,
                                 tabletVal: 16,
                               ),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryGold500,
-                              isUnderline: true,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 4,
                             ),
-                          ),
-                        ],
-                      ),
-                    ).getAlignRight()
-                  : Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/call_icon.svg",
-                            height: sizes!.responsiveHeight(
-                              phoneVal: 24,
-                              tabletVal: 32,
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GestureDetector(
+                              onTap: () async {
+                                await CommonService.openCallingUrl(
+                                  phoneNumber: "6810",
+                                );
+                              },
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.call_now, //"Call Now",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 14,
+                                  tabletVal: 16,
+                                ),
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primaryGold500,
+                                isUnderline: true,
+                              ),
                             ),
-                            width: sizes!.responsiveWidth(
-                              phoneVal: 24,
-                              tabletVal: 32,
+
+                            SizedBox(
+                              height: 2,
                             ),
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.call_us_title, //"Call Us",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
+                            GestureDetector(
+                              onTap: () async {
+                                await CommonService.openCallingUrl(
+                                  phoneNumber: "+96477670570",
+                                );
+                              },
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: AppLocalizations.of(context)!.call_now,//"Call Us",
+                                      style: TextStyle(
+                                        fontSize: sizes!.responsiveFont(
+                                           phoneVal: 16,
+                                  tabletVal: 18,
+                                        ),
+                                        fontWeight: FontWeight.bold,
+
+          decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+
+                                    TextSpan(
+                                      text: AppLocalizations.of(context)!.outside_iraq,//"(Outside Iraq)",
+                                      style: TextStyle(
+                                        fontSize: sizes!.responsiveFont(
+                                          phoneVal: 5,
+                                          tabletVal: 10,
+                                        ),
+                                        fontWeight: FontWeight.w400,
+                                        
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // GetGenericText(
+                              //   text: "Call Us Now(Outside Iraq)",
+                              //   // AppLocalizations.of(
+                              //   //   context,
+                              //   // )!.call_now, //"Call Now",
+                              //   fontSize: sizes!.responsiveFont(
+                              //     phoneVal: 14,
+                              //     tabletVal: 16,
+                              //   ),
+                              //   fontWeight: FontWeight.w500,
+                              //   color: AppColors.primaryGold500,
+                              //   isUnderline: true,
+                              // ),
                             ),
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.grey5Color,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(context)!.call_us_desc,
-                            //"Speak directly with one of our support representatives, available Monday to Friday, 9:00 AM - 6:00 PM (Your Time Zone).",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 14,
-                              tabletVal: 16,
+                          ],
+                        ),
+                      ).getAlignRight()
+                    : Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/svg/call_icon.svg",
+                              height: sizes!.responsiveHeight(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
+                              width: sizes!.responsiveWidth(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
                             ),
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
-                            lines: 4,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GestureDetector(
-                            onTap: () async {
-                              await CommonService.openCallingUrl(
-                                phoneNumber: "6810",
-                              );
-                            },
-                            child: GetGenericText(
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
                               text: AppLocalizations.of(
                                 context,
-                              )!.call_now, //"Call Now",
+                              )!.call_us_title, //"Call Us",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.grey5Color,
+                            ),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
+                              text: AppLocalizations.of(context)!.call_us_desc,
+                              //"Speak directly with one of our support representatives, available Monday to Friday, 9:00 AM - 6:00 PM (Your Time Zone).",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 14,
                                 tabletVal: 16,
                               ),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryGold500,
-                              isUnderline: true,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 4,
                             ),
-                          ),
-                        ],
-                      ),
-                    ).getAlign(),
-
-              ConstPadding.sizeBoxWithHeight(height: 16),
-              Divider(
-                color: AppColors.greyScale900,
-                thickness: 1.5,
-              ),
-              ConstPadding.sizeBoxWithHeight(height: 16),
-
-              /// WhatsApp
-              Directionality.of(context) == TextDirection.rtl
-                  ? Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/whatsapp_icon.svg",
-                            height: sizes!.responsiveHeight(
-                              phoneVal: 24,
-                              tabletVal: 32,
-                            ),
-                            width: sizes!.responsiveWidth(
-                              phoneVal: 24,
-                              tabletVal: 32,
-                            ),
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.whatsapp_title, //"Whatsapp",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
-                            ),
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.grey5Color,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(context)!.whatsapp_desc,
-                            //"Message us on WhatsApp for quick and easy support, available 24/7.",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 14,
-                              tabletVal: 16,
-                            ),
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
-                            lines: 4,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-
-                          /// Whatsapp button
-                          GestureDetector(
-                            onTap: () async {
-                              await CommonService.openWhatsappUrl(
-                                phoneNumber: "+9647708015596",
-                                message:
-                                    "Hello, I need an assistance from Baghdad Bullion House Team",
-                              );
-                            },
-                            child: GetGenericText(
-                              text: AppLocalizations.of(
-                                context,
-                              )!.message_on_whatsapp, //"Message on Whatsapp",
+                            GetGenericText(
+                              text: AppLocalizations.of(context)!.call_us_desc,
+                              //"Speak directly with one of our support representatives, available Monday to Friday, 9:00 AM - 6:00 PM (Your Time Zone).",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 14,
                                 tabletVal: 16,
                               ),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryGold500,
-                              isUnderline: true,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 4,
                             ),
-                          ),
-                        ],
-                      ),
-                    ).getAlignRight()
-                  : Container(
-                      color: Colors.transparent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SvgPicture.asset(
-                            "assets/svg/whatsapp_icon.svg",
-                            height: sizes!.responsiveHeight(
-                              phoneVal: 24,
-                              tabletVal: 32,
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GestureDetector(
+                              onTap: () async {
+                                await CommonService.openCallingUrl(
+                                  phoneNumber: "6810",
+                                );
+                              },
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.call_now, //"Call Now",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 14,
+                                  tabletVal: 16,
+                                ),
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primaryGold500,
+                                isUnderline: true,
+                              ),
                             ),
-                            width: sizes!.responsiveWidth(
-                              phoneVal: 24,
-                              tabletVal: 32,
+                            SizedBox(
+                              height: 4,
                             ),
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(
-                              context,
-                            )!.whatsapp_title, //"Whatsapp",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 16,
-                              tabletVal: 18,
-                            ),
-                            fontWeight: FontWeight.w500,
-                            color: AppColors.grey5Color,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
-                          GetGenericText(
-                            text: AppLocalizations.of(context)!.whatsapp_desc,
-                            //"Message us on WhatsApp for quick and easy support, available 24/7.",
-                            fontSize: sizes!.responsiveFont(
-                              phoneVal: 14,
-                              tabletVal: 16,
-                            ),
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey3Color,
-                            lines: 4,
-                          ),
-                          ConstPadding.sizeBoxWithHeight(height: 4),
+                            GestureDetector(
+                              onTap: () async {
+                                await CommonService.openCallingUrl(
+                                  phoneNumber: "+96477670570",
+                                );
+                              },
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: AppLocalizations.of(context)!.call_now,
+                                      style: TextStyle(
+                                        //"Call Now",
+                                        fontSize: sizes!.responsiveFont(
+                                          phoneVal: 14,
+                                          tabletVal: 16,
+                                        ),
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.primaryGold500,
+                                        //isUnderline: true,
+                                        decoration: TextDecoration.underline,
+                                        
+                                      ),
+                                    ),
 
-                          /// Whatsapp button
-                          GestureDetector(
-                            onTap: () async {
-                              await CommonService.openWhatsappUrl(
-                                phoneNumber: "+9647708015596",
-                                message:
-                                    "Hello, I need an assistance from Baghdad Bullion House Team",
-                              );
-                            },
-                            child: GetGenericText(
+                                    TextSpan(
+                                      text: " (Outside Iraq)",
+                                      style: TextStyle(
+                                        //"Call Now",
+                                        fontSize: sizes!.responsiveFont(
+                                          phoneVal: 10,
+                                          tabletVal: 10,
+                                        ),
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.whiteColor,
+
+                                        //isUnderline: true,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            
+                            //   GetGenericText(
+                            //     text: "Call Us Now(Outside Iraq)",
+                            //     // AppLocalizations.of(
+                            //     //   context,
+                            //     // )!.call_now, //"Call Now",
+                            //     fontSize: sizes!.responsiveFont(
+                            //       phoneVal: 14,
+                            //       tabletVal: 16,
+                            //     ),
+                            //     fontWeight: FontWeight.w500,
+                            //     color: AppColors.primaryGold500,
+                            //     isUnderline: true,
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ).getAlign(),
+
+                ConstPadding.sizeBoxWithHeight(height: 16),
+                Divider(
+                  color: AppColors.greyScale900,
+                  thickness: 1.5,
+                ),
+                ConstPadding.sizeBoxWithHeight(height: 16),
+
+                /// WhatsApp
+                Directionality.of(context) == TextDirection.rtl
+                    ? Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/svg/whatsapp_icon.svg",
+                              height: sizes!.responsiveHeight(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
+                              width: sizes!.responsiveWidth(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
+                            ),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
                               text: AppLocalizations.of(
                                 context,
-                              )!.message_on_whatsapp, //"Message on Whatsapp",
+                              )!.whatsapp_title, //"Whatsapp",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.grey5Color,
+                            ),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
+                              text: AppLocalizations.of(context)!.whatsapp_desc,
+                              //"Message us on WhatsApp for quick and easy support, available 24/7.",
                               fontSize: sizes!.responsiveFont(
                                 phoneVal: 14,
                                 tabletVal: 16,
                               ),
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.primaryGold500,
-                              isUnderline: true,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 4,
                             ),
-                          ),
-                        ],
-                      ),
-                    ).getAlign(),
-            ],
-          ).get16HorizontalPadding(),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+
+                            /// Whatsapp button
+                            GestureDetector(
+                              onTap: () async {
+                                await CommonService.openWhatsappUrl(
+                                  phoneNumber: "+9647871111112",
+                                  message:
+                                      "Hello, I need an assistance from Baghdad Bullion House Team",
+                                );
+                              },
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.message_on_whatsapp, //"Message on Whatsapp",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 14,
+                                  tabletVal: 16,
+                                ),
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primaryGold500,
+                                isUnderline: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).getAlignRight()
+                    : Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SvgPicture.asset(
+                              "assets/svg/whatsapp_icon.svg",
+                              height: sizes!.responsiveHeight(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
+                              width: sizes!.responsiveWidth(
+                                phoneVal: 24,
+                                tabletVal: 32,
+                              ),
+                            ),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.whatsapp_title, //"Whatsapp",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 16,
+                                tabletVal: 18,
+                              ),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.grey5Color,
+                            ),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+                            GetGenericText(
+                              text: AppLocalizations.of(context)!.whatsapp_desc,
+                              //"Message us on WhatsApp for quick and easy support, available 24/7.",
+                              fontSize: sizes!.responsiveFont(
+                                phoneVal: 14,
+                                tabletVal: 16,
+                              ),
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.grey3Color,
+                              lines: 4,
+                            ),
+                            ConstPadding.sizeBoxWithHeight(height: 4),
+
+                            /// Whatsapp button
+                            GestureDetector(
+                              onTap: () async {
+                                await CommonService.openWhatsappUrl(
+                                  phoneNumber: "+9647871111112",
+                                  message:
+                                      "Hello, I need an assistance from Baghdad Bullion House Team",
+                                );
+                              },
+                              child: GetGenericText(
+                                text: AppLocalizations.of(
+                                  context,
+                                )!.message_on_whatsapp, //"Message on Whatsapp",
+                                fontSize: sizes!.responsiveFont(
+                                  phoneVal: 14,
+                                  tabletVal: 16,
+                                ),
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.primaryGold500,
+                                isUnderline: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).getAlign(),
+              ],
+            ).get16HorizontalPadding(),
+          ),
         ),
       ),
     );

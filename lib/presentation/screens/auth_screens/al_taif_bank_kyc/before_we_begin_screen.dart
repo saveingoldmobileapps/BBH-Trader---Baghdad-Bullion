@@ -350,11 +350,108 @@ class _BBHOnboardingScreenState extends State<BBHOnboardingScreen> {
         curve: Curves.easeInOut,
       );
     } else {
+      final onboardingPayload = _buildAlTaifOnboardingPayload();
       // After step 12, continue directly into identity verification (ShuftiPro flow).
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const KycSecondStepScreen()),
+        MaterialPageRoute(
+          builder: (_) => KycSecondStepScreen(
+            alTaifOnboardingData: onboardingPayload,
+          ),
+        ),
       );
     }
+  }
+
+  Map<String, dynamic> _buildAlTaifOnboardingPayload() {
+    String? normalizedOrNull(String? value) {
+      final v = value?.trim() ?? '';
+      return v.isEmpty ? null : v;
+    }
+
+    return {
+      "flow": "al_taif_bank_onboarding",
+      "version": "1.0",
+      "completedSteps": _totalSteps,
+      "step1Purpose": {
+        "purposeConfirmed": _form.purposeConfirmed,
+      },
+      "step2Contact": {
+        "mobile": normalizedOrNull(_form.mobile.text),
+        "email": normalizedOrNull(_form.email.text),
+        "branch": _form.branch,
+      },
+      "step3ArabicName": {
+        "firstName": normalizedOrNull(_form.arFirst.text),
+        "fatherName": normalizedOrNull(_form.arFather.text),
+        "grandfatherName": normalizedOrNull(_form.arGf.text),
+        "surname": normalizedOrNull(_form.arSurname.text),
+        "motherName": normalizedOrNull(_form.arMother.text),
+      },
+      "step4EnglishName": {
+        "firstName": normalizedOrNull(_form.enFirst.text),
+        "fatherName": normalizedOrNull(_form.enFather.text),
+        "grandfatherName": normalizedOrNull(_form.enGf.text),
+        "surname": normalizedOrNull(_form.enSurname.text),
+      },
+      "step5PersonalDetails": {
+        "gender": _form.gender,
+        "nationality": normalizedOrNull(_form.nationality.text),
+        "dateOfBirth": normalizedOrNull(_form.dob.text),
+        "countryOfBirth": normalizedOrNull(_form.countryBirth.text),
+        "placeOfBirth": normalizedOrNull(_form.placeBirth.text),
+      },
+      "step6NationalId": {
+        "personalNumber": normalizedOrNull(_form.idPersonal.text),
+        "cardSerialNumber": normalizedOrNull(_form.idSerial.text),
+        "placeOfIssue": normalizedOrNull(_form.idIssuePlace.text),
+        "dateOfIssue": normalizedOrNull(_form.idIssueDate.text),
+        "dateOfExpiry": normalizedOrNull(_form.idExpiryDate.text),
+      },
+      "step7ResidenceCard": {
+        "isNotApplicable": _form.residenceNa,
+        "cardNumber": _form.residenceNa ? null : normalizedOrNull(_form.resNo.text),
+        "placeOfIssue": _form.residenceNa ? null : normalizedOrNull(_form.resPlace.text),
+        "dateOfIssue": _form.residenceNa ? null : normalizedOrNull(_form.resIssue.text),
+        "dateOfExpiry": _form.residenceNa ? null : normalizedOrNull(_form.resExpiry.text),
+      },
+      "step8Passport": {
+        "isNotApplicable": _form.passportNa,
+        "passportNumber": _form.passportNa ? null : normalizedOrNull(_form.ppNo.text),
+        "placeOfIssue": _form.passportNa ? null : normalizedOrNull(_form.ppPlace.text),
+        "dateOfIssue": _form.passportNa ? null : normalizedOrNull(_form.ppIssue.text),
+        "dateOfExpiry": _form.passportNa ? null : normalizedOrNull(_form.ppExpiry.text),
+      },
+      "step9IncomeEmployment": {
+        "educationLevel": _form.education,
+        "economicSector": _form.sector,
+        "monthlyIncomeIqd": normalizedOrNull(_form.income.text),
+        "occupation": normalizedOrNull(_form.occupation.text),
+        "employerName": normalizedOrNull(_form.employer.text),
+        "employerAddress": normalizedOrNull(_form.employerAddr.text),
+      },
+      "step10Address": {
+        "governorate": normalizedOrNull(_form.addrGov.text),
+        "district": normalizedOrNull(_form.addrDistrict.text),
+        "cityOrTown": normalizedOrNull(_form.addrCity.text),
+        "mahalla": normalizedOrNull(_form.addrMahalla.text),
+        "street": normalizedOrNull(_form.addrStreet.text),
+        "houseNumber": normalizedOrNull(_form.addrHouse.text),
+        "nearestLandmarkArabic": normalizedOrNull(_form.addrLandmarkAr.text),
+        "nearestLandmarkEnglish": normalizedOrNull(_form.addrLandmarkEn.text),
+      },
+      "step11Fatca": {
+        "isUsPerson": _form.fatca == "Yes",
+        "tinOrSsn": _form.fatca == "Yes" ? normalizedOrNull(_form.fatcaTin.text) : null,
+        "usAddress": _form.fatca == "Yes" ? normalizedOrNull(_form.fatcaAddr.text) : null,
+      },
+      "step12Pep": {
+        "isPep": _form.pep == "Yes",
+        "positionOrRelation": _form.pep == "Yes" ? normalizedOrNull(_form.pepPosition.text) : null,
+        "country": _form.pep == "Yes" ? normalizedOrNull(_form.pepCountry.text) : null,
+        "from": _form.pep == "Yes" ? normalizedOrNull(_form.pepFrom.text) : null,
+        "to": _form.pep == "Yes" ? normalizedOrNull(_form.pepTo.text) : null,
+      },
+    };
   }
 
   void _back() {

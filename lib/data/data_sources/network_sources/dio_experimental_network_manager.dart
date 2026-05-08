@@ -9,6 +9,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:logger/logger.dart';
+import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/presentation/feature_injection.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -88,6 +89,60 @@ class DioNetworkManager {
   factory DioNetworkManager() => _instance;
 
   late final Dio _dio;
+
+  bool _isPriceLikeKey(String key) {
+    final k = key.toLowerCase();
+    if (k.contains('quantity') ||
+        k.contains('qty') ||
+        k.contains('weight') ||
+        k.contains('gram') ||
+        k.contains('metal') ||
+        k.contains('rate')) {
+      return false;
+    }
+    return k.contains('price') ||
+        k.contains('amount') ||
+        k.contains('charge') ||
+        k.contains('total') ||
+        k.contains('vat') ||
+        k.contains('premium') ||
+        k.contains('discount') ||
+        k.contains('payable') ||
+        k.contains('money');
+  }
+
+  dynamic _normalizePayloadPrices(dynamic data, {String? parentKey}) {
+    if (data is Map) {
+      final out = <String, dynamic>{};
+      data.forEach((key, value) {
+        out[key.toString()] = _normalizePayloadPrices(
+          value,
+          parentKey: key.toString(),
+        );
+      });
+      return out;
+    }
+
+    if (data is List) {
+      return data
+          .map((e) => _normalizePayloadPrices(e, parentKey: parentKey))
+          .toList();
+    }
+
+    if (parentKey != null && _isPriceLikeKey(parentKey)) {
+      if (data is num) {
+        return CommonService.normalizeIqdForApi(data);
+      }
+      if (data is String) {
+        final parsed = num.tryParse(data.trim());
+        if (parsed != null) {
+          return CommonService.normalizeIqdForApi(parsed).toString();
+        }
+      }
+    }
+
+    return data;
+  }
 
   Future<void> _initialize() async {
     getLocator<Logger>().i("Dio Network Manager Initialized");
@@ -173,12 +228,18 @@ class DioNetworkManager {
       ...?myHeaders,
     };
 
+    final normalizedBody = (httpMethod == HttpMethod.post ||
+            httpMethod == HttpMethod.put ||
+            httpMethod == HttpMethod.patch)
+        ? _normalizePayloadPrices(body)
+        : body;
+
     /// 3) Attempt request with simple retry
     for (var attempt = 0; attempt <= retries; attempt++) {
       try {
         return await _dio.request(
           url,
-          data: body,
+          data: normalizedBody,
           queryParameters: parameters,
           cancelToken: cancelToken,
           options: Options(

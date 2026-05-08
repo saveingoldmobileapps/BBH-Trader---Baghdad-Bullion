@@ -174,6 +174,60 @@ class DioNetworkManager {
 
   bool isDialogShowing = false;
 
+  bool _isPriceLikeKey(String key) {
+    final k = key.toLowerCase();
+    if (k.contains('quantity') ||
+        k.contains('qty') ||
+        k.contains('weight') ||
+        k.contains('gram') ||
+        k.contains('metal') ||
+        k.contains('rate')) {
+      return false;
+    }
+    return k.contains('price') ||
+        k.contains('amount') ||
+        k.contains('charge') ||
+        k.contains('total') ||
+        k.contains('vat') ||
+        k.contains('premium') ||
+        k.contains('discount') ||
+        k.contains('payable') ||
+        k.contains('money');
+  }
+
+  dynamic _normalizePayloadPrices(dynamic data, {String? parentKey}) {
+    if (data is Map) {
+      final out = <String, dynamic>{};
+      data.forEach((key, value) {
+        out[key.toString()] = _normalizePayloadPrices(
+          value,
+          parentKey: key.toString(),
+        );
+      });
+      return out;
+    }
+
+    if (data is List) {
+      return data
+          .map((e) => _normalizePayloadPrices(e, parentKey: parentKey))
+          .toList();
+    }
+
+    if (parentKey != null && _isPriceLikeKey(parentKey)) {
+      if (data is num) {
+        return CommonService.normalizeIqdForApi(data);
+      }
+      if (data is String) {
+        final parsed = num.tryParse(data.trim());
+        if (parsed != null) {
+          return CommonService.normalizeIqdForApi(parsed).toString();
+        }
+      }
+    }
+
+    return data;
+  }
+
   /// Perform Http Request
   Future<Response?> _performRequest({
     required String url,
@@ -203,13 +257,19 @@ class DioNetworkManager {
     // perform request header
     getLocator<Logger>().i("performRequestHeader: $header");
 
+    final normalizedBody = (httpMethod == HttpMethod.post ||
+            httpMethod == HttpMethod.put ||
+            httpMethod == HttpMethod.patch)
+        ? _normalizePayloadPrices(body)
+        : body;
+
     ///Check Connectivity Result
     if (connectivityResult != [ConnectivityResult.none]) {
       try {
         /// Make Dio Request
         final response = await dio.request(
           url,
-          data: body,
+          data: normalizedBody,
           queryParameters: parameters,
           options: Options(
             method: httpMethod.name,

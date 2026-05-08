@@ -1058,163 +1058,339 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                                       // Show confirmation dialog only after validation passes
                                       await genericPopUpWidget(
-                                        context: context,
-                                        heading: AppLocalizations.of(
-                                          context,
-                                        )!.deal_update_confirm_title, //"Confirmation",
-                                        subtitle: AppLocalizations.of(
-                                          context,
-                                        )!.deal_sure_confirm,
-                                        //"Are you sure you want to Update this order?",
-                                        noButtonTitle: AppLocalizations.of(
-                                          context,
-                                        )!.no, //"No",
-                                        yesButtonTitle: AppLocalizations.of(
-                                          context,
-                                        )!.yes,
-                                        isLoadingState: false,
-                                        onNoPress: () {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
-                                        onYesPress: () async {
-                                          final existingBuyAtPrice =
-                                              double.tryParse(
-                                                widget.gramData.buyAtPrice
-                                                        ?.toString() ??
-                                                    "0",
-                                              ) ??
-                                              0;
-                                          final existingSellAtProfit =
-                                              double.tryParse(
-                                                widget.gramData.sellAtProfit
-                                                        ?.toString() ??
-                                                    "0",
-                                              ) ??
-                                              0;
-                                          final existingGram =
-                                              double.tryParse(
-                                                widget.gramData.tradeMetal
-                                                        ?.toString() ??
-                                                    "0",
-                                              ) ??
-                                              0;
+  context: context,
+  heading: AppLocalizations.of(
+    context,
+  )!.deal_update_confirm_title,
+  subtitle: AppLocalizations.of(
+    context,
+  )!.deal_sure_confirm,
+  noButtonTitle: AppLocalizations.of(
+    context,
+  )!.no,
+  yesButtonTitle: AppLocalizations.of(
+    context,
+  )!.yes,
+  isLoadingState: false,
+  onNoPress: () {
+    Navigator.pop(context);
+    Navigator.pop(context);
+  },
+  onYesPress: () async {
+    final existingBuyAtPrice =
+        double.tryParse(
+          widget.gramData.buyAtPrice
+                  ?.toString() ??
+              "0",
+        ) ??
+        0;
 
-                                          final updatedGram =
-                                              double.tryParse(
-                                                gramAmountController.text,
-                                              ) ??
-                                              existingGram;
-                                          final updatedPrice =
-                                              double.tryParse(
-                                                sellAtPriceController.text,
-                                              ) ??
-                                              0;
+    final existingSellAtProfit =
+        double.tryParse(
+          widget.gramData.sellAtProfit
+                  ?.toString() ??
+              "0",
+        ) ??
+        0;
 
-                                          final calculatedTradeMoney = (() {
-                                            if (isGramAmountPrice &&
-                                                !isEditPrice) {
-                                              return tradeType == "Sell"
-                                                  ? updatedGram *
-                                                        existingSellAtProfit
-                                                  : updatedGram *
-                                                        existingBuyAtPrice;
-                                            } else if (!isGramAmountPrice &&
-                                                isEditPrice) {
-                                              return existingGram *
-                                                  updatedPrice;
-                                            } else if (isGramAmountPrice &&
-                                                isEditPrice) {
-                                              return updatedGram * updatedPrice;
-                                            } else {
-                                              return widget.gramData.tradeMoney;
-                                            }
-                                          })();
+    final existingGram =
+        double.tryParse(
+          widget.gramData.tradeMetal
+                  ?.toString() ??
+              "0",
+        ) ??
+        0;
 
-                                          // Proceed to API call after passing price validation
-                                          final updated = tradeType == "Sell"
-                                              ? await gramStateReadProvider
-                                                    .updateSellOrder(
-                                                      context: context,
-                                                      tradeId: widget
-                                                          .gramData
-                                                          .id
-                                                          .toString(),
-                                                      dealId: widget
-                                                          .gramData
-                                                          .dealId!,
-                                                      tradeMoney:
-                                                          calculatedTradeMoney
-                                                              .toString(),
-                                                      tradeMetal:
-                                                          isGramAmountPrice
-                                                          ? gramAmountController
-                                                                .text
-                                                          : widget
-                                                                .gramData
-                                                                .tradeMetal!
-                                                                .toString(),
-                                                      sellAtProfit: isEditPrice
-                                                          ? sellAtPriceController
-                                                                .text
-                                                          : widget
-                                                                .gramData
-                                                                .sellAtProfit
-                                                                .toString(),
-                                                      sellingPrice: isEditPrice
-                                                          ? sellAtPriceController
-                                                                .text
-                                                          : widget
-                                                                .gramData
-                                                                .sellAtProfit
-                                                                .toString(),
-                                                    )
-                                              : await gramStateReadProvider
-                                                    .updateBuyOrder(
-                                                      context: context,
-                                                      dealId: widget
-                                                          .gramData
-                                                          .dealId!,
-                                                      tradeMoney:
-                                                          calculatedTradeMoney
-                                                              .toString(),
-                                                      tradeMetal:
-                                                          isGramAmountPrice
-                                                          ? gramAmountController
-                                                                .text
-                                                          : widget
-                                                                .gramData
-                                                                .tradeMetal!
-                                                                .toString(),
-                                                      buyAtPrice: isEditPrice
-                                                          ? sellAtPriceController
-                                                                .text
-                                                          : widget
-                                                                .gramData
-                                                                .buyAtPrice
-                                                                .toString(),
-                                                      buyingPrice: isEditPrice
-                                                          ? sellAtPriceController
-                                                                .text
-                                                          : widget
-                                                                .gramData
-                                                                .buyAtPrice
-                                                                .toString(),
-                                                    );
+    final updatedGram =
+        double.tryParse(
+          gramAmountController.text,
+        ) ??
+        existingGram;
 
-                                          if (!context.mounted) return;
-                                          if (!updated) return;
+    final updatedPrice =
+        double.tryParse(
+          sellAtPriceController.text,
+        ) ??
+        0;
 
-                                          await ref
-                                              .read(gramProvider.notifier)
-                                              .getUserGramBalance();
+    /// APPLY ROUNDING ONLY FOR PRICE
+    final roundedPrice =
+        CommonService.normalizeIqdForApi(
+          updatedPrice,
+        ).toString();
 
-                                          if (!context.mounted) return;
+    final calculatedTradeMoney = (() {
+      if (isGramAmountPrice &&
+          !isEditPrice) {
+        return tradeType == "Sell"
+            ? updatedGram *
+                existingSellAtProfit
+            : updatedGram *
+                existingBuyAtPrice;
+      } else if (!isGramAmountPrice &&
+          isEditPrice) {
+        return existingGram *
+            double.parse(roundedPrice);
+      } else if (isGramAmountPrice &&
+          isEditPrice) {
+        return updatedGram *
+            double.parse(roundedPrice);
+      } else {
+        return widget.gramData.tradeMoney;
+      }
+    })();
 
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        },
-                                      );
+    // Proceed to API call after passing price validation
+    final updated = tradeType == "Sell"
+        ? await gramStateReadProvider
+              .updateSellOrder(
+              context: context,
+              tradeId: widget
+                  .gramData
+                  .id
+                  .toString(),
+              dealId: widget
+                  .gramData
+                  .dealId!,
+              tradeMoney:
+                  calculatedTradeMoney
+                      .toString(),
+              tradeMetal:
+                  isGramAmountPrice
+                  ? gramAmountController
+                        .text
+                  : widget
+                        .gramData
+                        .tradeMetal!
+                        .toString(),
+
+              /// ROUNDED
+              sellAtProfit:
+                  isEditPrice
+                  ? roundedPrice
+                  : widget
+                        .gramData
+                        .sellAtProfit
+                        .toString(),
+
+              /// ROUNDED
+              sellingPrice:
+                  isEditPrice
+                  ? roundedPrice
+                  : widget
+                        .gramData
+                        .sellAtProfit
+                        .toString(),
+            )
+        : await gramStateReadProvider
+              .updateBuyOrder(
+              context: context,
+              dealId: widget
+                  .gramData
+                  .dealId!,
+              tradeMoney:
+                  calculatedTradeMoney
+                      .toString(),
+              tradeMetal:
+                  isGramAmountPrice
+                  ? gramAmountController
+                        .text
+                  : widget
+                        .gramData
+                        .tradeMetal!
+                        .toString(),
+
+              /// ROUNDED
+              buyAtPrice:
+                  isEditPrice
+                  ? roundedPrice
+                  : widget
+                        .gramData
+                        .buyAtPrice
+                        .toString(),
+
+              /// ROUNDED
+              buyingPrice:
+                  isEditPrice
+                  ? roundedPrice
+                  : widget
+                        .gramData
+                        .buyAtPrice
+                        .toString(),
+            );
+
+    if (!context.mounted) return;
+    if (!updated) return;
+
+    await ref
+        .read(gramProvider.notifier)
+        .getUserGramBalance();
+
+    if (!context.mounted) return;
+
+    Navigator.pop(context);
+    Navigator.pop(context);
+  },
+);
+                                      // await genericPopUpWidget(
+                                      //   context: context,
+                                      //   heading: AppLocalizations.of(
+                                      //     context,
+                                      //   )!.deal_update_confirm_title, //"Confirmation",
+                                      //   subtitle: AppLocalizations.of(
+                                      //     context,
+                                      //   )!.deal_sure_confirm,
+                                      //   //"Are you sure you want to Update this order?",
+                                      //   noButtonTitle: AppLocalizations.of(
+                                      //     context,
+                                      //   )!.no, //"No",
+                                      //   yesButtonTitle: AppLocalizations.of(
+                                      //     context,
+                                      //   )!.yes,
+                                      //   isLoadingState: false,
+                                      //   onNoPress: () {
+                                      //     Navigator.pop(context);
+                                      //     Navigator.pop(context);
+                                      //   },
+                                      //   onYesPress: () async {
+                                      //     final existingBuyAtPrice =
+                                      //         double.tryParse(
+                                      //           widget.gramData.buyAtPrice
+                                      //                   ?.toString() ??
+                                      //               "0",
+                                      //         ) ??
+                                      //         0;
+                                      //     final existingSellAtProfit =
+                                      //         double.tryParse(
+                                      //           widget.gramData.sellAtProfit
+                                      //                   ?.toString() ??
+                                      //               "0",
+                                      //         ) ??
+                                      //         0;
+                                      //     final existingGram =
+                                      //         double.tryParse(
+                                      //           widget.gramData.tradeMetal
+                                      //                   ?.toString() ??
+                                      //               "0",
+                                      //         ) ??
+                                      //         0;
+
+                                      //     final updatedGram =
+                                      //         double.tryParse(
+                                      //           gramAmountController.text,
+                                      //         ) ??
+                                      //         existingGram;
+                                      //     final updatedPrice =
+                                      //         double.tryParse(
+                                      //           sellAtPriceController.text,
+                                      //         ) ??
+                                      //         0;
+
+                                      //     final calculatedTradeMoney = (() {
+                                      //       if (isGramAmountPrice &&
+                                      //           !isEditPrice) {
+                                      //         return tradeType == "Sell"
+                                      //             ? updatedGram *
+                                      //                   existingSellAtProfit
+                                      //             : updatedGram *
+                                      //                   existingBuyAtPrice;
+                                      //       } else if (!isGramAmountPrice &&
+                                      //           isEditPrice) {
+                                      //         return existingGram *
+                                      //             updatedPrice;
+                                      //       } else if (isGramAmountPrice &&
+                                      //           isEditPrice) {
+                                      //         return updatedGram * updatedPrice;
+                                      //       } else {
+                                      //         return widget.gramData.tradeMoney;
+                                      //       }
+                                      //     })();
+
+                                      //     // Proceed to API call after passing price validation
+                                      //     final updated = tradeType == "Sell"
+                                      //         ? await gramStateReadProvider
+                                      //               .updateSellOrder(
+                                      //                 context: context,
+                                      //                 tradeId: widget
+                                      //                     .gramData
+                                      //                     .id
+                                      //                     .toString(),
+                                      //                 dealId: widget
+                                      //                     .gramData
+                                      //                     .dealId!,
+                                      //                 tradeMoney:
+                                      //                     calculatedTradeMoney
+                                      //                         .toString(),
+                                      //                 tradeMetal:
+                                      //                     isGramAmountPrice
+                                      //                     ? gramAmountController
+                                      //                           .text
+                                      //                     : widget
+                                      //                           .gramData
+                                      //                           .tradeMetal!
+                                      //                           .toString(),
+                                      //                 sellAtProfit: isEditPrice
+                                      //                     ? sellAtPriceController
+                                      //                           .text
+                                      //                     : widget
+                                      //                           .gramData
+                                      //                           .sellAtProfit
+                                      //                           .toString(),
+                                      //                 sellingPrice: isEditPrice
+                                      //                     ? sellAtPriceController
+                                      //                           .text
+                                      //                     : widget
+                                      //                           .gramData
+                                      //                           .sellAtProfit
+                                      //                           .toString(),
+                                      //               )
+                                      //         : await gramStateReadProvider
+                                      //               .updateBuyOrder(
+                                      //                 context: context,
+                                      //                 dealId: widget
+                                      //                     .gramData
+                                      //                     .dealId!,
+                                      //                 tradeMoney:
+                                      //                     calculatedTradeMoney
+                                      //                         .toString(),
+                                      //                 tradeMetal:
+                                      //                     isGramAmountPrice
+                                      //                     ? gramAmountController
+                                      //                           .text
+                                      //                     : widget
+                                      //                           .gramData
+                                      //                           .tradeMetal!
+                                      //                           .toString(),
+                                      //                 buyAtPrice: isEditPrice
+                                      //                     ? sellAtPriceController
+                                      //                           .text
+                                      //                     : widget
+                                      //                           .gramData
+                                      //                           .buyAtPrice
+                                      //                           .toString(),
+                                      //                 buyingPrice: isEditPrice
+                                      //                     ? sellAtPriceController
+                                      //                           .text
+                                      //                     : widget
+                                      //                           .gramData
+                                      //                           .buyAtPrice
+                                      //                           .toString(),
+                                      //               );
+
+                                      //     if (!context.mounted) return;
+                                      //     if (!updated) return;
+
+                                      //     await ref
+                                      //         .read(gramProvider.notifier)
+                                      //         .getUserGramBalance();
+
+                                      //     if (!context.mounted) return;
+
+                                      //     Navigator.pop(context);
+                                      //     Navigator.pop(context);
+                                      //   },
+                                      // );
+                                    
                                     },
                                   ),
                                 ),
@@ -1414,142 +1590,312 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
 
                           /// Update Deal Position
                           AbsorbPointer(
-                            absorbing: !canUseLiveSellForDeal,
-                            child: Opacity(
-                              opacity: canUseLiveSellForDeal ? 1.0 : 0.5,
-                              child: LoaderButton(
-                                title: AppLocalizations.of(
-                                  context,
-                                )!.deal_update_position_btn, //"Update Deal Position",
-                                onTap: () async {
-                                  // Validate form first (errors show below field)
-                                  if (!(_formTakeProfitKey.currentState
-                                          ?.validate() ??
-                                      false)) {
-                                    return;
-                                  }
-                                  final sellingPrice =
-                                      goldPriceStateWatchProvider
-                                          .value
-                                          ?.oneGramSellingPriceInIQD;
-                                  if (sellingPrice == null ||
-                                      sellingPrice <= 0) {
-                                    Toasts.getErrorToast(
-                                      text: AppLocalizations.of(
-                                        context,
-                                      )!.error_loading_price,
-                                      gravity: ToastGravity.TOP,
-                                    );
-                                    return;
-                                  }
+  absorbing: !canUseLiveSellForDeal,
+  child: Opacity(
+    opacity: canUseLiveSellForDeal ? 1.0 : 0.5,
+    child: LoaderButton(
+      title: AppLocalizations.of(
+        context,
+      )!.deal_update_position_btn,
+      onTap: () async {
+        // Validate form first
+        if (!(_formTakeProfitKey.currentState?.validate() ??
+            false)) {
+          return;
+        }
 
-                                  final String inputText = sellAtPriceController
-                                      .text
-                                      .trim();
-                                  final double userInput =
-                                      double.tryParse(inputText) ?? 0.0;
-                                  final buyingPrice =
-                                      widget.gramData.buyingPrice;
-                                  if (buyingPrice == null) return;
+        final sellingPrice =
+            goldPriceStateWatchProvider
+                .value
+                ?.oneGramSellingPriceInIQD;
 
-                                  final double roundedInput = double.parse(
-                                    userInput.toStringAsFixed(3),
-                                  );
-                                  final double roundedSelling = double.parse(
-                                    sellingPrice.toStringAsFixed(3),
-                                  );
-                                  final bool saveProfit =
-                                      roundedInput < roundedSelling;
+        if (sellingPrice == null ||
+            sellingPrice <= 0) {
+          Toasts.getErrorToast(
+            text: AppLocalizations.of(
+              context,
+            )!.error_loading_price,
+            gravity: ToastGravity.TOP,
+          );
+          return;
+        }
 
-                                  // Proceed (validation done in form validator above)
-                                  if (_formTakeProfitKey.currentState
-                                          ?.validate() ??
-                                      false) {
-                                    _focusSellAtPriceNode.unfocus();
+        final String inputText =
+            sellAtPriceController.text.trim();
 
-                                    final kSellingPrice = sellingPrice;
-                                    final sellAtProfit = num.parse(inputText);
-                                    final newTradeMoney =
-                                        sellAtProfit *
-                                        widget.gramData.tradeMetal!;
+        final double userInput =
+            double.tryParse(inputText) ?? 0.0;
 
-                                    debugPrint(
-                                      "newTradeMoney: $newTradeMoney | sellAtProfit: $sellAtProfit | tradeMetal: ${widget.gramData.tradeMetal} | kSellingPrice: $kSellingPrice",
-                                    );
+        final buyingPrice =
+            widget.gramData.buyingPrice;
 
-                                    // final String confirmationMessage =
-                                    //     roundedInput >= roundedSelling
-                                    //     ? AppLocalizations.of(context)!.about_take_profit//"You are about to take profit at the selected price."
-                                    //     : AppLocalizations.of(context)!.about_take_profit;//"You are about to save your profit at the selected price.";
-                                    final num buyAt = num.parse(
-                                      (widget.gramData.buyingPrice ?? 0)
-                                          .toStringAsFixed(3),
-                                    );
+        if (buyingPrice == null) return;
 
-                                    final String confirmationMessage =
-                                        (roundedInput >= buyAt &&
-                                            roundedInput <= roundedSelling)
-                                        ? AppLocalizations.of(
-                                            context,
-                                          )!.about_to_save_profit
-                                        : AppLocalizations.of(
-                                            context,
-                                          )!.about_to_take_profit_message;
+        /// APPLY IQD ROUNDING
+        final double roundedInput =
+            CommonService.normalizeIqdForApi(
+              userInput,
+            ).toDouble();
 
-                                    //if bool is true than show the user that you want to save profit insteady of you want to update deal
+        final double roundedSelling =
+            CommonService.normalizeIqdForApi(
+              sellingPrice,
+            ).toDouble();
 
-                                    await genericPopUpWidget(
-                                      context: context,
-                                      heading: AppLocalizations.of(
-                                        context,
-                                      )!.confirmation, //"Confirmation",
-                                      subtitle: confirmationMessage,
-                                      // AppLocalizations.of(
-                                      //   context,
-                                      // )!.deal_update_confirm_message, //"Are you sure you want to update deal position?",
-                                      noButtonTitle: AppLocalizations.of(
-                                        context,
-                                      )!.no, //"No",
-                                      yesButtonTitle: AppLocalizations.of(
-                                        context,
-                                      )!.yes, //"Yes",
-                                      isLoadingState: ref
-                                          .watch(gramProvider)
-                                          .isButtonState,
-                                      onNoPress: () {
-                                        Navigator.pop(context);
-                                      },
-                                      onYesPress: () async {
-                                        final ok = await tradeStateReadProvider
-                                            .updateTradeDealPosition(
-                                              dealId: widget.gramData.dealId!,
-                                              tradeMoney: newTradeMoney,
-                                              tradeMetal:
-                                                  widget.gramData.tradeMetal!,
-                                              sellAtProfitStatus: isTakeProfit,
-                                              sellAtProfit: sellAtProfit,
-                                              sellingPrice: double.parse(
-                                                sellingPrice.toStringAsFixed(3),
-                                              ),
-                                              saveProfit: saveProfit,
-                                              context: context,
-                                            );
-                                        if (!context.mounted) return;
-                                        if (!ok) return;
-                                        await ref
-                                            .read(gramProvider.notifier)
-                                            .getUserGramBalance();
-                                        if (!context.mounted) return;
-                                        sellAtPriceController.clear();
-                                        Navigator.pop(context);
-                                        Navigator.pop(context);
-                                      },
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
+        final bool saveProfit =
+            roundedInput < roundedSelling;
+
+        // Proceed
+        if (_formTakeProfitKey.currentState
+                ?.validate() ??
+            false) {
+          _focusSellAtPriceNode.unfocus();
+
+          final kSellingPrice = sellingPrice;
+
+          /// ROUNDED VALUE
+          final sellAtProfit =
+              CommonService.normalizeIqdForApi(
+                userInput,
+              );
+
+          final newTradeMoney =
+              sellAtProfit *
+              widget.gramData.tradeMetal!;
+
+          debugPrint(
+            "newTradeMoney: $newTradeMoney | "
+            "sellAtProfit: $sellAtProfit | "
+            "tradeMetal: ${widget.gramData.tradeMetal} | "
+            "kSellingPrice: $kSellingPrice",
+          );
+
+          final num buyAt =
+              CommonService.normalizeIqdForApi(
+                widget.gramData.buyingPrice ?? 0,
+              );
+
+          final String confirmationMessage =
+              (roundedInput >= buyAt &&
+                      roundedInput <=
+                          roundedSelling)
+                  ? AppLocalizations.of(
+                      context,
+                    )!.about_to_save_profit
+                  : AppLocalizations.of(
+                      context,
+                    )!
+                      .about_to_take_profit_message;
+
+          await genericPopUpWidget(
+            context: context,
+            heading: AppLocalizations.of(
+              context,
+            )!.confirmation,
+            subtitle: confirmationMessage,
+            noButtonTitle:
+                AppLocalizations.of(
+                  context,
+                )!
+                    .no,
+            yesButtonTitle:
+                AppLocalizations.of(
+                  context,
+                )!
+                    .yes,
+            isLoadingState: ref
+                .watch(gramProvider)
+                .isButtonState,
+            onNoPress: () {
+              Navigator.pop(context);
+            },
+            onYesPress: () async {
+              final ok =
+                  await tradeStateReadProvider
+                      .updateTradeDealPosition(
+                dealId:
+                    widget.gramData.dealId!,
+                tradeMoney:
+                    newTradeMoney,
+                tradeMetal: widget
+                    .gramData.tradeMetal!,
+                sellAtProfitStatus:
+                    isTakeProfit,
+                sellAtProfit:
+                    sellAtProfit,
+
+                /// ROUNDED SELLING PRICE
+                sellingPrice:
+                    CommonService
+                        .normalizeIqdForApi(
+                          sellingPrice,
+                        )
+                        .toDouble(),
+
+                saveProfit: saveProfit,
+                context: context,
+              );
+
+              if (!context.mounted) return;
+              if (!ok) return;
+
+              await ref
+                  .read(
+                    gramProvider.notifier,
+                  )
+                  .getUserGramBalance();
+
+              if (!context.mounted) return;
+
+              sellAtPriceController.clear();
+
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+          );
+        }
+      },
+    ),
+  ),
+),
+                          // AbsorbPointer(
+                          //   absorbing: !canUseLiveSellForDeal,
+                          //   child: Opacity(
+                          //     opacity: canUseLiveSellForDeal ? 1.0 : 0.5,
+                          //     child: LoaderButton(
+                          //       title: AppLocalizations.of(
+                          //         context,
+                          //       )!.deal_update_position_btn, //"Update Deal Position",
+                          //       onTap: () async {
+                          //         // Validate form first (errors show below field)
+                          //         if (!(_formTakeProfitKey.currentState
+                          //                 ?.validate() ??
+                          //             false)) {
+                          //           return;
+                          //         }
+                          //         final sellingPrice =
+                          //             goldPriceStateWatchProvider
+                          //                 .value
+                          //                 ?.oneGramSellingPriceInIQD;
+                          //         if (sellingPrice == null ||
+                          //             sellingPrice <= 0) {
+                          //           Toasts.getErrorToast(
+                          //             text: AppLocalizations.of(
+                          //               context,
+                          //             )!.error_loading_price,
+                          //             gravity: ToastGravity.TOP,
+                          //           );
+                          //           return;
+                          //         }
+
+                          //         final String inputText = sellAtPriceController
+                          //             .text
+                          //             .trim();
+                          //         final double userInput =
+                          //             double.tryParse(inputText) ?? 0.0;
+                          //         final buyingPrice =
+                          //             widget.gramData.buyingPrice;
+                          //         if (buyingPrice == null) return;
+
+                          //         final double roundedInput = double.parse(
+                          //           userInput.toStringAsFixed(3),
+                          //         );
+                          //         final double roundedSelling = double.parse(
+                          //           sellingPrice.toStringAsFixed(3),
+                          //         );
+                          //         final bool saveProfit =
+                          //             roundedInput < roundedSelling;
+
+                          //         // Proceed (validation done in form validator above)
+                          //         if (_formTakeProfitKey.currentState
+                          //                 ?.validate() ??
+                          //             false) {
+                          //           _focusSellAtPriceNode.unfocus();
+
+                          //           final kSellingPrice = sellingPrice;
+                          //           final sellAtProfit = num.parse(inputText);
+                          //           final newTradeMoney =
+                          //               sellAtProfit *
+                          //               widget.gramData.tradeMetal!;
+
+                          //           debugPrint(
+                          //             "newTradeMoney: $newTradeMoney | sellAtProfit: $sellAtProfit | tradeMetal: ${widget.gramData.tradeMetal} | kSellingPrice: $kSellingPrice",
+                          //           );
+
+                          //           // final String confirmationMessage =
+                          //           //     roundedInput >= roundedSelling
+                          //           //     ? AppLocalizations.of(context)!.about_take_profit//"You are about to take profit at the selected price."
+                          //           //     : AppLocalizations.of(context)!.about_take_profit;//"You are about to save your profit at the selected price.";
+                          //           final num buyAt = num.parse(
+                          //             (widget.gramData.buyingPrice ?? 0)
+                          //                 .toStringAsFixed(3),
+                          //           );
+
+                          //           final String confirmationMessage =
+                          //               (roundedInput >= buyAt &&
+                          //                   roundedInput <= roundedSelling)
+                          //               ? AppLocalizations.of(
+                          //                   context,
+                          //                 )!.about_to_save_profit
+                          //               : AppLocalizations.of(
+                          //                   context,
+                          //                 )!.about_to_take_profit_message;
+
+                          //           //if bool is true than show the user that you want to save profit insteady of you want to update deal
+
+                          //           await genericPopUpWidget(
+                          //             context: context,
+                          //             heading: AppLocalizations.of(
+                          //               context,
+                          //             )!.confirmation, //"Confirmation",
+                          //             subtitle: confirmationMessage,
+                          //             // AppLocalizations.of(
+                          //             //   context,
+                          //             // )!.deal_update_confirm_message, //"Are you sure you want to update deal position?",
+                          //             noButtonTitle: AppLocalizations.of(
+                          //               context,
+                          //             )!.no, //"No",
+                          //             yesButtonTitle: AppLocalizations.of(
+                          //               context,
+                          //             )!.yes, //"Yes",
+                          //             isLoadingState: ref
+                          //                 .watch(gramProvider)
+                          //                 .isButtonState,
+                          //             onNoPress: () {
+                          //               Navigator.pop(context);
+                          //             },
+                          //             onYesPress: () async {
+                          //               final ok = await tradeStateReadProvider
+                          //                   .updateTradeDealPosition(
+                          //                     dealId: widget.gramData.dealId!,
+                          //                     tradeMoney: newTradeMoney,
+                          //                     tradeMetal:
+                          //                         widget.gramData.tradeMetal!,
+                          //                     sellAtProfitStatus: isTakeProfit,
+                          //                     sellAtProfit: sellAtProfit,
+                          //                     sellingPrice: double.parse(
+                          //                       sellingPrice.toStringAsFixed(3),
+                          //                     ),
+                          //                     saveProfit: saveProfit,
+                          //                     context: context,
+                          //                   );
+                          //               if (!context.mounted) return;
+                          //               if (!ok) return;
+                          //               await ref
+                          //                   .read(gramProvider.notifier)
+                          //                   .getUserGramBalance();
+                          //               if (!context.mounted) return;
+                          //               sellAtPriceController.clear();
+                          //               Navigator.pop(context);
+                          //               Navigator.pop(context);
+                          //             },
+                          //           );
+                          //         }
+                          //       },
+                          //     ),
+                          //   ),
+                          // ),
+                          
                           ConstPadding.sizeBoxWithHeight(height: 12),
                         ],
 

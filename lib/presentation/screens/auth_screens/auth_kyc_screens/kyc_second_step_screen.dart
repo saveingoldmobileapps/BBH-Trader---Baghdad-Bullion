@@ -28,7 +28,12 @@ import '../../../../data/models/shuftipro_model/ShuftiProApiReponseModel.dart';
 import '../../../sharedProviders/providers/language_provider.dart';
 
 class KycSecondStepScreen extends ConsumerStatefulWidget {
-  const KycSecondStepScreen({super.key});
+  final Map<String, dynamic>? alTaifOnboardingData;
+
+  const KycSecondStepScreen({
+    super.key,
+    this.alTaifOnboardingData,
+  });
 
   @override
   ConsumerState createState() => _KycSecondStepScreenState();
@@ -478,6 +483,8 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
                               // Toasts.getSuccessToast(text: "Please Wait...");
                               await shuftiProKYC(
                                 countryCode: _selectNationality!,
+                                alTaifOnboardingData:
+                                    widget.alTaifOnboardingData,
                               );
 
                               //  VerifyIdentitySheet.show(context);
@@ -607,6 +614,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
   /// shufti pro kyc
   Future<void> shuftiProKYC({
     required String countryCode,
+    Map<String, dynamic>? alTaifOnboardingData,
   }) async {
     try {
       /// Load keys from .env
@@ -768,6 +776,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
       final newJson = {
         'userId': userId,
         'kycData': shuftiProResult.toJson(),
+        'bankOnboardingData': alTaifOnboardingData,
         //'Savekycdata':shuftiProResult.toJson()
       };
       final kycData = shuftiProResult.toJson();

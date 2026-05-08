@@ -171,7 +171,6 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
               //     ),
               //   ),
               // ),
-
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async => await fetchESouqProductData(),
@@ -202,21 +201,28 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                                 child: CircularProgressIndicator(),
                               );
                             }
-                            
+
                             final product = esouqState.products[index];
-                            final lang =
-                                Localizations.localeOf(context).languageCode;
-                            final eSouqProductPrice = CommonService.calculateWeightPrice(
-                              weightFactor: product.weightFactor,
-                              oneGramSellingPrice: oneGramBuyingPriceInIQD,
-                         );
+                            final lang = Localizations.localeOf(
+                              context,
+                            ).languageCode;
+                            final eSouqProductPrice =
+                                CommonService.calculateWeightPrice(
+                                  weightFactor: product.weightFactor,
+                                  oneGramSellingPrice: oneGramBuyingPriceInIQD,
+                                );
                             // final itemPrice =
                             //  CommonService.formatCurrency(amount: eSouqProductPrice.toString(),
-  //);                        
+                            //);
 
-  final itemPrice =CommonService.roundingFormatIqdCurrency(double.tryParse(eSouqProductPrice.toString()) ?? 0);
+                            final itemPrice =
+                                CommonService.roundingFormatIqdCurrency(
+                                  double.tryParse(
+                                        eSouqProductPrice.toString(),
+                                      ) ??
+                                      0,
+                                );
                             final title = product.localizedProductName(lang);
-                            
 
                             return EsouqItemCard(
                               title: title.isNotEmpty ? title : l10n.na,
@@ -233,12 +239,11 @@ class _EsouqScreenState extends ConsumerState<EsouqScreen> {
                                   MaterialPageRoute(
                                     builder: (context) => EsouqItemDetailScreen(
                                       product: product,
-                                      productPrice:
-                                          eSouqProductPrice.toString(),
-                                      oneGramPriceInIQD:
-                                          oneGramBuyingPriceInIQD
-                                              .round()
-                                              .toString(),
+                                      productPrice: eSouqProductPrice
+                                          .toString(),
+                                      oneGramPriceInIQD: oneGramBuyingPriceInIQD
+                                          .round()
+                                          .toString(),
                                     ),
                                   ),
                                 );

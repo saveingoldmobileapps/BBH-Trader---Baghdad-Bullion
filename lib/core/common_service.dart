@@ -203,6 +203,23 @@ static String roundingFormatIqdCurrency(
   static String formatIQDForDisplay(num? value) => roundingFormatIqdCurrency(value);
 static String roundingformatIQDForDisplay(num? value) => roundingFormatIqdCurrency(value);
 
+  /// Normalize IQD numeric value for API payloads using the same app rounding policy.
+  /// - < 100  => nearest 10
+  /// - >= 100 => nearest 100
+  /// Returns a number (no locale formatting / no separators) safe for JSON payloads.
+  static num normalizeIqdForApi(num? value) {
+    final val = (value ?? 0).round();
+    if (val < 100) {
+      final tens = (val ~/ 10) * 10;
+      final remainder = val % 10;
+      return remainder < 5 ? tens : tens + 10;
+    }
+
+    final lastTwoDigits = val % 100;
+    final base = val - lastTwoDigits;
+    return lastTwoDigits < 50 ? base : base + 100;
+  }
+
   /// Format price for compact display (e.g. 2K, 1M) — based on rounded whole units.
   static String formatPriceCompact(num? value) {
     final rounded = (value ?? 0).round();

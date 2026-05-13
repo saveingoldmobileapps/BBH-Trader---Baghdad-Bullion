@@ -339,6 +339,7 @@ class Auth extends _$Auth {
         );
         return;
       }
+      
 
       final bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
       final bool isDeviceSupported = await _localAuth.isDeviceSupported();
@@ -4082,6 +4083,7 @@ class Auth extends _$Auth {
         body: body,
         httpMethod: HttpMethod.patch,
       );
+      print("body ${body}");
 
       setButtonState(false);
 
@@ -4137,6 +4139,7 @@ class Auth extends _$Auth {
           getLocator<Logger>().e(
             "ExceptionError: ${serverResponse.resultData}",
           );
+          print("object");
       }
     } catch (e, stackTrace) {
       await Sentry.captureException(

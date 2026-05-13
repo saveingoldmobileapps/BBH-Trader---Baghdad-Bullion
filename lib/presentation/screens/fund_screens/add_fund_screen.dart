@@ -222,8 +222,8 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
                 )!.dep_method_direct, //"Direct Transfer",
                 subtitle: AppLocalizations.of(
                   context,
-                )!.dep_method_noFees, //"No Fees",
-                iconString: "assets/svg/direct_icon.svg",
+                )!.bank_charge_message, //"No Fees",
+                iconString: "assets/png/iqd_icon.png",//"assets/svg/direct_icon.svg",
                 onTap: () async {
                   //Toasts.getWarningToast(text: "Try it later");
                   //await connectBank();

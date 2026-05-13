@@ -106,7 +106,10 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
     }
 
     if (widget.limitBuyPricePerGram != null) {
-      _goldPriceListenSub = ref.listenManual(goldPriceProvider, (previous, next) {
+      _goldPriceListenSub = ref.listenManual(goldPriceProvider, (
+        previous,
+        next,
+      ) {
         next.whenData((data) {
           _maybeInvalidateLimitBuy(data.oneGramBuyingPriceInIQD);
         });
@@ -135,7 +138,8 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final dialogTitle = widget.title ?? l10n.trade_confirm_dialog_title;
-    final dialogSubtitle = widget.subtitle ?? l10n.trade_confirm_dialog_subtitle;
+    final dialogSubtitle =
+        widget.subtitle ?? l10n.trade_confirm_dialog_subtitle;
     final dialogConfirm =
         widget.confirmButtonText ?? l10n.trade_confirm_dialog_button;
 
@@ -257,9 +261,18 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
               const SizedBox(height: 20),
             ],
 
+            // tradeConfirmDetailRow(
+            //   l10n.amountVar,
+            //   '${widget.amountGrams} ${l10n.grams_unit_lowercase}',
+            // ),
             tradeConfirmDetailRow(
               l10n.amountVar,
-              '${widget.amountGrams} ${l10n.grams_unit_lowercase}',
+              (() {
+                final amountValue =
+                    double.tryParse(widget.amountGrams.toString()) ?? 0;
+
+                return '${widget.amountGrams} ${amountValue > 1 ? l10n.grams_plural_lowercase : l10n.grams_unit_lowercase}';
+              })(),
             ),
             const SizedBox(height: 12),
             const Divider(color: Colors.white10, height: 1),

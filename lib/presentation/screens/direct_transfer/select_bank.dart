@@ -1,4 +1,5 @@
 
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -95,47 +96,133 @@ class _SelectBankForDirectTransferState
                 child: ListView.builder(
                   itemCount: state.allBanks.length,
                   itemBuilder: (context, index) {
-                    final bank = state.allBanks[index];
-                    final initials = _getInitials(title: bank.bankName ?? '');
-                    return Column(
-                      children: [
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          leading: CircleAvatar(
-                            radius: 18,
-                            backgroundColor: AppColors.greyScale900,
-                            child: GetGenericText(
-                              text: initials,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white.withValues(alpha: 204),
-                            ),
-                          ),
-                          title: GetGenericText(
-                            text: bank.bankName ?? "",
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.grey5Color,
-                          ),
-                          trailing: SvgPicture.asset(
-                            "assets/svg/bank_forward_icon.svg",
-                            height: sizes!.heightRatio * 16,
-                            width: sizes!.widthRatio * 16,
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    BankDetailsScreen(bankId: bank.id!),
-                              ),
-                            );
-                          },
-                        ),
-                        const Divider(color: Colors.grey, thickness: 0.3),
-                      ],
-                    );
-                  },
+  final bank = state.allBanks[index];
+
+  final isEnglish =
+      ref.read(languageProvider).languageCode == "en";
+
+  final bankTitle = isEnglish
+      ? (bank.bankName?.en ?? "")
+      : (bank.bankName?.ar ?? "");
+
+  //final initials = _getInitials(title: bankTitle);
+
+  return Column(
+    children: [
+      ListTile(
+        contentPadding: EdgeInsets.zero,
+
+        /// ✅ BANK LOGO (fallback to initials)
+        leading: bank.logoUrl != null && bank.logoUrl!.isNotEmpty
+            ? CircleAvatar(
+                radius: 18,
+                backgroundColor: AppColors.greyScale900,
+                backgroundImage: NetworkImage(bank.logoUrl!),
+              )
+            : CircleAvatar(
+                radius: 18,
+                backgroundColor: AppColors.greyScale900,
+                child: GetGenericText(
+                  text: "",//initials,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white.withValues(alpha: 204),
+                ),
+              ),
+
+        /// ✅ MULTI LANGUAGE NAME
+        title: GetGenericText(
+          text: bankTitle,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          color: AppColors.grey5Color,
+        ),
+
+        trailing:isEnglish? 
+        Icon(
+          Icons.arrow_forward_ios,
+          size: sizes!.heightRatio * 26,
+          color: AppColors.whiteColor,
+          //   height: sizes!.heightRatio * 16,
+          // width: sizes!.widthRatio * 16,
+        ):Icon(Icons.keyboard_arrow_left,
+
+        
+          size: sizes!.heightRatio * 26,
+          color: AppColors.whiteColor,),
+        // SvgPicture.asset(
+        //   "assets/svg/bank_forward_icon.svg",
+        //   height: sizes!.heightRatio * 16,
+        //   width: sizes!.widthRatio * 16,
+        // ):
+        // SvgPicture.asset(
+        //   "assets/svg/bank_forward_icon.svg",
+        //   height: sizes!.heightRatio * 16,
+        //   width: sizes!.widthRatio * 16,
+        //   color: ,
+        // ),
+
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  BankDetailsScreen(bankId: bank.id!),
+            ),
+          );
+        },
+      ),
+
+      const Divider(
+        color: Colors.grey,
+        thickness: 0.3,
+      ),
+    ],
+  );
+},
+                  // itemBuilder: (context, index) {
+                  //   final bank = state.allBanks[index];
+                  //   final initials = _getInitials(title: bank.bankName ?? '');
+                  //   return Column(
+                  //     children: [
+                  //       ListTile(
+                  //         contentPadding: EdgeInsets.zero,
+                  //         leading: CircleAvatar(
+                  //           radius: 18,
+                  //           backgroundColor: AppColors.greyScale900,
+                  //           child: GetGenericText(
+                  //             text: initials,
+                  //             fontSize: 12,
+                  //             fontWeight: FontWeight.w600,
+                  //             color: Colors.white.withValues(alpha: 204),
+                  //           ),
+                  //         ),
+                  //         title: GetGenericText(
+                  //           text: bank.bankName ?? "",
+                  //           fontSize: 16,
+                  //           fontWeight: FontWeight.w400,
+                  //           color: AppColors.grey5Color,
+                  //         ),
+                  //         trailing: SvgPicture.asset(
+                  //           "assets/svg/bank_forward_icon.svg",
+                  //           height: sizes!.heightRatio * 16,
+                  //           width: sizes!.widthRatio * 16,
+                  //         ),
+                  //         onTap: () {
+                  //           Navigator.push(
+                  //             context,
+                  //             MaterialPageRoute(
+                  //               builder: (context) =>
+                  //                   BankDetailsScreen(bankId: bank.id!),
+                  //             ),
+                  //           );
+                  //         },
+                  //       ),
+                  //       const Divider(color: Colors.grey, thickness: 0.3),
+                  //     ],
+                  //   );
+                  // },
+                
                 ),
               ),
           ],
@@ -145,11 +232,11 @@ class _SelectBankForDirectTransferState
   }
 
   /// get initials from title
-  String _getInitials({
-    required String title,
-  }) {
-    final parts = title.split(' ');
-    if (parts.length == 1) return title.substring(0, 2).toUpperCase();
-    return (parts[0].substring(0, 1) + parts[1].substring(0, 1)).toUpperCase();
-  }
+  // String _getInitials({
+  //   required String title,
+  // }) {
+  //   final parts = title.split(' ');
+  //   if (parts.length == 1) return title.substring(0, 2).toUpperCase();
+  //   return (parts[0].substring(0, 1) + parts[1].substring(0, 1)).toUpperCase();
+  // }
 }

@@ -7,12 +7,12 @@
   "gs_subtitle": "Seamlessly buy, sell, and grow your gold portfolio with the platform you trust.",
   "login": "Login",
   "getStarted": "Get Started",
-  "your_gold":"Your Gold\nYour Wealth.",
+  "your_gold":"Your Gold\nYour Wealth",
   "new_to_bbh":"I''m new to BBH",
   "sign_up_bbh" : "Sign up",
   "login_des": "Trade, track, and grow your gold portfolio with real-time precision.",
   "login_to_bbh" : "Login",
-  "bank_client_onboarding": "Al-Taif bank onboarding",
+  "bank_client_onboarding": "Al Taif Islamic Bank",
   "exiting_to_bbh": "I''m an existing user",
   "eng_title": "English",
   "arabic_title": "Arabic",
@@ -20,6 +20,27 @@
 
   "@languageScreen": {},
   "app_lang": "App Language",
+
+
+  "need_help": "Need Help?",
+  "email_us": "Email Us",
+  "whatsapp": "WhatsApp",
+  "email_not_available": "Email app not available",
+  "whatsapp_not_available": "WhatsApp is not installed",
+  "confirm_exit": "Confirm Exit",
+  "sure_exit": "Are you sure you want to exit?",
+  "yes": "Yes",
+  "no": "No",
+
+  
+  "contact_us": "Contact Us",
+  "get_in_touch": "Get in Touch",
+  "contact_desc": "We''re here to help! Choose your preferred way to reach us.",
+  "call_us": "Call Us",
+  "office_hours": "Office Hours",
+  "office_hours_desc": "Monday - Friday: 9:00 AM - 6:00 PM\nSaturday: 10:00 AM - 2:00 PM",
+
+
 
   "@LoginScreen": {},
   "welcome_back": "Welcome Back",
@@ -365,6 +386,8 @@
   "dep_method_sub": "Select a Method",
   "dep_method_direct": "Direct Transfer",
   "dep_method_noFees": "No Fees",
+  "account_type": "Account Type",
+  "currency": "Currency",
   "dep_method_card": "Card Payment",
   "dep_method_google": "Google Pay",
   "dep_fee_instantNote": "Instant Deposit, bank fees apply.",
@@ -380,7 +403,7 @@
   "dep_label_iban": "IBAN Number",
   "dep_label_swift": "Swift",
   "dep_share_title": "Share Receipt",
-  "dep_share_desc": "Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House FZCO account.",
+  "dep_share_desc": "Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House account.",
   "dep_share_whatsapp": "Share on Whatsapp",
   "dep_share_email": "Send via Email",
   "dep_toast_txSaved": "Transaction saved successfully",
@@ -412,7 +435,7 @@
   "withdraw_only_alphabets" : "Only alphabets are allowed",
   "withdraw_alphabet_char": "Must include both letters and digits",
   "withdraw_add_fund": "Please add funds into your account.",
-  "bank_charge_message": "A bank fee of IQD 25 plus VAT will be applied.",
+  "bank_charge_message": "A bank fee will be applied.",
   "save_changes": "Save Changes",
   "edit_bank_card":"Edit Bank Card",
   "save_card_detail":"Save Card Details",
@@ -1253,7 +1276,9 @@
 
 
   "buy_gold_grams_subtitle": "Enter the amount of gold in grams to trade",
-  "grams_unit_lowercase": "grams",
+  "grams_unit_lowercase": "gram",
+  "grams_plural_lowercase": "grams",
+
   "buy_gold_approx_total": "≈ IQD {amount}",
   "@buy_gold_approx_total": {
     "placeholders": {
@@ -1293,12 +1318,13 @@
   "order_placed_title": "Order Placed!",
   "limit_order_title": "Limit Order",
   "limit_order_des": "Your limit order has been placed and will\nexecute when the target price is reached.",
-  "limit_order_success":"You have Successfully Placed the order.",
+  "limit_order_success":"You have successfully placed the order.",
   "limit_date_time": "Date & Time",
   "limit_trade_type": "Trade type",
   "limit_amount": "Amount",
   "target_price":"Target price",
-  "gmt_time":"GMT+3 Total",
+  "execution_Price": "Execution Price",
+  "gmt_time":"Total",
   "will_notify":"We’ll notify you when your order is executed",
   "return_home": "Return to home",
 

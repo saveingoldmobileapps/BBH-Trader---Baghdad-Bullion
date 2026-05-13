@@ -133,12 +133,17 @@ class OrderPlacedScreen extends StatelessWidget {
                       tradeType,
                     ),
                     _row(
-                      "${AppLocalizations.of(context)!.limit_amount}",
+                      
+                      "${AppLocalizations.of(context)!.limit_amount}"
+                      ,
                       amount,
                       context,
                     ),
                     _row(
-                      "${AppLocalizations.of(context)!.target_price}",
+                      tradeType == 'Limit Order' || tradeType == "أمر محدد"? 
+                      "${AppLocalizations.of(context)!.target_price}":
+                      "${AppLocalizations.of(context)!.execution_Price}"
+                      ,
                       targetPrice,
                       context,
                     ),
@@ -153,13 +158,15 @@ class OrderPlacedScreen extends StatelessWidget {
 
               const SizedBox(height: 16),
 
-              Text(
+           tradeType == 'Limit Order' || tradeType == "أمر محدد"?   
+           
+           Text(
                 "${AppLocalizations.of(context)!.will_notify}",
                 style: GoogleFonts.inter(
                   color: Colors.white38,
                   fontSize: 12,
                 ),
-              ),
+              ):SizedBox(),
 
               const Spacer(),
 

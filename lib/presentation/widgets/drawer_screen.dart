@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:baghdad_bullion_house/presentation/screens/setting_screens/face_id_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -166,6 +167,37 @@ class _DrawerScreenState extends ConsumerState<DrawerScreen> {
                             );
                           },
                         ),
+                    //     if (Platform.isIOS) ...[
+                    // //_buildDivider(),
+                    // BuildSettingCard(
+                    //   title: l10n.faceid_enable,
+                    //   subtitle: l10n.faceid_desc,
+                    //   iconString: "assets/svg/faceId_icon.svg",
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => const FaceIDScreen(),
+                    //       ),
+                    //     );
+                    //   },
+                    //   isSecondIcon: true,
+                    // ),
+                 // ],
+                 if (Platform.isIOS)
+                          _settingTile(
+                            icon: "assets/svg/finger_scan.svg",
+                            title: l10n.settings_biometric,
+                            subtitle: l10n.settings_biometric_desc,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const FaceIDScreen(),
+                                ),
+                              );
+                            },
+                          ),
 
                         if (Platform.isAndroid)
                           _settingTile(

@@ -7,7 +7,7 @@
   "gs_subtitle": "اشترِ وبِع واستثمر في محفظتك الذهبية بسهولة عبر منصة موثوقة.",
   "login": "تسجيل الدخول",
   "getStarted": "ابدأ الآن",
-  "your_gold": "ذهبك\nثروتك.",
+  "your_gold": "ذهبك\nثروتك",
   "new_to_bbh": "أنا مستخدم جديد في BBH",
   "exiting_to_bbh": "أنا مستخدم حالي",
   "eng_title": "الإنجليزية",
@@ -15,7 +15,7 @@
   "sign_up_bbh": "إنشاء حساب",
   "login_des": "تداول وتتبع ونمِّ محفظتك من الذهب بدقة لحظية.",
   "login_to_bbh": "تسجيل الدخول",
-  "bank_client_onboarding": "انضمام بنك الطيف",
+  "bank_client_onboarding": "مصرف الطيف الإسلامي",
 
   "@languageScreen": {},
   "app_lang": "لغة التطبيق",
@@ -184,7 +184,26 @@
   "news": "الأخبار",
   "no_news": "لا توجد أخبار متاحة",
   "check_back": "تحقق لاحقًا للحصول على التحديثات",
+  
 
+
+  "need_help": "بحاجة إلى مساعدة؟",
+  "email_us": "راسلنا بالبريد",
+  "whatsapp": "واتساب",
+  "email_not_available": "تطبيق البريد الإلكتروني غير متوفر",
+  "whatsapp_not_available": "واتساب غير مثبت",
+  "confirm_exit": "تأكيد الخروج",
+  "sure_exit": "هل أنت متأكد أنك تريد الخروج؟",
+  "yes": "نعم",
+  "no": "لا",
+
+  
+  "contact_us": "اتصل بنا",
+  "get_in_touch": "تواصل معنا",
+  "contact_desc": "نحن هنا لمساعدتك! اختر الطريقة المفضلة للتواصل معنا.",
+  "call_us": "اتصل بنا",
+  "office_hours": "ساعات العمل",
+  "office_hours_desc": "الإثنين - الجمعة: 9:00 ص - 6:00 م\nالسبت: 10:00 ص - 2:00 م",
 
 
   "@BottomNavigation": {},
@@ -374,6 +393,8 @@
   "dep_method_sub": "اختر طريقة",
   "dep_method_direct": "تحويل مباشر",
   "dep_method_noFees": "بدون رسوم",
+  "account_type": "نوع الحساب",
+  "currency": "العملة",
   "dep_method_card": "الدفع بالبطاقة",
   "dep_method_google": "Google Pay",
   "dep_fee_instantNote": "إيداع فوري، تطبق رسوم البنك.",
@@ -389,7 +410,7 @@
   "dep_label_iban": "رقم الآيبان",
   "dep_label_swift": "سويفت",
   "dep_share_title": "مشاركة الإيصال",
-  "dep_share_desc": "اختر أيًا من الخيارات أدناه لمشاركة الإيصال بعد تحويل الأموال إلى حساب Baghdad Bullion House FZCO.",
+  "dep_share_desc": "اختر أيًا من الخيارات أدناه لمشاركة الإيصال بعد تحويل الأموال إلى حساب Baghdad Bullion House.",
   "dep_share_whatsapp": "مشاركة عبر واتساب",
   "dep_share_email": "إرسال عبر البريد الإلكتروني",
   "dep_toast_txSaved": "تم حفظ المعاملة بنجاح",
@@ -423,7 +444,7 @@
   "withdraw_alphabet_char": "يجب أن يحتوي على أحرف وأرقام معًا",
   "withdraw_add_fund": "يرجى إضافة أموال إلى حسابك.",
   "no_banks_available": "لا توجد بنوك متاحة",
-  "bank_charge_message_ar": "سيتم تطبيق رسوم بنكية قدرها 25 الدينار العراقيًا إماراتيًا بالإضافة إلى ضريبة القيمة المضافة.",
+  "bank_charge_message": "سيتم تطبيق رسوم بنكية.",
   "save_changes": "حفظ التغييرات",
   "edit_bank_card": "تعديل البطاقة البنكية",
   "save_card_detail": "حفظ تفاصيل البطاقة",
@@ -1264,7 +1285,8 @@
   "metal_closed_at": "أُغلق عند",
 
   "buy_gold_grams_subtitle": "أدخل كمية الذهب بالغرامات للتداول",
-  "grams_unit_lowercase": "غرامات",
+  "grams_unit_lowercase": "غرام",
+  "grams_plural_lowercase": "غرامات",
   "buy_gold_approx_total": "≈ {amount} د.ع",
   "@buy_gold_approx_total": {
     "placeholders": {
@@ -1308,7 +1330,8 @@
 "limit_trade_type": "نوع العملية",
 "limit_amount": "المبلغ",
 "target_price": "السعر المستهدف",
-"gmt_time": "توقيت غرينتش +3",
+"execution_Price": "سعر التنفيذ",
+"gmt_time":"الإجمالي",
 "will_notify": "سنقوم بإشعارك عند تنفيذ طلبك",
 "return_home": "العودة إلى الصفحة الرئيسية",
 

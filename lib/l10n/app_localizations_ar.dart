@@ -31,7 +31,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get getStarted => 'ابدأ الآن';
 
   @override
-  String get your_gold => 'ذهبك\nثروتك.';
+  String get your_gold => 'ذهبك\nثروتك';
 
   @override
   String get new_to_bbh => 'أنا مستخدم جديد في BBH';
@@ -46,7 +46,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get login_to_bbh => 'تسجيل الدخول';
 
   @override
-  String get bank_client_onboarding => 'انضمام بنك الطيف';
+  String get bank_client_onboarding => 'مصرف الطيف الإسلامي';
 
   @override
   String get exiting_to_bbh => 'أنا مستخدم حالي';
@@ -62,6 +62,53 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get app_lang => 'لغة التطبيق';
+
+  @override
+  String get need_help => 'بحاجة إلى مساعدة؟';
+
+  @override
+  String get email_us => 'راسلنا بالبريد';
+
+  @override
+  String get whatsapp => 'واتساب';
+
+  @override
+  String get email_not_available => 'تطبيق البريد الإلكتروني غير متوفر';
+
+  @override
+  String get whatsapp_not_available => 'واتساب غير مثبت';
+
+  @override
+  String get confirm_exit => 'تأكيد الخروج';
+
+  @override
+  String get sure_exit => 'هل أنت متأكد أنك تريد الخروج؟';
+
+  @override
+  String get yes => 'نعم';
+
+  @override
+  String get no => 'لا';
+
+  @override
+  String get contact_us => 'اتصل بنا';
+
+  @override
+  String get get_in_touch => 'تواصل معنا';
+
+  @override
+  String get contact_desc =>
+      'نحن هنا لمساعدتك! اختر الطريقة المفضلة للتواصل معنا.';
+
+  @override
+  String get call_us => 'اتصل بنا';
+
+  @override
+  String get office_hours => 'ساعات العمل';
+
+  @override
+  String get office_hours_desc =>
+      'الإثنين - الجمعة: 9:00 ص - 6:00 م\nالسبت: 10:00 ص - 2:00 م';
 
   @override
   String get welcome_back => 'مرحبًا بعودتك';
@@ -971,6 +1018,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get dep_method_noFees => 'بدون رسوم';
 
   @override
+  String get account_type => 'نوع الحساب';
+
+  @override
+  String get currency => 'العملة';
+
+  @override
   String get dep_method_card => 'الدفع بالبطاقة';
 
   @override
@@ -1020,7 +1073,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get dep_share_desc =>
-      'اختر أيًا من الخيارات أدناه لمشاركة الإيصال بعد تحويل الأموال إلى حساب Baghdad Bullion House FZCO.';
+      'اختر أيًا من الخيارات أدناه لمشاركة الإيصال بعد تحويل الأموال إلى حساب Baghdad Bullion House.';
 
   @override
   String get dep_share_whatsapp => 'مشاركة عبر واتساب';
@@ -1110,8 +1163,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get withdraw_add_fund => 'يرجى إضافة أموال إلى حسابك.';
 
   @override
-  String get bank_charge_message =>
-      'A bank fee of IQD 25 plus VAT will be applied.';
+  String get bank_charge_message => 'سيتم تطبيق رسوم بنكية.';
 
   @override
   String get save_changes => 'حفظ التغييرات';
@@ -2607,12 +2659,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get are_you_sure_want_to_delete => 'هل أنت متأكد أنك تريد الحذف؟';
 
   @override
-  String get no => 'لا';
-
-  @override
-  String get yes => 'نعم';
-
-  @override
   String get idq => 'الدينار العراقي';
 
   @override
@@ -3103,7 +3149,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get buy_gold_grams_subtitle => 'أدخل كمية الذهب بالغرامات للتداول';
 
   @override
-  String get grams_unit_lowercase => 'غرامات';
+  String get grams_unit_lowercase => 'غرام';
+
+  @override
+  String get grams_plural_lowercase => 'غرامات';
 
   @override
   String buy_gold_approx_total(String amount) {
@@ -3193,7 +3242,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String get limit_amount => 'المبلغ';
 
   @override
-  String get gmt_time => 'توقيت غرينتش +3';
+  String get execution_Price => 'سعر التنفيذ';
+
+  @override
+  String get gmt_time => 'الإجمالي';
 
   @override
   String get will_notify => 'سنقوم بإشعارك عند تنفيذ طلبك';

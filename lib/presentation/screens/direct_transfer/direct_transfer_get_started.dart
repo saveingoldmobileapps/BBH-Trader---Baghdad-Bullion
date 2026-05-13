@@ -62,9 +62,10 @@ class _GetStartedScreenState extends ConsumerState<DirectTransferGetStarted> {
           children: [
             ConstPadding.sizeBoxWithHeight(height: 50),
             Center(
-              child: SvgPicture.asset(
-                "assets/svg/direct_get_started.svg",
-              ),
+              child:buildAssetImage("assets/png/bankTransfer.png"),
+              // child: SvgPicture.asset(
+              //   "assets/png/bankTransfer.png",//"assets/svg/direct_get_started.svg",
+              // ),
             ),
             ConstPadding.sizeBoxWithHeight(height: 50),
             GetGenericText(
@@ -103,4 +104,20 @@ class _GetStartedScreenState extends ConsumerState<DirectTransferGetStarted> {
       ),
     );
   }
+  Widget buildAssetImage(String assetPath, {double? width, double? height}) {
+  if (assetPath.toLowerCase().endsWith('.svg')) {
+    return SvgPicture.asset(
+      assetPath,
+      width: width,
+      height: height,
+    );
+  } else {
+    // For PNG, JPG, JPEG, etc.
+    return Image.asset(
+      assetPath,
+      width: width,
+      height: height,
+    );
+  }
+}
 }

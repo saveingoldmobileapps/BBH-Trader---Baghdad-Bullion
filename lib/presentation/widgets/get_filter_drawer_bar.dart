@@ -63,6 +63,25 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
       return s.replaceFirst(RegExp(r'\.?0+$'), '');
     }
 
+    // API expects: when category is Ounce/Oz, send value in ounce units.
+    // Example: 31.10347 grams with "Ounce" should be sent as 1.
+    if (c == 'ounce' ||
+        c == 'ounces' ||
+        c == 'oz' ||
+        c == 'onz' ||
+        c == 'onus' ||
+        c.contains('ounce') ||
+        c.contains('oz') ||
+        c.contains('onus')) {
+      const gramsPerOunce = 31.10347;
+      final ounce = w / gramsPerOunce;
+      if (ounce.isNaN || ounce.isInfinite) return weight.trim();
+      final asInt = ounce.round();
+      if ((ounce - asInt).abs() < 1e-6) return asInt.toString();
+      final s = ounce.toStringAsFixed(3);
+      return s.replaceFirst(RegExp(r'\.?0+$'), '');
+    }
+
     return weight.trim();
   }
 
@@ -71,13 +90,15 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
     super.didChangeDependencies();
     if (_filtersLoaded) return;
     _filtersLoaded = true;
-    
+
     // Fetch ALL products by default (minting + casting)
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
-        subtype: null, // null means fetch all products
-        shapeSubType: null,
-      );
+      ref
+          .read(esouqProvider.notifier)
+          .fetchEsouqFilterOptions(
+            subtype: null, // null means fetch all products
+            shapeSubType: null,
+          );
     });
   }
 
@@ -86,8 +107,7 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
     final l10n = AppLocalizations.of(context)!;
     final esouqState = ref.watch(esouqProvider);
     final filterOptions = esouqState.filterOptions;
-    final isArabic =
-        Localizations.localeOf(context).languageCode == 'ar';
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
 
     return Container(
       height: MediaQuery.of(context).size.height * 0.92,
@@ -164,65 +184,114 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                   esouqState.isFilterLoading
                       ? _buildWeightChipsShimmer(context)
                       : filterOptions.isEmpty
-                          ? Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(32.0),
-                                child: Text(
-                                  AppLocalizations.of(context)!.no_weight_available,
-                                  //'No weight options available',
-                                  style: TextStyle(
-                                    color: Colors.grey[600],
-                                    fontSize: 14,
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: Text(
+                              AppLocalizations.of(context)!.no_weight_available,
+                              //'No weight options available',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: filterOptions.map((item) {
+                            // CHANGED: Use weightFactorNum instead of weightFactor
+                            final uniqueValue =
+                                '${item.weightFactor ?? ''}_${item.weightCategory ?? ''}_${item.id ?? ''}';
+                            final isSelected =
+                                selectedUniqueWeight == uniqueValue;
+                            return GestureDetector(
+                              onTap: () => setState(() {
+                                selectedUniqueWeight = uniqueValue;
+                                selectedWeight = item.weightFactor?.toString();
+                                selectedWeightCategory = item.weightCategory;
+                              }),
+                              child: Container(
+                                width:
+                                    (MediaQuery.of(context).size.width / 3) -
+                                    20,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? Colors.white
+                                      : const Color(0xFF1E1E1E),
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? Colors.white
+                                        : Colors.white.withOpacity(0.05),
                                   ),
                                 ),
-                              ),
-                            )
-                          : Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: filterOptions.map((item) {
-                                // CHANGED: Use weightFactorNum instead of weightFactor
-                                final uniqueValue =
-                                    '${item.weightFactor ?? ''}_${item.weightCategory ?? ''}_${item.id ?? ''}';
-                                final isSelected = selectedUniqueWeight == uniqueValue;
-                                return GestureDetector(
-                                  onTap: () => setState(() {
-                                    selectedUniqueWeight = uniqueValue;
-                                    selectedWeight = item.weightFactor?.toString();
-                                    selectedWeightCategory = item.weightCategory;
-                                  }),
-                                  child: Container(
-                                    width: (MediaQuery.of(context).size.width / 3) - 20,
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                    decoration: BoxDecoration(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : const Color(0xFF1E1E1E),
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.white.withOpacity(0.05),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        // label.isNotEmpty ? label : l10n.na,
-                                       isArabic?item.productName!.ar.toString():item.productName!.en.toString(),
-                                        style: TextStyle(
-                                          color:
-                                              isSelected ? Colors.black : Colors.white,
-                                          fontWeight: isSelected
-                                              ? FontWeight.w600
-                                              : FontWeight.normal,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ),
+                                child: Center(
+                                  child: Center(
+                                    child: Text(
+  (() {
+    final productName = isArabic
+        ? item.productName?.ar?.trim()
+        : item.productName?.en?.trim();
+
+    return (productName == null || productName.isEmpty)
+        ? "${item.weight} ${_getLocalizedWeightCategory(item.weightCategory, context)}"
+        : "${item.weight} ${_getLocalizedWeightCategory(item.weightCategory, context)}";
+  })(),
+  style: TextStyle(
+    color: isSelected
+        ? Colors.black
+        : Colors.white,
+    fontWeight: isSelected
+        ? FontWeight.w600
+        : FontWeight.normal,
+    fontSize: 13,
+  ),
+),
+                                    // Text(
+                                    //   (() {
+                                    //     final productName = isArabic
+                                    //         ? item.productName?.ar?.trim()
+                                    //         : item.productName?.en?.trim();
+
+                                    //     return (productName == null ||
+                                    //             productName.isEmpty)
+                                    //         ? "${item.weight} ${item.weightCategory}"
+                                    //         : "${item.weight} ${item.weightCategory}"; //productName;
+                                    //   })(),
+                                    //   style: TextStyle(
+                                    //     color: isSelected
+                                    //         ? Colors.black
+                                    //         : Colors.white,
+                                    //     fontWeight: isSelected
+                                    //         ? FontWeight.w600
+                                    //         : FontWeight.normal,
+                                    //     fontSize: 13,
+                                    //   ),
+                                    // ),
+                                  
                                   ),
-                                );
-                              }).toList(),
-                            ),
+                                  // child: Text(
+                                  //   // label.isNotEmpty ? label : l10n.na,
+                                  //  isArabic?item.productName!.ar.toString():item.productName!.en.toString(),
+                                  //   style: TextStyle(
+                                  //     color:
+                                  //         isSelected ? Colors.black : Colors.white,
+                                  //     fontWeight: isSelected
+                                  //         ? FontWeight.w600
+                                  //         : FontWeight.normal,
+                                  //     fontSize: 13,
+                                  //   ),
+                                  // ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
 
                   const SizedBox(height: 32),
                   Text(
@@ -286,8 +355,9 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                     ? _mintingShapeType
                     : null;
 
-                final String? shapeSubType =
-                    shapeType == _mintingShapeType ? selectedShapeSubType : null;
+                final String? shapeSubType = shapeType == _mintingShapeType
+                    ? selectedShapeSubType
+                    : null;
 
                 final normalizedWeight = _normalizeWeightForApi(
                   weight: selectedWeight,
@@ -300,7 +370,7 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
                   shapeSubType,
                 );
                 Navigator.pop(context);
-              },  
+              },
               child: Container(
                 height: 56,
                 width: double.infinity,
@@ -356,19 +426,25 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
 
           if (type == _castedBarType) {
             // Fetch ONLY casting products (bars only)
-            await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
+            await ref
+                .read(esouqProvider.notifier)
+                .fetchEsouqFilterOptions(
                   subtype: 'casting',
                   shapeSubType: null,
                 );
           } else if (type == _mintedBarType) {
             // Fetch ONLY minting products (all: bars and coins)
-            await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
+            await ref
+                .read(esouqProvider.notifier)
+                .fetchEsouqFilterOptions(
                   subtype: 'minting',
                   shapeSubType: null, // null shows all minting products
                 );
           } else {
             // ALL - fetch all products (minting + casting + others)
-            await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
+            await ref
+                .read(esouqProvider.notifier)
+                .fetchEsouqFilterOptions(
                   subtype: null,
                   shapeSubType: null,
                 );
@@ -406,7 +482,7 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
 
     final l10n = AppLocalizations.of(context)!;
     //final isSelected = selectedShapeSubType == subType;
-    
+
     // Get translated text for Bar and Coin
     String displayText = subType;
     if (subType == _shapeSubTypeBar) {
@@ -425,7 +501,9 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
           });
           if (selectedBarType == _mintedBarType) {
             // Fetch minting products filtered by specific shape sub type (Bar or Coin)
-            await ref.read(esouqProvider.notifier).fetchEsouqFilterOptions(
+            await ref
+                .read(esouqProvider.notifier)
+                .fetchEsouqFilterOptions(
                   subtype: 'minting',
                   shapeSubType: subType,
                 );
@@ -480,4 +558,34 @@ class _GetFilterDrawerBarState extends ConsumerState<GetFilterDrawerBar> {
       ),
     );
   }
+  String _getLocalizedWeightCategory(
+  String? category,
+  BuildContext context,
+) {
+  final l10n = AppLocalizations.of(context)!;
+  final isArabic =
+      Localizations.localeOf(context).languageCode == 'ar';
+
+  if (!isArabic) {
+    return category ?? '';
+  }
+
+  switch (category?.toLowerCase()) {
+    case 'gram':
+    case 'grams':
+      return 'غرام';
+
+    case 'kg':
+    case 'kgs':
+      return 'كيلو';
+
+    case 'ounce':
+    case 'ounces':
+    case 'oz':
+      return 'أونصة';
+
+    default:
+      return category ?? '';
+  }
+}
 }

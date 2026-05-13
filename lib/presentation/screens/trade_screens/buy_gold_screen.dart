@@ -122,7 +122,8 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     final tradeStateWatchProvider = ref.watch(tradeProvider);
     final mainStateWatchProvider = ref.watch(homeProvider);
     final goldPriceState = ref.watch(goldPriceProvider);
-    final buyTargetInvalid = isBuyAtPriceStatus &&
+    final buyTargetInvalid =
+        isBuyAtPriceStatus &&
         goldPriceState.maybeWhen(
           data: (data) => _buyTargetAboveMarket(data.oneGramBuyingPriceInIQD),
           orElse: () => false,
@@ -159,7 +160,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       ),
 
       body: SingleChildScrollView(
-      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: Form(
           key: _keyForm,
           child: GestureDetector(
@@ -170,10 +171,10 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10),
-        
+
                   // Market / Target Price Selector
                   const SizedBox(height: 30),
-        
+
                   // Gram Input Section
                   Text(
                     l10n.amount,
@@ -188,7 +189,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                     style: GoogleFonts.inter(color: Colors.grey, fontSize: 13),
                   ),
                   const SizedBox(height: 15),
-        
+
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
@@ -215,7 +216,9 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                             //errorText: _isValidAmount ? null : 'Amount must be greater than zero', // 👈 Show error if invalid
                           ),
                           inputFormatters: [
-                            DecimalAmountInputFormatter(maxDigits: 4,),
+                            DecimalAmountInputFormatter(
+                              maxDigits: 4,
+                            ),
                           ],
                           onChanged: (value) {
                             // Validate on each change
@@ -226,9 +229,27 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                           },
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      //const SizedBox(width: 5),
+                      // Text(
+                      //   l10n.grams_unit_lowercase,
+                      //   style: GoogleFonts.inter(
+                      //     color: Colors.white54,
+                      //     fontSize: 20,
+                      //   ),
+                      // ),
                       Text(
-                        l10n.grams_unit_lowercase,
+                        (() {
+                          final value =
+                              double.tryParse(
+                                userInputController.text.trim(),
+                              ) ??
+                              0;
+
+                          return value > 1
+                              ? l10n
+                                    .grams_plural_lowercase //grams_unit_lowercase
+                              : l10n.grams_unit_lowercase;
+                        })(),
                         style: GoogleFonts.inter(
                           color: Colors.white54,
                           fontSize: 20,
@@ -345,15 +366,19 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: AbsorbPointer(
-                      absorbing: !_isValidAmount ||
+                      absorbing:
+                          !_isValidAmount ||
                           buyTargetInvalid ||
                           (goldPriceState.value?.oneGramBuyingPriceInIQD ??
                                   0) <=
                               0,
                       child: Opacity(
-                        opacity: _isValidAmount &&
+                        opacity:
+                            _isValidAmount &&
                                 !buyTargetInvalid &&
-                                (goldPriceState.value?.oneGramBuyingPriceInIQD ??
+                                (goldPriceState
+                                            .value
+                                            ?.oneGramBuyingPriceInIQD ??
                                         0) >
                                     0
                             ? 1.0
@@ -460,7 +485,9 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   const SizedBox(width: 4),
                   Text(
                     l10n.high_price_badge(
-                      CommonService.formatIQDForDisplay(data.lastHighBuyingPrice),
+                      CommonService.formatIQDForDisplay(
+                        data.lastHighBuyingPrice,
+                      ),
                     ),
                     style: const TextStyle(
                       color: Color(0xFF4CAF50),
@@ -512,32 +539,32 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         builder: (ctx) {
           final l10n = AppLocalizations.of(ctx)!;
           return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.white10),
-        ),
-        child: Row(
-          children: [
-            Text(
-              isBuyAtPriceStatus
-                  ? l10n.invest_target_price_menu
-                  : l10n.invest_market_price_short,
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.white10),
             ),
-            const SizedBox(width: 6),
-            const Icon(
-              Icons.keyboard_arrow_down,
-              color: Colors.white70,
-              size: 18,
+            child: Row(
+              children: [
+                Text(
+                  isBuyAtPriceStatus
+                      ? l10n.invest_target_price_menu
+                      : l10n.invest_market_price_short,
+                  style: GoogleFonts.inter(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(width: 6),
+                const Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Colors.white70,
+                  size: 18,
+                ),
+              ],
             ),
-          ],
-        ),
           );
         },
       ),
@@ -592,7 +619,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
       ),
       keyboardType: TextInputType.number,
       inputFormatters: [
-        RoundedAmountInputFormatter(maxDigits: 6)
+        RoundedAmountInputFormatter(maxDigits: 6),
         //AmountInputFormatter(maxDigits: 6,),
       ],
     );
@@ -783,35 +810,40 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     }
     final rawPrice = num.tryParse(buyAtPriceController.text.trim()) ?? 0;
 
-final roundedPrice = num.parse(
-  CommonService.roundingFormatIqdCurrency(rawPrice, useArabic: false)
-      .replaceAll(',', ''),
-);
-await showConfirmTradeDialog(
-  context: context,
-  isLimitOrder: isBuyAtPriceStatus,
-  amountGrams: userInputController.text.trim(),
-  targetPrice: isBuyAtPriceStatus
-      ? _formatIqd(roundedPrice.toString()) // ✅ use rounded
-      : CommonService.formatIQDForDisplay(buyingPriceInOneGram),
-  totalCost: _formatIqd(calculatedValue),
-  showCountdownTimer: !isBuyAtPriceStatus,
-  limitBuyPricePerGram: isBuyAtPriceStatus
-      ? roundedPrice.toDouble() // ✅ use rounded
-      : null,
-  onConfirm: () async {
-    await ref.read(tradeProvider.notifier).userCanBuyGold(
-      context: context,
-      tradeMoney: num.tryParse(calculatedValue) ?? 0,
-      tradeMetal: num.tryParse(userInputController.text.trim()) ?? 0,
-      buyAtPriceStatus: isBuyAtPriceStatus,
-      buyAtPrice: isBuyAtPriceStatus
-          ? roundedPrice // ✅ use rounded here
-          : null,
-      buyingPrice: buyingPriceInOneGram,
+    final roundedPrice = num.parse(
+      CommonService.roundingFormatIqdCurrency(
+        rawPrice,
+        useArabic: false,
+      ).replaceAll(',', ''),
     );
-  },
-);
+    await showConfirmTradeDialog(
+      context: context,
+      isLimitOrder: isBuyAtPriceStatus,
+      amountGrams: userInputController.text.trim(),
+      targetPrice: isBuyAtPriceStatus
+          ? _formatIqd(roundedPrice.toString()) // ✅ use rounded
+          : CommonService.formatIQDForDisplay(buyingPriceInOneGram),
+      totalCost: _formatIqd(calculatedValue),
+      showCountdownTimer: !isBuyAtPriceStatus,
+      limitBuyPricePerGram: isBuyAtPriceStatus
+          ? roundedPrice
+                .toDouble() // ✅ use rounded
+          : null,
+      onConfirm: () async {
+        await ref
+            .read(tradeProvider.notifier)
+            .userCanBuyGold(
+              context: context,
+              tradeMoney: num.tryParse(calculatedValue) ?? 0,
+              tradeMetal: num.tryParse(userInputController.text.trim()) ?? 0,
+              buyAtPriceStatus: isBuyAtPriceStatus,
+              buyAtPrice: isBuyAtPriceStatus
+                  ? roundedPrice // ✅ use rounded here
+                  : null,
+              buyingPrice: buyingPriceInOneGram,
+            );
+      },
+    );
 
     // Open Confirmation Dialog
     // await showConfirmTradeDialog(
@@ -841,7 +873,5 @@ await showConfirmTradeDialog(
     //         );
     //   },
     // );
-
-
   }
 }

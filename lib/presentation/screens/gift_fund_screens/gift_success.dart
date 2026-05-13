@@ -52,6 +52,8 @@ class _GiftSuccessScreenState extends ConsumerState<GiftSuccessScreen> {
             selectedDealsData: widget.selectedDealsData,
           );
     });
+
+    
   }
 
   @override

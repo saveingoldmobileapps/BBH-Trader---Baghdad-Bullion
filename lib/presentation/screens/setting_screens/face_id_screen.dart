@@ -12,10 +12,10 @@ class FaceIDScreen extends ConsumerStatefulWidget {
   const FaceIDScreen({super.key});
 
   @override
-  ConsumerState createState() => _ChangePasswordScreenState();
+  ConsumerState createState() => _FaceIDScreenState();
 }
 
-class _ChangePasswordScreenState extends ConsumerState<FaceIDScreen> {
+class _FaceIDScreenState extends ConsumerState<FaceIDScreen> {
   bool isFaceID = false;
 
   @override
@@ -28,20 +28,10 @@ class _ChangePasswordScreenState extends ConsumerState<FaceIDScreen> {
 
   Future<void> getState() async {
     bool faceIDEnabled = await LocalDatabase.instance.getFaceEnable() ?? false;
-    // await LocalDatabase.instance.getFaceEnable() ?? false;
-    bool deviceHasFinger = await BiometricUtils.isFaceLockAvailable();
+    bool deviceHasFace = await BiometricUtils.isFaceLockAvailable();
     setState(() {
-      if (deviceHasFinger && faceIDEnabled) {
-        isFaceID = true;
-      } else {
-        isFaceID = false;
-      }
+      isFaceID = deviceHasFace && faceIDEnabled;
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -52,7 +42,6 @@ class _ChangePasswordScreenState extends ConsumerState<FaceIDScreen> {
 
   @override
   Widget build(BuildContext context) {
-    /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
 
     return Scaffold(
@@ -64,11 +53,8 @@ class _ChangePasswordScreenState extends ConsumerState<FaceIDScreen> {
         centerTitle: false,
         titleSpacing: 0,
         title: GetGenericText(
-          text: AppLocalizations.of(context)!.face_id_title,//"Face ID",
-          fontSize: sizes!.responsiveFont(
-            phoneVal: 20,
-            tabletVal: 24,
-          ),
+          text: AppLocalizations.of(context)!.face_id_title,
+          fontSize: sizes!.responsiveFont(phoneVal: 20, tabletVal: 24),
           fontWeight: FontWeight.w400,
           color: AppColors.grey6Color,
         ),
@@ -76,106 +62,124 @@ class _ChangePasswordScreenState extends ConsumerState<FaceIDScreen> {
       body: Container(
         height: sizes!.height,
         width: sizes!.width,
-        decoration: const BoxDecoration(
-          color: AppColors.greyScale1000,
-        ),
+        color: AppColors.greyScale1000,
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ConstPadding.sizeBoxWithHeight(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GetGenericText(
-                    text: AppLocalizations.of(context)!.face_unlock,//"Face Unlock",
-                    fontSize: sizes!.responsiveFont(
-                      phoneVal: 16,
-                      tabletVal: 18,
-                    ),
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                  Switch.adaptive(
-                    activeColor: AppColors.primaryGold500,
-                    thumbColor: WidgetStateProperty.resolveWith<Color>((
-                      Set<WidgetState> states,
-                    ) {
-                      if (states.contains(WidgetState.disabled)) {
-                        return Colors.orange.withValues(alpha: .48);
-                      }
-                      return Colors.white;
-                    }),
-                    value: isFaceID,
-                    onChanged: (value) async {
-                      // Use the BiometricUtils to check and enable.
-                      final bool canEnable =
-                          await BiometricUtils.checkAndEnableBiometric(context);
-                      if (canEnable) {
-                        setState(() {
-                          isFaceID = value;
-                        });
-                        await LocalDatabase.instance.storeFaceEnable(
-                          isEnable: value,
-                        );
-                        // LocalDatabase.instance.storeFaceEnable(
-                        //   isEnable: value,
-                        // );
-                      } else {
-                        //  The switch should not change if they cancelled.
-                        if (mounted) {
-                          setState(() {
-                            isFaceID =
-                                false; // Keep the switch in its original state
-                          });
-                        }
-                      }
-                    },
-                  ),
-                ],
-              ),
-              Divider(
-                color: AppColors.greyScale900,
-                thickness: 1.5,
-              ),
-              ConstPadding.sizeBoxWithHeight(height: 10),
-              GestureDetector(
-                onTap: () async {
-                  await genericPopUpWidget(
-                    context: context,
-                    heading: AppLocalizations.of(context)!.rem_fa_id,//"Remove Face ID?",
-                    subtitle:
-                        AppLocalizations.of(context)!.wont_able_f_id,
+              GetGenericText(
+                text: AppLocalizations.of(context)!.face_unlock,
+                fontSize: sizes!.responsiveFont(phoneVal: 26, tabletVal: 32),
+                fontWeight: FontWeight.bold,
+                color: AppColors.whiteColor,
+              ).getAlign(),
 
-                        //"You won’t be able to login through Face recognition.",
-                    noButtonTitle: AppLocalizations.of(context)!.cancel,//"Cancel",
-                    yesButtonTitle: AppLocalizations.of(context)!.remove_title, //"Remove",
-                    isLoadingState: false,
-                    onNoPress: () {
-                      Navigator.pop(context);
-                    },
-                    onYesPress: () async {
-                      Navigator.pop(context);
-                      setState(() {
-                        isFaceID = false;
-                      });
-                      await LocalDatabase.instance.storeFaceEnable(
-                        isEnable: false,
-                      );
-                      // LocalDatabase.instance.storeFaceEnable(
-                      //   isEnable: false,
-                      // );
-                    },
-                  );
-                },
-                child: GetGenericText(
-                  text: AppLocalizations.of(context)!.remove_face_id,//"Remove Face ID",
-                  fontSize: sizes!.responsiveFont(
-                    phoneVal: 16,
-                    tabletVal: 18,
-                  ),
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ).getAlign(),
+              GetGenericText(
+                text: AppLocalizations.of(context)!.settings_biometric_desc, // You may want to create a specific description for Face ID
+                fontSize: sizes!.responsiveFont(phoneVal: 14, tabletVal: 20),
+                fontWeight: FontWeight.normal,
+                color: AppColors.whiteColor,
+              ).getAlign(),
+
+              ConstPadding.sizeBoxWithHeight(height: 16),
+
+              /// Rounded Face ID Container (Same style as BiometricScreen)
+              Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xff262929),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 12,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GetGenericText(
+                            text: AppLocalizations.of(context)!.face_unlock,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 16,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                          Switch.adaptive(
+                            activeColor: AppColors.goldColor,
+                            value: isFaceID,
+                            onChanged: (value) async {
+                              if (value) {
+                                final result = await BiometricUtils.checkAndEnableBiometric(
+                                  context,
+                                );
+                                if (result) {
+                                  setState(() => isFaceID = true);
+                                  await LocalDatabase.instance.storeFaceEnable(
+                                    isEnable: true,
+                                  );
+                                }
+                              } else {
+                                setState(() => isFaceID = false);
+                                await LocalDatabase.instance.storeFaceEnable(
+                                  isEnable: false,
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Divider(
+                      color: AppColors.greyScale900,
+                      thickness: 1.5,
+                      height: 1,
+                    ),
+
+                    InkWell(
+                      onTap: () async {
+                        await genericPopUpWidget(
+                          context: context,
+                          heading: AppLocalizations.of(context)!.remove_face_id,
+                          subtitle: AppLocalizations.of(context)!.wont_able_f_id,
+                          noButtonTitle: AppLocalizations.of(context)!.cancel,
+                          yesButtonTitle: AppLocalizations.of(context)!.remove_title,
+                          isLoadingState: false,
+                          onNoPress: () => Navigator.pop(context),
+                          onYesPress: () async {
+                            Navigator.pop(context);
+                            setState(() => isFaceID = false);
+                            await LocalDatabase.instance.storeFaceEnable(
+                              isEnable: false,
+                            );
+                          },
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 12,
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: GetGenericText(
+                            text: AppLocalizations.of(context)!.remove_face_id,
+                            fontSize: sizes!.responsiveFont(
+                              phoneVal: 16,
+                              tabletVal: 18,
+                            ),
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
           ).get16HorizontalPadding(),

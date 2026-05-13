@@ -901,14 +901,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
-  hyperpay_flutter:
-    dependency: "direct main"
-    description:
-      name: hyperpay_flutter
-      sha256: "3f5371a16e6a65ea5eab1fe91c8fe6f61c36170db00cb4704671e2e1c08d9848"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0+1"
   image:
     dependency: transitive
     description:

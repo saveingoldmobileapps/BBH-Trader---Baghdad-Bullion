@@ -214,7 +214,7 @@ class _SettingScreenState extends ConsumerState<SettingScreen> {
                   if (!Platform.isAndroid) _buildDivider(),
                   if (Platform.isIOS)
                     BuildSettingCard(
-                      title: l10n.faceid_enable,
+                      title: "",//l10n.faceid_enable,
                       subtitle: l10n.faceid_desc,
                       iconString: "assets/svg/faceId_icon.svg",
                       onTap: () {

@@ -31,7 +31,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getStarted => 'Get Started';
 
   @override
-  String get your_gold => 'Your Gold\nYour Wealth.';
+  String get your_gold => 'Your Gold\nYour Wealth';
 
   @override
   String get new_to_bbh => 'I\'m new to BBH';
@@ -47,7 +47,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login_to_bbh => 'Login';
 
   @override
-  String get bank_client_onboarding => 'Al-Taif bank onboarding';
+  String get bank_client_onboarding => 'Al Taif Islamic Bank';
 
   @override
   String get exiting_to_bbh => 'I\'m an existing user';
@@ -63,6 +63,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get app_lang => 'App Language';
+
+  @override
+  String get need_help => 'Need Help?';
+
+  @override
+  String get email_us => 'Email Us';
+
+  @override
+  String get whatsapp => 'WhatsApp';
+
+  @override
+  String get email_not_available => 'Email app not available';
+
+  @override
+  String get whatsapp_not_available => 'WhatsApp is not installed';
+
+  @override
+  String get confirm_exit => 'Confirm Exit';
+
+  @override
+  String get sure_exit => 'Are you sure you want to exit?';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get contact_us => 'Contact Us';
+
+  @override
+  String get get_in_touch => 'Get in Touch';
+
+  @override
+  String get contact_desc =>
+      'We\'re here to help! Choose your preferred way to reach us.';
+
+  @override
+  String get call_us => 'Call Us';
+
+  @override
+  String get office_hours => 'Office Hours';
+
+  @override
+  String get office_hours_desc =>
+      'Monday - Friday: 9:00 AM - 6:00 PM\nSaturday: 10:00 AM - 2:00 PM';
 
   @override
   String get welcome_back => 'Welcome Back';
@@ -980,6 +1027,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dep_method_noFees => 'No Fees';
 
   @override
+  String get account_type => 'Account Type';
+
+  @override
+  String get currency => 'Currency';
+
+  @override
   String get dep_method_card => 'Card Payment';
 
   @override
@@ -1029,7 +1082,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dep_share_desc =>
-      'Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House FZCO account.';
+      'Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House account.';
 
   @override
   String get dep_share_whatsapp => 'Share on Whatsapp';
@@ -1120,8 +1173,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get withdraw_add_fund => 'Please add funds into your account.';
 
   @override
-  String get bank_charge_message =>
-      'A bank fee of IQD 25 plus VAT will be applied.';
+  String get bank_charge_message => 'A bank fee will be applied.';
 
   @override
   String get save_changes => 'Save Changes';
@@ -2631,12 +2683,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get are_you_sure_want_to_delete => 'Are you sure want to delete';
 
   @override
-  String get no => 'No';
-
-  @override
-  String get yes => 'Yes';
-
-  @override
   String get idq => 'IQD';
 
   @override
@@ -3133,7 +3179,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Enter the amount of gold in grams to trade';
 
   @override
-  String get grams_unit_lowercase => 'grams';
+  String get grams_unit_lowercase => 'gram';
+
+  @override
+  String get grams_plural_lowercase => 'grams';
 
   @override
   String buy_gold_approx_total(String amount) {
@@ -3211,7 +3260,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your limit order has been placed and will\nexecute when the target price is reached.';
 
   @override
-  String get limit_order_success => 'You have Successfully Placed the order.';
+  String get limit_order_success => 'You have successfully placed the order.';
 
   @override
   String get limit_date_time => 'Date & Time';
@@ -3223,7 +3272,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get limit_amount => 'Amount';
 
   @override
-  String get gmt_time => 'GMT+3 Total';
+  String get execution_Price => 'Execution Price';
+
+  @override
+  String get gmt_time => 'Total';
 
   @override
   String get will_notify => 'We’ll notify you when your order is executed';

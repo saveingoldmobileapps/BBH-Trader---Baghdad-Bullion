@@ -143,7 +143,7 @@ abstract class AppLocalizations {
   /// No description provided for @your_gold.
   ///
   /// In en, this message translates to:
-  /// **'Your Gold\nYour Wealth.'**
+  /// **'Your Gold\nYour Wealth'**
   String get your_gold;
 
   /// No description provided for @new_to_bbh.
@@ -173,7 +173,7 @@ abstract class AppLocalizations {
   /// No description provided for @bank_client_onboarding.
   ///
   /// In en, this message translates to:
-  /// **'Al-Taif bank onboarding'**
+  /// **'Al Taif Islamic Bank'**
   String get bank_client_onboarding;
 
   /// No description provided for @exiting_to_bbh.
@@ -205,6 +205,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'App Language'**
   String get app_lang;
+
+  /// No description provided for @need_help.
+  ///
+  /// In en, this message translates to:
+  /// **'Need Help?'**
+  String get need_help;
+
+  /// No description provided for @email_us.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Us'**
+  String get email_us;
+
+  /// No description provided for @whatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get whatsapp;
+
+  /// No description provided for @email_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Email app not available'**
+  String get email_not_available;
+
+  /// No description provided for @whatsapp_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp is not installed'**
+  String get whatsapp_not_available;
+
+  /// No description provided for @confirm_exit.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Exit'**
+  String get confirm_exit;
+
+  /// No description provided for @sure_exit.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to exit?'**
+  String get sure_exit;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @contact_us.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get contact_us;
+
+  /// No description provided for @get_in_touch.
+  ///
+  /// In en, this message translates to:
+  /// **'Get in Touch'**
+  String get get_in_touch;
+
+  /// No description provided for @contact_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'\'re here to help! Choose your preferred way to reach us.'**
+  String get contact_desc;
+
+  /// No description provided for @call_us.
+  ///
+  /// In en, this message translates to:
+  /// **'Call Us'**
+  String get call_us;
+
+  /// No description provided for @office_hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Office Hours'**
+  String get office_hours;
+
+  /// No description provided for @office_hours_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Monday - Friday: 9:00 AM - 6:00 PM\nSaturday: 10:00 AM - 2:00 PM'**
+  String get office_hours_desc;
 
   /// No description provided for @welcome_back.
   ///
@@ -1958,6 +2048,18 @@ abstract class AppLocalizations {
   /// **'No Fees'**
   String get dep_method_noFees;
 
+  /// No description provided for @account_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Type'**
+  String get account_type;
+
+  /// No description provided for @currency.
+  ///
+  /// In en, this message translates to:
+  /// **'Currency'**
+  String get currency;
+
   /// No description provided for @dep_method_card.
   ///
   /// In en, this message translates to:
@@ -2051,7 +2153,7 @@ abstract class AppLocalizations {
   /// No description provided for @dep_share_desc.
   ///
   /// In en, this message translates to:
-  /// **'Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House FZCO account.'**
+  /// **'Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House account.'**
   String get dep_share_desc;
 
   /// No description provided for @dep_share_whatsapp.
@@ -2231,7 +2333,7 @@ abstract class AppLocalizations {
   /// No description provided for @bank_charge_message.
   ///
   /// In en, this message translates to:
-  /// **'A bank fee of IQD 25 plus VAT will be applied.'**
+  /// **'A bank fee will be applied.'**
   String get bank_charge_message;
 
   /// No description provided for @save_changes.
@@ -5046,18 +5148,6 @@ abstract class AppLocalizations {
   /// **'Are you sure want to delete'**
   String get are_you_sure_want_to_delete;
 
-  /// No description provided for @no.
-  ///
-  /// In en, this message translates to:
-  /// **'No'**
-  String get no;
-
-  /// No description provided for @yes.
-  ///
-  /// In en, this message translates to:
-  /// **'Yes'**
-  String get yes;
-
   /// No description provided for @idq.
   ///
   /// In en, this message translates to:
@@ -5967,8 +6057,14 @@ abstract class AppLocalizations {
   /// No description provided for @grams_unit_lowercase.
   ///
   /// In en, this message translates to:
-  /// **'grams'**
+  /// **'gram'**
   String get grams_unit_lowercase;
+
+  /// No description provided for @grams_plural_lowercase.
+  ///
+  /// In en, this message translates to:
+  /// **'grams'**
+  String get grams_plural_lowercase;
 
   /// No description provided for @buy_gold_approx_total.
   ///
@@ -6105,7 +6201,7 @@ abstract class AppLocalizations {
   /// No description provided for @limit_order_success.
   ///
   /// In en, this message translates to:
-  /// **'You have Successfully Placed the order.'**
+  /// **'You have successfully placed the order.'**
   String get limit_order_success;
 
   /// No description provided for @limit_date_time.
@@ -6126,10 +6222,16 @@ abstract class AppLocalizations {
   /// **'Amount'**
   String get limit_amount;
 
+  /// No description provided for @execution_Price.
+  ///
+  /// In en, this message translates to:
+  /// **'Execution Price'**
+  String get execution_Price;
+
   /// No description provided for @gmt_time.
   ///
   /// In en, this message translates to:
-  /// **'GMT+3 Total'**
+  /// **'Total'**
   String get gmt_time;
 
   /// No description provided for @will_notify.

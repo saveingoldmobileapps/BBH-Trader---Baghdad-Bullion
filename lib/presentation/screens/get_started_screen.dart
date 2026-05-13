@@ -1,4 +1,480 @@
+// import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/on_board_screen.dart';
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import 'package:baghdad_bullion_house/core/core_export.dart';
+// import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+// import 'package:baghdad_bullion_house/presentation/screens/auth_screens/register_screen.dart';
+// import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
+// import 'package:url_launcher/url_launcher.dart';
+// import 'auth_screens/login_screen.dart';
+
+// class GetStartedScreen extends ConsumerStatefulWidget {
+//   const GetStartedScreen({super.key});
+
+//   @override
+//   ConsumerState createState() => _GetStartedScreenState();
+// }
+
+// class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
+//   DateTime? lastPressed;
+
+//   @override
+//   void dispose() {
+//     super.dispose();
+//   }
+
+//   @override
+//   void didChangeDependencies() {
+//     super.didChangeDependencies();
+//     sizes!.initializeSize(context);
+//   }
+
+//   Future<void> _launchEmail() async {
+//     final Uri emailUri = Uri(
+//       scheme: 'mailto',
+//       path: 'support@baghdadbullion.com',
+//       query: 'subject=BBH Support Request&body=Hello, I need assistance with...',
+//     );
+    
+//     try {
+//       if (await canLaunchUrl(emailUri)) {
+//         await launchUrl(emailUri);
+//       } else {
+//         if (mounted) {
+//           ScaffoldMessenger.of(context).showSnackBar(
+//             SnackBar(
+//               content: Text(AppLocalizations.of(context)!.email_not_available),
+//               backgroundColor: Colors.red,
+//             ),
+//           );
+//         }
+//       }
+//     } catch (e) {
+//       debugPrint('Error launching email: $e');
+//     }
+//   }
+
+//   Future<void> _launchWhatsApp() async {
+//     final String phoneNumber = '+964123456789'; // Replace with actual support number
+//     final String whatsappUrl = 'https://wa.me/$phoneNumber?text=${Uri.encodeComponent('Hello, I need assistance with BBH app')}';
+    
+//     final Uri uri = Uri.parse(whatsappUrl);
+    
+//     try {
+//       if (await canLaunchUrl(uri)) {
+//         await launchUrl(uri, mode: LaunchMode.externalApplication);
+//       } else {
+//         if (mounted) {
+//           ScaffoldMessenger.of(context).showSnackBar(
+//             SnackBar(
+//               content: Text(AppLocalizations.of(context)!.whatsapp_not_available),
+//               backgroundColor: Colors.red,
+//             ),
+//           );
+//         }
+//       }
+//     } catch (e) {
+//       debugPrint('Error launching WhatsApp: $e');
+//     }
+//   }
+
+//   @override
+//   @override
+// Widget build(BuildContext context) {
+//   sizes!.refreshSize(context);
+//   final languageState = ref.watch(languageProvider);
+//   bool isEnglish = languageState.languageCode == "en";
+//   final languageNotifier = ref.read(languageProvider.notifier);
+
+//   return PopScope(
+//     canPop: true,
+//     onPopInvokedWithResult: (bool didPop, Object? result) {
+//       if (didPop) {
+//         debugPrint('Route popped with result: $result');
+//       } else {
+//         showDialog(
+//           context: context,
+//           builder: (context) => AlertDialog(
+//             title: Text(AppLocalizations.of(context)!.confirm_exit),
+//             content: Text(AppLocalizations.of(context)!.sure_exit),
+//             actions: [
+//               TextButton(
+//                 onPressed: () {
+//                   Navigator.of(context).pop();
+//                   Navigator.of(context).pop();
+//                 },
+//                 child: Text(AppLocalizations.of(context)!.yes),
+//               ),
+//               TextButton(
+//                 onPressed: () {
+//                   Navigator.of(context).pop();
+//                 },
+//                 child: Text(AppLocalizations.of(context)!.no),
+//               ),
+//             ],
+//           ),
+//         );
+//       }
+//     },
+//     child: Scaffold(
+//       body: Container(
+//         height: sizes!.height,
+//         width: sizes!.width,
+//         decoration: const BoxDecoration(
+//           color: Colors.transparent,
+//           image: DecorationImage(
+//             fit: BoxFit.cover,
+//             image: AssetImage('assets/png/bg_start.png'),
+//           ),
+//         ),
+//         child: SafeArea(
+//           child: Padding(
+//             padding: const EdgeInsets.symmetric(horizontal: 28),
+//             child: LayoutBuilder(
+//               builder: (context, constraints) {
+//                 return SingleChildScrollView(
+//                   physics: const BouncingScrollPhysics(),
+//                   child: ConstrainedBox(
+//                     constraints: BoxConstraints(
+//                       minHeight: constraints.maxHeight,
+//                     ),
+//                     child: IntrinsicHeight(
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           /// Language Switch (Top Right)
+//                           Align(
+//                             alignment: Alignment.topRight,
+//                             child: Row(
+//                               mainAxisSize: MainAxisSize.min,
+//                               children: [
+//                                 Text(
+//                                   AppLocalizations.of(context)!.eng_title,
+//                                   style: TextStyle(
+//                                     color: isEnglish ? Colors.white : Colors.grey,
+//                                     fontSize: 14,
+//                                   ),
+//                                 ),
+//                                 const SizedBox(width: 6),
+//                                 Switch.adaptive(
+//                                   activeThumbColor: AppColors.primaryGold500,
+//                                   activeTrackColor: AppColors.primaryGold500.withValues(alpha: 0.35),
+//                                   value: !isEnglish,
+//                                   onChanged: (_) {
+//                                     languageNotifier.toggleLanguage(context);
+//                                   },
+//                                 ),
+//                                 const SizedBox(width: 6),
+//                                 Text(
+//                                   AppLocalizations.of(context)!.arabic_title,
+//                                   style: TextStyle(
+//                                     color: !isEnglish ? Colors.white : Colors.grey,
+//                                     fontSize: 14,
+//                                   ),
+//                                 ),
+//                               ],
+//                             ),
+//                           ),
+
+//                           //const SizedBox(height: 5),
+
+//                           /// Logo
+//                          Center(
+//   child: Image.asset(
+//     "assets/png/app_ic.png",
+//     height: 200,
+//     width: 200,
+//     fit: BoxFit.contain,
+//     // color: AppColors.red800Color,
+//   ),
+// ),
+
+//                           const SizedBox(height: 12),
+
+//                           /// Title
+//                           Text(
+//                             AppLocalizations.of(context)!.your_gold,
+//                             textAlign: Directionality.of(context) == TextDirection.rtl ? TextAlign.right : TextAlign.left,
+//                             style: GoogleFonts.roboto(
+//                               fontSize: 36,
+//                               fontWeight: FontWeight.w600,
+//                               color: Colors.white,
+//                               height: 1.2,
+//                             ),
+//                           ),
+
+//                           const SizedBox(height: 12),
+
+//                           /// Subtitle
+//                           Text(
+//                             AppLocalizations.of(context)!.login_des,
+//                             textAlign: Directionality.of(context) == TextDirection.rtl ? TextAlign.right : TextAlign.left,
+//                             style: GoogleFonts.roboto(
+//                               fontSize: 14,
+//                               fontWeight: FontWeight.w400,
+//                               color: Colors.white70,
+//                             ),
+//                           ),
+
+                          
+//                           const SizedBox(height: 24),
+
+//                           /// Primary Button - Sign Up
+//                           SizedBox(
+//                             width: double.infinity,
+//                             height: 54,
+//                             child: InkWell(
+//                               onTap: () {
+//                                 Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                     builder: (_) => const RegisterScreen(),
+//                                   ),
+//                                 );
+//                               },
+//                               child: Container(
+//                                 decoration: BoxDecoration(
+//                                   borderRadius: BorderRadius.circular(12),
+//                                   gradient: const LinearGradient(
+//                                     colors: [
+//                                       Color(0xffB19454),
+//                                       Color(0xff74540E),
+//                                     ],
+//                                     begin: Alignment.topLeft,
+//                                     end: Alignment.bottomRight,
+//                                   ),
+//                                 ),
+//                                 child: Center(
+//                                   child: Text(
+//                                     AppLocalizations.of(context)!.sign_up_bbh,
+//                                     style: const TextStyle(
+//                                       fontSize: 16,
+//                                       fontWeight: FontWeight.w600,
+//                                       color: Colors.black,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+
+//                           const SizedBox(height: 14),
+
+//                           /// Secondary Button - Login
+//                           SizedBox(
+//                             width: double.infinity,
+//                             height: 54,
+//                             child: OutlinedButton(
+//                               style: OutlinedButton.styleFrom(
+//                                 side: const BorderSide(
+//                                   color: Color(0xff74540E),
+//                                 ),
+//                                 shape: RoundedRectangleBorder(
+//                                   borderRadius: BorderRadius.circular(12),
+//                                 ),
+//                               ),
+//                               onPressed: () {
+//                                 Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                     builder: (_) => const LoginScreen(),
+//                                   ),
+//                                 );
+//                               },
+//                               child: Text(
+//                                 AppLocalizations.of(context)!.login_to_bbh,
+//                                 style: const TextStyle(
+//                                   fontSize: 16,
+//                                   fontWeight: FontWeight.w600,
+//                                   color: AppColors.whiteColor,
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+
+//                           const SizedBox(height: 16),
+
+//                           /// Bank Client Button
+//                           SizedBox(
+//                             width: double.infinity,
+//                             height: 54,
+//                             child: OutlinedButton.icon(
+//                               style: OutlinedButton.styleFrom(
+//                                 side: const BorderSide(
+//                                   color: Color(0xff74540E),
+//                                 ),
+//                                 shape: RoundedRectangleBorder(
+//                                   borderRadius: BorderRadius.circular(12),
+//                                 ),
+//                               ),
+//                               onPressed: () {
+//                                 Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                     builder: (_) => const OnboardingScreen(),
+//                                   ),
+//                                 );
+//                               },
+//                               icon: const Icon(
+//                                 Icons.account_balance_rounded,
+//                                 color: AppColors.whiteColor,
+//                                 size: 22,
+//                               ),
+//                               label: Text(
+//                                 AppLocalizations.of(context)!.bank_client_onboarding,
+//                                 style: const TextStyle(
+//                                   fontSize: 16,
+//                                   fontWeight: FontWeight.w600,
+//                                   color: AppColors.whiteColor,
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                           const SizedBox(height: 14),
+
+//                           /// Support Section
+//                           Container(
+//                             padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+//                             decoration: BoxDecoration(
+//                               gradient: LinearGradient(
+//                                 colors: [
+//                                   const Color(0xffB19454).withValues(alpha: 0.1),
+//                                   const Color(0xff74540E).withValues(alpha: 0.05),
+//                                 ],
+//                                 begin: Alignment.topLeft,
+//                                 end: Alignment.bottomRight,
+//                               ),
+//                               borderRadius: BorderRadius.circular(20),
+//                               border: Border.all(
+//                                 color: const Color(0xff74540E).withValues(alpha: 0.3),
+//                                 width: 1,
+//                               ),
+//                             ),
+//                             child: Column(
+//                               children: [
+//                                 Row(
+//                                   mainAxisAlignment: MainAxisAlignment.center,
+//                                   children: [
+//                                     Icon(
+//                                       Icons.headset_mic_outlined,
+//                                       color: const Color(0xffB19454),
+//                                       size: 20,
+//                                     ),
+//                                     const SizedBox(width: 8),
+//                                     Text(
+//                                       AppLocalizations.of(context)!.need_help,
+//                                       style: GoogleFonts.roboto(
+//                                         fontSize: 14,
+//                                         fontWeight: FontWeight.w500,
+//                                         color: const Color(0xffB19454),
+//                                         letterSpacing: 0.5,
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                                 const SizedBox(height: 12),
+//                                 Row(
+//                                   children: [
+//                                     /// Email Support Button
+//                                     Expanded(
+//                                       child: InkWell(
+//                                         onTap: _launchEmail,
+//                                         borderRadius: BorderRadius.circular(12),
+//                                         child: Container(
+//                                           padding: const EdgeInsets.symmetric(vertical: 12),
+//                                           decoration: BoxDecoration(
+//                                             color: Colors.white.withValues(alpha: 0.05),
+//                                             borderRadius: BorderRadius.circular(12),
+//                                             border: Border.all(
+//                                               color: const Color(0xff74540E).withValues(alpha: 0.3),
+//                                             ),
+//                                           ),
+//                                           child: Row(
+//                                             mainAxisAlignment: MainAxisAlignment.center,
+//                                             children: [
+//                                               Icon(
+//                                                 Icons.email_outlined,
+//                                                 color: const Color(0xffB19454),
+//                                                 size: 20,
+//                                               ),
+//                                               const SizedBox(width: 8),
+//                                               Text(
+//                                                 AppLocalizations.of(context)!.email_us,
+//                                                 style: GoogleFonts.roboto(
+//                                                   fontSize: 14,
+//                                                   fontWeight: FontWeight.w500,
+//                                                   color: Colors.white,
+//                                                 ),
+//                                               ),
+//                                             ],
+//                                           ),
+//                                         ),
+//                                       ),
+//                                     ),
+//                                     const SizedBox(width: 12),
+                                    
+//                                     /// WhatsApp Support Button
+//                                     Expanded(
+//                                       child: InkWell(
+//                                         onTap: _launchWhatsApp,
+//                                         borderRadius: BorderRadius.circular(12),
+//                                         child: Container(
+//                                           padding: const EdgeInsets.symmetric(vertical: 12),
+//                                           decoration: BoxDecoration(
+//                                             color: Colors.white.withValues(alpha: 0.05),
+//                                             borderRadius: BorderRadius.circular(12),
+//                                             border: Border.all(
+//                                               color: const Color(0xff74540E).withValues(alpha: 0.3),
+//                                             ),
+//                                           ),
+//                                           child: Row(
+//                                             mainAxisAlignment: MainAxisAlignment.center,
+//                                             children: [
+//                                               Icon(
+//                                                 Icons.chat_bubble_outline,
+//                                                 color: const Color(0xff25D366),
+//                                                 size: 20,
+//                                               ),
+//                                               const SizedBox(width: 8),
+//                                               Text(
+//                                                 AppLocalizations.of(context)!.whatsapp,
+//                                                 style: GoogleFonts.roboto(
+//                                                   fontSize: 14,
+//                                                   fontWeight: FontWeight.w500,
+//                                                   color: Colors.white,
+//                                                 ),
+//                                               ),
+//                                             ],
+//                                           ),
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ],
+//                                 ),
+//                               ],
+//                             ),
+//                           ),
+
+
+//                           const SizedBox(height: 20),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
+//           ),
+//         ),
+//       ),
+//     ),
+//   );
+// }
+// }
+
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/on_board_screen.dart';
+import 'package:baghdad_bullion_house/presentation/screens/setting_screens/support_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,7 +482,261 @@ import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/register_screen.dart';
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'auth_screens/login_screen.dart';
+
+// Contact Us Page
+class ContactUsScreen extends StatelessWidget {
+  const ContactUsScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.greyScale1000,
+      appBar: AppBar(
+        backgroundColor: AppColors.greyScale1000,
+        elevation: 0,
+        surfaceTintColor: AppColors.greyScale1000,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        title: Text(
+          AppLocalizations.of(context)!.contact_us,
+          style: GoogleFonts.roboto(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header Icon
+              Center(
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xffB19454), Color(0xff74540E)],
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.headset_mic,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              
+              Center(
+                child: Text(
+                  AppLocalizations.of(context)!.get_in_touch,
+                  style: GoogleFonts.roboto(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              
+              Center(
+                child: Text(
+                  AppLocalizations.of(context)!.contact_desc,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.roboto(
+                    fontSize: 14,
+                    color: Colors.white70,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+              
+              // Email Card
+              _buildContactCard(
+                context: context,
+                icon: Icons.email_outlined,
+                title: AppLocalizations.of(context)!.email_us,
+                subtitle: 'we.care@baghdadbullionhouse.com',
+                color: const Color(0xffB19454),
+                //onTap: () async {
+                //   final Uri emailUri = Uri(
+                //     scheme: 'mailto',
+                //     path: 'support@baghdadbullion.com',
+                //     query: 'subject=BBH Support Request',
+                //   );
+                //   if (await canLaunchUrl(emailUri)) {
+                //     await launchUrl(emailUri);
+                //   }
+                // },
+                onTap: () async {
+                                await CommonService.openEmailApp(
+                                  emailAddress:
+                                      "we.care@baghdadbullionhouse.com",
+                                );
+                              },
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // WhatsApp Card
+              _buildContactCard(
+                context: context,
+                icon: Icons.chat_bubble_outline,
+                title: AppLocalizations.of(context)!.whatsapp,
+                subtitle: "+9647871111112",
+                color: const Color(0xff25D366),
+                onTap: () async {
+                  await CommonService.openWhatsappUrl(
+                                  phoneNumber: "+9647871111112",
+                                  message:
+                                      "Hello, I need an assistance from Baghdad Bullion House Team",
+                                );
+                },
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Phone Card
+              _buildContactCard(
+                context: context,
+                icon: Icons.phone_outlined,
+                title: AppLocalizations.of(context)!.call_us,
+                subtitle: '+964 123 456 789',
+                color: Colors.green,
+                onTap: () async {
+                  final Uri phoneUri = Uri(scheme: 'tel', path: '+964123456789');
+                  if (await canLaunchUrl(phoneUri)) {
+                    await launchUrl(phoneUri);
+                  }
+                },
+              ),
+              
+              const SizedBox(height: 32),
+              
+              // Office Hours
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: const Color(0xff262929),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xff74540E).withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.access_time,
+                          color: const Color(0xffB19454),
+                          size: 20,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          AppLocalizations.of(context)!.office_hours,
+                          style: GoogleFonts.roboto(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      AppLocalizations.of(context)!.office_hours_desc,
+                      style: GoogleFonts.roboto(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Widget _buildContactCard({
+  required BuildContext context,
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required Color color,
+  required VoidCallback onTap,
+}) {
+  return InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(12),
+    child: Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xff262929),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xff74540E).withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: GoogleFonts.roboto(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  subtitle,
+                  style: GoogleFonts.roboto(
+                    fontSize: 14,
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            Icons.arrow_forward_ios,
+            color: color,
+            size: 16,
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
 class GetStartedScreen extends ConsumerStatefulWidget {
   const GetStartedScreen({super.key});
@@ -16,57 +746,47 @@ class GetStartedScreen extends ConsumerStatefulWidget {
 }
 
 class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
-  DateTime? lastPressed;
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     sizes!.initializeSize(context);
   }
 
+  
+
+  
+
   @override
   Widget build(BuildContext context) {
-    /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
     final languageState = ref.watch(languageProvider);
     bool isEnglish = languageState.languageCode == "en";
-
-    /// states
-    //final languageState = ref.watch(languageProvider);
     final languageNotifier = ref.read(languageProvider.notifier);
 
     return PopScope(
       canPop: true,
       onPopInvokedWithResult: (bool didPop, Object? result) {
         if (didPop) {
-          // Handle the result from the popped route
           debugPrint('Route popped with result: $result');
         } else {
-          // Show a confirmation dialog before allowing the pop
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Confirm Exit'),
-              content: Text('Are you sure you want to exit?'),
+              title: Text(AppLocalizations.of(context)!.confirm_exit),
+              content: Text(AppLocalizations.of(context)!.sure_exit),
               actions: [
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close dialog
-                    Navigator.of(context).pop(); // Pop the route
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
-                  child: Text('Yes'),
+                  child: Text(AppLocalizations.of(context)!.yes),
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close dialog
+                    Navigator.of(context).pop();
                   },
-                  child: Text('No'),
+                  child: Text(AppLocalizations.of(context)!.no),
                 ),
               ],
             ),
@@ -74,218 +794,380 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
         }
       },
       child: Scaffold(
-        body: Container(
-          height: sizes!.height,
-          width: sizes!.width,
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage('assets/png/bg_start.png'),
-            ),
-          ),
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// Language Switch (Top Right)
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.eng_title,//"English",
-                          style: TextStyle(
-                            color: isEnglish ? Colors.white : Colors.grey,
-                            fontSize: 14,
+        body: Stack(
+          children: [
+            // Background Container
+            Container(
+              height: sizes!.height,
+              width: sizes!.width,
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage('assets/png/bg_start.png'),
+                ),
+              ),
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxHeight,
                           ),
-                        ),
-                        const SizedBox(width: 6),
-                        Switch.adaptive(
-                          activeThumbColor: AppColors.primaryGold500,
-                          activeTrackColor: AppColors.primaryGold500.withValues(alpha: 0.35),
-                          value: !isEnglish,
-                          onChanged: (_) {
-                            languageNotifier.toggleLanguage(context);
-                          },
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          AppLocalizations.of(context)!.arabic_title,//"العربية",
-                          style: TextStyle(
-                            color: !isEnglish ? Colors.white : Colors.grey,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                          child: IntrinsicHeight(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                /// Language Switch (Top Right)
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!.eng_title,
+                                        style: TextStyle(
+                                          color: isEnglish ? Colors.white : Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Switch.adaptive(
+                                        activeThumbColor: AppColors.primaryGold500,
+                                        activeTrackColor: AppColors.primaryGold500.withValues(alpha: 0.35),
+                                        value: !isEnglish,
+                                        onChanged: (_) {
+                                          languageNotifier.toggleLanguage(context);
+                                        },
+                                      ),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        AppLocalizations.of(context)!.arabic_title,
+                                        style: TextStyle(
+                                          color: !isEnglish ? Colors.white : Colors.grey,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
 
-                  const Spacer(flex: 2),
+                                /// Logo
+                                Center(
+                                  child: Image.asset(
+                                    "assets/png/app_ic.png",
+                                    height: 200,
+                                    width: 200,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
 
-                  /// Logo
-                  Center(
-                    child: Container(
-                      height: 250,
-                      width: 250,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: const DecorationImage(
-                          image: AssetImage(
-                            "assets/png/app_ic.png",
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
+                                const SizedBox(height: 12),
 
-                  const SizedBox(height: 40),
+                                /// Title
+                                Text(
+                                  AppLocalizations.of(context)!.your_gold,
+                                  textAlign: Directionality.of(context) == TextDirection.rtl ? TextAlign.right : TextAlign.left,
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                    height: 1.2,
+                                  ),
+                                ),
 
-                  /// Title
-                  Text(
-                    AppLocalizations.of(context)!.your_gold, //"Your Gold\nYour Wealth.",
-                    textAlign: Directionality.of(context) == TextDirection.rtl?TextAlign.right:TextAlign.left,
-                    style: GoogleFonts.roboto(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                      height: 1.2,
-                    ),
-                  ),
+                                const SizedBox(height: 12),
 
-                  const SizedBox(height: 16),
+                                /// Subtitle
+                                Text(
+                                  AppLocalizations.of(context)!.login_des,
+                                  textAlign: Directionality.of(context) == TextDirection.rtl ? TextAlign.right : TextAlign.left,
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                                
+                                const SizedBox(height: 24),
 
-                  /// Subtitle
-                  Text(
-                    AppLocalizations.of(context)!.login_des,
-                    textAlign: Directionality.of(context) == TextDirection.rtl?TextAlign.right:TextAlign.left,
-                    style: GoogleFonts.roboto(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white70,
-                    ),
-                  ),
+                                /// Primary Button - Sign Up
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 54,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const RegisterScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        gradient: const LinearGradient(
+                                          colors: [
+                                            Color(0xffB19454),
+                                            Color(0xff74540E),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!.sign_up_bbh,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
 
-                  const Spacer(flex: 1),
+                                const SizedBox(height: 14),
 
-                  /// Primary Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 54,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const RegisterScreen(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          gradient: const LinearGradient(
-                            colors: [
-                              Color(0xffB19454),
-                              Color(0xff74540E),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.sign_up_bbh, //"I'm new to B&H",
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
+                                /// Secondary Button - Login
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 54,
+                                  child: OutlinedButton(
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(
+                                        color: Color(0xff74540E),
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const LoginScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context)!.login_to_bbh,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.whiteColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 16),
+
+                                /// Bank Client Button
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 54,
+                                  child: OutlinedButton.icon(
+                                    style: OutlinedButton.styleFrom(
+                                      side: const BorderSide(
+                                        color: Color(0xff74540E),
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => const OnboardingScreen(),
+                                        ),
+                                      );
+                                    },
+                                    icon: const Icon(
+                                      Icons.account_balance_rounded,
+                                      color: AppColors.whiteColor,
+                                      size: 22,
+                                    ),
+                                    label: Text(
+                                      AppLocalizations.of(context)!.bank_client_onboarding,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.whiteColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                
+                                const SizedBox(height: 100), // Extra space for FAB
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
-
-                  const SizedBox(height: 14),
-
-                  /// Secondary Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 54,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(
-                          color: Color(0xff74540E),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const LoginScreen(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        AppLocalizations.of(context)!.login_to_bbh, // "I'm an existing user",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const Spacer(),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 54,
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(
-                          color: Color(0xff74540E),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const OnboardingScreen(),
-                          ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.account_balance_rounded,
-                        color: AppColors.whiteColor,
-                        size: 22,
-                      ),
-                      label: Text(
-                        AppLocalizations.of(context)!.bank_client_onboarding,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.whiteColor,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                ],
+                ),
               ),
             ),
-          ),
+            
+            /// Floating Action Button - Bottom Left (Small Sphere)
+//             Positioned(
+//   bottom: 20,
+//   left: 0,
+//   right: 0,
+//   child: Center(
+//     child: GestureDetector(
+//       onTap: () {
+//         Navigator.push(
+//           context,
+//           MaterialPageRoute(
+//             builder: (_) => const SupportScreen(),
+//           ),
+//         );
+//       },
+//       child: Container(
+//         padding: const EdgeInsets.symmetric(
+//           horizontal: 18,
+//           vertical: 10,
+//         ),
+//         decoration: BoxDecoration(
+//           gradient: LinearGradient(
+//                                 colors: [
+//                                   const Color(0xffB19454).withValues(alpha: 0.1),
+//                                   const Color(0xff74540E).withValues(alpha: 0.05),
+//                                 ],
+//                                 begin: Alignment.topLeft,
+//                                 end: Alignment.bottomRight,
+//                               ),
+//           // gradient: const LinearGradient(
+//           //   colors: [
+//           //     Color(0xffB19454),
+//           //     Color(0xff74540E),
+//           //   ],
+//           //   begin: Alignment.topLeft,
+//           //   end: Alignment.bottomRight,
+//           // ),
+//           borderRadius: BorderRadius.circular(14),
+//           boxShadow: [
+//             BoxShadow(
+//               color: Colors.black.withValues(alpha: 0.25),
+//               blurRadius: 8,
+//               offset: const Offset(0, 4),
+//             ),
+//           ],
+//         ),
+//         child:Directionality.of(context) == TextDirection.ltr? Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+//             const Icon(
+//               Icons.headset_mic,
+//               color: Colors.white,
+//               size: 20,
+//             ),
+//             const SizedBox(width: 8),
+//             Text(
+//               AppLocalizations.of(context)!.need_help,//"Need Help?",
+//               style: const TextStyle(
+//                 color: Colors.white,
+//                 fontWeight: FontWeight.w600,
+//                 fontSize: 14,
+//               ),
+//             ),
+//           ],
+//         ):
+//         Row(
+//           mainAxisSize: MainAxisSize.min,
+//           children: [
+            
+//             const Icon(
+//               Icons.headset_mic,
+//               color: Colors.white,
+//               size: 20,
+//             ),
+//             const SizedBox(width: 8),
+//             Text(
+//               AppLocalizations.of(context)!.need_help,//"Need Help?",
+//               style: const TextStyle(
+//                 color: Colors.white,
+//                 fontWeight: FontWeight.w600,
+//                 fontSize: 14,
+//               ),
+//             ),
+
+            
+            
+//           ],
+//         ),
+//       ),
+//     ),
+//   ),
+// ),
+            
+            Positioned(
+              bottom: 20,
+              left: 20,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const SupportScreen(),//ContactUsScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 56,
+                  width: 56,
+                  decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  const Color(0xffB19454).withValues(alpha: 0.1),
+                                  const Color(0xff74540E).withValues(alpha: 0.05),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: const Color(0xff74540E).withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                  // decoration: BoxDecoration(
+                  //   gradient: const LinearGradient(
+                  //     colors: [Color(0xffB19454), Color(0xff74540E)],
+                  //     begin: Alignment.topLeft,
+                  //     end: Alignment.bottomRight,
+                  //   ),
+                  //   shape: BoxShape.circle,
+                  //   boxShadow: [
+                  //     BoxShadow(
+                  //       color: Colors.black.withValues(alpha: 0.3),
+                  //       blurRadius: 10,
+                  //       offset: const Offset(0, 4),
+                  //     ),
+                  //   ],
+                  // ),
+                  
+                  child: const Icon(
+                    Icons.headset_mic,
+                    color: const Color(0xffB19454),
+                    size: 28,
+                  ),
+                ),
+              ),
+            ),
+          
+          ],
         ),
       ),
     );

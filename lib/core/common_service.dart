@@ -227,21 +227,51 @@ static String roundingformatIQDForDisplay(num? value) => roundingFormatIqdCurren
     final compact = NumberFormat.compact(locale: "en_US").format(rounded);
     return compact.replaceAll('k', 'K').replaceAll('m', 'M').replaceAll('b', 'B');
   }
+  static String formatGramForDisplay(dynamic value) {
+  if (value == null) return "0";
 
-  /// Gram / metal amounts for UI — whole grams with grouping, no decimals.
-  static String formatGramForDisplay(num? value) {
-    final amount = (value ?? 0).toDouble();
-    if (amount == 0) return "0.00";
-    if (amount.abs() >= 1000) {
-      return NumberFormat("#,##0.00", "en_US").format(amount);
-    }
-    return amount.toStringAsFixed(3);
-  }
-  //  static String formatGramForDisplay(num? value) {
-  //   final rounded = (value ?? 0).round();
-  //   if (rounded == 0) return "0";
-  //   return NumberFormat("#,##0", "en_US").format(rounded);
-  // }
+  final number = double.tryParse(value.toString());
+
+  if (number == null) return "0";
+
+  // Round to 3 decimal places
+  final rounded = number.toStringAsFixed(3);
+
+  final parts = rounded.split('.');
+
+  final integerPart = NumberFormat(
+    "#,##0",
+    "en_US",
+  ).format(int.parse(parts[0]));
+
+  // Remove unnecessary trailing zeros
+  String decimalPart = parts[1]
+      .replaceFirst(RegExp(r'0+$'), '');
+
+  return decimalPart.isEmpty
+      ? integerPart
+      : "$integerPart.$decimalPart";
+}
+
+//  static String formatGramForDisplay(dynamic value) {
+//   if (value == null) return "0";
+
+//   // Keep exact user-entered value
+//   final text = value.toString();
+
+//   // Only add commas to integer part if needed
+//   if (text.contains('.')) {
+//     final parts = text.split('.');
+
+//     final integerPart = NumberFormat("#,##0", "en_US")
+//         .format(int.tryParse(parts[0]) ?? 0);
+
+//     return "$integerPart.${parts[1]}";
+//   }
+
+//   return NumberFormat("#,##0", "en_US")
+//       .format(int.tryParse(text) ?? 0);
+// }
   static String formatIraqDateTime(
   String? isoDate,
   BuildContext context, {
@@ -728,6 +758,33 @@ static String roundingformatIQDForDisplay(num? value) => roundingFormatIqdCurren
       );
     }
   }
+  static Future<void> openEmptyEmailApp({
+  required String emailAddress,
+  String subject = '',
+  String body = '',
+}) async {
+  final emailUri = Uri(
+    scheme: 'mailto',
+    path: emailAddress,
+    queryParameters: {
+      'subject': subject,
+      'body': body,
+    },
+  );
+
+  try {
+    await launchUrl(
+      emailUri,
+      mode: LaunchMode.externalApplication,
+    );
+  } catch (e, stackTrace) {
+    debugPrint('Error opening email app: $e\n$stackTrace');
+
+    Toasts.getWarningToast(
+      text: 'Failed to open email app. Please try again.',
+    );
+  }
+}
 
   /// open calling url
   static Future<void> openCallingUrl({

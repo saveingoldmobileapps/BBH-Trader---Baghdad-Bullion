@@ -628,7 +628,7 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                     labelText: AppLocalizations.of(context)!.amount, //"Amount",
                     controller: amountController,
                     inputFormatters: [
-                            AmountInputFormatter(maxDigits: 4,),
+                            DecimalAmountInputFormatter(maxDigits: 4,decimalRange: 3),
                           ],
                     textInputType: TextInputType.numberWithOptions(
                       signed: true,
@@ -1416,6 +1416,19 @@ class _GiftFundScreenState extends ConsumerState<GiftFundScreen> {
                                     selectedDealsData: selectedDealsData,
                                     comment: commentController.text,
                                   );
+                                  debugPrint("---- GIFT REQUEST BODY ----");
+debugPrint("phoneNumber: $phoneNumber");
+debugPrint("receiverId: ${receiverAccountNumberController.text}");
+debugPrint("receiverName: ${receiverNameController.text}");
+debugPrint("receiverEmail: ${matchedUsers[0].email ?? ""}");
+debugPrint("receiverPhoneNumber: ${normalizedReceiverPhone ?? ""}");
+debugPrint("giftAmount: ${amountController.text}");
+debugPrint("paymentMethod: Metal");
+debugPrint("comment: ${commentController.text}");
+
+debugPrint("selectedDealsData: $selectedDealsData");
+debugPrint("selectedDealsData type: ${selectedDealsData.runtimeType}");
+debugPrint("---------------------------");
                             } else {
                               debugPrint("Context is not mounted.");
                             }

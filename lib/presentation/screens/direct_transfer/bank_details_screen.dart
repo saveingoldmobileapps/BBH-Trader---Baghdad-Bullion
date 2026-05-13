@@ -96,15 +96,25 @@ class _BankDetailsScreenState extends ConsumerState<BankDetailsScreen> {
     final state = ref.watch(directTransferProvider);
 
     // Move the ref.listen to the build method
+    // ref.listen<DirectTransferState>(directTransferProvider, (prev, next) {
+    //   final bank = next.bankDetailResponse?.payload;
+    //   if (bank != null) {
+    //     accountNameController.text = bank.bank!.accountName ?? '';
+    //     accountNumberController.text = bank.bank!.accountNumber ?? '';
+    //     fabIbanController.text = bank.bank!.iban ?? '';
+    //     fabSwiftController.text = bank.bank!.swiftCode ?? '';
+    //   }
+    // });
     ref.listen<DirectTransferState>(directTransferProvider, (prev, next) {
-      final bank = next.bankDetailResponse?.payload;
-      if (bank != null) {
-        accountNameController.text = bank.bank!.accountName ?? '';
-        accountNumberController.text = bank.bank!.accountNumber ?? '';
-        fabIbanController.text = bank.bank!.iban ?? '';
-        fabSwiftController.text = bank.bank!.swiftCode ?? '';
-      }
-    });
+  final bank = next.bankDetailResponse?.payload?.bank;
+
+  if (bank != null) {
+    accountNameController.text = bank.accountName?.en ?? bank.accountName?.ar ?? '';
+    accountNumberController.text = bank.accountNumber ?? '';
+    fabIbanController.text = bank.iban ?? '';
+    fabSwiftController.text = bank.swiftCode ?? '';
+  }
+});
 
     return Scaffold(
       backgroundColor: AppColors.greyScale1000,
@@ -131,7 +141,8 @@ class _BankDetailsScreenState extends ConsumerState<BankDetailsScreen> {
                     onTap: () async {
                       _copyToClipboard(
                         text:
-                            "${accountNameController.text}, ${accountNumberController.text}, ${fabIbanController.text}, ${fabSwiftController.text}",
+    "${accountNameController.text}, ${accountNumberController.text}, ${fabIbanController.text}, ${fabSwiftController.text}",
+                            //"${accountNameController.text}, ${accountNumberController.text}, ${fabIbanController.text}, ${fabSwiftController.text}",
                         label: AppLocalizations.of(
                           context,
                         )!.account_details, //"Account Details"
@@ -174,355 +185,775 @@ class _BankDetailsScreenState extends ConsumerState<BankDetailsScreen> {
         ],
       ),
       body: state.isDetailsLoading
-          ? Center(
-              child: ShimmerLoader(
-                loop: 6,
-              ).get16HorizontalPadding(),
-            )
-          : SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ConstPadding.sizeBoxWithHeight(height: 15),
-                    CommonTextFormField(
-                      title: AppLocalizations.of(
-                        context,
-                      )!.dep_label_accountName, //"Account Name",
-                      labelText: AppLocalizations.of(
-                        context,
-                      )!.dep_label_accountName, //"Account Name",
-                      controller: accountNameController,
-                      readOnly: true,
-                      hintText: "",
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: GestureDetector(
-                          onTap: () => _copyToClipboard(
-                            text: accountNameController.text,
-                            label: "Name",
-                          ),
-                          child: SvgPicture.asset(
-                            "assets/svg/copy_icon.svg",
-                          ),
-                        ),
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 15),
-                    CommonTextFormField(
-                      title: AppLocalizations.of(
-                        context,
-                      )!.dep_label_accountNumber, //"Account Number",
-                      labelText: AppLocalizations.of(
-                        context,
-                      )!.dep_label_accountNumber, //"Account Number",
-                      controller: accountNumberController,
-                      readOnly: true,
-                      hintText: "",
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: GestureDetector(
-                          onTap: () => _copyToClipboard(
-                            text: accountNumberController.text,
-                            label: AppLocalizations.of(
-                              context,
-                            )!.dep_label_accountNumber, //"Account Number"
-                          ),
-                          child: SvgPicture.asset(
-                            "assets/svg/copy_icon.svg",
-                          ),
-                        ),
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 15),
-                    CommonTextFormField(
-                      title: AppLocalizations.of(
-                        context,
-                      )!.dep_label_iban, //"IBAN Number",
-                      labelText: AppLocalizations.of(
-                        context,
-                      )!.dep_label_iban, //"IBAN Number",
-                      controller: fabIbanController,
-                      readOnly: true,
-                      hintText: "",
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: GestureDetector(
-                          onTap: () => _copyToClipboard(
-                            text: fabIbanController.text,
-                            label: AppLocalizations.of(
-                              context,
-                            )!.dep_label_iban, //"IBAN Number"
-                          ),
-                          child: SvgPicture.asset(
-                            "assets/svg/copy_icon.svg",
-                          ),
-                        ),
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 15),
-                    CommonTextFormField(
-                      title: AppLocalizations.of(
-                        context,
-                      )!.dep_label_swift, //"Swift",
-                      labelText: AppLocalizations.of(
-                        context,
-                      )!.dep_label_swift, //"Swift",
-                      controller: fabSwiftController,
-                      readOnly: true,
-                      hintText: "",
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: GestureDetector(
-                          onTap: () => _copyToClipboard(
-                            text: fabSwiftController.text,
-                            label: AppLocalizations.of(context)!.swift_code,
-                          ),
-                          child: SvgPicture.asset(
-                            "assets/svg/copy_icon.svg",
-                          ),
-                        ),
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 25),
+    ? Center(
+        child: ShimmerLoader(
+          loop: 6,
+        ).get16HorizontalPadding(),
+      )
+    : SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ConstPadding.sizeBoxWithHeight(height: 15),
 
-                    Container(
-                      height: sizes!.heightRatio * 1,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color.fromRGBO(95, 86, 68, 0),
-                            Color.fromRGBO(95, 86, 68, 1),
-                            Color.fromRGBO(197, 179, 141, 0),
-                          ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
-                      ),
+              /// Bank Name
+              CommonTextFormField(
+                title: AppLocalizations.of(context)!.bank_name,
+                labelText: AppLocalizations.of(context)!.bank_name,
+                controller: TextEditingController(
+                  text:
+                      Directionality.of(context) == TextDirection.rtl
+                          ? (state.bankDetailResponse?.payload?.bank?.bankName?.ar ?? "")
+                          : (state.bankDetailResponse?.payload?.bank?.bankName?.en ?? ""),
+                ),
+                readOnly: true,
+                hintText: "",
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: () => _copyToClipboard(
+                      text:
+                          Directionality.of(context) == TextDirection.rtl
+                              ? (state.bankDetailResponse?.payload?.bank?.bankName?.ar ?? "")
+                              : (state.bankDetailResponse?.payload?.bank?.bankName?.en ?? ""),
+                      label: AppLocalizations.of(context)!.bank_name,
                     ),
-                    ConstPadding.sizeBoxWithHeight(height: 25),
-
-                    /// share receipt
-                    GetGenericText(
-                      text: AppLocalizations.of(
-                        context,
-                      )!.dep_share_title, //"Share Receipt",
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.grey6Color,
+                    child: SvgPicture.asset(
+                      "assets/svg/copy_icon.svg",
                     ),
-                    ConstPadding.sizeBoxWithHeight(height: 4),
-                    GetGenericText(
-                      text: AppLocalizations.of(context)!.dep_share_desc,
-                      //"Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House FZCO account.",
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey3Color,
-                      lines: 4,
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 12),
-
-                    /// upload receipt
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) =>
-                    //             const TransactionSuccessScreen(),
-                    //       ),
-                    //     );
-                    //   },
-                    //   child: Container(
-                    //     width: sizes!.isPhone
-                    //         ? sizes!.widthRatio * 360
-                    //         : sizes!.width,
-                    //     height: sizes!.responsiveLandscapeHeight(
-                    //       phoneVal: 50,
-                    //       tabletVal: 60,
-                    //       tabletLandscapeVal: 70,
-                    //       isLandscape: sizes!.isLandscape(),
-                    //     ),
-                    //     decoration: ShapeDecoration(
-                    //       gradient: LinearGradient(
-                    //         begin: Alignment(1.00, 0.01),
-                    //         end: Alignment(-1, -0.01),
-                    //         colors: [
-                    //           Color(0xFF675A3D),
-                    //           Color(0xFFBBA473),
-                    //         ],
-                    //       ),
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(10),
-                    //       ),
-                    //     ),
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: [
-                    //         SvgPicture.asset(
-                    //           "assets/svg/export.svg",
-                    //           height: sizes!.heightRatio *
-                    //               (sizes!.isPhone
-                    //                   ? 22
-                    //                   : (sizes!.isLandscape() ? 32 : 20)),
-                    //           width: sizes!.widthRatio *
-                    //               (sizes!.isPhone
-                    //                   ? 22
-                    //                   : (sizes!.isLandscape() ? 32 : 20)),
-                    //         ),
-                    //         ConstPadding.sizeBoxWithWidth(width: 10),
-                    //         GetGenericText(
-                    //           text: "Upload Receipt",
-                    //           fontSize: sizes!.responsiveFont(
-                    //             phoneVal: 18,
-                    //             tabletVal: 20,
-                    //           ),
-                    //           fontWeight: FontWeight.w500,
-                    //           color: Colors.white,
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    // ConstPadding.sizeBoxWithHeight(height: 16),
-
-                    /// share on whatsapp
-                    GestureDetector(
-                      onTap: () async {
-                        final message = AppLocalizations.of(
-                          context,
-                        )!.whatsapp_inbox;
-                        //"Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this WhatsApp message. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.";
-
-                        /// launch whatsapp
-                        await CommonService.openWhatsappUrl(
-                          phoneNumber: "+9647871111112",
-                          message: message,
-                        );
-                      },
-                      child: Container(
-                        width: sizes!.isPhone
-                            ? sizes!.widthRatio * 360
-                            : sizes!.width,
-                        height: sizes!.responsiveLandscapeHeight(
-                          phoneVal: 50,
-                          tabletVal: 60,
-                          tabletLandscapeVal: 70,
-                          isLandscape: sizes!.isLandscape(),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Color(0x33BBA473),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            width: 1.50,
-                            color: Color(0xFFBBA473),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/svg/whatsapp_icon.svg",
-                              color: Colors.white,
-                              height:
-                                  sizes!.heightRatio *
-                                  (sizes!.isPhone
-                                      ? 22
-                                      : (sizes!.isLandscape() ? 32 : 20)),
-                              width:
-                                  sizes!.widthRatio *
-                                  (sizes!.isPhone
-                                      ? 22
-                                      : (sizes!.isLandscape() ? 32 : 20)),
-                            ),
-                            ConstPadding.sizeBoxWithWidth(width: 10),
-                            GetGenericText(
-                              text: AppLocalizations.of(
-                                context,
-                              )!.dep_share_whatsapp, //"Share on Whatsapp",
-                              fontSize: sizes!.responsiveFont(
-                                phoneVal: 18,
-                                tabletVal: 20,
-                              ), //16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    ConstPadding.sizeBoxWithHeight(height: 16),
-
-                    /// send via email
-                    GestureDetector(
-                      onTap: () async {
-                        final body = AppLocalizations.of(
-                          context,
-                        )!.email_message;
-                        //"Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this email. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.";
-                        // Send via email
-                        await CommonService.openEmailApp(
-                          emailAddress: "mobileapp@baghdadbullionhouse.com",
-                          subject: AppLocalizations.of(
-                            context,
-                          )!.email_url_title, //"Direct Bank Transfer Payment Receipt",
-                          body: body,
-                        );
-                      },
-                      child: Container(
-                        width: sizes!.isPhone
-                            ? sizes!.widthRatio * 360
-                            : sizes!.width,
-                        height: sizes!.responsiveLandscapeHeight(
-                          phoneVal: 50,
-                          tabletVal: 60,
-                          tabletLandscapeVal: 70,
-                          isLandscape: sizes!.isLandscape(),
-                        ),
-                        decoration: BoxDecoration(
-                          color: Color(0x33BBA473),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            width: 1.50,
-                            color: Color(0xFFBBA473),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              "assets/svg/sms.svg",
-                              height:
-                                  sizes!.heightRatio *
-                                  (sizes!.isPhone
-                                      ? 22
-                                      : (sizes!.isLandscape() ? 32 : 20)),
-                              width:
-                                  sizes!.widthRatio *
-                                  (sizes!.isPhone
-                                      ? 22
-                                      : (sizes!.isLandscape() ? 32 : 20)),
-                            ),
-                            ConstPadding.sizeBoxWithWidth(width: 10),
-                            GetGenericText(
-                              text: AppLocalizations.of(
-                                context,
-                              )!.dep_share_email, //"Send via Email",
-                              fontSize: sizes!.responsiveFont(
-                                phoneVal: 18,
-                                tabletVal: 20,
-                              ),
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ).get16HorizontalPadding(),
+                  ),
+                ),
               ),
-            ),
+
+              ConstPadding.sizeBoxWithHeight(height: 15),
+
+              /// Account Name
+              CommonTextFormField(
+                title: AppLocalizations.of(
+                  context,
+                )!.dep_label_accountName,
+                labelText: AppLocalizations.of(
+                  context,
+                )!.dep_label_accountName,
+                controller: TextEditingController(
+                  text:
+                      Directionality.of(context) == TextDirection.rtl
+                          ? (state.bankDetailResponse?.payload?.bank?.accountName?.ar ?? "")
+                          : (state.bankDetailResponse?.payload?.bank?.accountName?.en ?? ""),
+                ),
+                readOnly: true,
+                hintText: "",
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: () => _copyToClipboard(
+                      text:
+                          Directionality.of(context) == TextDirection.rtl
+                              ? (state.bankDetailResponse?.payload?.bank?.accountName?.ar ?? "")
+                              : (state.bankDetailResponse?.payload?.bank?.accountName?.en ?? ""),
+                      label: AppLocalizations.of(
+                        context,
+                      )!.dep_label_accountName,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/svg/copy_icon.svg",
+                    ),
+                  ),
+                ),
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 15),
+
+              /// Account Type
+              CommonTextFormField(
+                title: AppLocalizations.of(context)!.account_type,
+                labelText:AppLocalizations.of(context)!.account_type,
+                controller: TextEditingController(
+                  text:
+                      Directionality.of(context) == TextDirection.rtl
+                          ? (state.bankDetailResponse?.payload?.bank?.accountType?.ar ?? "")
+                          : (state.bankDetailResponse?.payload?.bank?.accountType?.en ?? ""),
+                ),
+                readOnly: true,
+                hintText: "",
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: () => _copyToClipboard(
+                      text:
+                          Directionality.of(context) == TextDirection.rtl
+                              ? (state.bankDetailResponse?.payload?.bank?.accountType?.ar ?? "")
+                              : (state.bankDetailResponse?.payload?.bank?.accountType?.en ?? ""),
+                      label: AppLocalizations.of(context)!.account_type,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/svg/copy_icon.svg",
+                    ),
+                  ),
+                ),
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 15),
+
+              /// Currency
+              CommonTextFormField(
+                title:AppLocalizations.of(context)!.currency,
+                labelText: AppLocalizations.of(context)!.currency,
+                controller: TextEditingController(
+                  text:
+                      Directionality.of(context) == TextDirection.rtl
+                          ? (state.bankDetailResponse?.payload?.bank?.currency?.ar ?? "")
+                          : (state.bankDetailResponse?.payload?.bank?.currency?.en ?? ""),
+                ),
+                readOnly: true,
+                hintText: "",
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: () => _copyToClipboard(
+                      text:
+                          Directionality.of(context) == TextDirection.rtl
+                              ? (state.bankDetailResponse?.payload?.bank?.currency?.ar ?? "")
+                              : (state.bankDetailResponse?.payload?.bank?.currency?.en ?? ""),
+                      label: "currency",
+                      // AppLocalizations.of(context)!.currenc,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/svg/copy_icon.svg",
+                    ),
+                  ),
+                ),
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 15),
+
+              /// Account Number
+              CommonTextFormField(
+                title: AppLocalizations.of(
+                  context,
+                )!.dep_label_accountNumber,
+                labelText: AppLocalizations.of(
+                  context,
+                )!.dep_label_accountNumber,
+                controller: accountNumberController,
+                readOnly: true,
+                hintText: "",
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: () => _copyToClipboard(
+                      text: accountNumberController.text,
+                      label: AppLocalizations.of(
+                        context,
+                      )!.dep_label_accountNumber,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/svg/copy_icon.svg",
+                    ),
+                  ),
+                ),
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 15),
+
+              /// IBAN
+              CommonTextFormField(
+                title: AppLocalizations.of(
+                  context,
+                )!.dep_label_iban,
+                labelText: AppLocalizations.of(
+                  context,
+                )!.dep_label_iban,
+                controller: fabIbanController,
+                readOnly: true,
+                hintText: "",
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: () => _copyToClipboard(
+                      text: fabIbanController.text,
+                      label: AppLocalizations.of(
+                        context,
+                      )!.dep_label_iban,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/svg/copy_icon.svg",
+                    ),
+                  ),
+                ),
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 15),
+
+              /// Swift Code
+              CommonTextFormField(
+                title: AppLocalizations.of(
+                  context,
+                )!.dep_label_swift,
+                labelText: AppLocalizations.of(
+                  context,
+                )!.dep_label_swift,
+                controller: fabSwiftController,
+                readOnly: true,
+                hintText: "",
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: GestureDetector(
+                    onTap: () => _copyToClipboard(
+                      text: fabSwiftController.text,
+                      label: AppLocalizations.of(context)!.swift_code,
+                    ),
+                    child: SvgPicture.asset(
+                      "assets/svg/copy_icon.svg",
+                    ),
+                  ),
+                ),
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 25),
+
+              Container(
+                height: sizes!.heightRatio * 1,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromRGBO(95, 86, 68, 0),
+                      Color.fromRGBO(95, 86, 68, 1),
+                      Color.fromRGBO(197, 179, 141, 0),
+                    ],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                ),
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 25),
+
+              /// Share Receipt
+              GetGenericText(
+                text: AppLocalizations.of(
+                  context,
+                )!.dep_share_title,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                color: AppColors.grey6Color,
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 4),
+
+              GetGenericText(
+                text: AppLocalizations.of(context)!.dep_share_desc,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: AppColors.grey3Color,
+                lines: 4,
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 12),
+
+              /// Share on WhatsApp
+              GestureDetector(
+                onTap: () async {
+                  final message =
+                      AppLocalizations.of(context)!.whatsapp_inbox;
+
+                  await CommonService.openWhatsappUrl(
+                    phoneNumber:""
+                        // state
+                        //     .bankDetailResponse
+                        //     ?.payload
+                        //     ?.supportDetails
+                        //     ?.firstOrNull
+                        //     ?.whatsApp ??
+                        "",
+                    message: message,
+                  );
+                },
+                child: Container(
+                  width: sizes!.isPhone
+                      ? sizes!.widthRatio * 360
+                      : sizes!.width,
+                  height: sizes!.responsiveLandscapeHeight(
+                    phoneVal: 50,
+                    tabletVal: 60,
+                    tabletLandscapeVal: 70,
+                    isLandscape: sizes!.isLandscape(),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0x33BBA473),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1.50,
+                      color: Color(0xFFBBA473),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svg/whatsapp_icon.svg",
+                        color: Colors.white,
+                        height:
+                            sizes!.heightRatio *
+                            (sizes!.isPhone
+                                ? 22
+                                : (sizes!.isLandscape() ? 32 : 20)),
+                        width:
+                            sizes!.widthRatio *
+                            (sizes!.isPhone
+                                ? 22
+                                : (sizes!.isLandscape() ? 32 : 20)),
+                      ),
+                      ConstPadding.sizeBoxWithWidth(width: 10),
+                      GetGenericText(
+                        text: AppLocalizations.of(
+                          context,
+                        )!.dep_share_whatsapp,
+                        fontSize: sizes!.responsiveFont(
+                          phoneVal: 18,
+                          tabletVal: 20,
+                        ),
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              ConstPadding.sizeBoxWithHeight(height: 16),
+
+              /// Send via Email
+              GestureDetector(
+                onTap: () async {
+                  final body =
+                      AppLocalizations.of(context)!.email_message;
+
+                  await CommonService.openEmptyEmailApp(
+                    emailAddress: ""
+                        // state
+                        //     .bankDetailResponse
+                        //     ?.payload
+                        //     ?.supportDetails
+                        //     ?.firstOrNull
+                        //     ?.supportEmail ??
+                        "",
+                    subject: AppLocalizations.of(
+                      context,
+                    )!.email_url_title,
+                    body: body,
+                  );
+                },
+                child: Container(
+                  width: sizes!.isPhone
+                      ? sizes!.widthRatio * 360
+                      : sizes!.width,
+                  height: sizes!.responsiveLandscapeHeight(
+                    phoneVal: 50,
+                    tabletVal: 60,
+                    tabletLandscapeVal: 70,
+                    isLandscape: sizes!.isLandscape(),
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color(0x33BBA473),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      width: 1.50,
+                      color: Color(0xFFBBA473),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        "assets/svg/sms.svg",
+                        height:
+                            sizes!.heightRatio *
+                            (sizes!.isPhone
+                                ? 22
+                                : (sizes!.isLandscape() ? 32 : 20)),
+                        width:
+                            sizes!.widthRatio *
+                            (sizes!.isPhone
+                                ? 22
+                                : (sizes!.isLandscape() ? 32 : 20)),
+                      ),
+                      ConstPadding.sizeBoxWithWidth(width: 10),
+                      GetGenericText(
+                        text: AppLocalizations.of(
+                          context,
+                        )!.dep_share_email,
+                        fontSize: sizes!.responsiveFont(
+                          phoneVal: 18,
+                          tabletVal: 20,
+                        ),
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ).get16HorizontalPadding(),
+        ),
+      ),
+      // body: state.isDetailsLoading
+      //     ? Center(
+      //         child: ShimmerLoader(
+      //           loop: 6,
+      //         ).get16HorizontalPadding(),
+      //       )
+      //     : SafeArea(
+      //         child: SingleChildScrollView(
+      //           child: Column(
+      //             crossAxisAlignment: CrossAxisAlignment.start,
+      //             children: [
+      //               ConstPadding.sizeBoxWithHeight(height: 15),
+      //               CommonTextFormField(
+      //                 title: AppLocalizations.of(
+      //                   context,
+      //                 )!.dep_label_accountName, //"Account Name",
+      //                 labelText: AppLocalizations.of(
+      //                   context,
+      //                 )!.dep_label_accountName, //"Account Name",
+      //                 controller: accountNameController,
+      //                 readOnly: true,
+      //                 hintText: "",
+      //                 suffixIcon: Padding(
+      //                   padding: const EdgeInsets.all(10.0),
+      //                   child: GestureDetector(
+      //                     onTap: () => _copyToClipboard(
+      //                       text: accountNameController.text,
+      //                       label: "Name",
+      //                     ),
+      //                     child: SvgPicture.asset(
+      //                       "assets/svg/copy_icon.svg",
+      //                     ),
+      //                   ),
+      //                 ),
+      //               ),
+      //               ConstPadding.sizeBoxWithHeight(height: 15),
+      //               CommonTextFormField(
+      //                 title: AppLocalizations.of(
+      //                   context,
+      //                 )!.dep_label_accountNumber, //"Account Number",
+      //                 labelText: AppLocalizations.of(
+      //                   context,
+      //                 )!.dep_label_accountNumber, //"Account Number",
+      //                 controller: accountNumberController,
+      //                 readOnly: true,
+      //                 hintText: "",
+      //                 suffixIcon: Padding(
+      //                   padding: const EdgeInsets.all(10.0),
+      //                   child: GestureDetector(
+      //                     onTap: () => _copyToClipboard(
+      //                       text: accountNumberController.text,
+      //                       label: AppLocalizations.of(
+      //                         context,
+      //                       )!.dep_label_accountNumber, //"Account Number"
+      //                     ),
+      //                     child: SvgPicture.asset(
+      //                       "assets/svg/copy_icon.svg",
+      //                     ),
+      //                   ),
+      //                 ),
+      //               ),
+      //               ConstPadding.sizeBoxWithHeight(height: 15),
+      //               CommonTextFormField(
+      //                 title: AppLocalizations.of(
+      //                   context,
+      //                 )!.dep_label_iban, //"IBAN Number",
+      //                 labelText: AppLocalizations.of(
+      //                   context,
+      //                 )!.dep_label_iban, //"IBAN Number",
+      //                 controller: fabIbanController,
+      //                 readOnly: true,
+      //                 hintText: "",
+      //                 suffixIcon: Padding(
+      //                   padding: const EdgeInsets.all(10.0),
+      //                   child: GestureDetector(
+      //                     onTap: () => _copyToClipboard(
+      //                       text: fabIbanController.text,
+      //                       label: AppLocalizations.of(
+      //                         context,
+      //                       )!.dep_label_iban, //"IBAN Number"
+      //                     ),
+      //                     child: SvgPicture.asset(
+      //                       "assets/svg/copy_icon.svg",
+      //                     ),
+      //                   ),
+      //                 ),
+      //               ),
+      //               ConstPadding.sizeBoxWithHeight(height: 15),
+      //               CommonTextFormField(
+      //                 title: AppLocalizations.of(
+      //                   context,
+      //                 )!.dep_label_swift, //"Swift",
+      //                 labelText: AppLocalizations.of(
+      //                   context,
+      //                 )!.dep_label_swift, //"Swift",
+      //                 controller: fabSwiftController,
+      //                 readOnly: true,
+      //                 hintText: "",
+      //                 suffixIcon: Padding(
+      //                   padding: const EdgeInsets.all(10.0),
+      //                   child: GestureDetector(
+      //                     onTap: () => _copyToClipboard(
+      //                       text: fabSwiftController.text,
+      //                       label: AppLocalizations.of(context)!.swift_code,
+      //                     ),
+      //                     child: SvgPicture.asset(
+      //                       "assets/svg/copy_icon.svg",
+      //                     ),
+      //                   ),
+      //                 ),
+      //               ),
+      //               ConstPadding.sizeBoxWithHeight(height: 25),
+
+      //               Container(
+      //                 height: sizes!.heightRatio * 1,
+      //                 decoration: BoxDecoration(
+      //                   gradient: LinearGradient(
+      //                     colors: [
+      //                       Color.fromRGBO(95, 86, 68, 0),
+      //                       Color.fromRGBO(95, 86, 68, 1),
+      //                       Color.fromRGBO(197, 179, 141, 0),
+      //                     ],
+      //                     begin: Alignment.centerLeft,
+      //                     end: Alignment.centerRight,
+      //                   ),
+      //                 ),
+      //               ),
+      //               ConstPadding.sizeBoxWithHeight(height: 25),
+
+      //               /// share receipt
+      //               GetGenericText(
+      //                 text: AppLocalizations.of(
+      //                   context,
+      //                 )!.dep_share_title, //"Share Receipt",
+      //                 fontSize: 18,
+      //                 fontWeight: FontWeight.w500,
+      //                 color: AppColors.grey6Color,
+      //               ),
+      //               ConstPadding.sizeBoxWithHeight(height: 4),
+      //               GetGenericText(
+      //                 text: AppLocalizations.of(context)!.dep_share_desc,
+      //                 //"Choose any of the options below to share the receipt once you’ve transferred the funds in Baghdad Bullion House FZCO account.",
+      //                 fontSize: 16,
+      //                 fontWeight: FontWeight.w400,
+      //                 color: AppColors.grey3Color,
+      //                 lines: 4,
+      //               ),
+      //               ConstPadding.sizeBoxWithHeight(height: 12),
+
+      //               /// upload receipt
+      //               // GestureDetector(
+      //               //   onTap: () {
+      //               //     Navigator.push(
+      //               //       context,
+      //               //       MaterialPageRoute(
+      //               //         builder: (context) =>
+      //               //             const TransactionSuccessScreen(),
+      //               //       ),
+      //               //     );
+      //               //   },
+      //               //   child: Container(
+      //               //     width: sizes!.isPhone
+      //               //         ? sizes!.widthRatio * 360
+      //               //         : sizes!.width,
+      //               //     height: sizes!.responsiveLandscapeHeight(
+      //               //       phoneVal: 50,
+      //               //       tabletVal: 60,
+      //               //       tabletLandscapeVal: 70,
+      //               //       isLandscape: sizes!.isLandscape(),
+      //               //     ),
+      //               //     decoration: ShapeDecoration(
+      //               //       gradient: LinearGradient(
+      //               //         begin: Alignment(1.00, 0.01),
+      //               //         end: Alignment(-1, -0.01),
+      //               //         colors: [
+      //               //           Color(0xFF675A3D),
+      //               //           Color(0xFFBBA473),
+      //               //         ],
+      //               //       ),
+      //               //       shape: RoundedRectangleBorder(
+      //               //         borderRadius: BorderRadius.circular(10),
+      //               //       ),
+      //               //     ),
+      //               //     child: Row(
+      //               //       mainAxisAlignment: MainAxisAlignment.center,
+      //               //       children: [
+      //               //         SvgPicture.asset(
+      //               //           "assets/svg/export.svg",
+      //               //           height: sizes!.heightRatio *
+      //               //               (sizes!.isPhone
+      //               //                   ? 22
+      //               //                   : (sizes!.isLandscape() ? 32 : 20)),
+      //               //           width: sizes!.widthRatio *
+      //               //               (sizes!.isPhone
+      //               //                   ? 22
+      //               //                   : (sizes!.isLandscape() ? 32 : 20)),
+      //               //         ),
+      //               //         ConstPadding.sizeBoxWithWidth(width: 10),
+      //               //         GetGenericText(
+      //               //           text: "Upload Receipt",
+      //               //           fontSize: sizes!.responsiveFont(
+      //               //             phoneVal: 18,
+      //               //             tabletVal: 20,
+      //               //           ),
+      //               //           fontWeight: FontWeight.w500,
+      //               //           color: Colors.white,
+      //               //         ),
+      //               //       ],
+      //               //     ),
+      //               //   ),
+      //               // ),
+      //               // ConstPadding.sizeBoxWithHeight(height: 16),
+
+      //               /// share on whatsapp
+      //               GestureDetector(
+      //                 onTap: () async {
+      //                   final message = AppLocalizations.of(
+      //                     context,
+      //                   )!.whatsapp_inbox;
+      //                   //"Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this WhatsApp message. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.";
+
+      //                   /// launch whatsapp
+      //                   await CommonService.openWhatsappUrl(
+      //                     phoneNumber: "",//"+9647871111112",
+      //                     message: message,
+      //                   );
+      //                 },
+      //                 child: Container(
+      //                   width: sizes!.isPhone
+      //                       ? sizes!.widthRatio * 360
+      //                       : sizes!.width,
+      //                   height: sizes!.responsiveLandscapeHeight(
+      //                     phoneVal: 50,
+      //                     tabletVal: 60,
+      //                     tabletLandscapeVal: 70,
+      //                     isLandscape: sizes!.isLandscape(),
+      //                   ),
+      //                   decoration: BoxDecoration(
+      //                     color: Color(0x33BBA473),
+      //                     borderRadius: BorderRadius.circular(10),
+      //                     border: Border.all(
+      //                       width: 1.50,
+      //                       color: Color(0xFFBBA473),
+      //                     ),
+      //                   ),
+      //                   child: Row(
+      //                     mainAxisAlignment: MainAxisAlignment.center,
+      //                     children: [
+      //                       SvgPicture.asset(
+      //                         "assets/svg/whatsapp_icon.svg",
+      //                         color: Colors.white,
+      //                         height:
+      //                             sizes!.heightRatio *
+      //                             (sizes!.isPhone
+      //                                 ? 22
+      //                                 : (sizes!.isLandscape() ? 32 : 20)),
+      //                         width:
+      //                             sizes!.widthRatio *
+      //                             (sizes!.isPhone
+      //                                 ? 22
+      //                                 : (sizes!.isLandscape() ? 32 : 20)),
+      //                       ),
+      //                       ConstPadding.sizeBoxWithWidth(width: 10),
+      //                       GetGenericText(
+      //                         text: AppLocalizations.of(
+      //                           context,
+      //                         )!.dep_share_whatsapp, //"Share on Whatsapp",
+      //                         fontSize: sizes!.responsiveFont(
+      //                           phoneVal: 18,
+      //                           tabletVal: 20,
+      //                         ), //16,
+      //                         fontWeight: FontWeight.w500,
+      //                         color: Colors.white,
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ),
+      //               ),
+      //               ConstPadding.sizeBoxWithHeight(height: 16),
+
+      //               /// send via email
+      //               GestureDetector(
+      //                 onTap: () async {
+      //                   final body = AppLocalizations.of(
+      //                     context,
+      //                   )!.email_message;
+      //                   //"Hi Baghdad Bullion House Sales Team, \n\nTo confirm and process your payment, please attach a copy of the payment receipt to this email. \n\nThis will help us verify the transaction and update your account accordingly.\nYou can simply reply to this email with the receipt attached. If you have any questions or concerns, feel free to reach out to us.\n\nRegards,\nBaghdad Bullion House Team.";
+      //                   // Send via email
+      //                   await CommonService.openEmailApp(
+      //                     emailAddress: "",//"mobileapp@baghdadbullionhouse.com",
+      //                     subject: AppLocalizations.of(
+      //                       context,
+      //                     )!.email_url_title, //"Direct Bank Transfer Payment Receipt",
+      //                     body: body,
+      //                   );
+      //                 },
+      //                 child: Container(
+      //                   width: sizes!.isPhone
+      //                       ? sizes!.widthRatio * 360
+      //                       : sizes!.width,
+      //                   height: sizes!.responsiveLandscapeHeight(
+      //                     phoneVal: 50,
+      //                     tabletVal: 60,
+      //                     tabletLandscapeVal: 70,
+      //                     isLandscape: sizes!.isLandscape(),
+      //                   ),
+      //                   decoration: BoxDecoration(
+      //                     color: Color(0x33BBA473),
+      //                     borderRadius: BorderRadius.circular(10),
+      //                     border: Border.all(
+      //                       width: 1.50,
+      //                       color: Color(0xFFBBA473),
+      //                     ),
+      //                   ),
+      //                   child: Row(
+      //                     mainAxisAlignment: MainAxisAlignment.center,
+      //                     children: [
+      //                       SvgPicture.asset(
+      //                         "assets/svg/sms.svg",
+      //                         height:
+      //                             sizes!.heightRatio *
+      //                             (sizes!.isPhone
+      //                                 ? 22
+      //                                 : (sizes!.isLandscape() ? 32 : 20)),
+      //                         width:
+      //                             sizes!.widthRatio *
+      //                             (sizes!.isPhone
+      //                                 ? 22
+      //                                 : (sizes!.isLandscape() ? 32 : 20)),
+      //                       ),
+      //                       ConstPadding.sizeBoxWithWidth(width: 10),
+      //                       GetGenericText(
+      //                         text: AppLocalizations.of(
+      //                           context,
+      //                         )!.dep_share_email, //"Send via Email",
+      //                         fontSize: sizes!.responsiveFont(
+      //                           phoneVal: 18,
+      //                           tabletVal: 20,
+      //                         ),
+      //                         fontWeight: FontWeight.w500,
+      //                         color: Colors.white,
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ),
+      //               ),
+      //             ],
+      //           ).get16HorizontalPadding(),
+      //         ),
+      //       ),
+    
     );
   }
+  String _getLangText(String? en, String? ar) {
+  final isArabic = Directionality.of(context) == TextDirection.rtl;
+  return isArabic ? (ar ?? en ?? '') : (en ?? ar ?? '');
+}
 }

@@ -572,7 +572,8 @@ class Gift extends _$Gift {
     // Handle API response
     switch (serverResponse.responseType) {
       case ServerResponseType.success:
-        getLocator<Logger>().i("Gift created successfully!");
+        // getLocator<Logger>().i("Gift created successfully!");
+        print("Response to API: ${jsonEncode(body)}");
         SuccessResponse successResponse =
             SuccessResponse.fromJson(serverResponse.resultData);
         state = state.copyWith(

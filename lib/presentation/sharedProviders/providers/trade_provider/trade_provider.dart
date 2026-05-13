@@ -217,13 +217,17 @@ class Trade extends _$Trade {
                     CommonService.formatIQDForDisplay(targetPriceValue);
                 final totalFormatted =
                     CommonService.formatIQDForDisplay(tradeMoney);
+                    final amountValue = double.tryParse(amountFormatted) ?? 0;
 
                 return OrderPlacedScreen(
                   orderId: "xyz",
                   dateTime: DateTime.now().toLocal().toString().split('.')[0],
                   tradeType: tradeTypeTitle,
                   amount:
-                      "$amountFormatted ${AppLocalizations.of(context)!.grams_unit_lowercase}",
+    "$amountFormatted ${amountValue > 1
+        ? AppLocalizations.of(context)!.grams_plural_lowercase
+        : AppLocalizations.of(context)!.grams_unit_lowercase}",
+                   // "$amountFormatted ${AppLocalizations.of(context)!.grams_unit_lowercase}",
                   targetPrice:
                       "${AppLocalizations.of(context)!.idq} $targetPriceFormatted ${AppLocalizations.of(context)!.trade_gram}",
                   total:

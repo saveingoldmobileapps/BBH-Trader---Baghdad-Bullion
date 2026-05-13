@@ -2054,8 +2054,9 @@ class _GramDealDetailScreenState extends ConsumerState<GramDealDetailScreen> {
                                   )!.deal_amount_gram, //"Amount Gram",
                                   controller: closeDealAmountGramController,
                                   inputFormatters: [
-                                    AmountInputFormatter(
+                                    DecimalAmountInputFormatter(
                                       maxDigits: 4,
+                                      decimalRange: 3
                                     ),
                                   ],
                                   textInputType:

@@ -90,8 +90,15 @@ class DioNetworkManager {
 
   late final Dio _dio;
 
-  bool _isPriceLikeKey(String key) {
+  bool _isPriceLikeKey(
+    String key, {
+    bool parentMapIsGiftMetalDealRow = false,
+    bool payloadPaymentIsMetal = false,
+  }) {
     final k = key.toLowerCase();
+    if (k == 'giftamount') return false;
+    if (parentMapIsGiftMetalDealRow && k == 'amount') return false;
+    if (payloadPaymentIsMetal && k == 'grandtotal') return false;
     if (k.contains('quantity') ||
         k.contains('qty') ||
         k.contains('weight') ||
@@ -111,13 +118,29 @@ class DioNetworkManager {
         k.contains('money');
   }
 
-  dynamic _normalizePayloadPrices(dynamic data, {String? parentKey}) {
+  dynamic _normalizePayloadPrices(
+    dynamic data, {
+    String? parentKey,
+    bool parentMapIsGiftMetalDealRow = false,
+    bool payloadPaymentIsMetal = false,
+  }) {
     if (data is Map) {
+      final lowerKeys = data.keys.map((e) => e.toString().toLowerCase()).toSet();
+      final mapIsGiftMetalDealRow = lowerKeys.contains('tradeid') &&
+          lowerKeys.contains('dealid') &&
+          lowerKeys.contains('amount');
+      final paymentRaw = data['paymentMethod'];
+      final isMetalPayment = paymentRaw is String &&
+          paymentRaw.trim().toLowerCase() == 'metal';
+      final inheritMetalPayment =
+          payloadPaymentIsMetal || isMetalPayment;
       final out = <String, dynamic>{};
       data.forEach((key, value) {
         out[key.toString()] = _normalizePayloadPrices(
           value,
           parentKey: key.toString(),
+          parentMapIsGiftMetalDealRow: mapIsGiftMetalDealRow,
+          payloadPaymentIsMetal: inheritMetalPayment,
         );
       });
       return out;
@@ -125,11 +148,23 @@ class DioNetworkManager {
 
     if (data is List) {
       return data
-          .map((e) => _normalizePayloadPrices(e, parentKey: parentKey))
+          .map(
+            (e) => _normalizePayloadPrices(
+              e,
+              parentKey: parentKey,
+              parentMapIsGiftMetalDealRow: parentMapIsGiftMetalDealRow,
+              payloadPaymentIsMetal: payloadPaymentIsMetal,
+            ),
+          )
           .toList();
     }
 
-    if (parentKey != null && _isPriceLikeKey(parentKey)) {
+    if (parentKey != null &&
+        _isPriceLikeKey(
+          parentKey,
+          parentMapIsGiftMetalDealRow: parentMapIsGiftMetalDealRow,
+          payloadPaymentIsMetal: payloadPaymentIsMetal,
+        )) {
       if (data is num) {
         return CommonService.normalizeIqdForApi(data);
       }

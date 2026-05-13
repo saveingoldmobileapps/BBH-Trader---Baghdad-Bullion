@@ -226,10 +226,18 @@ class _MetalStatementCardState extends State<MetalStatementCard>
 
     final bool useSpecialRow = isEsouqCheckout || isgiftSent;
 
-    final String finalLabel = isgiftSent
-        ? widget.statement.paymentModel
-              .toString() //AppLocalizations.of(context)!.gift
-        : "$label";
+    // final String finalLabel = isgiftSent
+    //     ? widget.statement.paymentModel
+    //           .toString() //AppLocalizations.of(context)!.gift
+    //     : "$label";
+    final bool isArabic =
+    Localizations.localeOf(context).languageCode == 'ar';
+
+final String finalLabel = isgiftSent
+    ? (isArabic
+        ? widget.statement.paymentModelInArabic.toString()
+        : widget.statement.paymentModel.toString())
+    : label;
 
     return useSpecialRow
         ? _buildEsouqRow(finalLabel, "")

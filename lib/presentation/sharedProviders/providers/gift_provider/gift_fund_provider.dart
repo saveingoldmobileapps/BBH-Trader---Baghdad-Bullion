@@ -1,13 +1,13 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart';
 import 'package:baghdad_bullion_house/data/data_sources/network_sources/api_url.dart';
 import 'package:baghdad_bullion_house/data/data_sources/network_sources/dio_network_manager.dart';
 import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
+import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../../data/data_sources/local_database/secure_database.dart';
@@ -491,133 +491,139 @@ class Gift extends _$Gift {
   //   }
   // }
   Future<void> createGift({
-  required String receiverId,
-  required String receiverName,
-  required String receiverEmail,
-  required String receiverPhoneNumber,
-  required String giftAmount,
-  required String paymentMethod,
-  required String comment,
-  required BuildContext context,
-  List<Map<String, dynamic>>? selectedDealsData,
-}) async {
-  try {
-    // Set button loading state
-    state = state.copyWith(loadingState: LoadingState.loading);
+    required String receiverId,
+    required String receiverName,
+    required String receiverEmail,
+    required String receiverPhoneNumber,
+    required String giftAmount,
+    required String paymentMethod,
+    required String comment,
+    required BuildContext context,
+    List<Map<String, dynamic>>? selectedDealsData,
+  }) async {
+    try {
+      // Set button loading state
+      state = state.copyWith(loadingState: LoadingState.loading);
 
-    // Get user info
-    String? userId = await LocalDatabase.instance.getUserId();
-    String? senderId = await LocalDatabase.instance.getUserAccountId();
-    String? refreshToken =
-        await SecureStorageService.instance.getRefreshToken();
+      // Get user info
+      String? userId = await LocalDatabase.instance.getUserId();
+      String? senderId = await LocalDatabase.instance.getUserAccountId();
+      String? refreshToken = await SecureStorageService.instance
+          .getRefreshToken();
 
-    if (refreshToken == null) {
-      getLocator<Logger>().e("No refresh token found!");
-      state = state.copyWith(loadingState: LoadingState.error);
-      return;
-    }
-
-    final headers = {
-      "Authorization": "Bearer $refreshToken",
-      "Content-Type": "application/json",
-    };
-
-    // Format giftAmount as double
-    final double formattedGiftAmount = double.tryParse(giftAmount) ?? 0;
-
-    // Format dealsData amounts as double
-    final List<Map<String, dynamic>>? formattedDealsData =
-        selectedDealsData?.map((deal) {
-      return {
-        "tradeId": deal["tradeId"],
-        "dealId": deal["dealId"],
-        "amount": double.tryParse(deal["amount"].toString()) ?? 0,
-      };
-    }).toList();
-
-    final body = {
-      "userId": userId,
-      "senderId": int.tryParse(senderId ?? "0") ?? 0,
-      "receiverId": int.tryParse(receiverId) ?? 0,
-      "receiverName": receiverName,
-      "receiverEmail": receiverEmail,
-      "giftAmount": formattedGiftAmount,
-      "receiverPhoneNumber": receiverPhoneNumber,
-      "paymentMethod": paymentMethod,
-      "comment": comment,
-    };
-
-    if (paymentMethod == "Metal" && formattedDealsData != null) {
-      body["dealsData"] = formattedDealsData;
-    }
-
-    // Print body for debugging (with 2 decimal formatting)
-    print("API Body: ${jsonEncode(body)}");
-    print("Gift Amount: ${formattedGiftAmount.toStringAsFixed(3)}");
-    if (formattedDealsData != null) {
-      for (var deal in formattedDealsData) {
-        print(
-            "Deal ${deal['dealId']} Amount: ${(deal['amount'] as double).toStringAsFixed(3)}");
-      }
-    }
-
-    // API call
-    ServerResponse serverResponse = await DioNetworkManager().callAPI(
-      url: ApiEndpoints.createGiftApiUrl,
-      httpMethod: HttpMethod.post,
-      headers: headers,
-      body: body,
-    );
-
-    // Handle API response
-    switch (serverResponse.responseType) {
-      case ServerResponseType.success:
-        // getLocator<Logger>().i("Gift created successfully!");
-        print("Response to API: ${jsonEncode(body)}");
-        SuccessResponse successResponse =
-            SuccessResponse.fromJson(serverResponse.resultData);
-        state = state.copyWith(
-          successResponse: successResponse,
-          loadingState: LoadingState.data,
-        );
-        Toasts.getSuccessToast(
-            text: "${successResponse.payload?.message.toString()}");
-        break;
-
-      case ServerResponseType.error:
-        ErrorResponse errorResponse =
-            ErrorResponse.fromJson(serverResponse.resultData);
-        state = state.copyWith(
-          errorResponse: errorResponse,
-          loadingState: LoadingState.error,
-        );
-        getLocator<Logger>().e("Error: ${errorResponse.payload?.message}");
-        Toasts.getErrorToast(text: "${errorResponse.payload?.message.toString()}");
-
-        // logout user if unauthorized
-        if (errorResponse.code == 401 && context.mounted) {
-          await CommonService.logoutUser(context: context);
-          return;
-        }
-
-        if (context.mounted) {
-          Navigator.of(context)
-            ..pop()
-            ..pop()
-            ..pop();
-        }
-        break;
-
-      case ServerResponseType.exception:
+      if (refreshToken == null) {
+        getLocator<Logger>().e("No refresh token found!");
         state = state.copyWith(loadingState: LoadingState.error);
-        getLocator<Logger>().e("Exception: ${serverResponse.resultData}");
-        break;
-    }
-  } catch (e, stackTrace) {
-    await Sentry.captureException(e, stackTrace: stackTrace);
-    getLocator<Logger>().e("Create Gift Error: $e");
-    state = state.copyWith(loadingState: LoadingState.error);
-  }
-}
+        return;
+      }
 
+      final headers = {
+        "Authorization": "Bearer $refreshToken",
+        "Content-Type": "application/json",
+      };
+
+      // Format giftAmount as double
+      final double formattedGiftAmount = double.tryParse(giftAmount) ?? 0;
+
+      // Format dealsData amounts as double
+      final List<Map<String, dynamic>>? formattedDealsData = selectedDealsData
+          ?.map((deal) {
+            return {
+              "tradeId": deal["tradeId"],
+              "dealId": deal["dealId"],
+              "amount": double.tryParse(deal["amount"].toString()) ?? 0,
+            };
+          })
+          .toList();
+
+      final body = {
+        "userId": userId,
+        "senderId": int.tryParse(senderId ?? "0") ?? 0,
+        "receiverId": int.tryParse(receiverId) ?? 0,
+        "receiverName": receiverName,
+        "receiverEmail": receiverEmail,
+        "giftAmount": formattedGiftAmount,
+        "receiverPhoneNumber": receiverPhoneNumber,
+        "paymentMethod": paymentMethod,
+        "comment": comment,
+      };
+
+      if (paymentMethod == "Metal" && formattedDealsData != null) {
+        body["dealsData"] = formattedDealsData;
+      }
+
+      // Print body for debugging (with 2 decimal formatting)
+      print("API Body: ${jsonEncode(body)}");
+      print("Gift Amount: ${formattedGiftAmount.toStringAsFixed(3)}");
+      if (formattedDealsData != null) {
+        for (var deal in formattedDealsData) {
+          print(
+            "Deal ${deal['dealId']} Amount: ${(deal['amount'] as double).toStringAsFixed(3)}",
+          );
+        }
+      }
+
+      // API call
+      ServerResponse serverResponse = await DioNetworkManager().callAPI(
+        url: ApiEndpoints.createGiftApiUrl,
+        httpMethod: HttpMethod.post,
+        headers: headers,
+        body: body,
+      );
+
+      // Handle API response
+      switch (serverResponse.responseType) {
+        case ServerResponseType.success:
+          // getLocator<Logger>().i("Gift created successfully!");
+          print("Response to API: ${jsonEncode(body)}");
+          SuccessResponse successResponse = SuccessResponse.fromJson(
+            serverResponse.resultData,
+          );
+          state = state.copyWith(
+            successResponse: successResponse,
+            loadingState: LoadingState.data,
+          );
+          Toasts.getSuccessToast(
+            text: "${successResponse.payload?.message.toString()}",
+          );
+          break;
+
+        case ServerResponseType.error:
+          ErrorResponse errorResponse = ErrorResponse.fromJson(
+            serverResponse.resultData,
+          );
+          state = state.copyWith(
+            errorResponse: errorResponse,
+            loadingState: LoadingState.error,
+          );
+          getLocator<Logger>().e("Error: ${errorResponse.payload?.message}");
+          Toasts.getErrorToast(
+            text: "${errorResponse.payload?.message.toString()}",
+          );
+
+          // logout user if unauthorized
+          if (errorResponse.code == 401 && context.mounted) {
+            await CommonService.logoutUser(context: context);
+            return;
+          }
+
+          if (context.mounted) {
+            Navigator.of(context)
+              ..pop()
+              ..pop()
+              ..pop();
+          }
+          break;
+
+        case ServerResponseType.exception:
+          state = state.copyWith(loadingState: LoadingState.error);
+          getLocator<Logger>().e("Exception: ${serverResponse.resultData}");
+          break;
+      }
+    } catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      getLocator<Logger>().e("Create Gift Error: $e");
+      state = state.copyWith(loadingState: LoadingState.error);
+    }
+  }
 }

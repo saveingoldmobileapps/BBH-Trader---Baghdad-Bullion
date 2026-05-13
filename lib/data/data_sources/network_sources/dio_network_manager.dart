@@ -5,18 +5,18 @@
 
 import 'dart:io';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/main.dart';
 import 'package:baghdad_bullion_house/presentation/feature_injection.dart';
 import 'package:baghdad_bullion_house/presentation/screens/get_started_screen.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/pop_up_widget.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,7 +30,8 @@ enum HttpMethod {
   post,
   put,
   patch,
-  delete;
+  delete
+  ;
 
   @override
   String toString() {
@@ -174,8 +175,17 @@ class DioNetworkManager {
 
   bool isDialogShowing = false;
 
-  bool _isPriceLikeKey(String key) {
+  bool _isPriceLikeKey(
+    String key, {
+    bool parentMapIsGiftMetalDealRow = false,
+    bool payloadPaymentIsMetal = false,
+  }) {
     final k = key.toLowerCase();
+    // Gram fields — must not go through IQD rounding (normalizeIqdForApi(1) => 0).
+    if (k == 'giftamount') return false;
+    if (parentMapIsGiftMetalDealRow && k == 'amount') return false;
+    // eSouq (and similar): grandTotal is grams when paying with Metal, not IQD.
+    if (payloadPaymentIsMetal && k == 'grandtotal') return false;
     if (k.contains('quantity') ||
         k.contains('qty') ||
         k.contains('weight') ||
@@ -195,13 +205,31 @@ class DioNetworkManager {
         k.contains('money');
   }
 
-  dynamic _normalizePayloadPrices(dynamic data, {String? parentKey}) {
+  dynamic _normalizePayloadPrices(
+    dynamic data, {
+    String? parentKey,
+    bool parentMapIsGiftMetalDealRow = false,
+    bool payloadPaymentIsMetal = false,
+  }) {
     if (data is Map) {
+      final lowerKeys = data.keys
+          .map((e) => e.toString().toLowerCase())
+          .toSet();
+      final mapIsGiftMetalDealRow =
+          lowerKeys.contains('tradeid') &&
+          lowerKeys.contains('dealid') &&
+          lowerKeys.contains('amount');
+      final paymentRaw = data['paymentMethod'];
+      final isMetalPayment =
+          paymentRaw is String && paymentRaw.trim().toLowerCase() == 'metal';
+      final inheritMetalPayment = payloadPaymentIsMetal || isMetalPayment;
       final out = <String, dynamic>{};
       data.forEach((key, value) {
         out[key.toString()] = _normalizePayloadPrices(
           value,
           parentKey: key.toString(),
+          parentMapIsGiftMetalDealRow: mapIsGiftMetalDealRow,
+          payloadPaymentIsMetal: inheritMetalPayment,
         );
       });
       return out;
@@ -209,11 +237,21 @@ class DioNetworkManager {
 
     if (data is List) {
       return data
-          .map((e) => _normalizePayloadPrices(e, parentKey: parentKey))
+          .map(
+            (e) => _normalizePayloadPrices(
+              e,
+              parentKey: parentKey,
+              parentMapIsGiftMetalDealRow: parentMapIsGiftMetalDealRow,
+              payloadPaymentIsMetal: payloadPaymentIsMetal,
+            ),
+          )
           .toList();
     }
 
-    if (parentKey != null && _isPriceLikeKey(parentKey)) {
+    if (parentKey != null && _isPriceLikeKey(parentKey,
+          parentMapIsGiftMetalDealRow: parentMapIsGiftMetalDealRow,
+          payloadPaymentIsMetal: payloadPaymentIsMetal,
+        )) {
       if (data is num) {
         return CommonService.normalizeIqdForApi(data);
       }

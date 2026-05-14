@@ -36,7 +36,7 @@
 //       path: 'support@baghdadbullion.com',
 //       query: 'subject=BBH Support Request&body=Hello, I need assistance with...',
 //     );
-    
+
 //     try {
 //       if (await canLaunchUrl(emailUri)) {
 //         await launchUrl(emailUri);
@@ -58,9 +58,9 @@
 //   Future<void> _launchWhatsApp() async {
 //     final String phoneNumber = '+964123456789'; // Replace with actual support number
 //     final String whatsappUrl = 'https://wa.me/$phoneNumber?text=${Uri.encodeComponent('Hello, I need assistance with BBH app')}';
-    
+
 //     final Uri uri = Uri.parse(whatsappUrl);
-    
+
 //     try {
 //       if (await canLaunchUrl(uri)) {
 //         await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -217,7 +217,6 @@
 //                             ),
 //                           ),
 
-                          
 //                           const SizedBox(height: 24),
 
 //                           /// Primary Button - Sign Up
@@ -413,7 +412,7 @@
 //                                       ),
 //                                     ),
 //                                     const SizedBox(width: 12),
-                                    
+
 //                                     /// WhatsApp Support Button
 //                                     Expanded(
 //                                       child: InkWell(
@@ -455,7 +454,6 @@
 //                               ],
 //                             ),
 //                           ),
-
 
 //                           const SizedBox(height: 20),
 //                         ],
@@ -533,7 +531,7 @@ class ContactUsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               Center(
                 child: Text(
                   AppLocalizations.of(context)!.get_in_touch,
@@ -545,7 +543,7 @@ class ContactUsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              
+
               Center(
                 child: Text(
                   AppLocalizations.of(context)!.contact_desc,
@@ -557,7 +555,7 @@ class ContactUsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 32),
-              
+
               // Email Card
               _buildContactCard(
                 context: context,
@@ -576,15 +574,14 @@ class ContactUsScreen extends StatelessWidget {
                 //   }
                 // },
                 onTap: () async {
-                                await CommonService.openEmailApp(
-                                  emailAddress:
-                                      "we.care@baghdadbullionhouse.com",
-                                );
-                              },
+                  await CommonService.openEmailApp(
+                    emailAddress: "we.care@baghdadbullionhouse.com",
+                  );
+                },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // WhatsApp Card
               _buildContactCard(
                 context: context,
@@ -594,15 +591,15 @@ class ContactUsScreen extends StatelessWidget {
                 color: const Color(0xff25D366),
                 onTap: () async {
                   await CommonService.openWhatsappUrl(
-                                  phoneNumber: "+9647871111112",
-                                  message:
-                                      "Hello, I need an assistance from Baghdad Bullion House Team",
-                                );
+                    phoneNumber: "+9647871111112",
+                    message:
+                        "Hello, I need an assistance from Baghdad Bullion House Team",
+                  );
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Phone Card
               _buildContactCard(
                 context: context,
@@ -611,15 +608,18 @@ class ContactUsScreen extends StatelessWidget {
                 subtitle: '+964 123 456 789',
                 color: Colors.green,
                 onTap: () async {
-                  final Uri phoneUri = Uri(scheme: 'tel', path: '+964123456789');
+                  final Uri phoneUri = Uri(
+                    scheme: 'tel',
+                    path: '+964123456789',
+                  );
                   if (await canLaunchUrl(phoneUri)) {
                     await launchUrl(phoneUri);
                   }
                 },
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Office Hours
               Container(
                 padding: const EdgeInsets.all(16),
@@ -752,10 +752,6 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
     sizes!.initializeSize(context);
   }
 
-  
-
-  
-
   @override
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
@@ -831,24 +827,35 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                       Text(
                                         AppLocalizations.of(context)!.eng_title,
                                         style: TextStyle(
-                                          color: isEnglish ? Colors.white : Colors.grey,
+                                          color: isEnglish
+                                              ? Colors.white
+                                              : Colors.grey,
                                           fontSize: 14,
                                         ),
                                       ),
                                       const SizedBox(width: 6),
                                       Switch.adaptive(
-                                        activeThumbColor: AppColors.primaryGold500,
-                                        activeTrackColor: AppColors.primaryGold500.withValues(alpha: 0.35),
+                                        activeThumbColor:
+                                            AppColors.primaryGold500,
+                                        activeTrackColor: AppColors
+                                            .primaryGold500
+                                            .withValues(alpha: 0.35),
                                         value: !isEnglish,
                                         onChanged: (_) {
-                                          languageNotifier.toggleLanguage(context);
+                                          languageNotifier.toggleLanguage(
+                                            context,
+                                          );
                                         },
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        AppLocalizations.of(context)!.arabic_title,
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.arabic_title,
                                         style: TextStyle(
-                                          color: !isEnglish ? Colors.white : Colors.grey,
+                                          color: !isEnglish
+                                              ? Colors.white
+                                              : Colors.grey,
                                           fontSize: 14,
                                         ),
                                       ),
@@ -871,7 +878,11 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                 /// Title
                                 Text(
                                   AppLocalizations.of(context)!.your_gold,
-                                  textAlign: Directionality.of(context) == TextDirection.rtl ? TextAlign.right : TextAlign.left,
+                                  textAlign:
+                                      Directionality.of(context) ==
+                                          TextDirection.rtl
+                                      ? TextAlign.right
+                                      : TextAlign.left,
                                   style: GoogleFonts.roboto(
                                     fontSize: 36,
                                     fontWeight: FontWeight.w600,
@@ -885,14 +896,18 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                 /// Subtitle
                                 Text(
                                   AppLocalizations.of(context)!.login_des,
-                                  textAlign: Directionality.of(context) == TextDirection.rtl ? TextAlign.right : TextAlign.left,
+                                  textAlign:
+                                      Directionality.of(context) ==
+                                          TextDirection.rtl
+                                      ? TextAlign.right
+                                      : TextAlign.left,
                                   style: GoogleFonts.roboto(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.white70,
                                   ),
                                 ),
-                                
+
                                 const SizedBox(height: 24),
 
                                 /// Primary Button - Sign Up
@@ -904,7 +919,8 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (_) => const RegisterScreen(),
+                                          builder: (_) =>
+                                              const RegisterScreen(),
                                         ),
                                       );
                                     },
@@ -922,7 +938,9 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                       ),
                                       child: Center(
                                         child: Text(
-                                          AppLocalizations.of(context)!.sign_up_bbh,
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.sign_up_bbh,
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
@@ -958,7 +976,9 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                       );
                                     },
                                     child: Text(
-                                      AppLocalizations.of(context)!.login_to_bbh,
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.login_to_bbh,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -987,7 +1007,8 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (_) => const OnboardingScreen(),
+                                          builder: (_) =>
+                                              const OnboardingScreen(),
                                         ),
                                       );
                                     },
@@ -997,7 +1018,9 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                       size: 22,
                                     ),
                                     label: Text(
-                                      AppLocalizations.of(context)!.bank_client_onboarding,
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.bank_client_onboarding,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -1006,8 +1029,10 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                     ),
                                   ),
                                 ),
-                                
-                                const SizedBox(height: 100), // Extra space for FAB
+
+                                const SizedBox(
+                                  height: 100,
+                                ), // Extra space for FAB
                               ],
                             ),
                           ),
@@ -1018,109 +1043,18 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                 ),
               ),
             ),
-            
-            /// Floating Action Button - Bottom Left (Small Sphere)
-//             Positioned(
-//   bottom: 20,
-//   left: 0,
-//   right: 0,
-//   child: Center(
-//     child: GestureDetector(
-//       onTap: () {
-//         Navigator.push(
-//           context,
-//           MaterialPageRoute(
-//             builder: (_) => const SupportScreen(),
-//           ),
-//         );
-//       },
-//       child: Container(
-//         padding: const EdgeInsets.symmetric(
-//           horizontal: 18,
-//           vertical: 10,
-//         ),
-//         decoration: BoxDecoration(
-//           gradient: LinearGradient(
-//                                 colors: [
-//                                   const Color(0xffB19454).withValues(alpha: 0.1),
-//                                   const Color(0xff74540E).withValues(alpha: 0.05),
-//                                 ],
-//                                 begin: Alignment.topLeft,
-//                                 end: Alignment.bottomRight,
-//                               ),
-//           // gradient: const LinearGradient(
-//           //   colors: [
-//           //     Color(0xffB19454),
-//           //     Color(0xff74540E),
-//           //   ],
-//           //   begin: Alignment.topLeft,
-//           //   end: Alignment.bottomRight,
-//           // ),
-//           borderRadius: BorderRadius.circular(14),
-//           boxShadow: [
-//             BoxShadow(
-//               color: Colors.black.withValues(alpha: 0.25),
-//               blurRadius: 8,
-//               offset: const Offset(0, 4),
-//             ),
-//           ],
-//         ),
-//         child:Directionality.of(context) == TextDirection.ltr? Row(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             const Icon(
-//               Icons.headset_mic,
-//               color: Colors.white,
-//               size: 20,
-//             ),
-//             const SizedBox(width: 8),
-//             Text(
-//               AppLocalizations.of(context)!.need_help,//"Need Help?",
-//               style: const TextStyle(
-//                 color: Colors.white,
-//                 fontWeight: FontWeight.w600,
-//                 fontSize: 14,
-//               ),
-//             ),
-//           ],
-//         ):
-//         Row(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-            
-//             const Icon(
-//               Icons.headset_mic,
-//               color: Colors.white,
-//               size: 20,
-//             ),
-//             const SizedBox(width: 8),
-//             Text(
-//               AppLocalizations.of(context)!.need_help,//"Need Help?",
-//               style: const TextStyle(
-//                 color: Colors.white,
-//                 fontWeight: FontWeight.w600,
-//                 fontSize: 14,
-//               ),
-//             ),
 
-            
-            
-//           ],
-//         ),
-//       ),
-//     ),
-//   ),
-// ),
-            
+            /// Floating Action Button - Bottom Left (Small Sphere)
+           
             Positioned(
-              bottom: 20,
               left: 20,
+              bottom: MediaQuery.of(context).viewPadding.bottom + 16,
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const SupportScreen(),//ContactUsScreen(),
+                      builder: (_) => const SupportScreen(),
                     ),
                   );
                 },
@@ -1128,45 +1062,28 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                   height: 56,
                   width: 56,
                   decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  const Color(0xffB19454).withValues(alpha: 0.1),
-                                  const Color(0xff74540E).withValues(alpha: 0.05),
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: const Color(0xff74540E).withValues(alpha: 0.3),
-                                width: 1,
-                              ),
-                            ),
-                  // decoration: BoxDecoration(
-                  //   gradient: const LinearGradient(
-                  //     colors: [Color(0xffB19454), Color(0xff74540E)],
-                  //     begin: Alignment.topLeft,
-                  //     end: Alignment.bottomRight,
-                  //   ),
-                  //   shape: BoxShape.circle,
-                  //   boxShadow: [
-                  //     BoxShadow(
-                  //       color: Colors.black.withValues(alpha: 0.3),
-                  //       blurRadius: 10,
-                  //       offset: const Offset(0, 4),
-                  //     ),
-                  //   ],
-                  // ),
-                  
+                    gradient: LinearGradient(
+                      colors: [
+                        const Color(0xffB19454).withValues(alpha: 0.1),
+                        const Color(0xff74540E).withValues(alpha: 0.05),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: const Color(0xff74540E).withValues(alpha: 0.3),
+                      width: 1,
+                    ),
+                  ),
                   child: const Icon(
                     Icons.headset_mic,
-                    color: const Color(0xffB19454),
+                    color: Color(0xffB19454),
                     size: 28,
                   ),
                 ),
               ),
             ),
-          
           ],
         ),
       ),

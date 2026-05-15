@@ -3284,6 +3284,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get return_home => 'Return to home';
 
   @override
+  String get open_real_account => 'Open a Real Account';
+
+  @override
+  String get register_for_free_demo => 'Register For Free Demo Account';
+
+  @override
   String trade_confirm_market_body(String price) {
     return 'Your trade will be executed immediately at the current market price of IQD $price. Ensure you have sufficient balance.';
   }

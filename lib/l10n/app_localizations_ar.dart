@@ -3254,6 +3254,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get return_home => 'العودة إلى الصفحة الرئيسية';
 
   @override
+  String get open_real_account => 'فتح حساب حقيقي';
+
+  @override
+  String get register_for_free_demo => 'التسجيل للحصول على حساب تجريبي مجاني';
+
+  @override
   String trade_confirm_market_body(String price) {
     return 'يُنفَّذ تداولك فورًا بسعر السوق الحالي البالغ $price د.ع. تأكد من كفاية رصيدك.';
   }

@@ -175,6 +175,7 @@ flutter:
     - .env
     - assets/lottie/Presize_Maintenance.json
     - assets/lottie/Confetti.json
+    - assets/html/
 
   fonts:
   - family: DINNextArabic

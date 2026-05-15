@@ -176,58 +176,58 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ).getAlign(),
 
                     ConstPadding.sizeBoxWithHeight(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            SvgPicture.asset(
-                              'assets/svg/user_icon.svg',
-                              height: sizes!.responsiveHeight(
-                                phoneVal: 24,
-                                tabletVal: 32,
-                              ),
-                              width: sizes!.responsiveWidth(
-                                phoneVal: 24,
-                                tabletVal: 32,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Text(
-                              // Show "Real Account" if not demo, else "Demo Account"
-                              // _isDemoAccount ? "Demo Account" : "Real Account",
-                              _isDemoAccount
-                                  ? AppLocalizations.of(
-                                      context,
-                                    )!.demo_accountToggle
-                                  : AppLocalizations.of(
-                                      context,
-                                    )!.real_accountToggle,
-                              style: GoogleFonts.inter(
-                                fontSize: sizes!.responsiveFont(
-                                  phoneVal: 16,
-                                  tabletVal: 18,
-                                ),
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.neutral90,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Switch(
-                          value: _isDemoAccount,
-                          //activeThumbColor: AppColors.primaryGold500,
-                          onChanged: (bool value) {
-                            setState(() {
-                              _isDemoAccount = value;
-                              // Update Status accordingly if you need to track it separately
-                              Status = _isDemoAccount ? "Demo" : "Real";
-                            });
-                          },
-                        ),
-                      ],
-                    ).getAlign(),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     Row(
+                    //       children: [
+                    //         SvgPicture.asset(
+                    //           'assets/svg/user_icon.svg',
+                    //           height: sizes!.responsiveHeight(
+                    //             phoneVal: 24,
+                    //             tabletVal: 32,
+                    //           ),
+                    //           width: sizes!.responsiveWidth(
+                    //             phoneVal: 24,
+                    //             tabletVal: 32,
+                    //           ),
+                    //         ),
+                    //         const SizedBox(width: 12),
+                    //         Text(
+                    //           // Show "Real Account" if not demo, else "Demo Account"
+                    //           // _isDemoAccount ? "Demo Account" : "Real Account",
+                    //           _isDemoAccount
+                    //               ? AppLocalizations.of(
+                    //                   context,
+                    //                 )!.demo_accountToggle
+                    //               : AppLocalizations.of(
+                    //                   context,
+                    //                 )!.real_accountToggle,
+                    //           style: GoogleFonts.inter(
+                    //             fontSize: sizes!.responsiveFont(
+                    //               phoneVal: 16,
+                    //               tabletVal: 18,
+                    //             ),
+                    //             fontWeight: FontWeight.w600,
+                    //             color: AppColors.neutral90,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     Switch(
+                    //       value: _isDemoAccount,
+                    //       //activeThumbColor: AppColors.primaryGold500,
+                    //       onChanged: (bool value) {
+                    //         setState(() {
+                    //           _isDemoAccount = value;
+                    //           // Update Status accordingly if you need to track it separately
+                    //           Status = _isDemoAccount ? "Demo" : "Real";
+                    //         });
+                    //       },
+                    //     ),
+                    //   ],
+                    // ).getAlign(),
                     ConstPadding.sizeBoxWithHeight(height: 10),
 
                     _isDemoAccount

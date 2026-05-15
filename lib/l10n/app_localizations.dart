@@ -6246,6 +6246,18 @@ abstract class AppLocalizations {
   /// **'Return to home'**
   String get return_home;
 
+  /// No description provided for @open_real_account.
+  ///
+  /// In en, this message translates to:
+  /// **'Open a Real Account'**
+  String get open_real_account;
+
+  /// No description provided for @register_for_free_demo.
+  ///
+  /// In en, this message translates to:
+  /// **'Register For Free Demo Account'**
+  String get register_for_free_demo;
+
   /// No description provided for @trade_confirm_market_body.
   ///
   /// In en, this message translates to:

@@ -1335,6 +1335,9 @@
 "will_notify": "سنقوم بإشعارك عند تنفيذ طلبك",
 "return_home": "العودة إلى الصفحة الرئيسية",
 
+"open_real_account": "فتح حساب حقيقي",
+"register_for_free_demo": "التسجيل للحصول على حساب تجريبي مجاني",
+
   "trade_confirm_market_body": "يُنفَّذ تداولك فورًا بسعر السوق الحالي البالغ {price} د.ع. تأكد من كفاية رصيدك.",
   "@trade_confirm_market_body": {
     "placeholders": {

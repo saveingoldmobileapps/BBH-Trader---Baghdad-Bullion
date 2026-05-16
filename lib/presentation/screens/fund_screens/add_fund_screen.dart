@@ -1,3 +1,5 @@
+import 'package:baghdad_bullion_house/presentation/screens/fund_screens/add_fund_html.dart';
+import 'package:baghdad_bullion_house/presentation/screens/fund_screens/funding_portal/funding_portal_mobile_flow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
@@ -161,19 +163,23 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
           child: Column(
             children: [
               ConstPadding.sizeBoxWithHeight(height: 20),
-              Directionality.of(context) == TextDirection.rtl?
-              GetGenericText(
-                text: AppLocalizations.of(context)!.add_funds, //"Add Funds",
-                fontSize: sizes!.isPhone ? 24 : 28,
-                fontWeight: FontWeight.bold,
-                color: AppColors.grey6Color,
-              ).getAlignRight():
-              GetGenericText(
-                text: AppLocalizations.of(context)!.add_funds, //"Add Funds",
-                fontSize: sizes!.isPhone ? 24 : 28,
-                fontWeight: FontWeight.bold,
-                color: AppColors.grey6Color,
-              ).getAlign(),
+              Directionality.of(context) == TextDirection.rtl
+                  ? GetGenericText(
+                      text: AppLocalizations.of(
+                        context,
+                      )!.add_funds, //"Add Funds",
+                      fontSize: sizes!.isPhone ? 24 : 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.grey6Color,
+                    ).getAlignRight()
+                  : GetGenericText(
+                      text: AppLocalizations.of(
+                        context,
+                      )!.add_funds, //"Add Funds",
+                      fontSize: sizes!.isPhone ? 24 : 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.grey6Color,
+                    ).getAlign(),
               Directionality.of(context) == TextDirection.rtl
                   ? GetGenericText(
                       text: AppLocalizations.of(
@@ -215,11 +221,15 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
               BuildPaymentMethodCard(
                 title: AppLocalizations.of(
                   context,
-                )!.dep_method_direct, //"Direct Transfer",
+                )!.ext_transfer, //"External Transfer",
+                // AppLocalizations.of(
+                //   context,
+                // )!.dep_method_direct, //"Direct Transfer",
                 subtitle: AppLocalizations.of(
                   context,
                 )!.bank_charge_message, //"No Fees",
-                iconString: "assets/png/iqd_icon.png",//"assets/svg/direct_icon.svg",
+                iconString:
+                    "assets/png/iqd_icon.png", //"assets/svg/direct_icon.svg",
                 onTap: () async {
                   //Toasts.getWarningToast(text: "Try it later");
                   //await connectBank();
@@ -232,6 +242,7 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
                   );
                 },
               ),
+
               // ConstPadding.sizeBoxWithHeight(height: 12),
               // BuildPaymentMethodCard(
               //   title: AppLocalizations.of(context)!.dep_method_card,
@@ -269,8 +280,56 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
               //     onTap: _showContactSupportPopup,
               //   ),
               // ],
+              ConstPadding.sizeBoxWithHeight(height: 12),
+              BuildPaymentMethodCard(
+                title: AppLocalizations.of(
+                  context,
+                )!.inst_transfer, //"Instant Transfer",
+                // AppLocalizations.of(
+                //   context,
+                // )!.dep_method_direct, //"Direct Transfer",
+                subtitle: "",
+                // AppLocalizations.of(
+                //   context,
+                // )!.bank_charge_message, //"No Fees",
+                iconString:
+                    "assets/png/iqd_icon.png", //"assets/svg/direct_icon.svg",
+                onTap: () async {
 
-              
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const addFundViewScreen(),
+                    ),
+                  );
+                },
+              ),
+            
+            // ConstPadding.sizeBoxWithHeight(height: 12),
+            //   BuildPaymentMethodCard(
+            //     title: "Custom Instant",
+            //     // AppLocalizations.of(
+            //     //   context,
+            //     // )!.inst_transfer, //"Instant Transfer",
+            //     // AppLocalizations.of(
+            //     //   context,
+            //     // )!.dep_method_direct, //"Direct Transfer",
+            //     subtitle: AppLocalizations.of(
+            //       context,
+            //     )!.bank_charge_message, //"No Fees",
+            //     iconString:
+            //         "assets/png/iqd_icon.png", //"assets/svg/direct_icon.svg",
+            //     onTap: () async {
+
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (_) => const FundingPortalMobileFlow(),//addFundViewScreen(),
+            //         ),
+            //       );
+            //     },
+            //   ),
+           
             ],
           ).get16HorizontalPadding(),
         ),

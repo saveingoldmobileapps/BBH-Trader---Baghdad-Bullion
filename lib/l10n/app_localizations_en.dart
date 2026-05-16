@@ -1063,6 +1063,16 @@ class AppLocalizationsEn extends AppLocalizations {
       'A direct transfer works just like sending money through your banking app. The transaction typically takes 24 to 48 hours to be confirmed.';
 
   @override
+  String get dep_extt_intro_desc =>
+      'An external transfer works just like sending money through your banking app. The transaction typically takes 24 to 48 hours to be confirmed.';
+
+  @override
+  String get inst_transfer => 'Instant Transfer';
+
+  @override
+  String get ext_transfer => 'External Transfer';
+
+  @override
   String get dep_copyDetails => 'Copy Details';
 
   @override

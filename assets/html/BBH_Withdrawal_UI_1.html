@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FAF5E8">
+<title>BBH Withdraw</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --gold: #B8944C;
+  --gold-soft: #C7A856;
+  --gold-deep: #8A6F3F;
+  --cream: #FAF5E8;
+  --cream-2: #F2E9CC;
+  --cream-3: #EFE7CF;
+  --ink: #1F1A14;
+  --ink-2: #2A2317;
+  --muted: #5A4A2E;
+  --green: #6FA055;
+  --line: rgba(184,148,76,0.18);
+  --line-strong: rgba(184,148,76,0.32);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  background: var(--cream);
+  font-family: "Manrope", "Helvetica Neue", sans-serif;
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+.app {
+  position: fixed; inset: 0;
+  display: flex; flex-direction: column;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 14px)
+    22px
+    calc(env(safe-area-inset-bottom, 0px) + 24px)
+    22px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--cream);
+}
+.app::-webkit-scrollbar { display: none; }
+.app-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px; min-height: 36px;
+}
+.app-header-back {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(184,148,76,0.1); border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.app-header-back:active { background: rgba(184,148,76,0.25); }
+.app-header-back svg { width: 16px; height: 16px; color: var(--ink); }
+.app-header-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px; font-weight: 600; color: var(--ink);
+  letter-spacing: 0.8px; text-transform: uppercase;
+}
+.app-header-spacer { width: 36px; }
+.app-greeting {
+  font-size: 11.5px; color: var(--muted);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  font-weight: 500; margin-bottom: 4px;
+}
+.app-name {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 26px; font-weight: 600; color: var(--ink);
+  margin-bottom: 24px; letter-spacing: 1px;
+}
+.wallet-card {
+  background: linear-gradient(135deg, #1a1208 0%, #2a1f0e 100%);
+  border-radius: 22px; padding: 24px 22px 26px 22px;
+  color: var(--cream); position: relative;
+  overflow: hidden; margin-bottom: 22px;
+}
+.wallet-card::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 80% 20%, rgba(184,148,76,0.12) 0%, transparent 50%),
+    radial-gradient(circle at 20% 90%, rgba(184,148,76,0.08) 0%, transparent 45%);
+  pointer-events: none;
+}
+.wallet-label {
+  font-size: 10px; letter-spacing: 2.5px; color: var(--gold);
+  text-transform: uppercase; font-weight: 600;
+  margin-bottom: 6px; position: relative;
+}
+.wallet-balance {
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 600; color: var(--cream);
+  line-height: 1.1; position: relative; font-size: 26px;
+}
+.wallet-meta {
+  display: flex; justify-content: space-between;
+  margin-top: 20px; padding-top: 16px;
+  border-top: 1px solid rgba(184,148,76,0.18); position: relative;
+}
+.wallet-meta-key {
+  font-size: 9.5px; letter-spacing: 1.5px;
+  color: rgba(250,245,232,0.55); text-transform: uppercase; margin-bottom: 3px;
+}
+.wallet-meta-val {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px; color: var(--cream);
+}
+.linked-account {
+  background: linear-gradient(135deg, var(--cream-2) 0%, var(--cream-3) 100%);
+  border-radius: 16px; padding: 16px 18px; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 14px;
+  border: 0.5pt solid var(--line-strong);
+}
+.linked-account-logo {
+  width: 40px; height: 40px; border-radius: 9px;
+  background: #1a1208; color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 14px; font-weight: 700;
+}
+.linked-account-info { flex: 1; min-width: 0; }
+.linked-account-label {
+  font-size: 10px; letter-spacing: 1.5px; color: var(--muted);
+  text-transform: uppercase; font-weight: 500;
+}
+.linked-account-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px; color: var(--ink); font-weight: 500; margin-top: 2px;
+}
+.linked-account-status {
+  font-size: 10px; letter-spacing: 1.5px; color: var(--green);
+  text-transform: uppercase; font-weight: 700;
+  display: flex; align-items: center; gap: 5px;
+}
+.linked-account-status::before {
+  content: ""; width: 7px; height: 7px; background: var(--green); border-radius: 50%;
+}
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 16px 20px;
+  font-family: "Manrope", sans-serif;
+  font-size: 14px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; border-radius: 14px;
+  border: none; cursor: pointer;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+  color: var(--cream); box-shadow: 0 6px 20px rgba(184,148,76,0.3);
+}
+.btn-primary:active {
+  transform: translateY(1px); box-shadow: 0 3px 12px rgba(184,148,76,0.4);
+}
+.btn-tertiary {
+  background: rgba(31,26,20,0.04); color: var(--muted);
+  font-weight: 500; font-size: 13px;
+}
+.btn-stack > * + * { margin-top: 10px; }
+.field { margin-bottom: 16px; }
+.field-label {
+  display: block; font-size: 10px; letter-spacing: 1.5px;
+  color: var(--muted); text-transform: uppercase;
+  font-weight: 600; margin-bottom: 7px;
+}
+.field-input {
+  width: 100%; padding: 14px 16px;
+  background: rgba(255,255,255,0.5);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 14px; color: var(--ink);
+}
+.field-input.large {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 32px; font-weight: 600; text-align: center;
+  padding: 20px; letter-spacing: 1px;
+}
+.field-hint { margin-top: 6px; font-size: 11px; color: var(--muted); }
+.review-card {
+  background: rgba(255,255,255,0.5); border: 1px solid var(--line);
+  border-radius: 14px; padding: 18px 20px; margin-bottom: 14px;
+}
+.review-row {
+  display: flex; justify-content: space-between;
+  padding: 14px 0; border-bottom: 0.5pt solid var(--line);
+  font-size: 14px;
+}
+.review-row:last-child { border-bottom: none; }
+.review-key { color: var(--muted); letter-spacing: 0.3px; }
+.review-val { color: var(--ink); font-weight: 500; text-align: right; }
+.review-val.amount {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 20px; font-weight: 600;
+}
+.otp-grid {
+  display: grid; grid-template-columns: repeat(6, 1fr);
+  gap: 10px; margin: 20px 0 16px 0;
+}
+.otp-cell {
+  aspect-ratio: 1; border: 1.5px solid var(--line-strong);
+  border-radius: 11px; background: rgba(255,255,255,0.5);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px; font-weight: 600; color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.otp-cell.filled { background: var(--gold); color: var(--cream); border-color: var(--gold); }
+.otp-prompt {
+  text-align: center; margin-bottom: 12px;
+  font-size: 13px; color: var(--muted); line-height: 1.5;
+}
+.otp-prompt strong {
+  color: var(--ink); display: block; font-weight: 600;
+  font-size: 15px; margin-bottom: 4px;
+}
+.otp-resend {
+  text-align: center; margin-top: 14px; font-size: 12.5px;
+  color: var(--gold-deep); font-weight: 600; letter-spacing: 0.5px;
+}
+.loading {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  flex: 1; gap: 22px; padding: 40px 0;
+}
+.spinner {
+  width: 56px; height: 56px;
+  border: 3px solid rgba(184,148,76,0.15);
+  border-top-color: var(--gold); border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 19px; color: var(--ink); font-weight: 500;
+  text-align: center; letter-spacing: 0.5px;
+}
+.loading-sub {
+  font-size: 12.5px; color: var(--muted);
+  text-align: center; max-width: 280px; line-height: 1.5;
+}
+.success {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  flex: 1; padding: 40px 10px; text-align: center;
+}
+.success-icon {
+  width: 88px; height: 88px; background: var(--green);
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; margin-bottom: 24px;
+  animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+.success-icon svg {
+  width: 44px; height: 44px; stroke: white;
+  stroke-width: 3; fill: none;
+  stroke-dasharray: 50; stroke-dashoffset: 50;
+  animation: draw 0.6s 0.3s ease forwards;
+}
+@keyframes pop-in { from { transform: scale(0.5); opacity: 0; } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.success-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 28px; font-weight: 600;
+  color: var(--ink); margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.success-amount {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 42px; font-weight: 700;
+  color: var(--gold-deep); margin-bottom: 4px;
+}
+.success-text {
+  font-size: 14px; color: var(--muted);
+  line-height: 1.6; margin-bottom: 26px; max-width: 280px;
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="appContent"></div>
+
+<script>
+const state = {
+  step: 0,
+  linked: true,
+  linkedAcctMasked: '···· 5309',
+  linkedAcctToken: 'LNK-7F3A-B12C',
+  customerID: 'BBH-A1B2C3D4'
+};
+
+const sequence = [
+  'withdraw-home', 'withdraw-amount', 'withdraw-review',
+  'withdraw-otp', 'withdraw-processing', 'withdraw-success'
+];
+
+function appHeader(backText, title, showBack) {
+  return `
+    <div class="app-header">
+      ${showBack ? `<button class="app-header-back" onclick="rewind()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button>` : '<div class="app-header-spacer"></div>'}
+      <div class="app-header-title">${title}</div>
+      <div class="app-header-spacer"></div>
+    </div>`;
+}
+
+function walletCard() {
+  return `
+    <div class="wallet-card">
+      <div class="wallet-label">BBH Wallet</div>
+      <div class="wallet-balance">Hussein Hammoodi</div>
+      <div class="wallet-meta">
+        <div>
+          <div class="wallet-meta-key">Customer ID</div>
+          <div class="wallet-meta-val">${state.customerID}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="wallet-meta-key">Status</div>
+          <div class="wallet-meta-val">Linked · TIB</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function linkedAccountChip() {
+  return `
+    <div class="linked-account">
+      <div class="linked-account-logo">TIB</div>
+      <div class="linked-account-info">
+        <div class="linked-account-label">Linked account</div>
+        <div class="linked-account-num">${state.linkedAcctMasked}</div>
+      </div>
+      <div class="linked-account-status">Active</div>
+    </div>`;
+}
+
+const screens = {
+  'withdraw-home': () => `
+    ${appHeader('', 'Wallet', false)}
+    <div class="app-greeting">Welcome back</div>
+    <div class="app-name">Your BBH Wallet</div>
+    ${walletCard()}
+    ${linkedAccountChip()}
+    <div style="margin-top:auto" class="btn-stack">
+      <button class="btn btn-primary" onclick="advance()">Withdraw</button>
+    </div>`,
+
+  'withdraw-amount': () => `
+    ${appHeader('Back', 'Amount', true)}
+    <div style="margin-bottom:6px">
+      <div class="app-name" style="font-size:22px">How much?</div>
+      <div style="font-size:13px;color:var(--muted)">To <strong style="color:var(--ink)">${state.linkedAcctMasked}</strong></div>
+    </div>
+    <div class="field" style="margin-top:28px">
+      <label class="field-label">Amount in IQD</label>
+      <input class="field-input large" value="250,000" readonly>
+      <div class="field-hint" style="text-align:center;margin-top:12px">
+        Min 10,000 IQD · Max 5,000,000 IQD per transaction
+      </div>
+    </div>
+    <div style="margin-top:auto" class="btn-stack">
+      <button class="btn btn-primary" onclick="advance()">Continue</button>
+    </div>`,
+
+  'withdraw-review': () => `
+    ${appHeader('Back', 'Review', true)}
+    <div style="margin-bottom:18px">
+      <div class="app-name" style="font-size:22px;margin-bottom:8px">Confirm withdrawal</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5">
+        Review the details · the next step requires an OTP from TIB.
+      </div>
+    </div>
+    <div class="review-card">
+      <div class="review-row">
+        <span class="review-key">Amount</span>
+        <span class="review-val amount">250,000 IQD</span>
+      </div>
+      <div class="review-row">
+        <span class="review-key">From</span>
+        <span class="review-val">Your BBH Wallet</span>
+      </div>
+      <div class="review-row">
+        <span class="review-key">To</span>
+        <span class="review-val">TIB ···· 5309</span>
+      </div>
+      <div class="review-row">
+        <span class="review-key">Fee</span>
+        <span class="review-val" style="color:var(--green)">0 IQD</span>
+      </div>
+      <div class="review-row">
+        <span class="review-key">Arrival</span>
+        <span class="review-val">Instant</span>
+      </div>
+    </div>
+    <div style="margin-top:auto" class="btn-stack">
+      <button class="btn btn-primary" onclick="advance()">Confirm with OTP</button>
+      <button class="btn btn-tertiary" onclick="rewind()">Change amount</button>
+    </div>`,
+
+  'withdraw-otp': () => {
+    setTimeout(() => {
+      const cells = document.querySelectorAll('.otp-cell');
+      const code = ['7','3','8','2','6','4'];
+      code.forEach((d, i) => {
+        setTimeout(() => {
+          if (cells[i]) { cells[i].textContent = d; cells[i].classList.add('filled'); }
+        }, 200 + i * 180);
+      });
+      setTimeout(advance, 2400);
+    }, 200);
+    return `
+      ${appHeader('', 'Verification', false)}
+      <div class="otp-prompt">
+        <strong>Enter the code from TIB</strong>
+        Sent to ··· ··· 4421 · valid for 5 minutes
+      </div>
+      <div class="otp-grid">
+        <div class="otp-cell"></div><div class="otp-cell"></div><div class="otp-cell"></div>
+        <div class="otp-cell"></div><div class="otp-cell"></div><div class="otp-cell"></div>
+      </div>
+      <div class="otp-resend">Resend in 24s</div>
+      <div style="margin-top:auto;font-size:12px;color:var(--muted);text-align:center;line-height:1.5;padding:10px">
+        Withdrawals require fresh OTP confirmation —<br/>per-transaction consent, audited by TIB.
+      </div>`;
+  },
+
+  'withdraw-processing': () => {
+    setTimeout(advance, 2200);
+    return `
+      ${appHeader('', 'Processing', false)}
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Sending 250,000 IQD to TIB</div>
+        <div class="loading-sub">TIB is moving funds from your BBH wallet to your linked account.</div>
+      </div>`;
+  },
+
+  'withdraw-success': () => `
+    ${appHeader('', 'Complete', false)}
+    <div class="success">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="success-amount">250,000 IQD</div>
+      <div class="success-title" style="font-size:20px;color:var(--muted);margin-top:4px;margin-bottom:22px">sent to your TIB account</div>
+      <div class="review-card" style="width:90%;margin-bottom:0">
+        <div class="review-row" style="padding:10px 0">
+          <span class="review-key">Withdrawal ID</span>
+          <span class="review-val" style="font-family:'JetBrains Mono',monospace;font-size:12px">TXN-W5C4-Y2A9F</span>
+        </div>
+        <div class="review-row" style="padding:10px 0">
+          <span class="review-key">To</span>
+          <span class="review-val" style="font-size:13px">TIB ···· 5309</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-stack" style="margin-top:auto">
+      <button class="btn btn-primary" onclick="restart()">Done</button>
+    </div>`
+};
+
+function advance() {
+  if (state.step < sequence.length - 1) { state.step++; render(); }
+}
+function rewind() {
+  if (state.step > 0) { state.step--; render(); }
+}
+function restart() {
+  state.step = 0;
+  render();
+}
+function render() {
+  const screenId = sequence[state.step];
+  const renderer = screens[screenId];
+  document.getElementById('appContent').innerHTML = renderer ? renderer() : '';
+  document.getElementById('appContent').scrollTop = 0;
+}
+render();
+</script>
+
+</body>
+</html>

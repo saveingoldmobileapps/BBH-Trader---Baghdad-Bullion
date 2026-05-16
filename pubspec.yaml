@@ -86,10 +86,23 @@ dependencies:
   shimmer: ^3.0.0
 
   #  firebase notification setup
-  firebase_core: ^4.7.0
-  firebase_messaging: ^16.2.0
+  # firebase_core: ^4.7.0
+  # firebase_messaging: ^16.2.0
+  
+
+  # firebase_core: ^2.24.2
+  # firebase_messaging: ^14.7.0
+  # firebase_crashlytics: ^3.4.0
+  # firebase_crashlytics: ^5.2.0
+
+  firebase_core: ^3.15.2
+  firebase_messaging: ^15.2.10
+  # flutter_local_notifications: ^19.3.1
+  # flutter_local_notifications: ^8.1.1
+  firebase_crashlytics: ^4.3.10
   flutter_local_notifications: ^21.0.0
-  firebase_crashlytics: ^5.2.0
+
+  
 
   otp_timer_button: ^1.1.1
   # signature: ^6.3.0

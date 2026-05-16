@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:baghdad_bullion_house/core/hyperpay/hyperpay_env_config.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:hyperpay_sdk/hyperpay_sdk.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/core/push_notification_service/firebase_push_notification_service.dart';
@@ -140,6 +142,13 @@ void main() async {
         await Stripe.instance.applySettings();
       } catch (e) {
         debugPrint("Stripe initialization failed (non-fatal): $e");
+      }
+
+      // Initialize HyperPay SDK
+      try {
+        await HyperpaySdk.setup(mode: HyperPayEnvConfig.paymentMode);
+      } catch (e) {
+        debugPrint("HyperpaySdk setup failed: $e");
       }
 
       // setup DI / locator

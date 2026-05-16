@@ -1,13 +1,9 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/screens/direct_transfer/direct_transfer_get_started.dart';
-import 'package:baghdad_bullion_house/presentation/screens/setting_screens/support_screen.dart';
-import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
+import 'package:baghdad_bullion_house/presentation/screens/fund_screens/hyperpay_add_fund_screen.dart';
 
 import '../../widgets/widget_export.dart';
 
@@ -19,23 +15,23 @@ class AddFundScreen extends ConsumerStatefulWidget {
 }
 
 class _AddFundScreenState extends ConsumerState<AddFundScreen> {
-  bool _showApplePay = false;
-  bool _showGooglePay = false;
+  // bool _showApplePay = false;
+  // bool _showGooglePay = false;
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((callback) {
-      _checkPlatformPaySupport();
-    });
-  }
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((callback) {
+  //     _checkPlatformPaySupport();
+  //   });
+  // }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   super.dispose();
+  // }
 
   @override
   void didChangeDependencies() {
@@ -44,45 +40,45 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
   }
 
   /// check platform pay support
-  Future<void> _checkPlatformPaySupport() async {
-    final isSupported = await Stripe.instance.isPlatformPaySupported();
-    if (!mounted) return;
-    setState(() {
-      _showApplePay = Platform.isIOS && isSupported;
-      _showGooglePay = Platform.isAndroid && isSupported;
-    });
-  }
+  // Future<void> _checkPlatformPaySupport() async {
+  //   final isSupported = await Stripe.instance.isPlatformPaySupported();
+  //   if (!mounted) return;
+  //   setState(() {
+  //     _showApplePay = Platform.isIOS && isSupported;
+  //     _showGooglePay = Platform.isAndroid && isSupported;
+  //   });
+  // }
 
-  void _showContactSupportPopup() {
-    temporaryCreditPopUpWidget(
-      context: context,
-      heading: AppLocalizations.of(context)!.dep_only_direct_title,
-      subtitle: AppLocalizations.of(context)!.dep_only_direct_msg,
-      buttonTitle: AppLocalizations.of(
-        context,
-      )!.temporary_credit_contact_support,
-      icon: Icons.contact_support_outlined,
-      onButtonPress: () {
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SupportScreen(),
-          ),
-        );
-      },
-      oncloseButtonPress: () => Navigator.pop(context),
-    );
-  }
+  // void _showContactSupportPopup() {
+  //   temporaryCreditPopUpWidget(
+  //     context: context,
+  //     heading: AppLocalizations.of(context)!.dep_only_direct_title,
+  //     subtitle: AppLocalizations.of(context)!.dep_only_direct_msg,
+  //     buttonTitle: AppLocalizations.of(
+  //       context,
+  //     )!.temporary_credit_contact_support,
+  //     icon: Icons.contact_support_outlined,
+  //     onButtonPress: () {
+  //       Navigator.pop(context);
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(
+  //           builder: (context) => const SupportScreen(),
+  //         ),
+  //       );
+  //     },
+  //     oncloseButtonPress: () => Navigator.pop(context),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
     /// Refresh sizes on orientation change
     sizes!.refreshSize(context);
-    final bool googlePayTrue =
-        ref.read(homeProvider).getHomeFeedResponse.payload?.googlePay ?? false;
-    final bool applePayTrue =
-        ref.read(homeProvider).getHomeFeedResponse.payload?.applePay ?? false;
+    // final bool googlePayTrue =
+    //     ref.read(homeProvider).getHomeFeedResponse.payload?.googlePay ?? false;
+    // final bool applePayTrue =
+    //     ref.read(homeProvider).getHomeFeedResponse.payload?.applePay ?? false;
 
     // var permissions = [
     //   LeanPermissions.identity,
@@ -238,19 +234,14 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
               ),
               // ConstPadding.sizeBoxWithHeight(height: 12),
               // BuildPaymentMethodCard(
-              //   title: AppLocalizations.of(
-              //     context,
-              //   )!.dep_method_card, //"Card Payment",
-              //   subtitle: AppLocalizations.of(
-              //     context,
-              //   )!.dep_fee_instantNote, //"Instant Deposit, bank fees may apply.",
-              //   iconString: "assets/svg/card_icon.svg",
-              //   onTap: _showContactSupportPopup,
-              // onTap: () async {
+              //   title: AppLocalizations.of(context)!.dep_method_card,
+              //   subtitle: AppLocalizations.of(context)!.dep_fee_instantNote,
+              //   iconString: 'assets/svg/card_icon.svg',
+              //   onTap: () {
               //     Navigator.push(
               //       context,
               //       MaterialPageRoute(
-              //         builder: (context) => const CardPaymentFundAmountScreen(),
+              //         builder: (context) => const HyperPayAddFundScreen(),
               //       ),
               //     );
               //   },

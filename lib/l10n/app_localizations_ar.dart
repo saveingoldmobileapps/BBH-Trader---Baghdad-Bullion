@@ -1054,6 +1054,16 @@ class AppLocalizationsAr extends AppLocalizations {
       'يعمل التحويل المباشر مثل إرسال الأموال عبر تطبيقك البنكي. تستغرق المعاملة عادة 24 إلى 48 ساعة للتأكيد.';
 
   @override
+  String get dep_extt_intro_desc =>
+      'تعمل الحوالة الخارجية تمامًا مثل إرسال الأموال عبر تطبيقك البنكي. تستغرق المعاملة عادةً من 24 إلى 48 ساعة ليتم تأكيدها.';
+
+  @override
+  String get inst_transfer => 'تحويل فوري';
+
+  @override
+  String get ext_transfer => 'تحويل خارجي';
+
+  @override
   String get dep_copyDetails => 'نسخ التفاصيل';
 
   @override

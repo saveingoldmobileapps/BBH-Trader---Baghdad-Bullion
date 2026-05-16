@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:baghdad_bullion_house/presentation/screens/withdraw_fund_screens/withdraw_html.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -793,7 +794,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const WithdrawalFundScreen(),
+                            builder: (context) => const withdrawViewScreen()//WithdrawalFundScreen//WithdrawalFundScreen(),
                           ),
                         );
                       },

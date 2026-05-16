@@ -2114,6 +2114,24 @@ abstract class AppLocalizations {
   /// **'A direct transfer works just like sending money through your banking app. The transaction typically takes 24 to 48 hours to be confirmed.'**
   String get dep_dt_intro_desc;
 
+  /// No description provided for @dep_extt_intro_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'An external transfer works just like sending money through your banking app. The transaction typically takes 24 to 48 hours to be confirmed.'**
+  String get dep_extt_intro_desc;
+
+  /// No description provided for @inst_transfer.
+  ///
+  /// In en, this message translates to:
+  /// **'Instant Transfer'**
+  String get inst_transfer;
+
+  /// No description provided for @ext_transfer.
+  ///
+  /// In en, this message translates to:
+  /// **'External Transfer'**
+  String get ext_transfer;
+
   /// No description provided for @dep_copyDetails.
   ///
   /// In en, this message translates to:

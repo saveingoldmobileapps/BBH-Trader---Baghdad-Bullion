@@ -10,7 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:hyperpay_sdk/hyperpay_sdk.dart';
+// import 'package:hyperpay_sdk/hyperpay_sdk.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/core/push_notification_service/firebase_push_notification_service.dart';
@@ -145,11 +145,11 @@ void main() async {
       }
 
       // Initialize HyperPay SDK
-      try {
-        await HyperpaySdk.setup(mode: HyperPayEnvConfig.paymentMode);
-      } catch (e) {
-        debugPrint("HyperpaySdk setup failed: $e");
-      }
+      // try {
+      //   await HyperpaySdk.setup(mode: HyperPayEnvConfig.paymentMode);
+      // } catch (e) {
+      //   debugPrint("HyperpaySdk setup failed: $e");
+      // }
 
       // setup DI / locator
       try {

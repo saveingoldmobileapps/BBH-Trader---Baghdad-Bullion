@@ -878,7 +878,7 @@ packages:
     source: hosted
     version: "0.15.6"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
@@ -901,6 +901,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  hyperpay_sdk:
+    dependency: "direct main"
+    description:
+      name: hyperpay_sdk
+      sha256: "5323f6f6b5077a1f928facfb579bbd82269051fde8853f11b52a9b80a22f4b2f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   image:
     dependency: transitive
     description:
@@ -2123,7 +2131,7 @@ packages:
     source: hosted
     version: "1.2.1"
   webview_flutter:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: webview_flutter
       sha256: a3da219916aba44947d3a5478b1927876a09781174b5a2b67fa5be0555154bf9

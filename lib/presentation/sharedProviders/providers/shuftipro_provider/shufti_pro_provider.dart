@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -39,6 +41,18 @@ class ShuftiPro extends _$ShuftiPro {
     state = state.copyWith(isLoading: value);
   }
 
+  /// Submits KYC payload from any provider (e.g. iPass) to the backend.
+  Future<void> submitKycPayload({
+    required Map<String, dynamic> data,
+    required BuildContext context,
+  }) async {
+    return submitKycData(
+      data: data,
+      shuftiProResult: ShuftiProApiResponseModel(event: 'verification.accepted'),
+      context: context,
+    );
+  }
+
   Future<void> submitKycData({
     required Map<String, dynamic> data,
     required ShuftiProApiResponseModel shuftiProResult,
@@ -58,6 +72,19 @@ class ShuftiPro extends _$ShuftiPro {
       final body = data;
 
       getLocator<Logger>().i("ShuftiProKYCBody: $body");
+
+      //print
+      String prettyPrintBody(dynamic body) {
+  try {
+    if (body is Map || body is List) {
+      return const JsonEncoder.withIndent('  ').convert(body);
+    }
+    return body.toString();
+  } catch (e) {
+    return "Invalid JSON body: $e";
+  }
+}
+getLocator<Logger>().i("ShuftiProKYCBody:\n${prettyPrintBody(body)}");
 
       /// API call
       ServerResponse serverResponse = await DioNetworkManager().callAPI(

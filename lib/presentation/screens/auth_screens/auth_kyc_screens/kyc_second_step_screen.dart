@@ -1,11 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:io' show Platform;
 import 'dart:math';
 
 import 'package:convert/convert.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:logger/logger.dart';
@@ -22,9 +21,10 @@ import 'package:baghdad_bullion_house/presentation/widgets/loader_button.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/search_drop_down.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/shimmers/shimmer_loader.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:shuftipro_onsite_sdk/shuftipro_onsite_sdk.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-import '../../../../data/models/shuftipro_model/ShuftiProApiReponseModel.dart';
+import '../../../../services/ipass_kyc/ipass_kyc_service.dart';
 import '../../../sharedProviders/providers/language_provider.dart';
 
 class KycSecondStepScreen extends ConsumerStatefulWidget {
@@ -476,12 +476,17 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
                               .isLoading,
                           onTap: () async {
                             if (_formKey.currentState?.validate() ?? false) {
-                              //For ShuftiPro initialization
                               Toasts.getSuccessToast(
                                 text: AppLocalizations.of(context)!.wait_please,
                               );
                               // Toasts.getSuccessToast(text: "Please Wait...");
-                              await shuftiProKYC(
+                              // await shuftiProKYC(
+                              //   countryCode: _selectNationality!,
+                              //   alTaifOnboardingData:
+                              //       widget.alTaifOnboardingData,
+                              // );
+
+                              await ipassKyc(
                                 countryCode: _selectNationality!,
                                 alTaifOnboardingData:
                                     widget.alTaifOnboardingData,
@@ -611,43 +616,57 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
     }
   }
 
-  /// shufti pro kyc
-  Future<void> shuftiProKYC({
+  /// Camera + mic for KYC. iOS uses native AVFoundation prompts (see IpassKycPlugin).
+  Future<bool> _ensureKycMediaPermissions() async {
+    if (Platform.isIOS) {
+      // Native plugin shows system dialogs; do not call openAppSettings here.
+      return true;
+    }
+
+    final camera = await Permission.camera.request();
+    final mic = await Permission.microphone.request();
+    if (camera.isGranted && mic.isGranted) {
+      return true;
+    }
+
+    Toasts.getErrorToast(
+      text: camera.isPermanentlyDenied || mic.isPermanentlyDenied
+          ? 'Enable camera and microphone in app settings for KYC.'
+          : 'Camera and microphone permissions are required for KYC.',
+    );
+    return false;
+  }
+
+  Map<String, String> _contactFromAlTaif(Map<String, dynamic>? data) {
+    if (data == null) return {};
+    final step2 = data['step2Contact'];
+    if (step2 is! Map) return {};
+    return {
+      'email': step2['email']?.toString() ?? '',
+      'phone': step2['mobile']?.toString() ?? '',
+    };
+  }
+
+  /// iPass KYC via native method channel (Android/iOS SDK).
+  Future<void> ipassKyc({
     required String countryCode,
     Map<String, dynamic>? alTaifOnboardingData,
   }) async {
     try {
-      /// Load keys from .env
-      final shuftiProBaseUrl = dotenv.env['SHUFTIPRO_BASE_URL'];
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
+      final config = IpassKycService.instance.loadConfigFromEnv();
+      final alTaifContact = _contactFromAlTaif(alTaifOnboardingData);
 
-      final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-      final shuftiProUUIDId = Directionality.of(context) == TextDirection.rtl
-          ? dotenv.env['SHUFTIPRO_UUID_Ar']
-          : dotenv.env['SHUFTIPRO_UUID_ID'];
+      final email = config.email.isNotEmpty
+          ? config.email
+          : (alTaifContact['email'] ?? '');
+      final phone = config.phoneNumber.isNotEmpty
+          ? config.phoneNumber
+          : (alTaifContact['phone'] ?? '');
+      final socialEmail = config.socialMediaEmail.isNotEmpty
+          ? config.socialMediaEmail
+          : email;
 
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-      // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-      // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-      // final shuftiProSecretKey = dotenv.env['SHUFTIPRO_TEST_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_TEST_CLIENT_ID'];
-      // final shuftiProUUIDId = dotenv.env['SHUFTIPRO_UUID_ID'];
-
-      //  final shuftiProSecretKey = dotenv.env['SHUFTIPRO_SECRET_KEY'];
-      // final shuftiProClientId = dotenv.env['SHUFTIPRO_CLIENT_ID'];
-
-      // Validate environment variables
-      if (shuftiProBaseUrl == null ||
-          shuftiProSecretKey == null ||
-          shuftiProClientId == null ||
-          shuftiProUUIDId == null) {
+      if (!config.isValid && email.isEmpty) {
         Toasts.getErrorToast(
           text: 'Configuration error, please try again later.',
         );
@@ -656,150 +675,77 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
 
       if (kDebugMode) {
         debugPrint(
-          '[ShuftiPro] start — SHUFTIPRO_BASE_URL=$shuftiProBaseUrl '
-          'SHUFTIPRO_CLIENT_ID=$shuftiProClientId '
-          'SHUFTIPRO_SECRET_KEY=$shuftiProSecretKey',
+          '[iPass] start — workflowId=${config.workflowId} dbType=${config.dbType}',
         );
       }
 
-      final authObject = {
-        'auth_type': 'basic_auth',
-        'client_id': shuftiProClientId,
-        'secret_key': shuftiProSecretKey,
-      };
-
-      final configObject = {
-        'base_url': shuftiProBaseUrl,
-        'consent_age': 18,
-        'button_text_color': '#FFFFFF',
-        'button_primary_color': '#BBA473',
-        'button_secondary_color': '#BBA473',
-        'cancel_button_color': '#BBA473',
-        "loader_color": "#BBA473",
-        "theme_color": "#BBA473",
-        "loader_text_color": "#FFFFFF",
-        'heading_color': '#FFFFFF',
-        'sub_heading_color': '#FFFFFF',
-        'icon_color': '#BBA473',
-        "card_background_color": "#333333",
-        'background_color': '#232323',
-        'stroke_color': '#FFFFFF',
-        'font_color': '#FFFFFF',
-        'hide_shuftipro_logo': true,
-        'brand_name': 'SaveInGold',
-      };
-
-      final reference = generateRandomHexReference();
-
-      final payload = {
-        "country": countryCode,
-        "reference": reference,
-        "language": locale?.languageCode ?? "EN",
-        "verification_mode": "image_only",
-        "show_results": 1,
-        "fetch_enhanced_data": "1",
-        "face": {
-          "allow_online": "1",
-          "allow_offline": "0",
-        },
-        "document": {
-          "supported_types": [
-            "passport",
-            "id_card",
-            //"driving_license",
-            //"credit_or_debit_card",
-          ],
-          "allow_multi_language": "1",
-          "fetch_enhanced_data": "1",
-          "name": {
-            "first_name": "",
-            "last_name": "",
-            "middle_name": "",
-          },
-          "dob": "",
-          "document_number": "",
-          "expiry_date": "",
-          "issue_date": "",
-          "gender": "",
-          "allow_online": "1",
-          "allow_offline": "0",
-          "show_ocr_form": "0",
-          // "allow_offline": "1",
-          // "show_ocr_form": "1",
-          "backside_proof_required": "1",
-        },
-        "questionnaire": {
-          "questionnaire_type": "pre_kyc", //post_kyc //pre_kyc
-          "uuid": [
-            shuftiProUUIDId,
-          ],
-        },
-      };
-
-      /// Send request to Shufti Pro
-      final response = await ShuftiproSdk.sendRequest(
-        authObject: authObject,
-        createdPayload: payload,
-        configObject: configObject,
-      );
-      print("shufti error ${response.toString()}");
-      if (response.isEmpty) {
-        Toasts.getErrorToast(text: AppLocalizations.of(context)!.kyc_error);
-        // Toasts.getErrorToast(text: 'Verification error, try again.');
+      if (!await _ensureKycMediaPermissions()) {
         return;
       }
 
-      final decodedResponse = jsonDecode(response) as Map<String, dynamic>;
-      final event = decodedResponse['event'];
+      final ipassResult = await IpassKycService.instance.startKycVerification(
+        email: email,
+        password: config.password,
+        appToken: config.appToken,
+        workflowId: config.workflowId,
+        socialMediaEmail: socialEmail,
+        phoneNumber: phone,
+        serverUrl: config.serverUrl,
+        dbType: config.dbType,
+        useDynamicDb: config.useDynamicDb,
+        enableHologram: config.enableHologram,
+      );
 
-      // Only proceed if event is success
-      if (event != "verification.accepted") {
+      if (!ipassResult.success || !ipassResult.apiStatus) {
         Toasts.getErrorToast(
           text: AppLocalizations.of(context)!.shufti_pro_verification_failed,
         );
-        // Toasts.getErrorToast(text: 'Verification failed, try again.');
         return;
+        
       }
+
 
       final userId = await LocalDatabase.instance.getUserId();
       if (userId == null) {
         Toasts.getErrorToast(
           text: AppLocalizations.of(context)!.shufti_user_auth_issue,
         );
-        // Toasts.getErrorToast(text: 'User authentication error, try again.');
         return;
       }
 
-      final shuftiProResult = ShuftiProApiResponseModel.fromJson(
-        decodedResponse,
+      final kycPayload = IpassKycService.instance.buildBackendKycPayload(
+        userId: userId,
+        countryCode: countryCode,
+        ipassResult: ipassResult,
+        bankOnboardingData: alTaifOnboardingData,
       );
-      final newJson = {
-        'userId': userId,
-        'kycData': shuftiProResult.toJson(),
-        'bankOnboardingData': alTaifOnboardingData,
-        //'Savekycdata':shuftiProResult.toJson()
-      };
-      final kycData = shuftiProResult.toJson();
 
-      await LocalDatabase.instance.saveKycData(kycData);
+      await LocalDatabase.instance.saveKycData(
+        kycPayload['kycData'] as Map<String, dynamic>,
+      );
 
       if (!mounted) return;
 
-      //  Only call submitKycData when ShuftiPro KYC is successful
-      await ref
-          .read(shuftiProProvider.notifier)
-          .submitKycData(
-            data: newJson,
-            shuftiProResult: shuftiProResult,
+      await ref.read(shuftiProProvider.notifier).submitKycPayload(
+            data: kycPayload,
             context: context,
           );
+    } on PlatformException catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      Toasts.getErrorToast(
+        text: e.message ??
+            AppLocalizations.of(context)!.kyc_verification_failed,
+      );
+    } on IpassKycException catch (e, stackTrace) {
+      await Sentry.captureException(e, stackTrace: stackTrace);
+      Toasts.getErrorToast(
+        text: e.message,
+      );
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);
       Toasts.getErrorToast(
         text: AppLocalizations.of(context)!.kyc_verification_failed,
       );
-
-      // Toasts.getErrorToast(text: 'KYC verification failed, please try again.');
     }
   }
 }

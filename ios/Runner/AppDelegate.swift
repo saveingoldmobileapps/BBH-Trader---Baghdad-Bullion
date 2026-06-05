@@ -10,6 +10,9 @@ import FirebaseCore
   ) -> Bool {
     FirebaseApp.configure()
     GeneratedPluginRegistrant.register(with: self)
+    if let registrar = self.registrar(forPlugin: "IpassKycPlugin") {
+      IpassKycPlugin.register(with: registrar)
+    }
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }

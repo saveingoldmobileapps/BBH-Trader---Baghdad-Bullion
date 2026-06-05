@@ -68,18 +68,40 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             //flutter build appbundle --release
             //signingConfig = signingConfigs.debug
+
+    minifyEnabled true
+    shrinkResources true
+    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // minifyEnabled false
             signingConfig = signingConfigs.release
         }
     }
 }
 
+
+// iPass SDK + Amplify liveness require okhttp3.ConnectionListener (not in OkHttp 4.11).
+configurations.configureEach {
+    resolutionStrategy {
+        force 'com.squareup.okhttp3:okhttp:5.0.0-alpha.16'
+        force 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.16'
+    }
+}
+
 dependencies {
+    implementation("com.github.iPass-MENA:iPass2.0NativeAndroidSDK:v2.17")
+    implementation("com.github.iPass-MENA:iPass2.0CoreAndroidSDK:2.17")
+
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.16'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.16'
+
     // For AGP 7.4+
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
     // For AGP 7.3
     // coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.3'
     // For AGP 4.0 to 7.2
     implementation 'org.json:json:20231013'
+    implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'androidx.multidex:multidex:2.0.1'
     // coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.9'
 

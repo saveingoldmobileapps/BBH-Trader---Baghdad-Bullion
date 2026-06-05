@@ -351,7 +351,7 @@ class _BBHOnboardingScreenState extends State<BBHOnboardingScreen> {
       );
     } else {
       final onboardingPayload = _buildAlTaifOnboardingPayload();
-      // After step 12, continue directly into identity verification (ShuftiPro flow).
+      // After step 12, continue directly into identity verification (iPass KYC flow).
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (_) => KycSecondStepScreen(

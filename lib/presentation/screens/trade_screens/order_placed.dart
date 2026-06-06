@@ -1,0 +1,291 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/global_time.dart';
+
+class OrderPlacedScreen extends StatelessWidget {
+  final String orderId;
+  final String dateTime;
+  final String tradeType;
+  final String amount;
+  final String targetPrice;
+  final String total;
+
+  const OrderPlacedScreen({
+    super.key,
+    required this.orderId,
+    required this.dateTime,
+    required this.tradeType,
+    required this.amount,
+    required this.targetPrice,
+    required this.total,
+  });
+
+  // String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
+  //   if (isoDate == null || isoDate.isEmpty) return '-';
+  //   try {
+  //     final parsed = DateTime.parse(isoDate);
+  //     final iraqTime = parsed.toUtc().add(const Duration(hours: 3));
+  //     final locale = Localizations.localeOf(context).languageCode == 'ar'
+  //         ? 'ar_IQ'
+  //         : 'en_IQ';
+  //     return DateFormat('dd/MM/yyyy, HH:mm', locale).format(iraqTime);
+  //   } catch (_) {
+  //     return isoDate;
+  //   }
+  // }
+//   String _formatIraqGregorianDateTime(String? isoDate, BuildContext context) {
+//   if (isoDate == null || isoDate.isEmpty) return '-';
+//   try {
+//     final parsed = DateTime.parse(isoDate);
+
+//     // ✅ Convert to device local time
+//     final localTime = parsed.toLocal();
+
+//     final locale = Localizations.localeOf(context).languageCode == 'ar'
+//         ? 'ar'
+//         : 'en';
+
+//     return DateFormat('dd/MM/yyyy, HH:mm', locale).format(localTime);
+//   } catch (_) {
+//     return isoDate;
+//   }
+// }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0E0E0E),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              const Spacer(),
+
+              SvgPicture.asset(
+                "assets/svg/success_Icon.svg",
+                height: 150,
+                fit: BoxFit.cover,
+              ),
+
+              const SizedBox(height: 20),
+              Text(
+                AppLocalizations.of(context)!.order_placed_title,
+                style: GoogleFonts.inter(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              /// ✅ Subtitle
+              tradeType == 'Limit Order' || tradeType == "أمر محدد"
+                  ? Text(
+                      AppLocalizations.of(context)!.limit_order_des,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        color: Colors.white60,
+                        fontSize: 13,
+                      ),
+                    )
+                  : Text(
+                      AppLocalizations.of(context)!.limit_order_success,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.inter(
+                        color: Colors.white60,
+                        fontSize: 13,
+                      ),
+                    ),
+
+              const SizedBox(height: 24),
+
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: const Color(0xff262929),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // _row("Order ID", orderId),
+                    // _row("Date & Time", dateTime),
+                    // _badgeRow("Trade type", tradeType),
+                    // _row("Amount", amount),
+                    // _row("Target price", targetPrice),
+                    // const Divider(color: Colors.white12),
+                    // _totalRow("GMT+3 Total", total),
+                    _row(
+                      AppLocalizations.of(context)!.limit_date_time,
+                      // _formatIraqGregorianDateTime(dateTime, context),
+                      DateTimeHelper.formatLocalDateTime(dateTime, context),
+                      context,
+                    ),
+                    _badgeRow(
+                      "${AppLocalizations.of(context)!.limit_trade_type}",
+                      tradeType,
+                    ),
+                    _row(
+                      
+                      "${AppLocalizations.of(context)!.limit_amount}"
+                      ,
+                      amount,
+                      context,
+                    ),
+                    _row(
+                      tradeType == 'Limit Order' || tradeType == "أمر محدد"? 
+                      "${AppLocalizations.of(context)!.target_price}":
+                      "${AppLocalizations.of(context)!.execution_Price}"
+                      ,
+                      targetPrice,
+                      context,
+                    ),
+                    const Divider(color: Colors.white12),
+                    _totalRow(
+                      "${AppLocalizations.of(context)!.gmt_time}",
+                      total,
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+           tradeType == 'Limit Order' || tradeType == "أمر محدد"?   
+           
+           Text(
+                "${AppLocalizations.of(context)!.will_notify}",
+                style: GoogleFonts.inter(
+                  color: Colors.white38,
+                  fontSize: 12,
+                ),
+              ):SizedBox(),
+
+              const Spacer(),
+
+              /// ✅ Fixed Button - No grey screen issue
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xff917330),
+                        Color(0xFF73530d),
+                        Color(0xff917330),
+                      ],
+                    ),
+                  ),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      foregroundColor: Colors.black,
+                      elevation: 0,
+                      padding: EdgeInsets.zero,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      "${AppLocalizations.of(context)!.return_home}",
+                      style: GoogleFonts.inter(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _row(String label, String value, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.inter(color: Colors.white38, fontSize: 12),
+          ),
+          Text(
+            value,
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _badgeRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.inter(color: Colors.white38, fontSize: 12),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: const Color(0xFFBBA473).withOpacity(0.15),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: const Color(0xFFBBA473)),
+            ),
+            child: Text(
+              value,
+              style: GoogleFonts.inter(
+                color: const Color(0xFFBBA473),
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _totalRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            label,
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 13),
+          ),
+          Text(
+            value,
+            style: GoogleFonts.inter(
+              color: const Color(0xFFBBA473),
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

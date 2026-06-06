@@ -1,0 +1,98 @@
+
+# FVM Version Cache
+.fvm/
+##################################################
+# Flutter / Dart
+##################################################
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+flutter_*.log
+
+##################################################
+# Environment & Secrets
+##################################################
+.env
+.env.*
+*.env
+*.key
+*.pem
+*.jks
+*.keystore
+*.p12
+
+##################################################
+# Android
+##################################################
+android/.gradle/
+android/app/build/
+android/key.properties
+android/local.properties
+*.apk
+*.aab
+
+##################################################
+# iOS
+##################################################
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Pods/
+ios/.symlinks/
+ios/Runner.xcworkspace
+ios/Runner/GeneratedPluginRegistrant.*
+
+##################################################
+# macOS
+##################################################
+macos/Flutter/GeneratedPluginRegistrant.swift
+macos/Pods/
+macos/.symlinks/
+
+##################################################
+# Web
+##################################################
+web/.dart_tool/
+web/build/
+
+##################################################
+# Windows / Linux
+##################################################
+windows/flutter/ephemeral/
+linux/flutter/ephemeral/
+
+##################################################
+# IDEs
+##################################################
+.idea/
+.vscode/
+*.iml
+
+##################################################
+# System files
+##################################################
+.DS_Store
+Thumbs.db
+
+##################################################
+# Logs
+##################################################
+*.log
+*.hprof
+*.hprof
+
+# coverage / testing
+coverage/
+
+# build outputs (extra safety)
+**/build/
+
+# dart tool cache anywhere
+**/.dart_tool/
+
+# pub cache safety
+**/.pub-cache/
+
+# optional: firebase
+.firebase/

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "182440117373",
+    "project_id": "bbh-trader---baghdad-bullion",
+    "storage_bucket": "bbh-trader---baghdad-bullion.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182440117373:android:6ba419fe3d80508fc11d14",
+        "android_client_info": {
+          "package_name": "com.baghdadbullion.bbhtrader"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgfXEa5XkOIDt5KBAbtL8Un-zKsQTgm9o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

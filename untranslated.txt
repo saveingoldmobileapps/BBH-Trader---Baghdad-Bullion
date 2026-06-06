@@ -1,0 +1,6 @@
+{
+  "ar": [
+    "failed_to_update_card",
+    "in_store_collection_detail"
+  ]
+}

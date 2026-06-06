@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BBH Funding Portal · Prototype for Technical Review</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg-page: #15110d;
+  --bg-page-2: #1c1813;
+  --bg-panel: #0E0B08;
+  --bg-panel-2: #181410;
+  --gold: #B8944C;
+  --gold-soft: #C7A856;
+  --gold-deep: #8A6F3F;
+  --gold-glow: rgba(184,148,76,0.18);
+  --cream: #FAF5E8;
+  --cream-2: #F2E9CC;
+  --cream-3: #EFE7CF;
+  --ink: #1F1A14;
+  --ink-2: #2A2317;
+  --muted: #5A4A2E;
+  --green: #6FA055;
+  --red: #C75A4F;
+  --blue: #5A8AC7;
+  --line: rgba(184,148,76,0.18);
+  --line-strong: rgba(184,148,76,0.32);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0; min-height: 100vh;
+  background: radial-gradient(ellipse at top, var(--bg-page-2) 0%, var(--bg-page) 100%);
+  font-family: "Manrope", "Helvetica Neue", sans-serif;
+  color: var(--cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(184,148,76,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 85% 80%, rgba(184,148,76,0.04) 0%, transparent 45%);
+  z-index: 0;
+}
+
+/* ===== HEADER ===== */
+.topbar {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 32px;
+  border-bottom: 0.5pt solid var(--line);
+  background: rgba(14,11,8,0.6);
+  backdrop-filter: blur(8px);
+}
+.brand {
+  display: flex; align-items: center; gap: 14px;
+}
+.brand-mark {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: radial-gradient(circle, #2a1f0e 0%, #15110d 100%);
+  border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Cormorant Garamond", serif;
+  color: var(--gold); font-weight: 700; font-size: 14px;
+  letter-spacing: 0.5px;
+}
+.brand-text {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 17px; font-weight: 600;
+  letter-spacing: 2px; color: var(--cream);
+  text-transform: uppercase;
+}
+.brand-sub {
+  font-family: "Manrope", sans-serif;
+  font-size: 10px; color: var(--gold);
+  letter-spacing: 2.2px; text-transform: uppercase;
+  margin-top: 2px;
+}
+.tabs {
+  display: flex; gap: 4px;
+  background: rgba(0,0,0,0.3); border: 1px solid var(--line);
+  border-radius: 100px; padding: 4px;
+}
+.tab {
+  padding: 8px 16px;
+  font-family: "Manrope", sans-serif;
+  font-size: 11px; font-weight: 500;
+  letter-spacing: 0.8px; text-transform: uppercase;
+  color: rgba(250,245,232,0.55);
+  background: transparent; border: none; border-radius: 100px;
+  cursor: pointer; transition: all 0.25s ease;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--cream); }
+.tab.active {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+  color: #1a1208; font-weight: 700;
+  box-shadow: 0 2px 12px rgba(184,148,76,0.3);
+}
+.tab .num {
+  display: inline-block; width: 16px; height: 16px;
+  background: rgba(0,0,0,0.18); border-radius: 50%;
+  font-size: 9px; line-height: 16px; text-align: center;
+  margin-right: 6px; font-weight: 700;
+}
+.tab.active .num { background: rgba(0,0,0,0.22); }
+.reset-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 18px; border-radius: 100px;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  color: var(--gold-soft);
+  font-family: "Manrope", sans-serif;
+  font-size: 11px; letter-spacing: 1.2px;
+  text-transform: uppercase; cursor: pointer;
+  transition: all 0.25s ease;
+}
+.reset-btn:hover { background: var(--gold-glow); color: var(--gold); }
+
+/* ===== MAIN LAYOUT ===== */
+.main {
+  position: relative; z-index: 1;
+  display: grid;
+  grid-template-columns: 280px 1fr 380px;
+  gap: 24px;
+  padding: 24px 32px;
+  min-height: calc(100vh - 71px);
+}
+
+/* ===== SIDEBAR LEFT — context ===== */
+.sidebar-left { display: flex; flex-direction: column; gap: 16px; }
+
+.panel {
+  background: var(--bg-panel-2);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+.panel-label {
+  font-size: 9px; letter-spacing: 2.2px;
+  color: var(--gold); text-transform: uppercase;
+  font-weight: 600; margin-bottom: 12px;
+  font-family: "Manrope", sans-serif;
+}
+.panel-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px; line-height: 1.2;
+  color: var(--cream); margin-bottom: 10px;
+  font-weight: 600;
+}
+.panel-body {
+  font-size: 12.5px; line-height: 1.65;
+  color: rgba(250,245,232,0.7);
+}
+.panel-body strong { color: var(--cream); font-weight: 600; }
+
+.state-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+.state-row:last-child { border-bottom: none; }
+.state-key {
+  color: rgba(250,245,232,0.55);
+  letter-spacing: 0.5px;
+}
+.state-val {
+  color: var(--cream); font-weight: 500;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+}
+.state-val.linked { color: var(--green); }
+.state-val.notlinked { color: var(--red); }
+.state-val.balance { color: var(--gold); font-size: 13px; }
+
+.step-tracker { margin-top: 8px; }
+.step {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 10px 0;
+  position: relative;
+}
+.step:not(:last-child)::after {
+  content: ""; position: absolute;
+  left: 11px; top: 28px; width: 1px; height: calc(100% - 16px);
+  background: var(--line);
+}
+.step.done:not(:last-child)::after { background: var(--gold-deep); }
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--bg-page); border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: rgba(250,245,232,0.4);
+  flex-shrink: 0; z-index: 1;
+}
+.step.done .step-num {
+  background: var(--gold); border-color: var(--gold);
+  color: #1a1208;
+}
+.step.current .step-num {
+  background: var(--bg-panel); border-color: var(--gold);
+  color: var(--gold); animation: pulse-num 1.5s ease-in-out infinite;
+}
+.step-title {
+  font-size: 12.5px; font-weight: 500;
+  color: rgba(250,245,232,0.55);
+  line-height: 1.4; padding-top: 2px;
+}
+.step.done .step-title { color: var(--cream); }
+.step.current .step-title { color: var(--gold-soft); font-weight: 600; }
+
+@keyframes pulse-num {
+  0%,100% { box-shadow: 0 0 0 0 var(--gold-glow); }
+  50% { box-shadow: 0 0 0 6px transparent; }
+}
+
+/* ===== PHONE COLUMN ===== */
+.phone-col {
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+}
+.phone-frame {
+  width: 360px; height: 720px;
+  background: linear-gradient(135deg, #0a0a0a, #1a1610);
+  border-radius: 44px;
+  padding: 12px;
+  position: relative;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.6),
+    0 0 0 1.5px rgba(184,148,76,0.18),
+    inset 0 0 0 0.5px rgba(255,255,255,0.04);
+}
+.phone-screen {
+  width: 100%; height: 100%;
+  background: var(--cream);
+  border-radius: 32px;
+  overflow: hidden;
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.phone-notch {
+  position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
+  width: 100px; height: 26px; background: #0a0a0a;
+  border-radius: 100px; z-index: 50;
+}
+.phone-status {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 26px 4px 26px;
+  font-family: "Manrope", sans-serif;
+  font-size: 12px; font-weight: 600; color: var(--ink);
+}
+.phone-status-right {
+  display: flex; gap: 5px; align-items: center;
+}
+.phone-status-right svg { width: 14px; height: 10px; }
+
+/* ===== APP CONTENT ===== */
+.app {
+  flex: 1; display: flex; flex-direction: column;
+  padding: 14px 22px 24px 22px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  position: relative;
+}
+.app::-webkit-scrollbar { display: none; }
+
+.app-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+  min-height: 32px;
+}
+.app-header-back {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(184,148,76,0.1); border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.2s;
+}
+.app-header-back:hover { background: rgba(184,148,76,0.2); }
+.app-header-back svg { width: 14px; height: 14px; color: var(--ink); }
+.app-header-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--ink); letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.app-header-spacer { width: 32px; }
+
+/* Home screen */
+.app-greeting {
+  font-family: "Manrope", sans-serif;
+  font-size: 11.5px; color: var(--muted);
+  letter-spacing: 1.5px; text-transform: uppercase;
+  font-weight: 500; margin-bottom: 4px;
+}
+.app-name {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 24px; font-weight: 600;
+  color: var(--ink); margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+
+.wallet-card {
+  background: linear-gradient(135deg, #1a1208 0%, #2a1f0e 100%);
+  border-radius: 22px; padding: 22px 22px 24px 22px;
+  color: var(--cream); position: relative;
+  overflow: hidden;
+  margin-bottom: 22px;
+}
+.wallet-card::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 80% 20%, rgba(184,148,76,0.12) 0%, transparent 50%),
+    radial-gradient(circle at 20% 90%, rgba(184,148,76,0.08) 0%, transparent 45%);
+  pointer-events: none;
+}
+.wallet-label {
+  font-size: 9.5px; letter-spacing: 2.5px;
+  color: var(--gold); text-transform: uppercase;
+  font-weight: 600; margin-bottom: 6px;
+  position: relative;
+}
+.wallet-balance {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 38px; font-weight: 600;
+  color: var(--cream); line-height: 1;
+  position: relative;
+}
+.wallet-balance .currency {
+  font-size: 16px; color: var(--gold-soft);
+  margin-left: 6px; font-weight: 500;
+  letter-spacing: 1.5px;
+}
+.wallet-meta {
+  display: flex; justify-content: space-between;
+  margin-top: 18px; padding-top: 16px;
+  border-top: 1px solid rgba(184,148,76,0.18);
+  position: relative;
+}
+.wallet-meta-item {}
+.wallet-meta-key {
+  font-size: 9px; letter-spacing: 1.5px;
+  color: rgba(250,245,232,0.5);
+  text-transform: uppercase; margin-bottom: 3px;
+}
+.wallet-meta-val {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; color: var(--cream);
+}
+
+.link-prompt {
+  background: rgba(184,148,76,0.08);
+  border: 1px solid var(--line);
+  border-radius: 16px; padding: 16px 18px;
+  margin-bottom: 18px;
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.link-prompt-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  border-radius: 50%; background: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  color: #1a1208; font-weight: 700; font-size: 18px;
+}
+.link-prompt-text {
+  font-size: 12.5px; line-height: 1.5;
+  color: var(--ink-2);
+}
+.link-prompt-text strong {
+  display: block; color: var(--ink);
+  font-weight: 600; font-size: 13.5px;
+  font-family: "Cormorant Garamond", serif;
+  margin-bottom: 2px;
+}
+
+/* Linked account chip */
+.linked-account {
+  background: linear-gradient(135deg, var(--cream-2) 0%, var(--cream-3) 100%);
+  border-radius: 16px; padding: 14px 16px;
+  margin-bottom: 18px;
+  display: flex; align-items: center; gap: 12px;
+  border: 0.5pt solid var(--line-strong);
+}
+.linked-account-logo {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: #1a1208; color: var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.5px;
+}
+.linked-account-info {
+  flex: 1; min-width: 0;
+}
+.linked-account-label {
+  font-size: 10px; letter-spacing: 1.5px;
+  color: var(--muted); text-transform: uppercase;
+  font-weight: 500;
+}
+.linked-account-num {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px; color: var(--ink);
+  font-weight: 500; margin-top: 1px;
+}
+.linked-account-status {
+  font-size: 9.5px; letter-spacing: 1.5px;
+  color: var(--green); text-transform: uppercase;
+  font-weight: 700;
+  display: flex; align-items: center; gap: 4px;
+}
+.linked-account-status::before {
+  content: ""; width: 6px; height: 6px;
+  background: var(--green); border-radius: 50%;
+}
+
+/* Buttons */
+.btn {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+  width: 100%; padding: 15px 20px;
+  font-family: "Manrope", sans-serif;
+  font-size: 13.5px; font-weight: 600;
+  letter-spacing: 1px; text-transform: uppercase;
+  border-radius: 14px; border: none;
+  cursor: pointer; transition: all 0.2s ease;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-deep) 100%);
+  color: var(--cream);
+  box-shadow: 0 6px 20px rgba(184,148,76,0.3);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(184,148,76,0.4);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--gold-deep);
+}
+.btn-secondary:hover { background: rgba(184,148,76,0.08); }
+.btn-tertiary {
+  background: rgba(31,26,20,0.04);
+  color: var(--muted);
+  font-weight: 500; font-size: 12px;
+}
+.btn:disabled {
+  opacity: 0.4; cursor: not-allowed;
+  transform: none !important; box-shadow: none !important;
+}
+.btn-icon {
+  width: 18px; height: 18px;
+}
+.btn-stack > * + * { margin-top: 10px; }
+
+/* Method choice card */
+.method-card {
+  border: 1.5px solid var(--line-strong);
+  border-radius: 16px; padding: 16px;
+  margin-bottom: 12px; cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(255,255,255,0.4);
+}
+.method-card:hover {
+  border-color: var(--gold);
+  background: rgba(184,148,76,0.05);
+}
+.method-card.selected {
+  border-color: var(--gold);
+  background: rgba(184,148,76,0.08);
+}
+.method-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 4px;
+}
+.method-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--cream-2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold-deep); font-size: 16px;
+}
+.method-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--ink); letter-spacing: 0.4px;
+}
+.method-desc {
+  font-size: 11px; color: var(--muted);
+  line-height: 1.5; padding-left: 44px;
+}
+.method-pill {
+  display: inline-block;
+  margin-left: auto;
+  background: var(--gold); color: var(--cream);
+  padding: 2px 8px; border-radius: 100px;
+  font-size: 9px; letter-spacing: 1px;
+  font-weight: 700; text-transform: uppercase;
+}
+
+/* Form inputs */
+.field {
+  margin-bottom: 14px;
+}
+.field-label {
+  display: block;
+  font-size: 9.5px; letter-spacing: 1.5px;
+  color: var(--muted); text-transform: uppercase;
+  font-weight: 600; margin-bottom: 6px;
+}
+.field-input {
+  width: 100%; padding: 12px 14px;
+  background: rgba(255,255,255,0.5);
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px; color: var(--ink);
+}
+.field-input:focus {
+  outline: none; border-color: var(--gold);
+  background: white;
+}
+.field-input.large {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 28px; font-weight: 600;
+  text-align: center; padding: 18px;
+  letter-spacing: 1px;
+}
+.field-hint {
+  margin-top: 5px;
+  font-size: 10.5px; color: var(--muted);
+}
+
+/* Review row */
+.review-row {
+  display: flex; justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 0.5pt solid var(--line);
+  font-size: 13px;
+}
+.review-row:last-child { border-bottom: none; }
+.review-key { color: var(--muted); letter-spacing: 0.3px; }
+.review-val { color: var(--ink); font-weight: 500; text-align: right; }
+.review-val.amount {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 18px; font-weight: 600;
+}
+
+/* OTP input */
+.otp-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  margin: 18px 0 14px 0;
+}
+.otp-cell {
+  aspect-ratio: 1;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.5);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px; font-weight: 600;
+  color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.otp-cell.filled {
+  background: var(--gold);
+  color: var(--cream);
+  border-color: var(--gold);
+}
+.otp-prompt {
+  text-align: center; margin-bottom: 10px;
+  font-size: 12.5px; color: var(--muted);
+  line-height: 1.5;
+}
+.otp-prompt strong { color: var(--ink); display: block; font-weight: 600; }
+.otp-resend {
+  text-align: center; margin-top: 12px;
+  font-size: 11.5px; color: var(--gold-deep);
+  font-weight: 600; letter-spacing: 0.5px;
+}
+
+/* Loading state */
+.loading {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  flex: 1; gap: 18px;
+  padding: 40px 0;
+}
+.spinner {
+  width: 48px; height: 48px;
+  border: 3px solid rgba(184,148,76,0.15);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 17px; color: var(--ink);
+  font-weight: 500; text-align: center;
+  letter-spacing: 0.5px;
+}
+.loading-sub {
+  font-size: 11.5px; color: var(--muted);
+  text-align: center; max-width: 240px;
+  line-height: 1.5;
+}
+
+/* Success state */
+.success {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  flex: 1; padding: 30px 10px;
+  text-align: center;
+}
+.success-icon {
+  width: 76px; height: 76px;
+  background: var(--green); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 22px;
+  animation: pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+.success-icon svg {
+  width: 38px; height: 38px;
+  stroke: white; stroke-width: 3;
+  fill: none;
+  stroke-dasharray: 50; stroke-dashoffset: 50;
+  animation: draw 0.6s 0.3s ease forwards;
+}
+@keyframes pop-in {
+  from { transform: scale(0.5); opacity: 0; }
+}
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+.success-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 26px; font-weight: 600;
+  color: var(--ink); margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.success-amount {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 36px; font-weight: 700;
+  color: var(--gold-deep); margin-bottom: 4px;
+}
+.success-text {
+  font-size: 13px; color: var(--muted);
+  line-height: 1.6; margin-bottom: 24px;
+  max-width: 260px;
+}
+
+/* Wire instruction screen */
+.wire-card {
+  background: rgba(255,255,255,0.5);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+}
+.wire-row {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 9px 0;
+  border-bottom: 0.5pt solid var(--line);
+}
+.wire-row:last-child { border-bottom: none; }
+.wire-key {
+  font-size: 10px; letter-spacing: 1.2px;
+  color: var(--muted); text-transform: uppercase;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.wire-val {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px; color: var(--ink);
+  font-weight: 500; text-align: right;
+}
+.wire-val.crucial {
+  background: var(--gold);
+  color: var(--cream);
+  padding: 3px 9px; border-radius: 6px;
+  font-size: 11.5px;
+}
+.wire-warning {
+  background: rgba(199,90,79,0.08);
+  border-left: 3px solid var(--red);
+  padding: 11px 14px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  font-size: 11.5px; color: var(--ink-2);
+  line-height: 1.5;
+}
+.wire-warning strong { color: var(--red); font-weight: 700; }
+
+.waiting {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 40px 0;
+}
+.waiting-pulse {
+  width: 80px; height: 80px;
+  background: rgba(184,148,76,0.1);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+.waiting-pulse::before, .waiting-pulse::after {
+  content: ""; position: absolute; inset: 0;
+  border-radius: 50%; border: 2px solid var(--gold);
+  animation: ripple 2s ease-out infinite;
+}
+.waiting-pulse::after { animation-delay: 1s; }
+.waiting-pulse-dot {
+  width: 20px; height: 20px; background: var(--gold);
+  border-radius: 50%;
+}
+@keyframes ripple {
+  from { transform: scale(1); opacity: 0.8; }
+  to { transform: scale(2); opacity: 0; }
+}
+
+/* ===== PHONE FOOTER ===== */
+.phone-footer {
+  display: flex; gap: 12px;
+  justify-content: center; align-items: center;
+  font-size: 11px; color: rgba(250,245,232,0.4);
+  font-family: "Manrope", sans-serif;
+  letter-spacing: 1px; text-transform: uppercase;
+  margin-top: 4px;
+}
+.phone-footer .dot { width: 4px; height: 4px; background: var(--gold-deep); border-radius: 50%; }
+
+/* ===== SIDEBAR RIGHT — API panel ===== */
+.api-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  max-height: calc(100vh - 120px);
+  position: sticky; top: 24px;
+}
+.api-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(184,148,76,0.04);
+}
+.api-header-title {
+  display: flex; align-items: center; gap: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px; color: var(--gold);
+  font-weight: 600; letter-spacing: 0.5px;
+}
+.api-header-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.api-header-clear {
+  background: transparent; border: none;
+  color: rgba(250,245,232,0.4); cursor: pointer;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px; letter-spacing: 0.5px;
+}
+.api-header-clear:hover { color: var(--gold); }
+
+.api-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 6px 12px 16px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11.5px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.api-log::-webkit-scrollbar { width: 4px; }
+.api-log::-webkit-scrollbar-thumb { background: var(--line); }
+
+.api-empty {
+  padding: 30px 14px; text-align: center;
+  color: rgba(250,245,232,0.3);
+  font-size: 11px; line-height: 1.6;
+}
+
+.log-entry {
+  padding: 7px 12px 7px 0;
+  border-left: 2px solid transparent;
+  padding-left: 14px;
+  margin-bottom: 8px;
+  animation: slideIn 0.3s ease-out;
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-8px); }
+}
+.log-entry.req { border-left-color: var(--blue); }
+.log-entry.res { border-left-color: var(--green); }
+.log-entry.err { border-left-color: var(--red); }
+.log-entry.note { border-left-color: var(--gold); }
+.log-entry.webhook { border-left-color: var(--gold-soft); }
+.log-time {
+  font-size: 10px;
+  color: rgba(250,245,232,0.4);
+  letter-spacing: 0.5px;
+}
+.log-arrow {
+  font-weight: 700;
+  margin: 0 5px 0 4px;
+}
+.log-arrow.req { color: var(--blue); }
+.log-arrow.res { color: var(--green); }
+.log-arrow.err { color: var(--red); }
+.log-arrow.note { color: var(--gold); }
+.log-arrow.webhook { color: var(--gold-soft); }
+.log-method {
+  font-weight: 700;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  margin-right: 5px;
+  letter-spacing: 0.3px;
+}
+.log-method.POST { background: rgba(90,138,199,0.18); color: var(--blue); }
+.log-method.GET { background: rgba(111,160,85,0.18); color: var(--green); }
+.log-method.DELETE { background: rgba(199,90,79,0.18); color: var(--red); }
+.log-path { color: var(--cream); }
+.log-summary {
+  display: block;
+  margin-top: 3px;
+  color: rgba(250,245,232,0.6);
+  font-size: 10.5px;
+  line-height: 1.5;
+}
+.log-detail {
+  display: block;
+  margin-top: 5px;
+  padding: 7px 10px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 5px;
+  font-size: 10.5px;
+  color: var(--gold-soft);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.log-status {
+  display: inline-block;
+  padding: 0 5px;
+  background: rgba(111,160,85,0.18);
+  color: var(--green);
+  border-radius: 3px;
+  font-size: 10px;
+  margin-right: 5px;
+  font-weight: 700;
+}
+
+/* ===== ANNOTATION BAR ===== */
+.annotation {
+  grid-column: 1 / -1;
+  background: linear-gradient(90deg, var(--bg-panel-2), var(--bg-panel));
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 22px;
+  display: flex; gap: 18px;
+  align-items: flex-start;
+  margin-top: 0;
+}
+.annotation-icon {
+  width: 36px; height: 36px; flex-shrink: 0;
+  border-radius: 50%; background: var(--gold-glow);
+  border: 1px solid var(--gold-deep);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); font-family: "Cormorant Garamond", serif;
+  font-size: 18px; font-weight: 700;
+}
+.annotation-content { flex: 1; min-width: 0; }
+.annotation-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 15px; font-weight: 600;
+  color: var(--cream); letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.annotation-body {
+  font-size: 12.5px; line-height: 1.6;
+  color: rgba(250,245,232,0.7);
+}
+.annotation-body code {
+  background: rgba(184,148,76,0.12);
+  color: var(--gold-soft); padding: 1px 6px;
+  border-radius: 3px; font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+}
+
+/* Help button overlay */
+.help-fab {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+  color: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; z-index: 100;
+  box-shadow: 0 8px 24px rgba(184,148,76,0.4);
+  font-family: "Cormorant Garamond", serif;
+  font-size: 22px; font-weight: 700;
+  border: none;
+  transition: transform 0.2s;
+}
+.help-fab:hover { transform: scale(1.1); }
+
+.help-modal {
+  position: fixed; inset: 0;
+  background: rgba(10,8,5,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 200;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 40px;
+}
+.help-modal.open { display: flex; }
+.help-modal-inner {
+  background: var(--bg-panel-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 18px;
+  padding: 32px;
+  max-width: 580px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+.help-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(184,148,76,0.1);
+  color: var(--gold); border: none; cursor: pointer;
+  font-size: 18px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.help-modal h2 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 26px; color: var(--cream);
+  margin: 0 0 14px 0; font-weight: 600;
+}
+.help-modal h3 {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 16px; color: var(--gold);
+  margin: 18px 0 8px 0;
+  letter-spacing: 0.5px;
+}
+.help-modal p, .help-modal li {
+  font-size: 13px; line-height: 1.6;
+  color: rgba(250,245,232,0.75);
+  margin: 0 0 8px 0;
+}
+.help-modal ul { padding-left: 18px; }
+.help-modal strong { color: var(--cream); }
+
+/* Responsive */
+@media (max-width: 1280px) {
+  .main { grid-template-columns: 240px 1fr 340px; gap: 18px; padding: 20px; }
+  .phone-frame { width: 340px; height: 680px; }
+}
+@media (max-width: 980px) {
+  .main {
+    grid-template-columns: 1fr;
+    grid-template-areas: "phone" "left" "right" "annotation";
+  }
+  .sidebar-left { grid-area: left; }
+  .phone-col { grid-area: phone; }
+  .api-panel { grid-area: right; position: static; max-height: 360px; }
+  .annotation { grid-area: annotation; }
+  .tabs { display: none; }
+}
+
+/* Tooltip */
+.tip {
+  position: relative;
+  cursor: help;
+  text-decoration: underline dotted rgba(184,148,76,0.4);
+  text-underline-offset: 3px;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== TOP BAR ===== -->
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">BBH</div>
+    <div>
+      <div class="brand-text">Baghdad Bullion House</div>
+      <div class="brand-sub">Customer App · Funding Portal Prototype</div>
+    </div>
+  </div>
+
+  <div class="tabs" id="flowTabs">
+    <button class="tab active" data-flow="link"><span class="num">1</span>Link Account · 7.1</button>
+    <button class="tab" data-flow="instant"><span class="num">2</span>Fund · Instant Transfer · 4.3</button>
+  </div>
+
+  <button class="reset-btn" id="resetBtn">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 3-6.7" /><polyline points="3 4 3 9 8 9"/></svg>
+    Reset
+  </button>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar-left">
+    <div class="panel">
+      <div class="panel-label">Customer Context</div>
+      <div class="state-row">
+        <span class="state-key">Customer ID</span>
+        <span class="state-val">BBH-A1B2C3D4</span>
+      </div>
+      <div class="state-row">
+        <span class="state-key">TIB linked</span>
+        <span class="state-val notlinked" id="state-linked">Not linked</span>
+      </div>
+      <div class="state-row">
+        <span class="state-key">Linked account</span>
+        <span class="state-val" id="state-linked-acct">—</span>
+      </div>
+    </div>
+
+    <div class="panel" id="flowPanel">
+      <div class="panel-label" id="flowLabel">Flow 1 of 3</div>
+      <div class="panel-title" id="flowTitle">Account Linking</div>
+      <div class="panel-body" id="flowDesc">
+        Customer establishes a verified relationship between their TIB account and their BBH wallet, calling API 7.1 (Verify Account Ownership) to receive an <code>account_ref_token</code>.
+      </div>
+
+      <div class="step-tracker" id="stepTracker">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- PHONE -->
+  <div class="phone-col">
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="phone-status">
+          <span>9:41</span>
+          <div class="phone-status-right">
+            <span>·il</span>
+            <span>۹۸</span>
+            <svg viewBox="0 0 24 12" fill="currentColor"><rect x="0" y="0" width="22" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="1"/><rect x="2" y="2" width="16" height="8" rx="1"/></svg>
+          </div>
+        </div>
+
+        <div class="app" id="appContent">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+    <div class="phone-footer">
+      <span>BBH iOS</span><span class="dot"></span><span id="screenIdLabel">screen 01</span><span class="dot"></span><span id="flowName">linking</span>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="api-panel">
+    <div class="api-header">
+      <div class="api-header-title">
+        <span class="api-header-dot"></span>
+        API Activity · Live
+      </div>
+      <button class="api-header-clear" id="clearLog">CLEAR</button>
+    </div>
+    <div class="api-log" id="apiLog">
+      <div class="api-empty">
+        Watching the wire ·<br/>
+        Tap inside the phone to advance the flow.<br/>
+        API calls and TIB responses will stream here.
+      </div>
+    </div>
+  </div>
+
+  <!-- ANNOTATION -->
+  <div class="annotation">
+    <div class="annotation-icon" id="annotationIcon">i</div>
+    <div class="annotation-content">
+      <div class="annotation-title" id="annotationTitle">What's happening</div>
+      <div class="annotation-body" id="annotationBody">
+        The home screen of the BBH customer app. Initial state: customer has no linked TIB account and no wallet balance. The app prompts them to link a TIB account so they can fund the wallet — choosing "Link account" begins API 7.1 flow.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- HELP FAB -->
+<button class="help-fab" id="helpBtn">?</button>
+<div class="help-modal" id="helpModal">
+  <div class="help-modal-inner">
+    <button class="help-close" id="helpClose">×</button>
+    <h2>About This Prototype</h2>
+    <p>This is an interactive demonstration of the <strong>BBH customer-facing funding portal</strong> — the answer to the question "where can the technical team find the payment portal?" The portal lives inside the BBH customer app.</p>
+
+    <h3>Two flows covered</h3>
+    <ul>
+      <li><strong>Account Linking (API 7.1, gated by 3.1/3.2).</strong> Customer establishes a verified link between their Al-Taif Islamic Bank account and their BBH wallet. OTP-gated: TIB sends a code to the phone on file for the TIB account; customer must enter it before BBH calls <code>POST /accounts/verify</code>. One-time setup. Required before in-app funding can be used.</li>
+      <li><strong>Funding · Instant Transfer (API 4.3 + 3.1/3.2).</strong> Customer moves money from their linked TIB account into BBH's segregated client account, confirmed via TIB-issued OTP. The single funding path.</li>
+    </ul>
+
+    <h3>How to use</h3>
+    <ul>
+      <li>Click <strong>buttons inside the phone</strong> to advance the flow.</li>
+      <li>Watch the <strong>API Activity panel</strong> on the right — every step that involves a TIB API call or webhook is logged.</li>
+      <li>The <strong>annotation bar at the bottom</strong> explains what's happening at each screen in plain language.</li>
+      <li>Switch flows using the tabs at the top.</li>
+      <li>Use <strong>Reset</strong> to return to initial state (no linked account, zero balance).</li>
+    </ul>
+
+    <h3>Who builds what</h3>
+    <p>Everything inside the phone is <strong>BBH's app</strong> — BBH builds the screens, copy, and UX. The right-hand API panel shows the <strong>TIB endpoints</strong> being called behind the scenes. TIB owns those APIs and the money rails; BBH owns the customer experience.</p>
+
+    <h3>Status</h3>
+    <p>Prototype only — no real money moves, no real TIB endpoint is called. All amounts, account numbers, customer IDs, and OTP codes are fixed demo values.</p>
+  </div>
+</div>
+
+<script>
+// ============ STATE ============
+const state = {
+  flow: 'link',
+  step: 0,
+  linked: false,
+  linkedAcctMasked: '—',
+  linkedAcctToken: null,
+  customerID: 'BBH-A1B2C3D4',
+  fundingAmount: 0,
+  otpDigits: ['','','','','',''],
+  startTime: Date.now()
+};
+
+// ============ FLOW DEFINITIONS ============
+const flows = {
+  link: {
+    title: 'Account Linking',
+    label: 'Flow 1 of 2',
+    name: 'linking',
+    desc: 'Customer establishes a verified relationship between their TIB account and their BBH wallet. OTP-gated for security: the customer must prove ownership of the phone on file before TIB issues an <code>account_ref_token</code>.',
+    steps: [
+      { title: 'Home — no linked account', screen: 'link-home', annotation: { title: 'Home · no linked account', body: 'The wallet shows zero balance. Because no TIB account is linked, the app surfaces a prominent prompt to link one. This is the start of the customer onboarding-to-funding sequence.' } },
+      { title: 'Enter account details', screen: 'link-enter', annotation: { title: 'Step 1 · enter TIB account details', body: 'BBH collects the customer\'s TIB account number and the name on the account. Tapping <strong>Send OTP</strong> triggers TIB to send a verification code to the phone number on file for that TIB account.' } },
+      { title: 'OTP verification', screen: 'link-otp', annotation: { title: 'OTP · proving phone ownership', body: 'TIB sent a 6-digit code via SMS to the phone on file. Entering it correctly proves the customer controls that phone — a required check before BBH and TIB agree the account is theirs to link. BBH never sees the OTP in clear text; it\'s verified directly by TIB via API 3.2.' } },
+      { title: 'Verifying with TIB', screen: 'link-verify', annotation: { title: 'Calling TIB · API 7.1', body: 'OTP confirmed. BBH now calls <code>POST /accounts/verify</code> with the verification token from the OTP step. TIB confirms the account exists, the name matches, and returns an <code>account_ref_token</code>.' } },
+      { title: 'Success — token received', screen: 'link-success', annotation: { title: 'Linked · token stored', body: 'TIB returned an <code>account_ref_token</code> like <code>LNK-7F3A-B12C</code>. BBH stores this token (not the raw account number) and uses it for all future transfers involving this linked account. The link can be revoked anytime via API 7.2.' } }
+    ]
+  },
+  instant: {
+    title: 'Funding · Instant Transfer',
+    label: 'Flow 2 of 2',
+    name: 'instant-funding',
+    desc: 'Customer moves funds from their linked TIB account into BBH\'s segregated client account, in-app, confirmed via TIB-issued OTP. Calls API 3.1, 3.2, then 4.3.',
+    steps: [
+      { title: 'Home — wallet ready', screen: 'fund-home', annotation: { title: 'Home · linked, ready to fund', body: 'Account is linked. Wallet balance is zero. The customer taps "Add funds" to begin a deposit from their linked TIB account.' }, requires: ['linked'] },
+      { title: 'Enter amount', screen: 'fund-amount', annotation: { title: 'Enter amount', body: 'Customer enters the IQD amount to transfer from their linked TIB account into the BBH wallet. Default in this demo: 250,000 IQD. In production, TIB confirms the daily and per-transaction limits — see BNK-002-T §4.4 Cash Transfers.' } },
+      { title: 'Review transfer', screen: 'fund-review', annotation: { title: 'Review · before OTP', body: 'Customer confirms the transfer details. The next action calls TIB\'s OTP endpoint (API 3.1) and surfaces the OTP entry screen.' } },
+      { title: 'Enter OTP', screen: 'fund-otp', annotation: { title: 'OTP · authenticating with TIB', body: 'TIB sent a 6-digit OTP to the customer\'s phone number on file. BBH never sees this OTP in clear text — it\'s typed by the customer and passed through to TIB for verification via API 3.2. The OTP makes the transfer compliant: per-transaction explicit consent.' } },
+      { title: 'Processing transfer', screen: 'fund-processing', annotation: { title: 'Processing · API 4.3', body: 'OTP verified. BBH now calls <code>POST /transfers/instant</code> with the <code>account_ref_token</code>, the amount, and the destination (BBH\'s segregated client account at TIB). TIB moves the money on its books.' } },
+      { title: 'Success — funds added', screen: 'fund-success', annotation: { title: 'Funded · wallet credited', body: 'TIB confirmed the transfer. BBH\'s Digital Ledger updates: this customer now owns 250,000 IQD of the segregated client account at TIB. The customer can now buy gold from the wallet.' } }
+    ]
+  }
+};
+
+// ============ SCREEN RENDERERS ============
+const screens = {
+  // ----- LINK FLOW -----
+  'link-home': () => `
+    ${appHeader('', 'Wallet', false)}
+    <div class="app-greeting">Welcome</div>
+    <div class="app-name">Your BBH Wallet</div>
+    ${walletCard()}
+    <div class="link-prompt">
+      <div class="link-prompt-icon">+</div>
+      <div class="link-prompt-text">
+        <strong>Link your Al-Taif Islamic Bank account</strong>
+        Connect it once, then fund your wallet instantly anytime.
+      </div>
+    </div>
+    <div style="margin-top:auto" class="btn-stack">
+      <button class="btn btn-primary" onclick="advance()">Link TIB Account</button>
+    </div>`,
+
+  'link-enter': () => `
+    ${appHeader('Cancel', 'Link Account', true)}
+    <div style="margin-bottom:18px">
+      <div class="app-name" style="font-size:20px;margin-bottom:6px">Account Details</div>
+      <div style="font-size:12.5px;color:var(--muted);line-height:1.5">
+        We'll send a verification code to the phone on file for this account.
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-label">TIB Account Number</label>
+      <input class="field-input" value="0042-1108-8675309" readonly>
+    </div>
+    <div class="field">
+      <label class="field-label">Account Holder Name</label>
+      <input class="field-input" value="Ahmed Al-Sayed" readonly>
+      <div class="field-hint">Must match the name on the TIB account exactly.</div>
+    </div>
+    <div style="margin-top:auto" class="btn-stack">
+      <button class="btn btn-primary" onclick="logApiCall('link-otp-trigger'); setTimeout(advance, 700)">Send OTP</button>
+    </div>`,
+
+  'link-otp': () => {
+    setTimeout(() => {
+      const cells = document.querySelectorAll('.otp-cell');
+      const code = ['4','7','2','9','1','5'];
+      code.forEach((d, i) => {
+        setTimeout(() => {
+          if (cells[i]) { cells[i].textContent = d; cells[i].classList.add('filled'); }
+        }, 250 + i * 180);
+      });
+      setTimeout(() => {
+        logApiCall('link-otp-verify');
+        setTimeout(() => { logApiResponse('link-otp-verify'); setTimeout(advance, 700); }, 1000);
+      }, 1900);
+    }, 200);
+
+    return `
+      ${appHeader('', 'Verification', false)}
+      <div class="otp-prompt">
+        <strong>Enter the code from TIB</strong>
+        Sent to ··· ··· 4421 · valid for 5 minutes
+      </div>
+      <div class="otp-grid">
+        <div class="otp-cell"></div><div class="otp-cell"></div><div class="otp-cell"></div>
+        <div class="otp-cell"></div><div class="otp-cell"></div><div class="otp-cell"></div>
+      </div>
+      <div class="otp-resend">Resend in 24s</div>
+      <div style="margin-top:auto;font-size:11px;color:var(--muted);text-align:center;line-height:1.5;padding:10px">
+        Linking an account requires OTP verification.<br/>Your code is sent directly by Al-Taif Islamic Bank.
+      </div>`;
+  },
+
+  'link-verify': () => {
+    setTimeout(() => {
+      logApiCall('link');
+      setTimeout(() => { logApiResponse('link'); setTimeout(advance, 600); }, 1100);
+    }, 300);
+    return `
+      ${appHeader('', 'Verifying', false)}
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Verifying with Al-Taif Islamic Bank</div>
+        <div class="loading-sub">Confirming account ownership · this takes about a second.</div>
+      </div>`;
+  },
+
+  'link-success': () => `
+    ${appHeader('', 'Linked', false)}
+    <div class="success">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="success-title">Account Linked</div>
+      <div class="success-text" style="margin-bottom:14px">
+        Your Al-Taif Islamic Bank account ending <strong style="color:var(--ink)">5309</strong> is now connected to your BBH wallet.
+      </div>
+      <div class="linked-account" style="margin-bottom:24px;max-width:280px">
+        <div class="linked-account-logo">TIB</div>
+        <div class="linked-account-info">
+          <div class="linked-account-label">Linked account</div>
+          <div class="linked-account-num">···· ···· ···· 5309</div>
+        </div>
+        <div class="linked-account-status">Active</div>
+      </div>
+    </div>
+    <div class="btn-stack" style="margin-top:auto">
+      <button class="btn btn-primary" onclick="state.linked=true; state.linkedAcctMasked='···· 5309'; state.linkedAcctToken='LNK-7F3A-B12C'; updateContext(); switchFlow('instant')">Continue · Try Funding</button>
+    </div>`,
+
+  // ----- INSTANT FUNDING -----
+  'fund-home': () => `
+    ${appHeader('', 'Wallet', false)}
+    <div class="app-greeting">Welcome back</div>
+    <div class="app-name">Your BBH Wallet</div>
+    ${walletCard()}
+    ${state.linked ? linkedAccountChip() : `
+      <div class="link-prompt">
+        <div class="link-prompt-icon">+</div>
+        <div class="link-prompt-text">
+          <strong>No linked account yet</strong>
+          Switch to flow 1 to link your TIB account before funding.
+        </div>
+      </div>`}
+    <div style="margin-top:auto" class="btn-stack">
+      <button class="btn btn-primary" onclick="advance()" ${state.linked ? '' : 'disabled'}>Add Funds</button>
+    </div>`,
+
+  'fund-amount': () => `
+    ${appHeader('Back', 'Amount', true)}
+    <div style="margin-bottom:6px">
+      <div class="app-name" style="font-size:20px">How much?</div>
+      <div style="font-size:12px;color:var(--muted)">From <strong style="color:var(--ink)">${state.linkedAcctMasked}</strong></div>
+    </div>
+    <div class="field" style="margin-top:24px">
+      <label class="field-label">Amount in IQD</label>
+      <input class="field-input large" value="250,000" readonly>
+      <div class="field-hint" style="text-align:center;margin-top:10px">
+        Min 10,000 IQD · Max 5,000,000 IQD per transaction
+      </div>
+    </div>
+    <div style="margin-top:auto" class="btn-stack">
+      <button class="btn btn-primary" onclick="state.fundingAmount=250000; advance()">Continue</button>
+    </div>`,
+
+  'fund-review': () => `
+    ${appHeader('Back', 'Review', true)}
+    <div style="margin-bottom:16px">
+      <div class="app-name" style="font-size:20px;margin-bottom:6px">Confirm transfer</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.5">
+        Review the details · the next step requires an OTP from TIB.
+      </div>
+    </div>
+    <div class="wire-card">
+      <div class="review-row">
+        <span class="review-key">Amount</span>
+        <span class="review-val amount">250,000 IQD</span>
+      </div>
+      <div class="review-row">
+        <span class="review-key">From</span>
+        <span class="review-val">TIB ···· 5309</span>
+      </div>
+      <div class="review-row">
+        <span class="review-key">To</span>
+        <span class="review-val">Your BBH Wallet</span>
+      </div>
+      <div class="review-row">
+        <span class="review-key">Fee</span>
+        <span class="review-val" style="color:var(--green)">0 IQD</span>
+      </div>
+      <div class="review-row">
+        <span class="review-key">Arrival</span>
+        <span class="review-val">Instant</span>
+      </div>
+    </div>
+    <div style="margin-top:auto" class="btn-stack">
+      <button class="btn btn-primary" onclick="logApiCall('otp-trigger'); setTimeout(advance, 600)">Confirm with OTP</button>
+      <button class="btn btn-tertiary" onclick="rewind()">Change amount</button>
+    </div>`,
+
+  'fund-otp': () => {
+    // Animate OTP filling
+    setTimeout(() => {
+      const cells = document.querySelectorAll('.otp-cell');
+      const code = ['1','2','3','4','5','6'];
+      code.forEach((d, i) => {
+        setTimeout(() => {
+          if (cells[i]) {
+            cells[i].textContent = d;
+            cells[i].classList.add('filled');
+          }
+        }, 200 + i * 180);
+      });
+      setTimeout(() => {
+        logApiCall('otp-verify');
+        setTimeout(() => { logApiResponse('otp-verify'); setTimeout(advance, 700); }, 1000);
+      }, 1800);
+    }, 200);
+
+    return `
+      ${appHeader('', 'Verification', false)}
+      <div class="otp-prompt">
+        <strong>Enter the code from TIB</strong>
+        Sent to ··· ··· 4421 · valid for 5 minutes
+      </div>
+      <div class="otp-grid">
+        <div class="otp-cell"></div><div class="otp-cell"></div><div class="otp-cell"></div>
+        <div class="otp-cell"></div><div class="otp-cell"></div><div class="otp-cell"></div>
+      </div>
+      <div class="otp-resend">Resend in 24s</div>
+      <div style="margin-top:auto;font-size:11px;color:var(--muted);text-align:center;line-height:1.5;padding:10px">
+        BBH never sees your OTP in clear text.<br/>It's verified directly by Al-Taif Islamic Bank via API 3.2.
+      </div>`;
+  },
+
+  'fund-processing': () => {
+    setTimeout(() => { logApiResponse('transfer-instant'); setTimeout(advance, 800); }, 1600);
+    setTimeout(() => { logApiCall('transfer-instant'); }, 200);
+    return `
+      ${appHeader('', 'Processing', false)}
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Transferring 250,000 IQD</div>
+        <div class="loading-sub">TIB is moving funds from your linked account to your BBH wallet.</div>
+      </div>`;
+  },
+
+  'fund-success': () => `
+    ${appHeader('', 'Complete', false)}
+    <div class="success">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="success-amount">250,000 IQD</div>
+      <div class="success-title" style="font-size:18px;color:var(--muted);margin-top:4px;margin-bottom:18px">added to your wallet</div>
+      <div class="wire-card" style="width:90%;margin-bottom:0">
+        <div class="review-row" style="padding:8px 0">
+          <span class="review-key">Transfer ID</span>
+          <span class="review-val" style="font-family:'JetBrains Mono',monospace;font-size:11px">TXN-8F2A-X7B3C9</span>
+        </div>
+        <div class="review-row" style="padding:8px 0">
+          <span class="review-key">From</span>
+          <span class="review-val" style="font-size:12px">TIB ···· 5309</span>
+        </div>
+      </div>
+    </div>
+    <div class="btn-stack" style="margin-top:auto">
+      <button class="btn btn-primary" onclick="document.getElementById('resetBtn').click()">Done · Reset Demo</button>
+    </div>`,
+
+  // (External wire flow removed by request — single funding path via instant transfer)
+};
+
+// ============ COMPONENT HELPERS ============
+function appHeader(backText, title, showBack) {
+  return `
+    <div class="app-header">
+      ${showBack ? `<button class="app-header-back" onclick="rewind()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button>` : '<div class="app-header-spacer"></div>'}
+      <div class="app-header-title">${title}</div>
+      <div class="app-header-spacer"></div>
+    </div>`;
+}
+
+function walletCard() {
+  return `
+    <div class="wallet-card">
+      <div class="wallet-label">BBH Wallet</div>
+      <div class="wallet-balance" style="font-size:24px;line-height:1.1">Ahmed Al-Sayed</div>
+      <div class="wallet-meta">
+        <div class="wallet-meta-item">
+          <div class="wallet-meta-key">Customer ID</div>
+          <div class="wallet-meta-val">${state.customerID}</div>
+        </div>
+        <div class="wallet-meta-item" style="text-align:right">
+          <div class="wallet-meta-key">Status</div>
+          <div class="wallet-meta-val">${state.linked ? 'Linked · TIB' : 'Not linked'}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function linkedAccountChip() {
+  return `
+    <div class="linked-account">
+      <div class="linked-account-logo">TIB</div>
+      <div class="linked-account-info">
+        <div class="linked-account-label">Linked account</div>
+        <div class="linked-account-num">${state.linkedAcctMasked}</div>
+      </div>
+      <div class="linked-account-status">Active</div>
+    </div>`;
+}
+
+// ============ API LOG ============
+function ts() {
+  const ms = Date.now() - state.startTime;
+  const s = (ms / 1000).toFixed(2);
+  return `t+${s}s`;
+}
+
+function clearLogs() {
+  document.getElementById('apiLog').innerHTML = `<div class="api-empty">Watching the wire ·<br/>Tap inside the phone to advance the flow.<br/>API calls and TIB responses will stream here.</div>`;
+}
+
+function addLog(cls, html) {
+  const log = document.getElementById('apiLog');
+  if (log.querySelector('.api-empty')) log.innerHTML = '';
+  const entry = document.createElement('div');
+  entry.className = `log-entry ${cls}`;
+  entry.innerHTML = html;
+  log.appendChild(entry);
+  log.scrollTop = log.scrollHeight;
+}
+
+const apiTemplates = {
+  link: {
+    req: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow req">→</span><span class="log-method POST">POST</span><span class="log-path">/accounts/verify</span><span class="log-detail">{
+  "account_no": "0042-1108-8675309",
+  "name": "Ahmed Al-Sayed",
+  "customer_id": "BBH-A1B2C3D4",
+  "verification_token": "VFY-L9X2-4K8D"
+}</span>`,
+    res: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow res">←</span><span class="log-status">200</span><span class="log-path">/accounts/verify</span><span class="log-detail">{
+  "verified": true,
+  "account_ref_token": "LNK-7F3A-B12C",
+  "masked_account": "···· 5309"
+}</span>`
+  },
+  'link-otp-trigger': {
+    req: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow req">→</span><span class="log-method POST">POST</span><span class="log-path">/otp/trigger</span><span class="log-detail">{
+  "account_no": "0042-1108-8675309",
+  "purpose": "link_account",
+  "customer_id": "BBH-A1B2C3D4"
+}</span>`,
+    res: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow res">←</span><span class="log-status">200</span><span class="log-path">/otp/trigger</span><span class="log-detail">{
+  "otp_id": "OTP-L4A1B2",
+  "delivery": "SMS",
+  "expires_in_s": 300
+}</span>`,
+    note: () => `<span class="log-arrow note">●</span><span class="log-summary"><strong style="color:var(--gold-soft)">TIB → customer phone</strong>  · OTP "472915" delivered via SMS to ···4421 (phone on file for the TIB account)</span>`
+  },
+  'link-otp-verify': {
+    req: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow req">→</span><span class="log-method POST">POST</span><span class="log-path">/otp/verify</span><span class="log-detail">{
+  "otp_id": "OTP-L4A1B2",
+  "code": "472915"
+}</span>`,
+    res: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow res">←</span><span class="log-status">200</span><span class="log-path">/otp/verify</span><span class="log-detail">{
+  "verified": true,
+  "verification_token": "VFY-L9X2-4K8D"
+}</span>`
+  },
+  'otp-trigger': {
+    req: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow req">→</span><span class="log-method POST">POST</span><span class="log-path">/otp/trigger</span><span class="log-detail">{
+  "account_ref_token": "LNK-7F3A-B12C",
+  "purpose": "transfer",
+  "amount_iqd": 250000
+}</span>`,
+    res: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow res">←</span><span class="log-status">200</span><span class="log-path">/otp/trigger</span><span class="log-detail">{
+  "otp_id": "OTP-T8X3K2",
+  "delivery": "SMS",
+  "expires_in_s": 300
+}</span>`,
+    note: () => `<span class="log-arrow note">●</span><span class="log-summary"><strong style="color:var(--gold-soft)">TIB → customer phone</strong>  · OTP "123456" delivered via SMS to ···4421</span>`
+  },
+  'otp-verify': {
+    req: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow req">→</span><span class="log-method POST">POST</span><span class="log-path">/otp/verify</span><span class="log-detail">{
+  "otp_id": "OTP-T8X3K2",
+  "code": "123456"
+}</span>`,
+    res: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow res">←</span><span class="log-status">200</span><span class="log-path">/otp/verify</span><span class="log-detail">{
+  "verified": true,
+  "verification_token": "VFY-9X2B-4C8D"
+}</span>`
+  },
+  'transfer-instant': {
+    req: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow req">→</span><span class="log-method POST">POST</span><span class="log-path">/transfers/instant</span><span class="log-detail">{
+  "account_ref_token": "LNK-7F3A-B12C",
+  "verification_token": "VFY-9X2B-4C8D",
+  "destination": "BBH_SEGREGATED_CLIENT",
+  "amount_iqd": 250000,
+  "idempotency_key": "BBH-IDEM-8F2A-X7B3C9"
+}</span>`,
+    res: () => `<span class="log-time">[${ts()}]</span><span class="log-arrow res">←</span><span class="log-status">200</span><span class="log-path">/transfers/instant</span><span class="log-detail">{
+  "transfer_id": "TXN-8F2A-X7B3C9",
+  "status": "completed",
+  "settled_at": "2026-05-15T09:43:18Z"
+}</span>`
+  }
+};
+
+function logApiCall(key) {
+  const t = apiTemplates[key];
+  if (!t) return;
+  if (t.req) addLog('req', t.req());
+  if (key === 'otp-trigger' || key === 'link-otp-trigger') {
+    setTimeout(() => addLog('res', t.res()), 400);
+    setTimeout(() => addLog('note', t.note()), 800);
+  }
+}
+
+function logApiResponse(key) {
+  const t = apiTemplates[key];
+  if (!t || !t.res) return;
+  addLog('res', t.res());
+}
+
+// ============ FLOW NAVIGATION ============
+function advance() {
+  const flow = flows[state.flow];
+  if (state.step < flow.steps.length - 1) {
+    state.step++;
+    render();
+  }
+}
+
+function rewind() {
+  if (state.step > 0) {
+    state.step--;
+    render();
+  }
+}
+
+function switchFlow(name) {
+  state.flow = name;
+  state.step = 0;
+  // Pre-conditions
+  if (name === 'instant' && !state.linked) {
+    // Allow viewing but home will show "not linked"
+  }
+  clearLogs();
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.flow === name);
+  });
+  render();
+}
+
+// ============ RENDER ============
+function render() {
+  const flow = flows[state.flow];
+  const step = flow.steps[state.step];
+
+  document.getElementById('flowLabel').textContent = flow.label;
+  document.getElementById('flowTitle').textContent = flow.title;
+  document.getElementById('flowDesc').innerHTML = flow.desc;
+  document.getElementById('flowName').textContent = flow.name;
+  document.getElementById('screenIdLabel').textContent = `screen ${String(state.step + 1).padStart(2,'0')} of ${String(flow.steps.length).padStart(2,'0')}`;
+
+  // Step tracker
+  document.getElementById('stepTracker').innerHTML = flow.steps.map((s, i) => `
+    <div class="step ${i < state.step ? 'done' : i === state.step ? 'current' : ''}">
+      <div class="step-num">${i + 1}</div>
+      <div class="step-title">${s.title}</div>
+    </div>
+  `).join('');
+
+  // Annotation
+  document.getElementById('annotationTitle').textContent = step.annotation.title;
+  document.getElementById('annotationBody').innerHTML = step.annotation.body;
+
+  // Screen
+  const renderer = screens[step.screen];
+  document.getElementById('appContent').innerHTML = renderer ? renderer() : '<div>Screen not implemented</div>';
+}
+
+function updateContext() {
+  document.getElementById('state-linked').textContent = state.linked ? 'Linked' : 'Not linked';
+  document.getElementById('state-linked').className = `state-val ${state.linked ? 'linked' : 'notlinked'}`;
+  document.getElementById('state-linked-acct').textContent = state.linkedAcctMasked;
+}
+
+// ============ INIT ============
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => switchFlow(tab.dataset.flow));
+});
+document.getElementById('resetBtn').addEventListener('click', () => {
+  state.linked = false;
+  state.linkedAcctMasked = '—';
+  state.linkedAcctToken = null;
+  state.startTime = Date.now();
+  clearLogs();
+  updateContext();
+  switchFlow('link');
+});
+document.getElementById('clearLog').addEventListener('click', clearLogs);
+document.getElementById('helpBtn').addEventListener('click', () => document.getElementById('helpModal').classList.add('open'));
+document.getElementById('helpClose').addEventListener('click', () => document.getElementById('helpModal').classList.remove('open'));
+document.getElementById('helpModal').addEventListener('click', (e) => {
+  if (e.target.id === 'helpModal') document.getElementById('helpModal').classList.remove('open');
+});
+
+updateContext();
+render();
+</script>
+
+</body>
+</html>

@@ -73,7 +73,7 @@ class BbhOnboardingSteps {
                       Container(width: 48, height: 1, color: BbhOnboardingColors.gold.withValues(alpha: 0.5)),
                       const SizedBox(height: 20),
                       Text(
-                        'Al-Taif Islamic Bank · Client Onboarding',
+                        'Clasific',
                         textAlign: TextAlign.center,
                         style: BbhOnboardingText.manrope(
                           size: 13,

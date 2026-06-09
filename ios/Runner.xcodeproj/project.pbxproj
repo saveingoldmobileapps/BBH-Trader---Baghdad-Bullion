@@ -252,7 +252,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2" */,
+				447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2.0NativeiOS" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -340,13 +340,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -392,13 +388,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -814,7 +806,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2" */ = {
+		447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2.0NativeiOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/iPass-MENA/iPass2.0NativeiOS";
 			requirement = {
@@ -827,7 +819,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		447735C22FD0ADD8001E8E54 /* iPass2.0NativeiOS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2" */;
+			package = 447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2.0NativeiOS" */;
 			productName = iPass2.0NativeiOS;
 		};
 /* End XCSwiftPackageProductDependency section */

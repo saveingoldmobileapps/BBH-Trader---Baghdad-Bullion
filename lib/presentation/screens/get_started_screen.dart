@@ -1,17 +1,15 @@
-
-
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_native_onboarding_screen.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/register_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/setting_screens/support_screen.dart';
+import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:baghdad_bullion_house/core/core_export.dart';
-import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
-import 'package:baghdad_bullion_house/presentation/screens/auth_screens/register_screen.dart';
-import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'auth_screens/login_screen.dart';
 
+import 'auth_screens/login_screen.dart';
 
 class GetStartedScreen extends ConsumerStatefulWidget {
   const GetStartedScreen({super.key});
@@ -250,7 +248,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                         child: Text(
                                           AppLocalizations.of(
                                             context,
-                                          )!.register_for_free_demo,//.sign_up_bbh,
+                                          )!.register_for_free_demo, //.sign_up_bbh,
                                           style: const TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
@@ -295,7 +293,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                     label: Text(
                                       AppLocalizations.of(
                                         context,
-                                      )!.open_real_account,//bank_client_onboarding,
+                                      )!.open_real_account, //bank_client_onboarding,
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -388,6 +386,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
     );
   }
 }
+
 // Contact Us Page
 class ContactUsScreen extends StatelessWidget {
   const ContactUsScreen({super.key});

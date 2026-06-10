@@ -29,6 +29,7 @@ class BbhOnboardingForm {
   final verifiedMobile = ValueNotifier<bool>(false);
   final verifiedEmail = ValueNotifier<bool>(false);
   final lockedFields = <String>{};
+  final verifiedFields = <String>{};
 
   final mobile = TextEditingController();
   final email = TextEditingController();
@@ -81,9 +82,12 @@ class BbhOnboardingForm {
   final pepTo = TextEditingController();
   final signerName = TextEditingController();
 
-  bool isLocked(String key) => lockedFields.contains(key);
+  /// Auto-filled fields are never locked — users can always edit them.
+  bool isLocked(String key) => false;
 
-  void lockField(String key) => lockedFields.add(key);
+  bool isVerified(String key) => verifiedFields.contains(key);
+
+  void verifyField(String key) => verifiedFields.add(key);
 
   TextEditingController? controllerFor(String key) => _controllerFor(key);
 
@@ -109,9 +113,10 @@ class BbhOnboardingForm {
     foreignCitCaptured = source.foreignCitCaptured;
     verifiedMobile.value = source.verifiedMobile.value;
     verifiedEmail.value = source.verifiedEmail.value;
-    lockedFields
+    lockedFields.clear();
+    verifiedFields
       ..clear()
-      ..addAll(source.lockedFields);
+      ..addAll(source.verifiedFields);
     for (final e in _allFieldEntries()) {
       final src = source.controllerFor(e.key);
       if (src != null) e.value.text = src.text;
@@ -133,7 +138,7 @@ class BbhOnboardingForm {
     for (final entry in values.entries) {
       final force = IpassHtmlFieldMapper.shouldForceApply(target, entry.key);
       if (!force && _hasValue(entry.key)) continue;
-      _setField(entry.key, entry.value);
+      _setScannedField(entry.key, entry.value);
     }
   }
 
@@ -141,10 +146,22 @@ class BbhOnboardingForm {
     final controller = _controllerFor(key);
     if (controller != null) {
       controller.text = value;
-      lockField(key);
+      verifyField(key);
     } else if (key == 'gender') {
       gender = value;
-      lockField('gender');
+      verifyField('gender');
+    }
+  }
+
+  /// Auto-filled from iPass — editable, shown with Verified badge.
+  void _setScannedField(String key, String value) {
+    final controller = _controllerFor(key);
+    if (controller != null) {
+      controller.text = value;
+      verifyField(key);
+    } else if (key == 'gender') {
+      gender = value;
+      verifyField('gender');
     }
   }
 
@@ -218,7 +235,8 @@ class BbhOnboardingForm {
         'foreignCitCaptured': foreignCitCaptured,
         'verifiedMobile': verifiedMobile.value,
         'verifiedEmail': verifiedEmail.value,
-        'lockedFields': lockedFields.toList(),
+        'lockedFields': const <String>[],
+        'verifiedFields': verifiedFields.toList(),
         'fields': {
           for (final e in _allFieldEntries()) e.key: e.value.text,
         },
@@ -247,9 +265,13 @@ class BbhOnboardingForm {
     form.foreignCitCaptured = json['foreignCitCaptured'] == true;
     form.verifiedMobile.value = json['verifiedMobile'] == true;
     form.verifiedEmail.value = json['verifiedEmail'] == true;
+    final verified = json['verifiedFields'];
+    if (verified is List) {
+      form.verifiedFields.addAll(verified.map((e) => e.toString()));
+    }
     final locked = json['lockedFields'];
     if (locked is List) {
-      form.lockedFields.addAll(locked.map((e) => e.toString()));
+      form.verifiedFields.addAll(locked.map((e) => e.toString()));
     }
     final fields = json['fields'];
     if (fields is Map) {

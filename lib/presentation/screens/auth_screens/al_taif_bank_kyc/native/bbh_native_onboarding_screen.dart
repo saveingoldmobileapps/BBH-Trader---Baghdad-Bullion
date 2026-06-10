@@ -1,7 +1,9 @@
-import 'dart:io' show Platform;
+import 'dart:io' show File, Platform;
 
 import 'package:baghdad_bullion_house/core/theme/const_toasts.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/widgets/documets_camera.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -84,20 +86,59 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
 
   Future<void> _runIpassFromDocuments(IpassScanTarget target) async {
     if (_controller.ipassInProgress) return;
+
+    if (target == IpassScanTarget.residence) {
+      if (!await _ensureKycMediaPermissions(documentOnly: true)) return;
+      await _runResidenceFormDataCapture();
+      return;
+    }
+
     final documentOnly = target != IpassScanTarget.nationalId;
     if (!await _ensureKycMediaPermissions(documentOnly: documentOnly)) return;
 
     await _controller.runIpassKyc(target);
   }
 
+  Future<File?> _captureResidenceImage(String title) async {
+    File? captured;
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => DocumentCameraScreen(
+          resolution: ResolutionPreset.medium,
+          onImageCaptured: (file) => captured = file,
+        ),
+      ),
+    );
+    return captured;
+  }
+
+  Future<void> _runResidenceFormDataCapture() async {
+    _controller.clearResidenceCaptureProgress();
+
+    final front = await _captureResidenceImage('Residence document — front');
+    if (!mounted || front == null) return;
+
+    final frontOk = await _controller.processResidenceFrontSide(frontImage: front);
+    if (!mounted || !frontOk) return;
+
+    final back = await _captureResidenceImage('Residence document — back');
+    if (!mounted || back == null) return;
+
+    await _controller.processResidenceBackSideAndFinalize(backImage: back);
+  }
+
   Future<void> _pickDate(TextEditingController target, String fieldKey) async {
-    if (_controller.form.isLocked(fieldKey)) return;
     final now = DateTime.now();
+    final isExpiry = fieldKey.contains('expiry');
+    var initialDate = DateTime(now.year - 30);
+    final existing = DateTime.tryParse(target.text.trim());
+    if (existing != null) initialDate = existing;
+
     final picked = await showDatePicker(
       context: context,
-      initialDate: DateTime(now.year - 30),
+      initialDate: initialDate,
       firstDate: DateTime(1920),
-      lastDate: DateTime(now.year + 20),
+      lastDate: isExpiry ? DateTime(now.year + 30) : now,
       builder: (context, child) {
         return Theme(
           data: BbhOnboardingTheme.materialTheme(),

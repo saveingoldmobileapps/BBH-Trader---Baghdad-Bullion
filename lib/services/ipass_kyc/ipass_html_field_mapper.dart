@@ -31,6 +31,9 @@ class IpassHtmlFieldMapper {
     'resPlace': 'res_place',
     'resIssue': 'res_issue',
     'resExpiry': 'res_expiry',
+    'addrHouse': 'addr_house',
+    'addrMahalla': 'addr_mahalla',
+    'addrStreet': 'addr_street',
     'ppNo': 'pp_no',
     'ppPlace': 'pp_place',
     'ppIssue': 'pp_issue',
@@ -91,7 +94,15 @@ class IpassHtmlFieldMapper {
       'mobile',
       'email',
     };
-    const residenceFields = {'res_no', 'res_place', 'res_issue', 'res_expiry'};
+    const residenceFields = {
+      'res_no',
+      'res_place',
+      'res_issue',
+      'res_expiry',
+      'addr_house',
+      'addr_mahalla',
+      'addr_street',
+    };
 
     bool allowed(String key) => switch (target) {
           IpassScanTarget.passport =>
@@ -105,13 +116,30 @@ class IpassHtmlFieldMapper {
     );
   }
 
-  /// Passport-only keys are always overwritten; shared keys respect [onlyMissingShared].
+  /// National ID overwrites its fields; passport overwrites pp_* and English/personal
+  /// fields (UI: "As it appears on the passport").
   static bool shouldForceApply(IpassScanTarget target, String htmlKey) {
     if (target != IpassScanTarget.passport) return true;
-    return const {'pp_no', 'pp_place', 'pp_issue', 'pp_expiry'}.contains(htmlKey);
+    return const {
+      'pp_no',
+      'pp_place',
+      'pp_issue',
+      'pp_expiry',
+      'en_first',
+      'en_father',
+      'en_gf',
+      'en_surname',
+      'en_mother',
+      'dob',
+      'gender',
+      'nationality',
+      'country_birth',
+      'place_birth',
+    }.contains(htmlKey);
   }
 
+  /// Kept for API compat — fields are never locked in the UI.
   static List<String> lockedHtmlFields(Map<String, String> htmlValues) {
-    return htmlValues.keys.toList(growable: false);
+    return const [];
   }
 }

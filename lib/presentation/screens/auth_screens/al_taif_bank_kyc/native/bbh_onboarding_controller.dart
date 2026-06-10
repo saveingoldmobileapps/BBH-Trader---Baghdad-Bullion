@@ -1,9 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:baghdad_bullion_house/data/models/ipass_model/ipass_formdata_result_response.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/bbh_onboarding_state_store.dart';
+import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_formdata_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_html_field_mapper.dart';
+import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_document_image_util.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_kyc_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper.dart';
+import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_residence_formdata_mapper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -43,6 +48,8 @@ class BbhOnboardingController extends ChangeNotifier {
   IpassScanTarget? activeIpassScan;
   bool get ipassInProgress => activeIpassScan != null;
   IpassKycResult? ipassResult;
+  IpassFormDataResultResponse? residenceFormDataFront;
+  IpassFormDataResultResponse? residenceFormDataBack;
   String? kycReference;
 
   static const flowSteps = [
@@ -375,8 +382,146 @@ class BbhOnboardingController extends ChangeNotifier {
     return true;
   }
 
+  /// Clears in-progress residence OCR before a new capture attempt.
+  void clearResidenceCaptureProgress() {
+    residenceFormDataFront = null;
+    residenceFormDataBack = null;
+    form.resFrontCaptured = false;
+    form.resBackCaptured = false;
+    notifyListeners();
+  }
+
+  /// Step 1: capture front → encode → OCR. Does not mark document as captured.
+  Future<bool> processResidenceFrontSide({required File frontImage}) async {
+    if (activeIpassScan != null && activeIpassScan != IpassScanTarget.residence) {
+      return false;
+    }
+    activeIpassScan = IpassScanTarget.residence;
+    notifyListeners();
+    try {
+      final config = IpassKycService.instance.loadConfigFromEnv();
+      if (config.email.isEmpty || config.password.isEmpty) {
+        lastError = 'iPass credentials are not configured.';
+        notifyListeners();
+        return false;
+      }
+
+      final frontBase64 = await IpassDocumentImageUtil.encodeToBase64(frontImage);
+      final frontResult = await IpassFormDataService.instance.scanImageFile(
+        frontImage,
+        sideLabel: 'front',
+        email: config.email,
+        precomputedBase64: frontBase64,
+      );
+
+      residenceFormDataFront = frontResult;
+      residenceFormDataBack = null;
+
+      lastSuccess = 'Front side processed. Now capture the back side.';
+      notifyListeners();
+      return true;
+    } on IpassFormDataException catch (e) {
+      lastError = e.message;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      lastError = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      activeIpassScan = null;
+      notifyListeners();
+    }
+  }
+
+  /// Step 2: capture back → encode → OCR → merge with front → mark captured.
+  Future<bool> processResidenceBackSideAndFinalize({required File backImage}) async {
+    if (residenceFormDataFront == null) {
+      lastError = 'Capture the front side first.';
+      notifyListeners();
+      return false;
+    }
+    if (activeIpassScan != null && activeIpassScan != IpassScanTarget.residence) {
+      return false;
+    }
+    activeIpassScan = IpassScanTarget.residence;
+    notifyListeners();
+    try {
+      final config = IpassKycService.instance.loadConfigFromEnv();
+      if (config.email.isEmpty || config.password.isEmpty) {
+        lastError = 'iPass credentials are not configured.';
+        notifyListeners();
+        return false;
+      }
+
+      final backBase64 = await IpassDocumentImageUtil.encodeToBase64(backImage);
+      final backResult = await IpassFormDataService.instance.scanImageFile(
+        backImage,
+        sideLabel: 'back',
+        email: config.email,
+        precomputedBase64: backBase64,
+      );
+
+      final frontResult = residenceFormDataFront!;
+      residenceFormDataBack = backResult;
+
+      final htmlFields = IpassResidenceFormdataMapper.toHtmlFields(
+        front: frontResult,
+        back: backResult,
+      );
+
+      if (kDebugMode) {
+        IpassOnboardingMapper.logDocumentScanDebug(
+          target: IpassScanTarget.residence,
+          ipassData: {
+            'front': frontResult.toJson(),
+            'back': backResult.toJson(),
+          },
+          mapped: IpassHtmlFieldMapper.toHtmlFieldValues(
+            IpassResidenceFormdataMapper.mapResults(
+              front: frontResult,
+              back: backResult,
+            ),
+          ),
+          formFields: htmlFields,
+        );
+      }
+
+      if (htmlFields.isNotEmpty) {
+        form.applyScanValues(IpassScanTarget.residence, htmlFields);
+      }
+
+      form.resFrontCaptured = true;
+      form.resBackCaptured = true;
+      await persist();
+
+      lastSuccess = htmlFields.isEmpty
+          ? 'Residence document captured (front & back). Enter details on the next screen.'
+          : 'Residence document captured. Details will appear on the next screen.';
+      notifyListeners();
+      return true;
+    } on IpassFormDataException catch (e) {
+      lastError = e.message;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      lastError = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      activeIpassScan = null;
+      notifyListeners();
+    }
+  }
+
   Future<bool> runIpassKyc(IpassScanTarget target) async {
     if (activeIpassScan != null) return false;
+    if (target == IpassScanTarget.residence) {
+      lastError =
+          'Residence scan requires camera capture — use the residence capture flow.';
+      notifyListeners();
+      return false;
+    }
     activeIpassScan = target;
     notifyListeners();
     try {
@@ -432,6 +577,8 @@ class BbhOnboardingController extends ChangeNotifier {
     old.dispose();
     step = BbhOnboardingStep.cover;
     ipassResult = null;
+    residenceFormDataFront = null;
+    residenceFormDataBack = null;
     kycReference = null;
     BbhOnboardingStateStore.instance.clear();
     notifyListeners();

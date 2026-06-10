@@ -269,6 +269,15 @@ class IpassOnboardingMapper {
     put('ppExpiry', expiryDate);
 
     put(
+      'enMother',
+      _firstSectionValue(section, const [
+        'Mothers Name',
+        "Mother's Name",
+        'Mother Name',
+      ]),
+    );
+
+    put(
       'nationality',
       _normalizeNationality(
         _sectionValue(section, 'Nationality') ??
@@ -520,6 +529,12 @@ class IpassOnboardingMapper {
         }
         if (!out.containsKey('enFather')) {
           put('enFather', _first(flat, const ['fathersname', 'fathername']));
+        }
+        if (!out.containsKey('enGf')) {
+          put('enGf', _first(flat, const ['grandfathername', 'grandfathersname']));
+        }
+        if (!out.containsKey('enMother')) {
+          put('enMother', _first(flat, const ['mothersname', 'mothername']));
         }
         put('ppNo', _first(flat, const ['passportnumber', 'passportno', 'documentnumber']));
         put('ppPlace', _first(flat, const ['passportplaceofissue', 'placeofissue', 'issuingstatename']));

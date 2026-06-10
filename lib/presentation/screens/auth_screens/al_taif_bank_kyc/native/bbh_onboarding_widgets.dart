@@ -354,7 +354,62 @@ class BbhTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final disabled = locked || readOnly;
+    final disableInput = locked;
+    final isDatePicker = onTap != null && !locked;
+    final effectiveHint = hint ?? (isDatePicker ? 'Tap to select date' : null);
+
+    Widget field = TextField(
+      controller: controller,
+      readOnly: disableInput || readOnly || isDatePicker,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      maxLines: maxLines,
+      textDirection: textDirection,
+      textCapitalization: capitalization,
+      style: BbhOnboardingText.manrope(
+        size: 15,
+        color: disableInput ? BbhOnboardingColors.muted : BbhOnboardingColors.ink,
+      ),
+      decoration: InputDecoration(
+        hintText: effectiveHint,
+        filled: true,
+        fillColor: disableInput
+            ? BbhOnboardingColors.paperWarm
+            : BbhOnboardingColors.paper,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        suffixIcon: locked
+            ? const Icon(Icons.lock_outline, size: 16, color: BbhOnboardingColors.muted)
+            : (isDatePicker
+                ? Icon(Icons.calendar_today_outlined, size: 18, color: BbhOnboardingColors.muted)
+                : null),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(BbhOnboardingRadii.sm),
+          borderSide: BorderSide(
+            color: verified ? BbhOnboardingColors.success.withValues(alpha: 0.5) : BbhOnboardingColors.rule,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(BbhOnboardingRadii.sm),
+          borderSide: BorderSide(
+            color: verified ? BbhOnboardingColors.success : BbhOnboardingColors.gold,
+            width: 1.2,
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(BbhOnboardingRadii.sm),
+          borderSide: BorderSide(color: BbhOnboardingColors.ruleSoft),
+        ),
+      ),
+    );
+
+    if (isDatePicker) {
+      field = InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(BbhOnboardingRadii.sm),
+        child: IgnorePointer(child: field),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -385,41 +440,7 @@ class BbhTextField extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        TextField(
-          controller: controller,
-          readOnly: disabled,
-          onTap: disabled ? null : onTap,
-          keyboardType: keyboardType,
-          inputFormatters: inputFormatters,
-          maxLines: maxLines,
-          textDirection: textDirection,
-          textCapitalization: capitalization,
-          style: BbhOnboardingText.manrope(size: 15, color: disabled ? BbhOnboardingColors.muted : BbhOnboardingColors.ink),
-          decoration: InputDecoration(
-            hintText: hint,
-            filled: true,
-            fillColor: disabled ? BbhOnboardingColors.paperWarm : BbhOnboardingColors.paper,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-            suffixIcon: locked ? const Icon(Icons.lock_outline, size: 16, color: BbhOnboardingColors.muted) : null,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(BbhOnboardingRadii.sm),
-              borderSide: BorderSide(
-                color: verified ? BbhOnboardingColors.success.withValues(alpha: 0.5) : BbhOnboardingColors.rule,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(BbhOnboardingRadii.sm),
-              borderSide: BorderSide(
-                color: verified ? BbhOnboardingColors.success : BbhOnboardingColors.gold,
-                width: 1.2,
-              ),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(BbhOnboardingRadii.sm),
-              borderSide: BorderSide(color: BbhOnboardingColors.ruleSoft),
-            ),
-          ),
-        ),
+        field,
       ],
     );
   }

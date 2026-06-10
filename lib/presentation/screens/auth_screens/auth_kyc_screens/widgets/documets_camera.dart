@@ -11,8 +11,13 @@ import '../../../../../core/theme/get_generic_text_widget.dart'
 
 class DocumentCameraScreen extends ConsumerStatefulWidget {
   final Function(File) onImageCaptured;
+  final ResolutionPreset resolution;
 
-  const DocumentCameraScreen({super.key, required this.onImageCaptured});
+  const DocumentCameraScreen({
+    super.key,
+    required this.onImageCaptured,
+    this.resolution = ResolutionPreset.high,
+  });
 
   @override
   ConsumerState<DocumentCameraScreen> createState() =>
@@ -35,7 +40,7 @@ class _DocumentCameraScreenState extends ConsumerState<DocumentCameraScreen> {
 
     _controller = CameraController(
       firstCamera,
-      ResolutionPreset.high,
+      widget.resolution,
     );
 
     _initializeControllerFuture = _controller!.initialize();

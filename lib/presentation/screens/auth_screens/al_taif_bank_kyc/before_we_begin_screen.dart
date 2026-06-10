@@ -359,8 +359,7 @@ class _BBHOnboardingScreenState extends State<BBHOnboardingScreen> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(m)));
   }
 
-  bool _isFieldLocked(String? fieldKey) =>
-      fieldKey != null && _ipassLockedFields.contains(fieldKey);
+  bool _isFieldLocked(String? fieldKey) => false;
 
   void _applyIpassPrefill(Map<String, String> values) {
     void setText(TextEditingController controller, String key) {

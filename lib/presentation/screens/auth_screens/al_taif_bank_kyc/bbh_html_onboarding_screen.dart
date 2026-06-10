@@ -165,11 +165,10 @@ class _BbhHtmlOnboardingScreenState extends State<BbhHtmlOnboardingScreen> {
       }
 
       final htmlFields = IpassHtmlFieldMapper.toHtmlFieldValues(mapped);
-      final lockedFields = IpassHtmlFieldMapper.lockedHtmlFields(htmlFields);
 
       final bridgePayload = jsonEncode({
         'fields': htmlFields,
-        'lockedFields': lockedFields,
+        'lockedFields': <String>[],
         'replace': replace,
         'transactionId': ipassResult.transactionId,
       });

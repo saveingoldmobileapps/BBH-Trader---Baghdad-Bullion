@@ -69,13 +69,23 @@ class IpassOnboardingMapper {
     Map<String, String>? formFields,
   }) {
     if (!kDebugMode) return;
-    if (target != IpassScanTarget.residence && target != IpassScanTarget.passport) {
+    if (target != IpassScanTarget.residence &&
+        target != IpassScanTarget.passport &&
+        target != IpassScanTarget.nationalId) {
       return;
     }
 
     const encoder = JsonEncoder.withIndent('  ');
-    final tag = target == IpassScanTarget.residence ? 'BBH_RES' : 'BBH_PASS';
-    final label = target == IpassScanTarget.residence ? 'RESIDENCE' : 'PASSPORT';
+    final tag = switch (target) {
+      IpassScanTarget.residence => 'BBH_RES',
+      IpassScanTarget.passport => 'BBH_PASS',
+      IpassScanTarget.nationalId => 'BBH_NID',
+    };
+    final label = switch (target) {
+      IpassScanTarget.residence => 'RESIDENCE',
+      IpassScanTarget.passport => 'PASSPORT',
+      IpassScanTarget.nationalId => 'NATIONAL ID',
+    };
 
     void emit(String line) {
       debugPrint('[$tag] $line');
@@ -142,17 +152,21 @@ class IpassOnboardingMapper {
   }
 
   static Map<String, dynamic> _resolveDataRoot(Map<String, dynamic> ipassData) {
-    if (ipassData['DocDetails'] != null || ipassData['DocType'] != null) {
-      return ipassData;
+    var current = ipassData;
+    for (var depth = 0; depth < 4; depth++) {
+      if (current['DocDetails'] != null || current['DocType'] != null) {
+        return current;
+      }
+      final inner = current['data'];
+      if (inner is Map<String, dynamic>) {
+        current = inner;
+      } else if (inner is Map) {
+        current = Map<String, dynamic>.from(inner);
+      } else {
+        break;
+      }
     }
-    final inner = ipassData['data'];
-    if (inner is Map<String, dynamic>) {
-      return inner;
-    }
-    if (inner is Map) {
-      return Map<String, dynamic>.from(inner);
-    }
-    return ipassData;
+    return current;
   }
 
   /// Visual overrides MRZ when both exist (human-readable values).
@@ -185,10 +199,9 @@ class IpassOnboardingMapper {
       case IpassScanTarget.nationalId:
         if (isResidenceDoc) {
           _mapResidenceFields(out, section);
-        } else if (isPassportDoc) {
-          // Passport scanned from national-ID row — map passport fields only.
-          _mapPassportFields(out, section);
         } else {
+          // Always map as national ID when user scanned from the ID row — Iraqi
+          // document numbers (e.g. E12350562) match the passport number pattern.
           _mapNationalIdFields(out, section);
         }
         return;
@@ -310,27 +323,46 @@ class IpassOnboardingMapper {
     put('dob', _normalizeDate(_sectionValue(section, 'Date of Birth')));
     put(
       'countryBirth',
-      _sectionValue(section, 'Issuing State Name') ??
-          _sectionValue(section, 'Place of Birth'),
+      _meaningfulSectionValue(section, const [
+        'Country of Birth',
+        'Issuing State Name',
+      ]),
     );
-    put('placeBirth', _sectionValue(section, 'Place of Birth'));
+    put(
+      'placeBirth',
+      _truncatePlaceBirth(
+        _meaningfulSectionValue(section, const [
+          'Place of Birth',
+          'Place of BirthAr',
+        ]),
+      ),
+    );
 
-    final identityNo = _firstSectionValue(section, const [
-      'Personal Number',
-      'Identity Card Number',
-      'Optional Data',
-    ]);
-    final documentNo = _sectionValue(section, 'Document Number');
-
-    final issuePlace = _sectionValue(section, 'Place of Issue');
-    final issueDate = _normalizeDate(_sectionValue(section, 'Date of Issue'));
-    final expiryDate = _normalizeDate(_sectionValue(section, 'Date of Expiry'));
-
-    put('idPersonal', identityNo);
-    put('idSerial', documentNo);
-    put('idIssuePlace', issuePlace);
-    put('idIssueDate', issueDate);
-    put('idExpiryDate', expiryDate);
+    put(
+      'idPersonal',
+      _firstSectionValue(section, const [
+        'Personal Number',
+        'Optional Data',
+      ]),
+    );
+    put(
+      'idSerial',
+      _firstSectionValue(section, const [
+        'Document Number',
+        'Identity Card Number',
+      ]),
+    );
+    put(
+      'idIssuePlace',
+      _meaningfulSectionValue(section, const [
+        'Place of Issue',
+        'Place of IssueAr',
+        'AuthorityAr',
+        'Issuing State Name',
+      ]),
+    );
+    put('idIssueDate', _normalizeDate(_sectionValue(section, 'Date of Issue')));
+    put('idExpiryDate', _normalizeDate(_sectionValue(section, 'Date of Expiry')));
   }
 
   static void _putEnglishNames(Map<String, String> out, Map<String, dynamic> section) {
@@ -498,6 +530,26 @@ class IpassOnboardingMapper {
     return null;
   }
 
+  static String? _meaningfulSectionValue(Map<String, dynamic> section, List<String> keys) {
+    for (final key in keys) {
+      final value = _sectionValue(section, key);
+      if (value != null && !_isPlaceholderValue(value)) return value;
+    }
+    return null;
+  }
+
+  static bool _isPlaceholderValue(String value) {
+    final v = value.trim();
+    if (v.isEmpty || v == '?' || v == '-' || v.toLowerCase() == 'n/a') return true;
+    return false;
+  }
+
+  static String? _truncatePlaceBirth(String? value) {
+    if (value == null) return null;
+    if (value.length <= 20) return value;
+    return value.substring(0, 20);
+  }
+
   static void _mapFromFlat(
     Map<String, String> out,
     Map<String, String> flat, {
@@ -596,7 +648,11 @@ class IpassOnboardingMapper {
     );
     put('dob', _normalizeDate(_first(flat, const ['dateofbirth', 'dob', 'birthdate'])));
     put('countryBirth', _first(flat, const ['issuingstatename', 'countryofbirth', 'birthcountry']));
-    put('placeBirth', _first(flat, const ['placeofbirth', 'birthplace']));
+    put('placeBirth', _truncatePlaceBirth(_first(flat, const [
+      'placeofbirth',
+      'placeofbirthar',
+      'birthplace',
+    ])));
 
     put(
       'idPersonal',
@@ -609,8 +665,14 @@ class IpassOnboardingMapper {
     final looksLikePassport = out.containsKey('ppNo') ||
         _first(flat, const ['passportnumber', 'passportno']) != null;
     if (!looksLikePassport) {
-      put('idSerial', _first(flat, const ['documentnumber', 'cardserialnumber', 'idnumber']));
-      put('idIssuePlace', _first(flat, const ['placeofissue', 'issueplace', 'issuingauthority']));
+      put('idSerial', _first(flat, const ['documentnumber', 'identitycardnumber', 'cardserialnumber', 'idnumber']));
+      put('idIssuePlace', _first(flat, const [
+        'placeofissue',
+        'placeofissuear',
+        'issueplace',
+        'issuingauthority',
+        'issuingstatename',
+      ]));
       put('idIssueDate', _normalizeDate(_first(flat, const ['dateofissue', 'issuedate'])));
       put('idExpiryDate', _normalizeDate(_first(flat, const ['dateofexpiry', 'expirydate'])));
     }

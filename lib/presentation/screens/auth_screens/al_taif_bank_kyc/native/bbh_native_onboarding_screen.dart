@@ -120,7 +120,9 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
     final front = await _captureResidenceImage('Residence document — front');
     if (!mounted || front == null) return;
 
-    final frontOk = await _controller.processResidenceFrontSide(frontImage: front);
+    final frontOk = await _controller.processResidenceFrontSide(
+      frontImage: front,
+    );
     if (!mounted || !frontOk) return;
 
     final back = await _captureResidenceImage('Residence document — back');
@@ -169,12 +171,15 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
     final mobile = _controller.form.mobile.text.trim();
     final email = _controller.form.email.text.trim().toLowerCase();
 
-    if (channel == BbhOnboardingOtpChannel.mobile && mobile.isEmpty) {
-      Toasts.getErrorToast(text: 'Enter your mobile number first.');
+    if (mobile.isEmpty || email.isEmpty) {
+      Toasts.getErrorToast(text: 'Enter both mobile and email first.');
       return;
     }
-    if (channel == BbhOnboardingOtpChannel.email && email.isEmpty) {
-      Toasts.getErrorToast(text: 'Enter your email address first.');
+    if (channel == BbhOnboardingOtpChannel.mobile &&
+        !_controller.form.verifiedEmail.value) {
+      Toasts.getErrorToast(
+        text: 'Verify your email before verifying your number.',
+      );
       return;
     }
 
@@ -199,8 +204,30 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
   }
 
   String _nextLabel() {
+    if (_controller.editReturnStep != null) return 'Done';
     if (_controller.step == BbhOnboardingStep.review) return 'Submit Pack';
     return 'Continue';
+  }
+
+  void _editReviewSection(String key) {
+    final form = _controller.form;
+    final target = switch (key) {
+      'contact' => BbhOnboardingStep.contact,
+      'name' || 'natid' || 'passport' =>
+        form.noPassport && key == 'passport'
+            ? BbhOnboardingStep.documents
+            : BbhOnboardingStep.ocrReview,
+      'personal' => BbhOnboardingStep.personalDetails,
+      'income' => BbhOnboardingStep.income,
+      'address' ||
+      'foreignres' ||
+      'foreigncit' => BbhOnboardingStep.residenceAddress,
+      'compliance' => BbhOnboardingStep.fatca,
+      'biometrics' => BbhOnboardingStep.documents,
+      'custodian' => BbhOnboardingStep.custodian,
+      _ => BbhOnboardingStep.review,
+    };
+    _controller.jumpToEdit(target);
   }
 
   void _onNext() {
@@ -257,11 +284,14 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
           onVerify: _verifyContact,
         );
       case BbhOnboardingStep.custodian:
-        return BbhOnboardingSteps.custodian();
+        return BbhOnboardingSteps.custodian(form, () => _refresh());
       case BbhOnboardingStep.consent:
         return BbhOnboardingSteps.consent(form, () => _refresh());
       case BbhOnboardingStep.review:
-        return BbhOnboardingSteps.review(form);
+        return BbhOnboardingSteps.review(
+          form,
+          onEditSection: _editReviewSection,
+        );
       case BbhOnboardingStep.success:
         return BbhOnboardingSteps.success(
           kycRef: _controller.kycReference,
@@ -323,7 +353,9 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
         stepLabel: '${_controller.progressIndex}',
         backVisible: step != BbhOnboardingStep.preflight,
         nextLabel: _nextLabel(),
-        nextIsGold: step == BbhOnboardingStep.review,
+        nextIsGold:
+            step == BbhOnboardingStep.review ||
+            _controller.editReturnStep != null,
         nextLoading: _controller.ipassInProgress,
         onBack: _controller.back,
         onNext: _onNext,

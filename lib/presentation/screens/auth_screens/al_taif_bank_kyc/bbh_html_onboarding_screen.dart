@@ -34,20 +34,19 @@ class _BbhHtmlOnboardingScreenState extends State<BbhHtmlOnboardingScreen> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        WebViewController()
-          ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..setBackgroundColor(const Color(0xFFF6F0E2))
-          ..addJavaScriptChannel(
-            'BBHFlutter',
-            onMessageReceived: _onJsMessage,
-          )
-          ..setNavigationDelegate(
-            NavigationDelegate(
-              onPageFinished: (_) => _onPageFinished(),
-            ),
-          )
-          ..loadFlutterAsset(_htmlAsset);
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xFFF6F0E2))
+      ..addJavaScriptChannel(
+        'BBHFlutter',
+        onMessageReceived: _onJsMessage,
+      )
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageFinished: (_) => _onPageFinished(),
+        ),
+      )
+      ..loadFlutterAsset(_htmlAsset);
   }
 
   Future<void> _onPageFinished() async {
@@ -109,10 +108,9 @@ class _BbhHtmlOnboardingScreenState extends State<BbhHtmlOnboardingScreen> {
     if (camera.isGranted && mic.isGranted) return true;
 
     Toasts.getErrorToast(
-      text:
-          camera.isPermanentlyDenied || mic.isPermanentlyDenied
-              ? 'Enable camera and microphone in app settings for identity verification.'
-              : 'Camera and microphone permissions are required for identity verification.',
+      text: camera.isPermanentlyDenied || mic.isPermanentlyDenied
+          ? 'Enable camera and microphone in app settings for identity verification.'
+          : 'Camera and microphone permissions are required for identity verification.',
     );
     return false;
   }
@@ -140,10 +138,9 @@ class _BbhHtmlOnboardingScreenState extends State<BbhHtmlOnboardingScreen> {
         password: config.password,
         appToken: config.appToken,
         workflowId: config.workflowId,
-        socialMediaEmail:
-            config.socialMediaEmail.isNotEmpty
-                ? config.socialMediaEmail
-                : config.email,
+        socialMediaEmail: config.socialMediaEmail.isNotEmpty
+            ? config.socialMediaEmail
+            : config.email,
         phoneNumber: config.phoneNumber,
         serverUrl: config.serverUrl,
         dbType: config.dbType,
@@ -182,8 +179,7 @@ class _BbhHtmlOnboardingScreenState extends State<BbhHtmlOnboardingScreen> {
       if (!mounted) return;
       Toasts.getErrorToast(
         text:
-            e.message ??
-            AppLocalizations.of(context)!.kyc_verification_failed,
+            e.message ?? AppLocalizations.of(context)!.kyc_verification_failed,
       );
     } catch (e, stackTrace) {
       await Sentry.captureException(e, stackTrace: stackTrace);

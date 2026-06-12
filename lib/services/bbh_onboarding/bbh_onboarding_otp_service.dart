@@ -30,7 +30,7 @@ class BbhOnboardingOtpResult {
       BbhOnboardingOtpResult._(success: false, message: message);
 }
 
-/// Onboarding contact OTP — phone via preVerify (WhatsApp), email via sendOtpToAnyEmail.
+/// Onboarding contact OTP — email and phone via register/preVerify (`sendOn`: email | phone).
 class BbhOnboardingOtpService {
   BbhOnboardingOtpService._();
 
@@ -44,22 +44,23 @@ class BbhOnboardingOtpService {
     final phone = phoneNumber.trim();
     final mail = email.trim().toLowerCase();
 
-    if (channel == BbhOnboardingOtpChannel.mobile) {
-      if (phone.isEmpty) {
-        return BbhOnboardingOtpResult.fail('Enter your mobile number first.');
-      }
-      return _postOtp(
-        url: ApiEndpoints.preVerifyApiUrl,
-        body: {'phoneNumber': phone},
-      );
+    if (phone.isEmpty) {
+      return BbhOnboardingOtpResult.fail('Enter your mobile number first.');
     }
-
     if (mail.isEmpty) {
       return BbhOnboardingOtpResult.fail('Enter your email address first.');
     }
+
+    final sendOn =
+        channel == BbhOnboardingOtpChannel.mobile ? 'phone' : 'email';
+
     return _postOtp(
-      url: ApiEndpoints.allEmailPasscodeApiUrl,
-      body: {'email': mail},
+      url: ApiEndpoints.preVerifyApiUrl,
+      body: {
+        'email': mail,
+        'phoneNumber': phone,
+        'sendOn': sendOn,
+      },
     );
   }
 

@@ -43,11 +43,15 @@ extension BbhOnboardingStepX on BbhOnboardingStep {
 }
 
 class BbhOnboardingController extends ChangeNotifier {
+  /// Temporary — allow continuing without WhatsApp/mobile OTP until numbers are available.
+  static const bypassMobileVerification = true;
+
   BbhOnboardingController({BbhOnboardingForm? form})
     : form = form ?? BbhOnboardingForm();
 
   BbhOnboardingForm form;
   BbhOnboardingStep step = BbhOnboardingStep.cover;
+  BbhOnboardingStep? editReturnStep;
   IpassScanTarget? activeIpassScan;
   bool get ipassInProgress => activeIpassScan != null;
   IpassKycResult? ipassResult;
@@ -133,6 +137,13 @@ class BbhOnboardingController extends ChangeNotifier {
   }
 
   void next() {
+    if (editReturnStep != null) {
+      if (!validateCurrent()) return;
+      final back = editReturnStep!;
+      editReturnStep = null;
+      goTo(back);
+      return;
+    }
     if (!validateCurrent()) return;
     final idx = _stepIndex(step);
     if (idx < 0 || idx >= BbhOnboardingStep.values.length - 1) return;
@@ -140,9 +151,19 @@ class BbhOnboardingController extends ChangeNotifier {
   }
 
   void back() {
+    if (editReturnStep != null) {
+      editReturnStep = null;
+      goTo(BbhOnboardingStep.review);
+      return;
+    }
     final idx = _stepIndex(step);
     if (idx <= 0) return;
     goTo(BbhOnboardingStep.values[idx - 1]);
+  }
+
+  void jumpToEdit(BbhOnboardingStep target) {
+    editReturnStep = BbhOnboardingStep.review;
+    goTo(target);
   }
 
   int _stepIndex(BbhOnboardingStep s) => BbhOnboardingStep.values.indexOf(s);
@@ -172,8 +193,19 @@ class BbhOnboardingController extends ChangeNotifier {
         if (!_filled(form.mobile) || !_filled(form.email)) {
           return _fail('Enter mobile and email.');
         }
-        if (form.verifiedMobile.value || form.verifiedEmail.value) {
-          return _fail('Verify mobile and email before continuing.');
+        if (!form.verifiedEmail.value) {
+          return _fail('Verify email before continuing.');
+        }
+        if (!bypassMobileVerification && !form.verifiedMobile.value) {
+          return _fail('Verify mobile before continuing.');
+        }
+        return true;
+      case BbhOnboardingStep.custodian:
+        if (form.hasAccount == 'Yes') {
+          final iban = form.iban.text.replaceAll(RegExp(r'\s'), '').toUpperCase();
+          if (!RegExp(r'^IQ[A-Z0-9]{21}$').hasMatch(iban)) {
+            return _fail('Enter a valid Iraqi IBAN (IQ + 21 characters).');
+          }
         }
         return true;
       case BbhOnboardingStep.consent:
@@ -626,6 +658,7 @@ class BbhOnboardingController extends ChangeNotifier {
     form = BbhOnboardingForm();
     old.dispose();
     step = BbhOnboardingStep.cover;
+    editReturnStep = null;
     ipassResult = null;
     residenceFormDataFront = null;
     residenceFormDataBack = null;

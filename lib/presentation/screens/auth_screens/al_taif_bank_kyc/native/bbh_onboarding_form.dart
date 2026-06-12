@@ -19,6 +19,7 @@ class BbhOnboardingForm {
   String? education;
   String? sector;
   String custodian = 'ALTAIF';
+  String hasAccount = 'No';
 
   bool idFrontCaptured = false;
   bool idBackCaptured = false;
@@ -83,6 +84,7 @@ class BbhOnboardingForm {
   final pepFrom = TextEditingController();
   final pepTo = TextEditingController();
   final signerName = TextEditingController();
+  final iban = TextEditingController();
 
   /// Auto-filled fields are never locked — users can always edit them.
   bool isLocked(String key) => false;
@@ -106,6 +108,7 @@ class BbhOnboardingForm {
     education = source.education;
     sector = source.sector;
     custodian = source.custodian;
+    hasAccount = source.hasAccount;
     idFrontCaptured = source.idFrontCaptured;
     idBackCaptured = source.idBackCaptured;
     resFrontCaptured = source.resFrontCaptured;
@@ -237,6 +240,8 @@ class BbhOnboardingForm {
       'foreign_cit': foreignCit,
       'no_passport': noPassport,
       'custodian': custodian,
+      'has_account': hasAccount,
+      'iban': trimmed(iban),
       'gender': gender,
       'education': education,
       'sector': sector,
@@ -326,6 +331,7 @@ class BbhOnboardingForm {
         'education': education,
         'sector': sector,
         'custodian': custodian,
+        'hasAccount': hasAccount,
         'idFrontCaptured': idFrontCaptured,
         'idBackCaptured': idBackCaptured,
         'resFrontCaptured': resFrontCaptured,
@@ -356,6 +362,7 @@ class BbhOnboardingForm {
     form.education = json['education']?.toString();
     form.sector = json['sector']?.toString();
     form.custodian = json['custodian']?.toString() ?? 'ALTAIF';
+    form.hasAccount = json['hasAccount']?.toString() ?? 'No';
     form.idFrontCaptured = json['idFrontCaptured'] == true;
     form.idBackCaptured = json['idBackCaptured'] == true;
     form.resFrontCaptured = json['resFrontCaptured'] == true;
@@ -434,6 +441,7 @@ class BbhOnboardingForm {
     yield MapEntry('pep_from', pepFrom);
     yield MapEntry('pep_to', pepTo);
     yield MapEntry('signer_name', signerName);
+    yield MapEntry('iban', iban);
   }
 
   void dispose() {

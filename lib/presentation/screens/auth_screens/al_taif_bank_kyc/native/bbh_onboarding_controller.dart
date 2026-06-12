@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer' as developer;
 import 'dart:io';
+import 'dart:math' show min;
 
 import 'package:baghdad_bullion_house/data/models/ipass_model/ipass_formdata_result_response.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/bbh_onboarding_state_store.dart';
@@ -51,6 +54,7 @@ class BbhOnboardingController extends ChangeNotifier {
   IpassFormDataResultResponse? residenceFormDataFront;
   IpassFormDataResultResponse? residenceFormDataBack;
   String? kycReference;
+  Map<String, dynamic>? submissionPayload;
 
   static const flowSteps = [
     BbhOnboardingStep.preflight,
@@ -168,7 +172,7 @@ class BbhOnboardingController extends ChangeNotifier {
         if (!_filled(form.mobile) || !_filled(form.email)) {
           return _fail('Enter mobile and email.');
         }
-        if (!form.verifiedMobile.value || !form.verifiedEmail.value) {
+        if (form.verifiedMobile.value || form.verifiedEmail.value) {
           return _fail('Verify mobile and email before continuing.');
         }
         return true;
@@ -298,16 +302,12 @@ class BbhOnboardingController extends ChangeNotifier {
     );
 
     if (kDebugMode) {
-      if (target == IpassScanTarget.residence || target == IpassScanTarget.passport) {
-        IpassOnboardingMapper.logDocumentScanDebug(
-          target: target,
-          ipassData: result.data,
-          mapped: mapped,
-          formFields: htmlFields,
-        );
-      } else {
-        IpassOnboardingMapper.logMappedFields(mapped);
-      }
+      IpassOnboardingMapper.logDocumentScanDebug(
+        target: target,
+        ipassData: result.data,
+        mapped: mapped,
+        formFields: htmlFields,
+      );
     }
 
     if (htmlFields.isEmpty) return false;
@@ -318,10 +318,11 @@ class BbhOnboardingController extends ChangeNotifier {
 
   bool _faceVerificationRejected(Map<String, dynamic>? data) {
     if (data == null) return false;
-    final overall = data['OverAllStatus']?.toString().toUpperCase();
+    final root = _resolveScanDataRoot(data);
+    final overall = root['OverAllStatus']?.toString().toUpperCase();
     if (overall == 'REJECTED') return true;
 
-    final reasons = data['Reason'];
+    final reasons = root['Reason'];
     if (reasons is! List) return false;
     for (final item in reasons) {
       if (item is! Map) continue;
@@ -329,6 +330,24 @@ class BbhOnboardingController extends ChangeNotifier {
       if (text.contains('face') || text.contains('liveness')) return true;
     }
     return false;
+  }
+
+  Map<String, dynamic> _resolveScanDataRoot(Map<String, dynamic> data) {
+    var current = data;
+    for (var depth = 0; depth < 4; depth++) {
+      if (current.containsKey('OverAllStatus') || current.containsKey('DocDetails')) {
+        return current;
+      }
+      final inner = current['data'];
+      if (inner is Map<String, dynamic>) {
+        current = inner;
+      } else if (inner is Map) {
+        current = Map<String, dynamic>.from(inner);
+      } else {
+        break;
+      }
+    }
+    return current;
   }
 
   Future<bool> _handleIpassResult(IpassKycResult result, IpassScanTarget target) async {
@@ -568,7 +587,38 @@ class BbhOnboardingController extends ChangeNotifier {
         '${DateTime.now().month.toString().padLeft(2, '0')}'
         '${DateTime.now().day.toString().padLeft(2, '0')}-'
         '${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+
+    submissionPayload = form.buildSubmissionPayload(
+      kycReference: kycReference!,
+      submittedAt: DateTime.now(),
+      ipassVerification: ipassResult?.toJson(),
+    );
+    _logSubmissionPayload(submissionPayload!);
+
     goTo(BbhOnboardingStep.success);
+    unawaited(persist());
+  }
+
+  void _logSubmissionPayload(Map<String, dynamic> payload) {
+    final printable = Map<String, dynamic>.from(payload);
+    final sig = printable['signature'];
+    if (sig is String && sig.length > 80) {
+      printable['signature'] = '${sig.substring(0, 48)}… (${sig.length} chars)';
+    }
+
+    const encoder = JsonEncoder.withIndent('  ');
+    final json = encoder.convert(printable);
+    debugPrint('========== BBH_KYC_SUBMIT ==========');
+    debugPrint(json);
+    debugPrint('========== END BBH_KYC_SUBMIT ==========');
+
+    const chunkSize = 800;
+    for (var i = 0; i < json.length; i += chunkSize) {
+      developer.log(
+        json.substring(i, min(i + chunkSize, json.length)),
+        name: 'BBH_KYC_SUBMIT',
+      );
+    }
   }
 
   void resetAll() {
@@ -580,6 +630,7 @@ class BbhOnboardingController extends ChangeNotifier {
     residenceFormDataFront = null;
     residenceFormDataBack = null;
     kycReference = null;
+    submissionPayload = null;
     BbhOnboardingStateStore.instance.clear();
     notifyListeners();
   }

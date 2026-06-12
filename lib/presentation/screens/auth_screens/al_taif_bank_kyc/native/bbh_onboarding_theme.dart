@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Design tokens from `bbh-onboarding-demo_22_2.html`.
+/// Design tokens from `bbh-onboarding-demo_25.html`.
 abstract final class BbhOnboardingColors {
   static const cream = Color(0xFFF6F0E2);
   static const creamDeep = Color(0xFFEDE4CF);
@@ -51,12 +51,14 @@ abstract final class BbhOnboardingText {
     FontWeight weight = FontWeight.w600,
     Color color = BbhOnboardingColors.ink,
     double? height,
+    double? letterSpacing,
   }) =>
       GoogleFonts.cormorantGaramond(
         fontSize: size,
         fontWeight: weight,
         color: color,
         height: height,
+        letterSpacing: letterSpacing,
       );
 
   static TextStyle arabic({
@@ -72,7 +74,7 @@ abstract final class BbhOnboardingText {
           size: 10,
           weight: FontWeight.w600,
           color: BbhOnboardingColors.goldDeep,
-          letterSpacing: 2.2,
+          letterSpacing: 2.2, // ~0.22em at 10px
         );
 
   static TextStyle stepTitle({bool isArabic = false}) => isArabic
@@ -86,8 +88,13 @@ abstract final class BbhOnboardingText {
         size: 10,
         weight: FontWeight.w600,
         color: BbhOnboardingColors.goldDeep,
-        letterSpacing: 1.6,
+        letterSpacing: 1.8, // ~0.18em at 10px
       );
+
+  static TextStyle fieldHint() => display(
+        size: 13,
+        color: BbhOnboardingColors.muted,
+      ).copyWith(fontStyle: FontStyle.italic);
 }
 
 /// Isolated Material theme so app-wide defaults cannot wash out onboarding text.

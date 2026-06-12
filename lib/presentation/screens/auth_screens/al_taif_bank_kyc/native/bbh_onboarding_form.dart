@@ -7,7 +7,9 @@ class BbhOnboardingForm {
   bool purposeConfirmed = false;
   bool consentConfirmed = false;
   bool noPassport = false;
-  bool hasSignature = false;
+  String? signature;
+
+  bool get hasSignature => signature != null && signature!.isNotEmpty;
 
   String fatca = 'No';
   String pep = 'No';
@@ -95,7 +97,7 @@ class BbhOnboardingForm {
     purposeConfirmed = source.purposeConfirmed;
     consentConfirmed = source.consentConfirmed;
     noPassport = source.noPassport;
-    hasSignature = source.hasSignature;
+    signature = source.signature;
     fatca = source.fatca;
     pep = source.pep;
     foreignRes = source.foreignRes;
@@ -213,11 +215,109 @@ class BbhOnboardingForm {
         _ => null,
       };
 
+  /// Full onboarding pack for backend — keys match HTML `data-field` / `formData`.
+  Map<String, dynamic> buildSubmissionPayload({
+    required String kycReference,
+    required DateTime submittedAt,
+    Map<String, dynamic>? ipassVerification,
+  }) {
+    String? trimmed(TextEditingController c) {
+      final t = c.text.trim();
+      return t.isEmpty ? null : t;
+    }
+
+    return {
+      'flow': 'bbh_native_onboarding',
+      'version': '1.0',
+      'kyc': kycReference,
+      'submitted_at': submittedAt.toIso8601String(),
+      'fatca': fatca,
+      'pep': pep,
+      'foreign_res': foreignRes,
+      'foreign_cit': foreignCit,
+      'no_passport': noPassport,
+      'custodian': custodian,
+      'gender': gender,
+      'education': education,
+      'sector': sector,
+      'mobile': trimmed(mobile),
+      'email': trimmed(email),
+      'ar_first': trimmed(arFirst),
+      'ar_father': trimmed(arFather),
+      'ar_gf': trimmed(arGf),
+      'ar_surname': trimmed(arSurname),
+      'ar_mother': trimmed(arMother),
+      'en_first': trimmed(enFirst),
+      'en_father': trimmed(enFather),
+      'en_gf': trimmed(enGf),
+      'en_surname': trimmed(enSurname),
+      'en_mother': trimmed(enMother),
+      'nationality': trimmed(nationality),
+      'dob': trimmed(dob),
+      'country_birth': trimmed(countryBirth),
+      'place_birth': trimmed(placeBirth),
+      'id_personal': trimmed(idPersonal),
+      'id_serial': trimmed(idSerial),
+      'id_issue_place': trimmed(idIssuePlace),
+      'id_issue_date': trimmed(idIssueDate),
+      'id_expiry_date': trimmed(idExpiryDate),
+      'pp_no': trimmed(ppNo),
+      'pp_place': trimmed(ppPlace),
+      'pp_issue': trimmed(ppIssue),
+      'pp_expiry': trimmed(ppExpiry),
+      'res_no': trimmed(resNo),
+      'res_place': trimmed(resPlace),
+      'res_issue': trimmed(resIssue),
+      'res_expiry': trimmed(resExpiry),
+      'addr_gov': trimmed(addrGov),
+      'addr_district': trimmed(addrDistrict),
+      'addr_city': trimmed(addrCity),
+      'addr_mahalla': trimmed(addrMahalla),
+      'addr_street': trimmed(addrStreet),
+      'addr_house': trimmed(addrHouse),
+      'addr_landmark_ar': trimmed(addrLandmarkAr),
+      'addr_landmark_en': trimmed(addrLandmarkEn),
+      'foreign_res_country': trimmed(foreignResCountry),
+      'foreign_cit_country': trimmed(foreignCitCountry),
+      'income': trimmed(income),
+      'occupation': trimmed(occupation),
+      'employer': trimmed(employer),
+      'employer_addr': trimmed(employerAddr),
+      'fatca_tin': trimmed(fatcaTin),
+      'fatca_addr': trimmed(fatcaAddr),
+      'pep_position': trimmed(pepPosition),
+      'pep_country': trimmed(pepCountry),
+      'pep_from': trimmed(pepFrom),
+      'pep_to': trimmed(pepTo),
+      'signer_name': trimmed(signerName),
+      'signature': ?signature,
+      'confirms': {
+        'purpose': purposeConfirmed,
+        'consent': consentConfirmed,
+      },
+      'verified': {
+        'mobile': verifiedMobile.value,
+        'email': verifiedEmail.value,
+      },
+      'documents': {
+        'id_front': idFrontCaptured,
+        'id_back': idBackCaptured,
+        'res_front': resFrontCaptured,
+        'res_back': resBackCaptured,
+        'passport': passportCaptured,
+        'foreign_res': foreignResCaptured,
+        'foreign_cit': foreignCitCaptured,
+      },
+      'verified_fields': verifiedFields.toList(),
+      if (ipassVerification != null) 'ipass_verification': ipassVerification,
+    };
+  }
+
   Map<String, dynamic> toJson() => {
         'purposeConfirmed': purposeConfirmed,
         'consentConfirmed': consentConfirmed,
         'noPassport': noPassport,
-        'hasSignature': hasSignature,
+        if (signature != null) 'signature': signature,
         'fatca': fatca,
         'pep': pep,
         'foreignRes': foreignRes,
@@ -247,7 +347,7 @@ class BbhOnboardingForm {
     form.purposeConfirmed = json['purposeConfirmed'] == true;
     form.consentConfirmed = json['consentConfirmed'] == true;
     form.noPassport = json['noPassport'] == true;
-    form.hasSignature = json['hasSignature'] == true;
+    form.signature = json['signature']?.toString();
     form.fatca = json['fatca']?.toString() ?? 'No';
     form.pep = json['pep']?.toString() ?? 'No';
     form.foreignRes = json['foreignRes']?.toString() ?? 'No';

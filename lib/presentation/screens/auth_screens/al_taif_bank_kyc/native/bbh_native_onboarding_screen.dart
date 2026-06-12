@@ -2,17 +2,19 @@ import 'dart:io' show File, Platform;
 
 import 'package:baghdad_bullion_house/core/theme/const_toasts.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/widgets/documets_camera.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_otp_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'bbh_onboarding_controller.dart';
+import 'bbh_onboarding_otp_sheet.dart';
 import 'bbh_onboarding_steps.dart';
 import 'bbh_onboarding_theme.dart';
 import 'bbh_onboarding_widgets.dart';
 
-/// Native Flutter onboarding — visual match to `bbh-onboarding-demo_22_2.html`.
+/// Native Flutter onboarding — visual match to `bbh-onboarding-demo_25.html`.
 class BbhNativeOnboardingScreen extends StatefulWidget {
   const BbhNativeOnboardingScreen({super.key});
 
@@ -161,6 +163,41 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
     setState(() {});
   }
 
+  Future<void> _verifyContact(BbhOnboardingOtpChannel channel) async {
+    FocusScope.of(context).unfocus();
+
+    final mobile = _controller.form.mobile.text.trim();
+    final email = _controller.form.email.text.trim().toLowerCase();
+
+    if (channel == BbhOnboardingOtpChannel.mobile && mobile.isEmpty) {
+      Toasts.getErrorToast(text: 'Enter your mobile number first.');
+      return;
+    }
+    if (channel == BbhOnboardingOtpChannel.email && email.isEmpty) {
+      Toasts.getErrorToast(text: 'Enter your email address first.');
+      return;
+    }
+
+    final verified = await BbhOnboardingOtpSheet.openForVerification(
+      context,
+      channel: channel,
+      phoneNumber: mobile,
+      email: email,
+    );
+
+    if (!mounted || verified != true) return;
+
+    if (channel == BbhOnboardingOtpChannel.mobile) {
+      _controller.form.verifiedMobile.value = true;
+    } else {
+      _controller.form.verifiedEmail.value = true;
+    }
+    _controller.lastSuccess = channel == BbhOnboardingOtpChannel.mobile
+        ? 'Mobile number verified.'
+        : 'Email address verified.';
+    await _refresh();
+  }
+
   String _nextLabel() {
     if (_controller.step == BbhOnboardingStep.review) return 'Submit Pack';
     return 'Continue';
@@ -214,7 +251,11 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
       case BbhOnboardingStep.pep:
         return BbhOnboardingSteps.pep(form, () => _refresh());
       case BbhOnboardingStep.contact:
-        return BbhOnboardingSteps.contact(form, () => _refresh());
+        return BbhOnboardingSteps.contact(
+          form,
+          () => _refresh(),
+          onVerify: _verifyContact,
+        );
       case BbhOnboardingStep.custodian:
         return BbhOnboardingSteps.custodian();
       case BbhOnboardingStep.consent:

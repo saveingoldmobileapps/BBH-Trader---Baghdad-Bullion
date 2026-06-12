@@ -1,3 +1,4 @@
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_otp_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,13 +12,11 @@ class BbhOnboardingSteps {
   BbhOnboardingSteps._();
 
   static const educationLevels = [
-    'Primary', 'Secondary', 'Diploma', "Bachelor's", "Master's", 'Doctorate', 'Other',
+    'Postgraduate', 'University', 'Diploma', 'Preparatory', 'Intermediate', 'Primary',
   ];
 
   static const sectors = [
-    'Trade — Gold & Bullion', 'Trade — General', 'Manufacturing', 'Agriculture',
-    'Construction', 'Real Estate', 'Financial Services', 'Public Sector',
-    'Healthcare', 'Education', 'Other Services', 'Not Applicable',
+    'Commercial / Trade', 'Services', 'Private sector', 'Government', 'Undefined',
   ];
 
   static const governorates = [
@@ -52,10 +51,10 @@ class BbhOnboardingSteps {
                   child: Column(
                     children: [
                       const Spacer(),
-                      Image.asset('assets/png/app_ic.png', height: 88, width: 88),
+                      Image.asset('assets/png/app_ic.png', height: 132, width: 132),
                       const SizedBox(height: 24),
                       Text(
-                        'BAGHDAD\nBULLION HOUSE',
+                        'Baghdad\nBullion House',
                         textAlign: TextAlign.center,
                         style: BbhOnboardingText.display(
                           size: 38,
@@ -65,23 +64,59 @@ class BbhOnboardingSteps {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'دار بغداد لصياغة الذهب والفضة والسبائك الذهبية',
+                        'دار بغداد لصياغة الذهب و الفضة والسبائك الذهبية',
                         textAlign: TextAlign.center,
                         style: BbhOnboardingText.arabic(size: 18, color: const Color(0xD9E8D49E)),
                       ),
                       const SizedBox(height: 20),
-                      Container(width: 48, height: 1, color: BbhOnboardingColors.gold.withValues(alpha: 0.5)),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Clasific',
-                        textAlign: TextAlign.center,
-                        style: BbhOnboardingText.manrope(
-                          size: 13,
-                          color: BbhOnboardingColors.coverText.withValues(alpha: 0.75),
+                      Container(
+                        width: 90,
+                        height: 1,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              BbhOnboardingColors.goldLight.withValues(alpha: 0.85),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            top: BorderSide(color: BbhOnboardingColors.gold.withValues(alpha: 0.28)),
+                            bottom: BorderSide(color: BbhOnboardingColors.gold.withValues(alpha: 0.28)),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              'CLASSIFICATION',
+                              style: BbhOnboardingText.manrope(
+                                size: 9,
+                                weight: FontWeight.w600,
+                                letterSpacing: 2.2,
+                                color: BbhOnboardingColors.goldLight,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Restricted',
+                              style: BbhOnboardingText.display(
+                                size: 15,
+                                weight: FontWeight.w500,
+                                color: const Color(0xFFF0E2BD),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       const Spacer(flex: 2),
-                      BbhPrimaryButton(label: 'Begin Onboarding', onPressed: onBegin),
+                      BbhGoldButton(label: 'Begin Onboarding', onPressed: onBegin, forCover: true),
                       const SizedBox(height: 10),
                       BbhGhostButton(label: 'Exit', onPressed: onExit, onDark: true),
                     ],
@@ -182,13 +217,13 @@ class BbhOnboardingSteps {
     return _scroll([
       const BbhStepHeader(
         eyebrow: 'Step 1 · Document Capture',
-        title: "Let's start with your documents",
-        lede: "Capture each document clearly. We'll read your details automatically and you can review them on the next screen.",
+        title: 'Let’s start with your documents',
+        lede: 'Capture each document clearly. We’ll read your details automatically and you can review them on the next screen.',
       ),
       const SizedBox(height: 20),
       BbhDocCaptureRow(
         badge: '1',
-        title: 'National ID (Front and Back)',
+        title: 'Identity Verification',
         captured: idCaptured,
         loading: ipassLoadingTarget == IpassScanTarget.nationalId && !idCaptured,
         onCapture: () => onIpassCapture(IpassScanTarget.nationalId),
@@ -196,7 +231,7 @@ class BbhOnboardingSteps {
       ),
       BbhDocCaptureRow(
         badge: '2',
-        title: 'Residence Document (Front and Back)',
+        title: 'Residence Card (Front and Back)',
         captured: resCaptured,
         loading: ipassLoadingTarget == IpassScanTarget.residence && !resCaptured,
         onCapture: () => onIpassCapture(IpassScanTarget.residence),
@@ -283,8 +318,27 @@ class BbhOnboardingSteps {
       const SizedBox(height: 24),
       _groupTitle('National Identity Card', 'Both numbers are printed on the same card.'),
       _grid2(
-        BbhTextField(controller: form.idPersonal, label: 'Personal Number', verified: form.isVerified('id_personal'), keyboardType: TextInputType.number, inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(12)]),
-        BbhTextField(controller: form.idSerial, label: 'ID Number (Card Serial)', verified: form.isVerified('id_serial'), capitalization: TextCapitalization.characters),
+        _fieldWithHint(
+          BbhTextField(
+            controller: form.idPersonal,
+            label: 'Personal Number',
+            verified: form.isVerified('id_personal'),
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(12)],
+            hint: '123456789012',
+          ),
+          '12 digits. Same across renewals.',
+        ),
+        _fieldWithHint(
+          BbhTextField(
+            controller: form.idSerial,
+            label: 'ID Number (Card Serial)',
+            verified: form.isVerified('id_serial'),
+            capitalization: TextCapitalization.characters,
+            hint: 'A12345678',
+          ),
+          'One letter + 8 digits. Changes on renewal.',
+        ),
       ),
       BbhTextField(controller: form.idIssuePlace, label: 'Place of Issue', verified: form.isVerified('id_issue_place')),
       _grid2(
@@ -293,7 +347,7 @@ class BbhOnboardingSteps {
       ),
       if (!form.noPassport) ...[
         const SizedBox(height: 24),
-        _groupTitle('Passport', 'Photo page details.'),
+        _groupTitle('Passport', null),
         _grid2(
           BbhTextField(controller: form.ppNo, label: 'Passport Number', verified: form.isVerified('pp_no')),
           BbhTextField(controller: form.ppPlace, label: 'Place of Issue', verified: form.isVerified('pp_place')),
@@ -311,32 +365,37 @@ class BbhOnboardingSteps {
       const BbhStepHeader(
         eyebrow: 'Step 3 · Residence & Address',
         title: 'Residence card & address',
+        lede: 'Please enter these details from your residence card.',
       ),
       const SizedBox(height: 20),
       _groupTitle('Residence Card', null),
-      BbhTextField(controller: form.resNo, label: 'Card Number', verified: form.isVerified('res_no')),
-      BbhTextField(controller: form.resPlace, label: 'Place of Issue', verified: form.isVerified('res_place')),
-      BbhTextField(controller: form.resIssue, label: 'Date of Issue', readOnly: true, verified: form.isVerified('res_issue'), onTap: () => pickDate(form.resIssue, 'res_issue')),
+      BbhTextField(controller: form.resNo, label: 'Residence Card Number', verified: form.isVerified('res_no')),
+      _grid2(
+        BbhTextField(controller: form.resPlace, label: 'Place of Issue', verified: form.isVerified('res_place')),
+        BbhTextField(controller: form.resIssue, label: 'Date of Issue', readOnly: true, verified: form.isVerified('res_issue'), onTap: () => pickDate(form.resIssue, 'res_issue')),
+      ),
       const SizedBox(height: 24),
-      _groupTitle('Address in Iraq', null),
+      _groupTitle('Address', null),
       _dropdown('Governorate', form.addrGov.text.isEmpty ? null : form.addrGov.text, governorates, (v) { form.addrGov.text = v ?? ''; onChanged(); }),
       _grid2(
-        BbhTextField(controller: form.addrDistrict, label: 'District / Qada', verified: form.isVerified('addr_district')),
+        BbhTextField(controller: form.addrDistrict, label: 'District', verified: form.isVerified('addr_district')),
         BbhTextField(controller: form.addrCity, label: 'City / Town', verified: form.isVerified('addr_city')),
       ),
       _grid2(
-        BbhTextField(controller: form.addrMahalla, label: 'Mahalla / Neighbourhood', verified: form.isVerified('addr_mahalla')),
+        BbhTextField(controller: form.addrMahalla, label: 'Mahalla', verified: form.isVerified('addr_mahalla')),
         BbhTextField(controller: form.addrStreet, label: 'Street', verified: form.isVerified('addr_street')),
       ),
-      BbhTextField(controller: form.addrHouse, label: 'House / Building No.', verified: form.isVerified('addr_house')),
+      BbhTextField(controller: form.addrHouse, label: 'House No.', verified: form.isVerified('addr_house')),
       BbhTextField(controller: form.addrLandmarkAr, label: 'Nearest Landmark (Arabic)', textDirection: TextDirection.rtl, verified: form.isVerified('addr_landmark_ar')),
       BbhTextField(controller: form.addrLandmarkEn, label: 'Nearest Landmark (English)', verified: form.isVerified('addr_landmark_en')),
-      const SizedBox(height: 16),
-      BbhToggleGroup(label: 'Foreign residency outside Iraq?', value: form.foreignRes, options: const ['No', 'Yes'], onChanged: (v) { form.foreignRes = v; onChanged(); }),
-      if (form.foreignRes == 'Yes') BbhTextField(controller: form.foreignResCountry, label: 'Country of Foreign Residency'),
-      const SizedBox(height: 12),
-      BbhToggleGroup(label: 'Foreign citizenship?', value: form.foreignCit, options: const ['No', 'Yes'], onChanged: (v) { form.foreignCit = v; onChanged(); }),
-      if (form.foreignCit == 'Yes') BbhTextField(controller: form.foreignCitCountry, label: 'Country of Foreign Citizenship'),
+      const SizedBox(height: 18),
+      _groupTitle('Additional Residency', 'Outside Iraq.'),
+      BbhToggleGroup(label: 'Do you have permission to reside outside Iraq?', value: form.foreignRes, options: const ['No', 'Yes'], onChanged: (v) { form.foreignRes = v; onChanged(); }),
+      if (form.foreignRes == 'Yes') BbhTextField(controller: form.foreignResCountry, label: 'Country'),
+      const SizedBox(height: 18),
+      _groupTitle('Additional Citizenship', 'Outside Iraq.'),
+      BbhToggleGroup(label: 'Do you hold citizenship in another country?', value: form.foreignCit, options: const ['No', 'Yes'], onChanged: (v) { form.foreignCit = v; onChanged(); }),
+      if (form.foreignCit == 'Yes') BbhTextField(controller: form.foreignCitCountry, label: 'Country'),
     ]);
   }
 
@@ -366,10 +425,10 @@ class BbhOnboardingSteps {
       const SizedBox(height: 20),
       _dropdown('Education Level', form.education, educationLevels, (v) { form.education = v; onChanged(); }),
       const SizedBox(height: 12),
-      _dropdown('Sector', form.sector, sectors, (v) { form.sector = v; onChanged(); }),
-      BbhTextField(controller: form.income, label: 'Monthly Income (IQD)', keyboardType: TextInputType.number, hint: 'e.g. 2,500,000'),
+      _dropdown('Economic Sector', form.sector, sectors, (v) { form.sector = v; onChanged(); }),
+      BbhTextField(controller: form.income, label: 'Total Monthly Income (IQD)', keyboardType: TextInputType.number, hint: 'e.g. 2,500,000'),
       BbhTextField(controller: form.occupation, label: 'Occupation', hint: 'e.g. Goldsmith, Trader, Engineer'),
-      BbhTextField(controller: form.employer, label: 'Employer / Status', hint: 'Or Retired, Student, etc.'),
+      BbhTextField(controller: form.employer, label: 'Employer Name', hint: 'Or "Retired", "Student", "Housewife", "Unemployed"'),
       BbhTextField(controller: form.employerAddr, label: 'Employer Address', maxLines: 3),
     ]);
   }
@@ -378,11 +437,17 @@ class BbhOnboardingSteps {
     return _scroll([
       const BbhStepHeader(eyebrow: 'Step 6 · FATCA Declaration', title: 'U.S. tax residency'),
       const SizedBox(height: 16),
-      const BbhCallout(text: 'FATCA requires financial institutions to report accounts held by U.S. persons. Answer honestly — a "Yes" does not automatically reject your application.'),
+      BbhCallout(title: "Who is a U.S. person?",text: 'A U.S. citizen, a U.S. green-card holder, or any other person treated as a U.S. tax resident.'),
+      // _calloutWithTitle(
+      //   title: 'Who is a U.S. person?',
+      //   paragraphs: const [
+      //     'A U.S. citizen, a U.S. green-card holder, or any other person treated as a U.S. tax resident.',
+      //   ],
+      // ),
       const SizedBox(height: 16),
-      BbhToggleGroup(label: 'Are you a U.S. citizen, resident, or green-card holder?', value: form.fatca, options: const ['No', 'Yes'], onChanged: (v) { form.fatca = v; onChanged(); }),
+      BbhToggleGroup(label: 'Are you a U.S. person?', value: form.fatca, options: const ['No', 'Yes'], onChanged: (v) { form.fatca = v; onChanged(); }),
       if (form.fatca == 'Yes') ...[
-        BbhTextField(controller: form.fatcaTin, label: 'U.S. TIN'),
+        BbhTextField(controller: form.fatcaTin, label: 'U.S. TIN / SSN'),
         BbhTextField(controller: form.fatcaAddr, label: 'U.S. Address', maxLines: 3),
       ],
     ]);
@@ -392,11 +457,19 @@ class BbhOnboardingSteps {
     return _scroll([
       const BbhStepHeader(eyebrow: 'Step 7 · PEP Declaration', title: 'Politically Exposed Person'),
       const SizedBox(height: 16),
-      const BbhCallout(text: 'A Politically Exposed Person (PEP) is someone who holds or has held a prominent public function.'),
+       BbhCallout(text:  'A person who holds — or has held in the previous twelve months — a prominent public function: heads of state, ministers, members of parliament, senior judges, senior military or police officers, senior officials of state-owned enterprises, or senior officials of political parties.',title: "What counts as a PEP?",),
+      
+      // _calloutWithTitle(
+      //   title: 'What counts as a PEP?',
+      //   paragraphs: const [
+      //     'A person who holds — or has held in the previous twelve months — a prominent public function: heads of state, ministers, members of parliament, senior judges, senior military or police officers, senior officials of state-owned enterprises, or senior officials of political parties.',
+      //     'This covers you, your close family members, and your known close associates.',
+      //   ],
+      // ),
       const SizedBox(height: 16),
-      BbhToggleGroup(label: 'Are you, or a close associate or family member, a PEP?', value: form.pep, options: const ['No', 'Yes'], onChanged: (v) { form.pep = v; onChanged(); }),
+      BbhToggleGroup(label: 'Do you fall into any PEP category?', value: form.pep, options: const ['No', 'Yes'], onChanged: (v) { form.pep = v; onChanged(); }),
       if (form.pep == 'Yes') ...[
-        BbhTextField(controller: form.pepPosition, label: 'Position / Relationship'),
+        BbhTextField(controller: form.pepPosition, label: 'Position Held / Relationship to PEP'),
         BbhTextField(controller: form.pepCountry, label: 'Country'),
         _grid2(
           BbhTextField(controller: form.pepFrom, label: 'From (MM/YYYY)', hint: 'MM/YYYY'),
@@ -406,24 +479,73 @@ class BbhOnboardingSteps {
     ]);
   }
 
-  static Widget contact(BbhOnboardingForm form, VoidCallback onChanged) {
+  static Widget contact(
+    BbhOnboardingForm form,
+    VoidCallback onChanged, {
+    required Future<void> Function(BbhOnboardingOtpChannel channel) onVerify,
+  }) {
     return _scroll([
       const BbhStepHeader(eyebrow: 'Step 8 · Contact & Verification', title: 'Where can we reach you?'),
       const SizedBox(height: 20),
-      BbhTextField(controller: form.mobile, label: 'Mobile Number', hint: '+964 7XX XXX XXXX', keyboardType: TextInputType.phone, verified: form.verifiedMobile.value),
+      BbhTextField(
+        controller: form.mobile,
+        label: 'Mobile Number',
+        hint: '+964 7XX XXX XXXX',
+        keyboardType: TextInputType.phone,
+        verified: form.verifiedMobile.value,
+        onChanged: (_) {
+          if (form.verifiedMobile.value) {
+            form.verifiedMobile.value = false;
+          }
+          onChanged();
+        },
+      ),
+      const SizedBox(height: 6),
+      Text(
+        'International format with country code.',
+        style: BbhOnboardingText.manrope(size: 12, color: BbhOnboardingColors.muted),
+      ),
       Align(
         alignment: Alignment.centerRight,
-        child: TextButton(
-          onPressed: form.mobile.text.trim().isEmpty ? null : () { form.verifiedMobile.value = true; onChanged(); },
-          child: const Text('Verify'),
+        child: SizedBox(
+          width: 148,
+          child: BbhGhostButton(
+            label: form.verifiedMobile.value ? 'Verified ✓' : 'Verify Number',
+            onPressed: form.verifiedMobile.value
+                ? null
+                : () => onVerify(BbhOnboardingOtpChannel.mobile),
+          ),
         ),
       ),
-      BbhTextField(controller: form.email, label: 'Email Address', hint: 'client@example.com', keyboardType: TextInputType.emailAddress, verified: form.verifiedEmail.value, capitalization: TextCapitalization.none),
+      BbhTextField(
+        controller: form.email,
+        label: 'Email Address',
+        hint: 'client@example.com',
+        keyboardType: TextInputType.emailAddress,
+        verified: form.verifiedEmail.value,
+        capitalization: TextCapitalization.none,
+        onChanged: (_) {
+          if (form.verifiedEmail.value) {
+            form.verifiedEmail.value = false;
+          }
+          onChanged();
+        },
+      ),
+      const SizedBox(height: 6),
+      Text(
+        'Lowercase only.',
+        style: BbhOnboardingText.manrope(size: 12, color: BbhOnboardingColors.muted),
+      ),
       Align(
         alignment: Alignment.centerRight,
-        child: TextButton(
-          onPressed: form.email.text.trim().isEmpty ? null : () { form.verifiedEmail.value = true; onChanged(); },
-          child: const Text('Verify'),
+        child: SizedBox(
+          width: 148,
+          child: BbhGhostButton(
+            label: form.verifiedEmail.value ? 'Verified ✓' : 'Verify Email',
+            onPressed: form.verifiedEmail.value
+                ? null
+                : () => onVerify(BbhOnboardingOtpChannel.email),
+          ),
         ),
       ),
     ]);
@@ -456,11 +578,24 @@ class BbhOnboardingSteps {
                 ),
                 const SizedBox(width: 8),
                 Text('Al-Taif Islamic Bank', style: BbhOnboardingText.manrope(size: 16, weight: FontWeight.w700)),
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: BbhOnboardingColors.creamDeep,
+                    borderRadius: BorderRadius.circular(30),
+                    border: Border.all(color: BbhOnboardingColors.rule),
+                  ),
+                  child: Text(
+                    'Bank custody',
+                    style: BbhOnboardingText.manrope(size: 11, weight: FontWeight.w700, color: BbhOnboardingColors.muted),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
             Text(
-              'Your gold and Iraqi Dinars are held in segregated custody at Al-Taif Islamic Bank, with bank-grade security and reconciliation.',
+              'Your gold and Iraqi Dinars are held in segregated custody at Al-Taif Islamic Bank, with bank-grade security and reconciliation. Your onboarding details will be shared with Al-Taif.',
               style: BbhOnboardingText.manrope(size: 13.5, color: BbhOnboardingColors.inkSoft, height: 1.5),
             ),
           ],
@@ -471,32 +606,33 @@ class BbhOnboardingSteps {
 
   static Widget consent(BbhOnboardingForm form, VoidCallback onChanged) {
     return _scroll([
-      const BbhStepHeader(eyebrow: 'Section 6 · Consent & Authorisation', title: 'Consent'),
+      const BbhStepHeader(eyebrow: 'Section 6 · Consent & Authorisation', title: 'Consent', lede: 'Please read before signing.'),
       const SizedBox(height: 16),
-      const BbhClauseItem(number: '6.1', bold: 'Collection.', body: 'I authorise BBH to collect and keep the information, documents, and live photograph captured during this onboarding.'),
-      const BbhClauseItem(number: '6.2', bold: 'Sharing.', body: 'I consent to BBH sharing my onboarding data with Al-Taif Islamic Bank for account opening purposes.'),
-      BbhTextField(controller: form.signerName, label: 'Signer Name'),
+      const BbhClauseItem(number: '6.1', bold: 'Collection.', body: 'I authorise BBH to collect and keep the information and documents captured during this onboarding.'),
+      const BbhClauseItem(number: '6.2', bold: 'Permitted use.', body: "BBH may use my information only to (a) open and operate my BBH gold account, (b) settle my gold purchases and sales with BBH, and (c) discharge BBH's legal and compliance obligations."),
+      const BbhClauseItem(number: '6.3', bold: 'Custodian bank.', body: 'My gold and Iraqi Dinars will be held in custody at Al-Taif Islamic Bank. I authorise BBH to share this onboarding information with Al-Taif Islamic Bank to open my custody account there.'),
+      const BbhClauseItem(number: '6.4', bold: 'Excluded purposes.', body: 'This consent does not authorise BBH or any partner bank to offer me credit cards, loans, financing, insurance, or unrelated investment products.'),
+      const BbhClauseItem(number: '6.5', bold: 'Retention.', body: 'BBH retains these records for not less than seven (7) years from the closure of the account or last transaction.'),
+      const SizedBox(height: 2),
+      Center(child: Text('◆ ◆ ◆', style: BbhOnboardingText.display(size: 14, color: BbhOnboardingColors.goldDeep))),
       const SizedBox(height: 12),
-      GestureDetector(
-        onTap: () { form.hasSignature = true; onChanged(); },
-        child: Container(
-          height: 120,
-          width: double.infinity,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: BbhOnboardingColors.paper,
-            borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
-            border: Border.all(color: BbhOnboardingColors.rule, width: 1.5),
-          ),
-          child: Text(
-            form.hasSignature ? 'Signature captured ✓' : 'Tap to sign',
-            style: BbhOnboardingText.manrope(color: BbhOnboardingColors.muted, weight: FontWeight.w600),
-          ),
-        ),
+      BbhTextField(controller: form.signerName, label: 'Full Name'),
+      const SizedBox(height: 12),
+      Align(
+        alignment: Alignment.centerLeft,
+        child: Text('Signature', style: BbhOnboardingText.fieldLabel()),
+      ),
+      const SizedBox(height: 8),
+      BbhSignaturePad(
+        hasSignature: form.hasSignature,
+        onSignatureChanged: (value) {
+          form.signature = value;
+          onChanged();
+        },
       ),
       const SizedBox(height: 16),
       BbhConfirmRow(
-        text: 'I confirm Section 6 has been read and I agree to the terms above.',
+        text: 'I have read clauses 6.1 to 6.5, understand them, and give consent.',
         checked: form.consentConfirmed,
         onChanged: (_) { form.consentConfirmed = !form.consentConfirmed; onChanged(); },
       ),
@@ -506,7 +642,11 @@ class BbhOnboardingSteps {
   static Widget review(BbhOnboardingForm form) {
     String v(TextEditingController c) => c.text.trim().isEmpty ? '—' : c.text.trim();
     return _scroll([
-      const BbhStepHeader(eyebrow: 'Final Review', title: 'Review before submission'),
+      const BbhStepHeader(
+        eyebrow: 'Final Review',
+        title: 'Review before submission',
+        lede: 'Tap any section to edit. Submission is final.',
+      ),
       const SizedBox(height: 16),
       _reviewSection('Identity', [
         'Name (EN): ${v(form.enFirst)} ${v(form.enFather)} ${v(form.enSurname)}',
@@ -519,6 +659,16 @@ class BbhOnboardingSteps {
         'ID Back: ${form.idBackCaptured ? 'Captured ✓' : '—'}',
       ]),
       _reviewSection('Employment', ['Occupation: ${v(form.occupation)}', 'Income: ${v(form.income)}']),
+      const SizedBox(height: 2),
+      Center(child: Text('◆ ◆ ◆', style: BbhOnboardingText.display(size: 14, color: BbhOnboardingColors.goldDeep))),
+      const SizedBox(height: 14),
+      Center(
+        child: Text(
+          'Once submitted, this pack will be sent to Al-Taif Islamic Bank for processing.',
+          textAlign: TextAlign.center,
+          style: BbhOnboardingText.display(size: 14, color: BbhOnboardingColors.muted).copyWith(fontStyle: FontStyle.italic),
+        ),
+      ),
     ]);
   }
 
@@ -541,11 +691,59 @@ class BbhOnboardingSteps {
                     child: const Icon(Icons.check, color: Colors.white, size: 36),
                   ),
                   const SizedBox(height: 20),
+                  Text('Submission Complete', style: BbhOnboardingText.stepEyebrow()),
+                  const SizedBox(height: 8),
                   Text('Pack Submitted', style: BbhOnboardingText.stepTitle()),
                   const SizedBox(height: 12),
-                  if (kycRef != null)
-                    Text('Reference: $kycRef', style: BbhOnboardingText.manrope(size: 14, color: BbhOnboardingColors.muted)),
-                  const SizedBox(height: 32),
+                  Text(
+                    'Your onboarding pack has been received and is being processed by BBH.',
+                    textAlign: TextAlign.center,
+                    style: BbhOnboardingText.manrope(size: 14, color: BbhOnboardingColors.muted, height: 1.55),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: BbhOnboardingColors.paper,
+                      borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
+                      border: Border.all(color: BbhOnboardingColors.rule),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('KYC Reference', style: BbhOnboardingText.fieldLabel()),
+                        const SizedBox(height: 6),
+                        Text(
+                          kycRef ?? 'BBH-KYC-XXXX',
+                          style: BbhOnboardingText.display(size: 20, weight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 4),
+                        Text('Submitted just now', style: BbhOnboardingText.manrope(size: 12, color: BbhOnboardingColors.muted)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: BbhOnboardingColors.paper,
+                      borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
+                      border: Border.all(color: BbhOnboardingColors.rule),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('What happens next', style: BbhOnboardingText.manrope(size: 14, weight: FontWeight.w700)),
+                        const SizedBox(height: 8),
+                        _successItem('BBH receives the pack within minutes'),
+                        _successItem('Account opening is normally completed within 2 business days'),
+                        _successItem('BBH retains a digital copy for not less than 7 years'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
                   BbhPrimaryButton(label: 'Start a new onboarding', onPressed: onRestart),
                 ],
               ),
@@ -621,13 +819,14 @@ class BbhOnboardingSteps {
 
   static Widget _groupTitle(String title, String? sub) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12, top: 8),
+      padding: EdgeInsets.only(bottom: sub != null ? 16 : 12, top: title.isEmpty ? 0 : 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: BbhOnboardingText.display(size: 21, weight: FontWeight.w600)),
+          if (title.isNotEmpty)
+            Text(title, style: BbhOnboardingText.display(size: 21, weight: FontWeight.w600)),
           if (sub != null) ...[
-            const SizedBox(height: 4),
+            if (title.isNotEmpty) const SizedBox(height: 2),
             Text(sub, style: BbhOnboardingText.manrope(size: 13, color: BbhOnboardingColors.muted)),
           ],
         ],
@@ -647,7 +846,7 @@ class BbhOnboardingSteps {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(child: left),
-              const SizedBox(width: 12),
+              const SizedBox(width: 14),
               Expanded(child: right),
             ],
           );
@@ -678,6 +877,69 @@ class BbhOnboardingSteps {
             ],
             onChanged: onChanged,
           ),
+        ],
+      ),
+    );
+  }
+
+  static Widget _fieldWithHint(Widget field, String hint) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        field,
+        const SizedBox(height: 6),
+        Text(
+          hint,
+          style: BbhOnboardingText.fieldHint(),
+        ),
+      ],
+    );
+  }
+
+  static Widget _calloutWithTitle({required String title, required List<String> paragraphs}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(18, 16, 16, 16),
+      margin: const EdgeInsets.only(bottom: 22),
+      decoration: BoxDecoration(
+        color: BbhOnboardingColors.paperWarm,
+        borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
+        border: const Border(
+          left: BorderSide(color: BbhOnboardingColors.gold, width: 3),
+          top: BorderSide(color: BbhOnboardingColors.rule),
+          right: BorderSide(color: BbhOnboardingColors.rule),
+          bottom: BorderSide(color: BbhOnboardingColors.rule),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: BbhOnboardingText.display(size: 16, weight: FontWeight.w600)),
+          const SizedBox(height: 6),
+          for (var i = 0; i < paragraphs.length; i++) ...[
+            Text(
+              paragraphs[i],
+              style: BbhOnboardingText.manrope(size: 13.5, color: BbhOnboardingColors.inkSoft, height: 1.6),
+            ),
+            if (i != paragraphs.length - 1) const SizedBox(height: 8),
+          ],
+        ],
+      ),
+    );
+  }
+
+  static Widget _successItem(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 1),
+            child: Icon(Icons.check, size: 15, color: BbhOnboardingColors.success),
+          ),
+          const SizedBox(width: 8),
+          Expanded(child: Text(text, style: BbhOnboardingText.manrope(size: 13.2, color: BbhOnboardingColors.inkSoft))),
         ],
       ),
     );

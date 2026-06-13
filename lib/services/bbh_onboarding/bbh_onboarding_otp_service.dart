@@ -47,9 +47,9 @@ class BbhOnboardingOtpService {
     if (phone.isEmpty) {
       return BbhOnboardingOtpResult.fail('Enter your mobile number first.');
     }
-    if (mail.isEmpty) {
-      return BbhOnboardingOtpResult.fail('Enter your email address first.');
-    }
+    // if (mail.isEmpty) {
+    //   return BbhOnboardingOtpResult.fail('Enter your email address first.');
+    // }
 
     final sendOn =
         channel == BbhOnboardingOtpChannel.mobile ? 'phone' : 'email';

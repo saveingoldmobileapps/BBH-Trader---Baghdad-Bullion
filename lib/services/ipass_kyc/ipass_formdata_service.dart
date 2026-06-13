@@ -1,9 +1,6 @@
-import 'dart:convert';
-import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../data/models/ipass_model/ipass_formdata_result_response.dart';
@@ -134,8 +131,20 @@ class IpassFormDataService {
       );
 
       if (result.isSucceeded) {
-        _logScanResult(sideLabel, result);
-        return result;
+        final raw = result.rawJson;
+        if (raw != null && raw.isNotEmpty) {
+          return IpassFormDataResultResponse.fromApiJson(
+            raw,
+            scanSide: sideLabel,
+            imageBase64: base64Image,
+          );
+        }
+        return IpassFormDataResultResponse(
+          result: result.result,
+          rawJson: result.rawJson,
+          scanSide: sideLabel,
+          imageBase64: base64Image,
+        );
       }
 
       final status = result.result?.status?.toLowerCase() ?? '';
@@ -201,23 +210,11 @@ class IpassFormDataService {
       },
     );
 
-    return IpassFormDataResultResponse.fromJson(
+    return IpassFormDataResultResponse.fromApiJson(
       Map<String, dynamic>.from(response.data ?? {}),
     );
   }
 
-  static void _logScanResult(String side, IpassFormDataResultResponse result) {
-    if (!kDebugMode) return;
-    const encoder = JsonEncoder.withIndent('  ');
-    final banner = '========== iPass FormData OCR ($side) ==========';
-    developer.log(banner, name: 'iPassFormData');
-    try {
-      developer.log(encoder.convert(result.toJson()), name: 'iPassFormData');
-    } catch (_) {
-      developer.log(result.ocrContent ?? '(no content)', name: 'iPassFormData');
-    }
-    developer.log('========== END iPass FormData OCR ==========', name: 'iPassFormData');
-  }
 }
 
 class IpassFormDataException implements Exception {

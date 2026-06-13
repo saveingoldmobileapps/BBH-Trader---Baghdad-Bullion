@@ -822,92 +822,227 @@ class BbhOnboardingSteps {
       ],
     ]);
   }
-
   static Widget contact(
-    BbhOnboardingForm form,
-    VoidCallback onChanged, {
-    required Future<void> Function(BbhOnboardingOtpChannel channel) onVerify,
-  }) {
-    return _scroll([
-      const BbhStepHeader(
-        eyebrow: 'Step 8 · Contact & Verification',
-        title: 'Where can we reach you?',
+  BbhOnboardingForm form,
+  VoidCallback onChanged, {
+  required Future<void> Function(BbhOnboardingOtpChannel channel) onVerify,
+}) {
+  return _scroll([
+    const BbhStepHeader(
+      eyebrow: 'Step 8 · Contact & Verification',
+      title: 'Where can we reach you?',
+    ),
+    const SizedBox(height: 20),
+
+    // Mobile First
+    BbhTextField(
+      controller: form.mobile,
+      label: 'Mobile Number',
+      hint: '+964 7XX XXX XXXX',
+      keyboardType: TextInputType.phone,
+      verified: form.verifiedMobile.value,
+      onChanged: (_) {
+        if (form.verifiedMobile.value) {
+          form.verifiedMobile.value = false;
+        }
+        onChanged();
+      },
+    ),
+    const SizedBox(height: 6),
+    Text(
+      'Verify your mobile number first.',
+      style: BbhOnboardingText.manrope(
+        size: 12,
+        color: BbhOnboardingColors.muted,
       ),
-      const SizedBox(height: 20),
-      BbhTextField(
-        controller: form.email,
-        label: 'Email Address',
-        hint: 'client@example.com',
-        keyboardType: TextInputType.emailAddress,
-        verified: form.verifiedEmail.value,
-        capitalization: TextCapitalization.none,
-        onChanged: (_) {
-          if (form.verifiedEmail.value) {
-            form.verifiedEmail.value = false;
-          }
-          if (form.verifiedMobile.value) {
-            form.verifiedMobile.value = false;
-          }
-          onChanged();
-        },
-      ),
-      const SizedBox(height: 6),
-      Text(
-        'Lowercase only. Verify your email first.',
-        style: BbhOnboardingText.manrope(
-          size: 12,
-          color: BbhOnboardingColors.muted,
+    ),
+    Align(
+      alignment: Alignment.centerRight,
+      child: SizedBox(
+        width: 148,
+        child: BbhGhostButton(
+          label:
+              form.verifiedMobile.value ? 'Verified ✓' : 'Verify Number',
+          onPressed: form.verifiedMobile.value
+              ? null
+              : () => onVerify(BbhOnboardingOtpChannel.mobile),
         ),
       ),
-      Align(
-        alignment: Alignment.centerRight,
-        child: SizedBox(
-          width: 148,
-          child: BbhGhostButton(
-            label: form.verifiedEmail.value ? 'Verified ✓' : 'Verify Email',
-            onPressed: form.verifiedEmail.value
-                ? null
-                : () => onVerify(BbhOnboardingOtpChannel.email),
-          ),
+    ),
+
+    const SizedBox(height: 20),
+
+    // Email Second
+    BbhTextField(
+      controller: form.email,
+      label: 'Email Address',
+      hint: 'client@example.com',
+      keyboardType: TextInputType.emailAddress,
+      verified: form.verifiedEmail.value,
+      capitalization: TextCapitalization.none,
+      onChanged: (_) {
+        if (form.verifiedEmail.value) {
+          form.verifiedEmail.value = false;
+        }
+        onChanged();
+      },
+    ),
+    const SizedBox(height: 6),
+    Text(
+      form.verifiedMobile.value
+          ? 'Lowercase only.'
+          : 'Verify your mobile number first.',
+      style: BbhOnboardingText.manrope(
+        size: 12,
+        color: BbhOnboardingColors.muted,
+      ),
+    ),
+    Align(
+      alignment: Alignment.centerRight,
+      child: SizedBox(
+        width: 148,
+        child: BbhGhostButton(
+          label:
+              form.verifiedEmail.value ? 'Verified ✓' : 'Verify Email',
+          onPressed: form.verifiedEmail.value ||
+                  !form.verifiedMobile.value
+              ? null
+              : () => onVerify(BbhOnboardingOtpChannel.email),
         ),
       ),
-      BbhTextField(
-        controller: form.mobile,
-        label: 'Mobile Number',
-        hint: '+964 7XX XXX XXXX',
-        keyboardType: TextInputType.phone,
-        verified: form.verifiedMobile.value,
-        onChanged: (_) {
-          if (form.verifiedMobile.value) {
-            form.verifiedMobile.value = false;
-          }
-          onChanged();
-        },
-      ),
-      const SizedBox(height: 6),
-      Text(
-        form.verifiedEmail.value
-            ? 'International format with country code.'
-            : 'Verify your email first, then verify your mobile number.',
-        style: BbhOnboardingText.manrope(
-          size: 12,
-          color: BbhOnboardingColors.muted,
-        ),
-      ),
-      Align(
-        alignment: Alignment.centerRight,
-        child: SizedBox(
-          width: 148,
-          child: BbhGhostButton(
-            label: form.verifiedMobile.value ? 'Verified ✓' : 'Verify Number',
-            onPressed: form.verifiedMobile.value || !form.verifiedEmail.value
-                ? null
-                : () => onVerify(BbhOnboardingOtpChannel.mobile),
-          ),
-        ),
-      ),
-    ]);
-  }
+    ),
+  ]);
+}
+
+//   static Widget contact(
+//     BbhOnboardingForm form,
+//     VoidCallback onChanged, {
+//     required Future<void> Function(BbhOnboardingOtpChannel channel) onVerify,
+//   }) {
+//     return _scroll([
+//       const BbhStepHeader(
+//         eyebrow: 'Step 8 · Contact & Verification',
+//         title: 'Where can we reach you?',
+//       ),
+//       const SizedBox(height: 20),
+//       BbhTextField(
+//   controller: form.mobile,
+//   label: 'Mobile Number',
+//   hint: '+964 7XX XXX XXXX',
+//   keyboardType: TextInputType.phone,
+//   verified: form.verifiedMobile.value,
+//   onChanged: (_) {
+//     if (form.verifiedMobile.value) {
+//       form.verifiedMobile.value = false;
+//     }
+//     onChanged();
+//   },
+// ),
+//       // BbhTextField(
+//       //   controller: form.email,
+//       //   label: 'Email Address',
+//       //   hint: 'client@example.com',
+//       //   keyboardType: TextInputType.emailAddress,
+//       //   verified: form.verifiedEmail.value,
+//       //   capitalization: TextCapitalization.none,
+//       //   onChanged: (_) {
+//       //     if (form.verifiedEmail.value) {
+//       //       form.verifiedEmail.value = false;
+//       //     }
+//       //     if (form.verifiedMobile.value) {
+//       //       form.verifiedMobile.value = false;
+//       //     }
+//       //     onChanged();
+//       //   },
+//       // ),
+      
+//       const SizedBox(height: 6),
+//       Text(
+//         'Lowercase only. Verify your email first.',
+//         style: BbhOnboardingText.manrope(
+//           size: 12,
+//           color: BbhOnboardingColors.muted,
+//         ),
+//       ),
+//       Align(
+//         alignment: Alignment.centerRight,
+//         child: SizedBox(
+//           width: 148,
+//           child: BbhGhostButton(
+//   label: form.verifiedMobile.value
+//       ? 'Verified ✓'
+//       : 'Verify Number',
+//   onPressed: form.verifiedMobile.value
+//       ? null
+//       : () => onVerify(BbhOnboardingOtpChannel.mobile),
+// ),
+//           // BbhGhostButton(
+//           //   label: form.verifiedEmail.value ? 'Verified ✓' : 'Verify Email',
+//           //   onPressed: form.verifiedEmail.value
+//           //       ? null
+//           //       : () => onVerify(BbhOnboardingOtpChannel.email),
+//           // ),
+//         ),
+//       ),
+//       BbhTextField(
+//   controller: form.email,
+//   label: 'Email Address',
+//   hint: 'client@example.com',
+//   keyboardType: TextInputType.emailAddress,
+//   verified: form.verifiedEmail.value,
+//   capitalization: TextCapitalization.none,
+//   onChanged: (_) {
+//     if (form.verifiedEmail.value) {
+//       form.verifiedEmail.value = false;
+//     }
+//     onChanged();
+//   },
+// ),
+//       // BbhTextField(
+//       //   controller: form.mobile,
+//       //   label: 'Mobile Number',
+//       //   hint: '+964 7XX XXX XXXX',
+//       //   keyboardType: TextInputType.phone,
+//       //   verified: form.verifiedMobile.value,
+//       //   onChanged: (_) {
+//       //     if (form.verifiedMobile.value) {
+//       //       form.verifiedMobile.value = false;
+//       //     }
+//       //     onChanged();
+//       //   },
+//       // ),
+//       const SizedBox(height: 6),
+//       Text(
+//         form.verifiedEmail.value
+//             ? 'International format with country code.'
+//             : 'Verify your email first, then verify your mobile number.',
+//         style: BbhOnboardingText.manrope(
+//           size: 12,
+//           color: BbhOnboardingColors.muted,
+//         ),
+//       ),
+//       Align(
+//         alignment: Alignment.centerRight,
+//         child: SizedBox(
+//           width: 148,
+//           child: BbhGhostButton(
+//   label: form.verifiedEmail.value
+//       ? 'Verified ✓'
+//       : 'Verify Email',
+//   onPressed: form.verifiedEmail.value || !form.verifiedMobile.value
+//       ? null
+//       : () => onVerify(BbhOnboardingOtpChannel.email),
+// ),
+//           // BbhGhostButton(
+//           //   label: form.verifiedMobile.value ? 'Verified ✓' : 'Verify Number',
+//           //   onPressed: form.verifiedMobile.value || !form.verifiedEmail.value
+//           //       ? null
+//           //       : () => onVerify(BbhOnboardingOtpChannel.mobile),
+//           // ),
+//         ),
+//       ),
+//     ]);
+//   }
 
   static Widget custodian(BbhOnboardingForm form, VoidCallback onChanged) {
     return _scroll([

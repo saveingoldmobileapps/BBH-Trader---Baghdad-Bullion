@@ -164,44 +164,59 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
     await _controller.persist();
     setState(() {});
   }
+  Future<void> _verifyContact(
+  BbhOnboardingOtpChannel channel,
+) async {
+  FocusScope.of(context).unfocus();
 
-  Future<void> _verifyContact(BbhOnboardingOtpChannel channel) async {
-    FocusScope.of(context).unfocus();
+  final mobile = _controller.form.mobile.text.trim();
+  final email = _controller.form.email.text.trim().toLowerCase();
 
-    final mobile = _controller.form.mobile.text.trim();
-    final email = _controller.form.email.text.trim().toLowerCase();
-
-    if (mobile.isEmpty || email.isEmpty) {
-      Toasts.getErrorToast(text: 'Enter both mobile and email first.');
-      return;
-    }
-    if (channel == BbhOnboardingOtpChannel.mobile &&
-        !_controller.form.verifiedEmail.value) {
-      Toasts.getErrorToast(
-        text: 'Verify your email before verifying your number.',
-      );
-      return;
-    }
-
-    final verified = await BbhOnboardingOtpSheet.openForVerification(
-      context,
-      channel: channel,
-      phoneNumber: mobile,
-      email: email,
+  if (channel == BbhOnboardingOtpChannel.mobile &&
+      mobile.isEmpty) {
+    Toasts.getErrorToast(
+      text: 'Please enter your mobile number.',
     );
-
-    if (!mounted || verified != true) return;
-
-    if (channel == BbhOnboardingOtpChannel.mobile) {
-      _controller.form.verifiedMobile.value = true;
-    } else {
-      _controller.form.verifiedEmail.value = true;
-    }
-    _controller.lastSuccess = channel == BbhOnboardingOtpChannel.mobile
-        ? 'Mobile number verified.'
-        : 'Email address verified.';
-    await _refresh();
+    return;
   }
+
+  if (channel == BbhOnboardingOtpChannel.email &&
+      email.isEmpty) {
+    Toasts.getErrorToast(
+      text: 'Please enter your email address.',
+    );
+    return;
+  }
+
+  if (channel == BbhOnboardingOtpChannel.email &&
+      !_controller.form.verifiedMobile.value) {
+    Toasts.getErrorToast(
+      text: 'Verify your mobile number before verifying your email.',
+    );
+    return;
+  }
+
+  final verified = await BbhOnboardingOtpSheet.openForVerification(
+    context,
+    channel: channel,
+    phoneNumber: mobile,
+    email: email,
+  );
+
+  if (!mounted || verified != true) {
+    return;
+  }
+
+  if (channel == BbhOnboardingOtpChannel.mobile) {
+    _controller.form.verifiedMobile.value = true;
+    _controller.lastSuccess = 'Mobile number verified.';
+  } else {
+    _controller.form.verifiedEmail.value = true;
+    _controller.lastSuccess = 'Email address verified.';
+  }
+
+  await _refresh();
+}
 
   String _nextLabel() {
     if (_controller.editReturnStep != null) return 'Done';
@@ -295,7 +310,7 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
       case BbhOnboardingStep.success:
         return BbhOnboardingSteps.success(
           kycRef: _controller.kycReference,
-          onRestart: _controller.resetAll,
+         onRestart: _controller.resetAll,
         );
     }
   }

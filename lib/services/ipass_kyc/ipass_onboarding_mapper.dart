@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:developer' as developer;
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// Which document the user is scanning — controls field mapping and workflow.
 enum IpassScanTarget {
@@ -15,6 +18,528 @@ enum IpassScanTarget {
 /// Supports iPass `data.DocDetails.Visual` / `MRZ` (Regula-style keys with spaces).
 class IpassOnboardingMapper {
   IpassOnboardingMapper._();
+
+  static String? _lastLoggedPayload;
+  static DateTime? _lastLoggedAt;
+  static String? lastSavedResponsePath;
+  static String? lastSavedImagesPath;
+  static List<Map<String, dynamic>> lastExtractedImages = [];
+
+  static const Map<IpassScanTarget, String> scanTargetKeys = {
+    IpassScanTarget.nationalId: 'national_id',
+    IpassScanTarget.passport: 'passport',
+    IpassScanTarget.residence: 'residence',
+  };
+
+  /// Pulls every base64 image from an iPass scan with document + image type labels.
+  static List<Map<String, dynamic>> extractIpassImages(
+    Map<String, dynamic> data, {
+    String? scanTarget,
+  }) {
+    final documentType = data['DocType']?.toString() ?? 'Unknown';
+    final overAllStatus = data['OverAllStatus']?.toString();
+    final images = <Map<String, dynamic>>[];
+
+    void add({
+      required String category,
+      required String imageType,
+      required dynamic value,
+      int? index,
+    }) {
+      if (value is! String || value.trim().isEmpty) return;
+      final base64 = value.trim();
+      images.add({
+        if (scanTarget != null) 'scanTarget': scanTarget,
+        'documentType': documentType,
+        'overAllStatus': overAllStatus,
+        'category': category,
+        'imageType': imageType,
+        if (index != null) 'index': index,
+        'mimeType': _guessMimeFromBase64(base64),
+        'sizeChars': base64.length,
+        'base64': base64,
+      });
+    }
+
+    final docImages = data['DocImages'];
+    if (docImages is Map) {
+      for (final entry in docImages.entries) {
+        add(
+          category: 'DocImages',
+          imageType: entry.key.toString(),
+          value: entry.value,
+        );
+      }
+    }
+
+    final liveness = data['livenessResult'];
+    if (liveness is Map) {
+      add(
+        category: 'livenessResult',
+        imageType: 'faceImage',
+        value: liveness['faceImage'],
+      );
+      final audit = liveness['AuditImages'];
+      if (audit is List) {
+        for (var i = 0; i < audit.length; i++) {
+          final item = audit[i];
+          if (item is! Map) continue;
+          for (final entry in item.entries) {
+            add(
+              category: 'livenessResult.AuditImages',
+              imageType: entry.key.toString(),
+              value: entry.value,
+              index: i,
+            );
+          }
+        }
+      }
+    }
+
+    final faceMatch = data['faceMatchngResult'] ?? data['faceMatchingResult'];
+    if (faceMatch is List) {
+      for (var i = 0; i < faceMatch.length; i++) {
+        final item = faceMatch[i];
+        if (item is! Map) continue;
+        add(
+          category: 'faceMatchngResult',
+          imageType: 'sourceImageBase64',
+          value: item['sourceImageBase64'],
+          index: i,
+        );
+        add(
+          category: 'faceMatchngResult',
+          imageType: 'targetImageBase64',
+          value: item['targetImageBase64'],
+          index: i,
+        );
+      }
+    }
+
+    final faceMatchNfc =
+        data['faceMatchngResultNfc'] ?? data['faceMatchingResultNfc'];
+    if (faceMatchNfc is Map) {
+      add(
+        category: 'faceMatchngResultNfc',
+        imageType: 'sourceImageBase64',
+        value: faceMatchNfc['sourceImageBase64'],
+      );
+      add(
+        category: 'faceMatchngResultNfc',
+        imageType: 'targetImageBase64',
+        value: faceMatchNfc['targetImageBase64'],
+      );
+    }
+
+    return images;
+  }
+
+  /// Full iPass API body as returned after scan: `{ Apistatus, Apimessage, data }`.
+  /// Images remain embedded under `data.DocImages`, `data.livenessResult`, etc.
+  static Map<String, dynamic>? buildApiEnvelope(Map<String, dynamic>? source) {
+    if (source == null || source.isEmpty) return null;
+
+    if (_looksLikeApiEnvelope(source)) {
+      return _normalizeApiEnvelope(source);
+    }
+
+    final inner = resolveDataRoot(source);
+    if (inner.isEmpty) return null;
+
+    return {
+      'Apistatus': source['Apistatus'] == true || source['apiStatus'] == true,
+      'Apimessage': _clean(source['Apimessage']?.toString()) ??
+          _clean(source['apiMessage']?.toString()) ??
+          _clean(source['scanMessage']?.toString()) ??
+          'Success',
+      'data': inner,
+    };
+  }
+
+  /// Builds envelope from [IpassKycResult], preferring native `rawResponse`.
+  static Map<String, dynamic>? buildApiEnvelopeFromResult(
+    dynamic result, {
+    bool? apiStatus,
+    String? apiMessage,
+  }) {
+    if (result == null) return null;
+
+    final raw = _readStringField(result, 'rawResponse');
+    if (raw != null && raw.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(raw);
+        if (decoded is Map) {
+          final map = Map<String, dynamic>.from(decoded);
+          if (_looksLikeApiEnvelope(map)) {
+            return _normalizeApiEnvelope(map);
+          }
+          if (map.containsKey('DocDetails') || map.containsKey('OverAllStatus')) {
+            return {
+              'Apistatus': apiStatus ?? true,
+              'Apimessage': apiMessage ?? 'Success',
+              'data': map,
+            };
+          }
+        }
+      } catch (_) {}
+    }
+
+    final data = _readMapField(result, 'data');
+    if (data != null) {
+      return buildApiEnvelope({
+        if (apiStatus != null) 'Apistatus': apiStatus,
+        if (apiMessage != null) 'Apimessage': apiMessage,
+        'data': data,
+      });
+    }
+
+    return buildApiEnvelope(data);
+  }
+
+  static bool _looksLikeApiEnvelope(Map<String, dynamic> map) {
+    final hasApiKeys =
+        map.containsKey('Apistatus') ||
+        map.containsKey('apiStatus') ||
+        map.containsKey('Apimessage') ||
+        map.containsKey('apiMessage');
+    final data = map['data'];
+    return hasApiKeys && data is Map;
+  }
+
+  static Map<String, dynamic> _normalizeApiEnvelope(Map<String, dynamic> map) {
+    final dataRaw = map['data'];
+    Map<String, dynamic> inner;
+    if (dataRaw is Map<String, dynamic>) {
+      inner = dataRaw;
+    } else if (dataRaw is Map) {
+      inner = Map<String, dynamic>.from(dataRaw);
+    } else if (dataRaw is String && dataRaw.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(dataRaw);
+        inner = decoded is Map
+            ? Map<String, dynamic>.from(decoded)
+            : <String, dynamic>{};
+      } catch (_) {
+        inner = <String, dynamic>{};
+      }
+    } else {
+      inner = <String, dynamic>{};
+    }
+
+    return {
+      'Apistatus': map['Apistatus'] == true || map['apiStatus'] == true,
+      'Apimessage':
+          _clean(map['Apimessage']?.toString()) ??
+          _clean(map['apiMessage']?.toString()) ??
+          'Success',
+      'data': inner,
+    };
+  }
+
+  static String? _readStringField(dynamic source, String key) {
+    if (source is Map) {
+      final value = source[key];
+      if (value is String) return value;
+    }
+    return null;
+  }
+
+  static Map<String, dynamic>? _readMapField(dynamic source, String key) {
+    if (source is! Map) return null;
+    final value = source[key];
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) return Map<String, dynamic>.from(value);
+    if (value is String && value.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(value);
+        if (decoded is Map<String, dynamic>) return decoded;
+        if (decoded is Map) return Map<String, dynamic>.from(decoded);
+      } catch (_) {}
+    }
+    return null;
+  }
+
+  /// Inner scan payload (`OverAllStatus`, `DocDetails`, `DocImages`, …).
+  static Map<String, dynamic> resolveDataRoot(Map<String, dynamic>? ipassData) {
+    if (ipassData == null || ipassData.isEmpty) return {};
+    return _resolveDataRoot(ipassData);
+  }
+
+  /// Builds backend-ready iPass payload from one or more scan results.
+  static Map<String, dynamic> buildSubmissionIpassBundle(
+    Map<IpassScanTarget, dynamic> results,
+  ) {
+    final scans = <String, dynamic>{};
+    final verifications = <String, dynamic>{};
+    final images = <Map<String, dynamic>>[];
+
+    for (final entry in results.entries) {
+      final scanKey = scanTargetKeys[entry.key];
+      if (scanKey == null) continue;
+
+      final result = entry.value;
+      if (result == null) continue;
+
+      final envelope = buildApiEnvelopeFromResult(
+        result,
+        apiStatus: _readApiStatus(result) ?? true,
+        apiMessage: _readScanMessage(result),
+      );
+      if (envelope == null) continue;
+
+      scans[scanKey] = envelope;
+      final verificationJson = _resultToJson(result);
+      if (verificationJson != null) {
+        verifications[scanKey] = verificationJson;
+      }
+
+      final dataRoot = resolveDataRoot(envelope);
+      images.addAll(extractIpassImages(dataRoot, scanTarget: scanKey));
+    }
+
+    final nationalId = scans['national_id'];
+    final passport = scans['passport'];
+    final primaryVerification = verifications['national_id'] ?? verifications['passport'];
+
+    return {
+      if (scans.isNotEmpty) 'ipass_scans': scans,
+      if (nationalId != null) 'ipass_scan_data': nationalId,
+      if (passport != null) 'ipass_passport_scan_data': passport,
+      if (images.isNotEmpty) 'ipass_images': images,
+      if (verifications.isNotEmpty) 'ipass_verifications': verifications,
+      if (primaryVerification != null) 'ipass_verification': primaryVerification,
+    };
+  }
+
+  /// Residence form OCR — front + back Azure `analyzeResult` responses.
+  static Map<String, dynamic> buildResidenceSubmissionPayload({
+    dynamic front,
+    dynamic back,
+  }) {
+    Map<String, dynamic>? frontJson;
+    Map<String, dynamic>? backJson;
+
+    if (front != null) {
+      frontJson = _resultToJson(front);
+    }
+    if (back != null) {
+      backJson = _resultToJson(back);
+    }
+    if (frontJson == null && backJson == null) return {};
+
+    final sides = <String, dynamic>{
+      if (frontJson != null) 'front': frontJson,
+      if (backJson != null) 'back': backJson,
+    };
+
+    final residenceImages = <Map<String, dynamic>>[];
+    void addImage(String side, Map<String, dynamic>? payload) {
+      final base64 = payload?['imageBase64']?.toString();
+      if (base64 == null || base64.trim().isEmpty) return;
+      residenceImages.add({
+        'scanTarget': 'residence',
+        'side': side,
+        'documentType': 'Residence Form',
+        'category': 'formdata',
+        'imageType': 'document_${side}Side',
+        'mimeType': _guessMimeFromBase64(base64.trim()),
+        'sizeChars': base64.trim().length,
+        'base64': base64.trim(),
+      });
+    }
+
+    addImage('front', frontJson);
+    addImage('back', backJson);
+
+    final envelope = {
+      'Apistatus': true,
+      'Apimessage': 'Success',
+      'data': {
+        'DocType': 'Residence Form',
+        'OverAllStatus': 'PASSED',
+        ...sides,
+      },
+    };
+
+    return {
+      'ipass_residence_scan_data': sides,
+      'ipass_scans': {'residence': envelope},
+      if (residenceImages.isNotEmpty) 'ipass_residence_images': residenceImages,
+    };
+  }
+
+  /// Merges KYC SDK scans with residence FormData OCR for one submit payload.
+  static Map<String, dynamic> mergeSubmissionBundles(
+    Map<String, dynamic> kycBundle,
+    Map<String, dynamic> residenceBundle,
+  ) {
+    if (residenceBundle.isEmpty) return kycBundle;
+    if (kycBundle.isEmpty) return residenceBundle;
+
+    final merged = Map<String, dynamic>.from(kycBundle);
+    final kycScans = kycBundle['ipass_scans'];
+    final residenceScans = residenceBundle['ipass_scans'];
+    if (kycScans is Map || residenceScans is Map) {
+      merged['ipass_scans'] = {
+        if (kycScans is Map) ...Map<String, dynamic>.from(kycScans),
+        if (residenceScans is Map) ...Map<String, dynamic>.from(residenceScans),
+      };
+    }
+
+    for (final key in ['ipass_residence_scan_data', 'ipass_residence_images']) {
+      final value = residenceBundle[key];
+      if (value != null) merged[key] = value;
+    }
+
+    final residenceImages = residenceBundle['ipass_residence_images'];
+    if (residenceImages is List) {
+      final combined = <Map<String, dynamic>>[];
+      final kycImages = merged['ipass_images'];
+      if (kycImages is List) {
+        for (final item in kycImages) {
+          if (item is Map) combined.add(Map<String, dynamic>.from(item));
+        }
+      }
+      for (final item in residenceImages) {
+        if (item is Map) combined.add(Map<String, dynamic>.from(item));
+      }
+      if (combined.isNotEmpty) merged['ipass_images'] = combined;
+    }
+
+    return merged;
+  }
+
+  static bool? _readApiStatus(dynamic result) {
+    if (result is Map) {
+      return result['apiStatus'] == true || result['success'] == true;
+    }
+    try {
+      final value = (result as dynamic).apiStatus;
+      if (value is bool) return value;
+    } catch (_) {}
+    return null;
+  }
+
+  static String? _readScanMessage(dynamic result) {
+    if (result is Map) return result['scanMessage']?.toString();
+    try {
+      final value = (result as dynamic).scanMessage;
+      if (value is String) return value;
+    } catch (_) {}
+    return null;
+  }
+
+  static Map<String, dynamic>? _resultToJson(dynamic result) {
+    if (result == null) return null;
+    if (result is Map<String, dynamic>) return result;
+    if (result is Map) return Map<String, dynamic>.from(result);
+    try {
+      final json = (result as dynamic).toJson();
+      if (json is Map<String, dynamic>) return json;
+      if (json is Map) return Map<String, dynamic>.from(json);
+    } catch (_) {}
+    return null;
+  }
+
+  static String _guessMimeFromBase64(String base64) {
+    if (base64.startsWith('/9j/') || base64.startsWith('data:image/jpeg')) {
+      return 'image/jpeg';
+    }
+    if (base64.startsWith('iVBORw0KGgo') || base64.startsWith('data:image/png')) {
+      return 'image/png';
+    }
+    return 'application/octet-stream';
+  }
+
+  /// One export per iPass completion: console summary + full JSON file on disk.
+  static void logIpassResponseOnce(
+    Map<String, dynamic>? data, {
+    String label = 'IPASS_RESPONSE',
+  }) {
+    if (!kDebugMode || data == null || data.isEmpty) return;
+
+    final envelope = buildApiEnvelope(data) ?? data;
+    final dataRoot = resolveDataRoot(envelope);
+    final images = extractIpassImages(dataRoot);
+    lastExtractedImages = images;
+
+    String fullJson;
+    try {
+      fullJson = const JsonEncoder.withIndent('  ').convert(envelope);
+    } catch (_) {
+      fullJson = envelope.toString();
+    }
+
+    final now = DateTime.now();
+    if (_lastLoggedPayload == fullJson &&
+        _lastLoggedAt != null &&
+        now.difference(_lastLoggedAt!) < const Duration(seconds: 3)) {
+      return;
+    }
+    _lastLoggedPayload = fullJson;
+    _lastLoggedAt = now;
+
+    unawaited(_saveFullResponseFiles(fullJson, images, label));
+
+    final totalImageChars = images.fold<int>(
+      0,
+      (sum, img) => sum + (img['sizeChars'] as int? ?? 0),
+    );
+
+    debugPrint('========== $label ==========');
+    debugPrint('Apistatus: ${envelope['Apistatus']}');
+    debugPrint('OverAllStatus: ${dataRoot['OverAllStatus']}');
+    debugPrint('DocType: ${dataRoot['DocType']}');
+    debugPrint(
+      'NOTE: Log preview only — backend/files keep FULL base64 (not shortened).',
+    );
+    debugPrint('Full JSON: ${fullJson.length} chars | Images: ${images.length} ($totalImageChars chars base64)');
+    debugPrint('--- IPASS IMAGES (${dataRoot['DocType'] ?? 'Unknown'}) ---');
+    if (images.isEmpty) {
+      debugPrint('(no images found)');
+    } else {
+      for (final img in images) {
+        final idx = img['index'];
+        final indexSuffix = idx == null ? '' : ' #$idx';
+        debugPrint(
+          '  [${img['category']}] ${img['imageType']}$indexSuffix'
+          ' — ${img['documentType']} / ${img['mimeType']} / ${img['sizeChars']} chars',
+        );
+      }
+    }
+    debugPrint('Full JSON + images saved to files (see IPASS_RESPONSE_FILE below).');
+    debugPrint('========== END $label ==========');
+  }
+
+  static Future<void> _saveFullResponseFiles(
+    String fullJson,
+    List<Map<String, dynamic>> images,
+    String label,
+  ) async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final stamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+      final responseFile = File('${dir.path}/$label-$stamp.json');
+      await responseFile.writeAsString(fullJson);
+      lastSavedResponsePath = responseFile.path;
+      debugPrint(
+        'IPASS_RESPONSE_FILE: ${responseFile.path} (${responseFile.lengthSync()} bytes)',
+      );
+
+      if (images.isNotEmpty) {
+        final imagesFile = File('${dir.path}/$label-images-$stamp.json');
+        await imagesFile.writeAsString(
+          const JsonEncoder.withIndent('  ').convert(images),
+        );
+        lastSavedImagesPath = imagesFile.path;
+        debugPrint(
+          'IPASS_IMAGES_FILE: ${imagesFile.path} (${images.length} images)',
+        );
+      }
+    } catch (e) {
+      debugPrint('IPASS_RESPONSE_FILE_ERROR: $e');
+    }
+  }
 
   static const Set<String> allFieldKeys = {
     'mobile',
@@ -60,8 +585,7 @@ class IpassOnboardingMapper {
     );
   }
 
-  /// Debug-only logs for residence / passport scans.
-  /// Search console/logcat for `BBH_RES` or `BBH_PASS` and copy the block between START/END.
+  /// Debug-only: single raw JSON log per scan (search console for `IPASS_RESPONSE`).
   static void logDocumentScanDebug({
     required IpassScanTarget target,
     Map<String, dynamic>? ipassData,
@@ -75,49 +599,12 @@ class IpassOnboardingMapper {
       return;
     }
 
-    const encoder = JsonEncoder.withIndent('  ');
-    final tag = switch (target) {
-      IpassScanTarget.residence => 'BBH_RES',
-      IpassScanTarget.passport => 'BBH_PASS',
-      IpassScanTarget.nationalId => 'BBH_NID',
-    };
     final label = switch (target) {
-      IpassScanTarget.residence => 'RESIDENCE',
-      IpassScanTarget.passport => 'PASSPORT',
-      IpassScanTarget.nationalId => 'NATIONAL ID',
+      IpassScanTarget.residence => 'IPASS_RESPONSE_RESIDENCE',
+      IpassScanTarget.passport => 'IPASS_RESPONSE_PASSPORT',
+      IpassScanTarget.nationalId => 'IPASS_RESPONSE_NATIONAL_ID',
     };
-
-    void emit(String line) {
-      debugPrint('[$tag] $line');
-      developer.log(line, name: tag);
-    }
-
-    emit('>>> $label SCAN DATA START <<<  (search: $tag)');
-    emit('Copy everything from START to END and send for field mapping fixes.');
-
-    if (ipassData != null && ipassData.isNotEmpty) {
-      try {
-        emit('--- raw iPass JSON ---\n${encoder.convert(ipassData)}');
-      } catch (e) {
-        emit('--- raw iPass JSON (encode failed: $e) ---\n$ipassData');
-      }
-    } else {
-      emit('--- raw iPass JSON: null or empty ---');
-    }
-
-    if (mapped.isEmpty) {
-      emit('--- mapped fields: EMPTY (no fields extracted) ---');
-    } else {
-      emit('--- mapped fields (camelCase) ---\n${encoder.convert(mapped)}');
-    }
-
-    if (formFields == null || formFields.isEmpty) {
-      emit('--- form fields (snake_case): EMPTY ---');
-    } else {
-      emit('--- form fields (snake_case) ---\n${encoder.convert(formFields)}');
-    }
-
-    emit('>>> $label SCAN DATA END <<<');
+    logIpassResponseOnce(ipassData, label: label);
   }
 
   /// Returns field key → value for non-empty extractions from [ipassData].
@@ -176,8 +663,10 @@ class IpassOnboardingMapper {
 
     final merged = <String, dynamic>{};
     final mrz = docDetails['MRZ'];
+    final nfc = docDetails['NFC'];
     final visual = docDetails['Visual'];
     if (mrz is Map) merged.addAll(Map<String, dynamic>.from(mrz));
+    if (nfc is Map) merged.addAll(Map<String, dynamic>.from(nfc));
     if (visual is Map) merged.addAll(Map<String, dynamic>.from(visual));
     return merged.isEmpty ? null : merged;
   }
@@ -268,10 +757,11 @@ class IpassOnboardingMapper {
       'Document Number',
       'Passport Number',
     ]);
-    final issuePlace = _firstSectionValue(section, const [
+    final issuePlace = _meaningfulSectionValue(section, const [
+      'Authority',
       'Place of Issue',
       'Issuing State Name',
-      'Nationality',
+      'AuthorityAr',
     ]);
     final issueDate = _normalizeDate(_sectionValue(section, 'Date of Issue'));
     final expiryDate = _normalizeDate(_sectionValue(section, 'Date of Expiry'));
@@ -287,19 +777,36 @@ class IpassOnboardingMapper {
         'Mothers Name',
         "Mother's Name",
         'Mother Name',
+        'Mothers NameAr',
       ]),
     );
 
     put(
       'nationality',
       _normalizeNationality(
-        _sectionValue(section, 'Nationality') ??
+        _firstSectionValue(section, const [
+          'Nationality',
+          'NationalityAr',
+          'Nationality Code',
+        ]) ??
             _nationalityFromCode(_sectionValue(section, 'Nationality Code')),
       ),
     );
     put('dob', _normalizeDate(_sectionValue(section, 'Date of Birth')));
-    put('countryBirth', _sectionValue(section, 'Issuing State Name'));
-    put('placeBirth', _sectionValue(section, 'Place of Birth'));
+    put(
+      'countryBirth',
+      _meaningfulSectionValue(section, const [
+        'Issuing State Name',
+        'Country of Birth',
+      ]),
+    );
+    put(
+      'placeBirth',
+      _meaningfulSectionValue(section, const [
+        'Place of Birth',
+        'Place of BirthAr',
+      ]),
+    );
     put('gender', _normalizeGender(_firstSectionValue(section, const ['Sex', 'SexAr'])));
   }
 
@@ -492,10 +999,17 @@ class IpassOnboardingMapper {
     final v = raw.trim();
     if (v.isEmpty) return null;
     final compact = v.replaceAll(RegExp(r'[\s<]'), '').toUpperCase();
+    final lower = v.toLowerCase();
     if (compact == 'IRQ' ||
         compact == 'IQI' ||
         compact == 'IQ' ||
-        v.toLowerCase() == 'iraq') {
+        compact == 'RAQI' ||
+        lower == 'iraq' ||
+        lower == 'iraqi' ||
+        lower == 'raqi' ||
+        lower.contains('iraq') ||
+        v == 'عراقي' ||
+        v.contains('عراق')) {
       return 'Iraqi';
     }
     return _nationalityFromCode(compact) ?? v;

@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer' as developer;
 import 'dart:io';
-import 'dart:math' show min;
 
 import 'package:baghdad_bullion_house/data/models/ipass_model/ipass_formdata_result_response.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_builder.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_logger.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/bbh_onboarding_state_store.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_formdata_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_html_field_mapper.dart';
@@ -55,6 +54,7 @@ class BbhOnboardingController extends ChangeNotifier {
   IpassScanTarget? activeIpassScan;
   bool get ipassInProgress => activeIpassScan != null;
   IpassKycResult? ipassResult;
+  final Map<IpassScanTarget, IpassKycResult> ipassScanResults = {};
   IpassFormDataResultResponse? residenceFormDataFront;
   IpassFormDataResultResponse? residenceFormDataBack;
   String? kycReference;
@@ -114,6 +114,7 @@ class BbhOnboardingController extends ChangeNotifier {
 
     kycReference = raw['kycReference']?.toString();
     ipassResult = null;
+    ipassScanResults.clear();
     notifyListeners();
   }
 
@@ -384,6 +385,7 @@ class BbhOnboardingController extends ChangeNotifier {
 
   Future<bool> _handleIpassResult(IpassKycResult result, IpassScanTarget target) async {
     ipassResult = result;
+    ipassScanResults[target] = result;
     final docApplied = _applyIpassDocumentFields(result, target);
 
     if (docApplied) {
@@ -522,12 +524,27 @@ class BbhOnboardingController extends ChangeNotifier {
       );
 
       if (kDebugMode) {
+        final residencePayload =
+            IpassOnboardingMapper.buildResidenceSubmissionPayload(
+          front: frontResult,
+          back: backResult,
+        );
+        final scans = residencePayload['ipass_scans'];
+        final residenceEnvelope =
+            scans is Map ? scans['residence'] : null;
         IpassOnboardingMapper.logDocumentScanDebug(
           target: IpassScanTarget.residence,
-          ipassData: {
-            'front': frontResult.toJson(),
-            'back': backResult.toJson(),
-          },
+          ipassData: residenceEnvelope is Map
+              ? Map<String, dynamic>.from(residenceEnvelope)
+              : {
+                  'Apistatus': true,
+                  'Apimessage': 'Success',
+                  'data': {
+                    'DocType': 'Residence Form',
+                    'front': frontResult.toJson(),
+                    'back': backResult.toJson(),
+                  },
+                },
           mapped: IpassHtmlFieldMapper.toHtmlFieldValues(
             IpassResidenceFormdataMapper.mapResults(
               front: frontResult,
@@ -620,37 +637,30 @@ class BbhOnboardingController extends ChangeNotifier {
         '${DateTime.now().day.toString().padLeft(2, '0')}-'
         '${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
 
-    submissionPayload = form.buildSubmissionPayload(
-      kycReference: kycReference!,
-      submittedAt: DateTime.now(),
-      ipassVerification: ipassResult?.toJson(),
+    final ipassBundle = IpassOnboardingMapper.mergeSubmissionBundles(
+      IpassOnboardingMapper.buildSubmissionIpassBundle(ipassScanResults),
+      IpassOnboardingMapper.buildResidenceSubmissionPayload(
+        front: residenceFormDataFront,
+        back: residenceFormDataBack,
+      ),
     );
-    _logSubmissionPayload(submissionPayload!);
+    final submittedAt = DateTime.now();
+    submissionPayload = BbhOnboardingSubmissionBuilder.build(
+      form: form,
+      kycReference: kycReference!,
+      submittedAt: submittedAt,
+      ipassBundle: ipassBundle,
+    );
+    submissionPayload = BbhOnboardingSubmissionBuilder.build(
+    form: form,
+    kycReference: kycReference!,
+    submittedAt: submittedAt,
+    ipassBundle: ipassBundle,
+  );
+    BbhOnboardingSubmissionLogger.logFinalSubmissionOnce(submissionPayload!);
 
     goTo(BbhOnboardingStep.success);
     unawaited(persist());
-  }
-
-  void _logSubmissionPayload(Map<String, dynamic> payload) {
-    final printable = Map<String, dynamic>.from(payload);
-    final sig = printable['signature'];
-    if (sig is String && sig.length > 80) {
-      printable['signature'] = '${sig.substring(0, 48)}… (${sig.length} chars)';
-    }
-
-    const encoder = JsonEncoder.withIndent('  ');
-    final json = encoder.convert(printable);
-    debugPrint('========== BBH_KYC_SUBMIT ==========');
-    debugPrint(json);
-    debugPrint('========== END BBH_KYC_SUBMIT ==========');
-
-    const chunkSize = 800;
-    for (var i = 0; i < json.length; i += chunkSize) {
-      developer.log(
-        json.substring(i, min(i + chunkSize, json.length)),
-        name: 'BBH_KYC_SUBMIT',
-      );
-    }
   }
 
   void resetAll() {
@@ -660,6 +670,7 @@ class BbhOnboardingController extends ChangeNotifier {
     step = BbhOnboardingStep.cover;
     editReturnStep = null;
     ipassResult = null;
+    ipassScanResults.clear();
     residenceFormDataFront = null;
     residenceFormDataBack = null;
     kycReference = null;

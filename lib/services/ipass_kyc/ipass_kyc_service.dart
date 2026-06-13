@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer' as developer;
-import 'dart:math' show min;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -228,64 +226,17 @@ class IpassKycService {
     return null;
   }
 
-  /// Pretty-prints iPass JSON to the debug console so you can copy it for field mapping.
-  /// Look for `iPassKycData` in Android Logcat / Xcode / VS Code Debug Console.
+  /// Single raw JSON block for field-mapping (search console for `IPASS_RESPONSE`).
   static void logResultForMapping(IpassKycResult result) {
-    if (!kDebugMode) return;
-
-    const encoder = JsonEncoder.withIndent('  ');
-    const banner =
-        '========== iPass KYC JSON (copy everything below) ==========';
-
-    developer.log(banner, name: 'iPassKycData');
-
-    if (result.transactionId != null) {
-      _logChunk('transactionId: ${result.transactionId}', 'iPassKycData');
-    }
-
-    if (result.data != null && result.data!.isNotEmpty) {
-      try {
-        _logChunk(
-          '--- parsed data ---\n${encoder.convert(result.data)}',
-          'iPassKycData',
-        );
-      } catch (e) {
-        _logChunk(
-          '--- parsed data (encode failed: $e) ---\n${result.data}',
-          'iPassKycData',
-        );
-      }
-    } else {
-      _logChunk('--- parsed data: null or empty ---', 'iPassKycData');
-    }
-
-    final raw = result.rawResponse;
-    if (raw != null && raw.isNotEmpty) {
-      try {
-        final decoded = jsonDecode(raw);
-        _logChunk(
-          '--- rawResponse ---\n${encoder.convert(decoded)}',
-          'iPassKycData',
-        );
-      } catch (_) {
-        _logChunk('--- rawResponse (string) ---\n$raw', 'iPassKycData');
-      }
-    }
-
-    developer.log(
-      '========== END iPass KYC JSON ==========',
-      name: 'iPassKycData',
+    final envelope = IpassOnboardingMapper.buildApiEnvelopeFromResult(
+      result,
+      apiStatus: result.apiStatus,
+      apiMessage: result.scanMessage,
     );
-  }
-
-  static void _logChunk(String text, String name) {
-    const chunkSize = 800;
-    for (var i = 0; i < text.length; i += chunkSize) {
-      developer.log(
-        text.substring(i, min(i + chunkSize, text.length)),
-        name: name,
-      );
-    }
+    IpassOnboardingMapper.logIpassResponseOnce(
+      envelope ?? result.data,
+      label: 'IPASS_RESPONSE',
+    );
   }
 
   /// Builds KYC payload for backend `service/kyc/saveData` endpoint.

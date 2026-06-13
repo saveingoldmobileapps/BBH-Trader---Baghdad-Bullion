@@ -222,7 +222,10 @@ class BbhOnboardingForm {
   Map<String, dynamic> buildSubmissionPayload({
     required String kycReference,
     required DateTime submittedAt,
+    Map<String, dynamic>? ipassBundle,
     Map<String, dynamic>? ipassVerification,
+    Map<String, dynamic>? ipassScanData,
+    List<Map<String, dynamic>>? ipassImages,
   }) {
     String? trimmed(TextEditingController c) {
       final t = c.text.trim();
@@ -314,7 +317,15 @@ class BbhOnboardingForm {
         'foreign_cit': foreignCitCaptured,
       },
       'verified_fields': verifiedFields.toList(),
-      if (ipassVerification != null) 'ipass_verification': ipassVerification,
+      if (ipassBundle != null) ...ipassBundle,
+      if (ipassBundle == null && ipassScanData != null)
+        'ipass_scan_data': ipassScanData,
+      if (ipassBundle == null &&
+          ipassImages != null &&
+          ipassImages.isNotEmpty)
+        'ipass_images': ipassImages,
+      if (ipassBundle == null && ipassVerification != null)
+        'ipass_verification': ipassVerification,
     };
   }
 

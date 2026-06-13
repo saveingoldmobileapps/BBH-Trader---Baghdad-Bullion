@@ -11,9 +11,9 @@ class IpassResidenceFormdataMapper {
     IpassFormDataResultResponse? back,
   }) {
     final mergedText = [
-      front?.ocrContent,
-      back?.ocrContent,
-    ].whereType<String>().where((t) => t.trim().isNotEmpty).join('\n');
+      _collectOcrText(front),
+      _collectOcrText(back),
+    ].where((t) => t.trim().isNotEmpty).join('\n');
 
     if (mergedText.isEmpty) return {};
 
@@ -31,6 +31,8 @@ class IpassResidenceFormdataMapper {
         RegExp(r'رقم\s*الاستمارة\s*([0-9]+)'),
         RegExp(r'رقم\s*التسلسل\s*([0-9]+)'),
         RegExp(r'التسلسل\s*/?\s*([0-9]+)'),
+        RegExp(r'(?:التسلسل|الرمز)[^\n]*\n\s*([0-9]{6,12})'),
+        RegExp(r'(?:^|\n)\s*([0-9]{7,10})\s*(?:\n|$)'),
       ],
     );
     put('resNo', formNo);
@@ -52,14 +54,26 @@ class IpassResidenceFormdataMapper {
     );
     put('resPlace', neighborhood);
 
-    final issueDate = _firstMatch(
-      normalized,
-      [
-        RegExp(r'تاريخ\s*تنظيم\s*الاستمارة\s*([0-9]{4}[/-][0-9]{1,2}[/-][0-9]{1,2})'),
-        RegExp(r'تاريخ\s*تنظيم\s*الاستمارة\s*([0-9/]+)'),
-      ],
-    );
-    put('resIssue', _normalizeDate(issueDate));
+    final issueDateParts = RegExp(
+      r'تاريخ\s*تنظيم\s*الاستمارة\s*([0-9]{1,2})\s*/\s*([0-9]{4})\s*/\s*([0-9]{1,2})',
+    ).firstMatch(normalized);
+    if (issueDateParts != null) {
+      final y = issueDateParts.group(2)!;
+      final m = issueDateParts.group(3)!.padLeft(2, '0');
+      final d = issueDateParts.group(1)!.padLeft(2, '0');
+      put('resIssue', '$y-$m-$d');
+    } else {
+      final issueDate = _firstMatch(
+        normalized,
+        [
+          RegExp(
+            r'تاريخ\s*تنظيم\s*الاستمارة\s*([0-9]{4}[/-][0-9]{1,2}[/-][0-9]{1,2})',
+          ),
+          RegExp(r'تاريخ\s*تنظيم\s*الاستمارة\s*([0-9/]+)'),
+        ],
+      );
+      put('resIssue', _normalizeDate(issueDate));
+    }
 
     return out;
   }
@@ -74,6 +88,35 @@ class IpassResidenceFormdataMapper {
       IpassScanTarget.residence,
       IpassHtmlFieldMapper.toHtmlFieldValues(mapped),
     );
+  }
+
+  static String _collectOcrText(IpassFormDataResultResponse? response) {
+    if (response == null) return '';
+    final parts = <String>[];
+
+    final content = response.ocrContent;
+    if (content != null && content.trim().isNotEmpty) {
+      parts.add(content);
+    }
+
+    final pages =
+        response.result?.analyzeResult?.rawAnalyzeJson?['pages'] ??
+        response.rawJson?['analyzeResult']?['pages'];
+    if (pages is List) {
+      for (final page in pages) {
+        if (page is! Map) continue;
+        final lines = page['lines'];
+        if (lines is! List) continue;
+        for (final line in lines) {
+          if (line is Map && line['content'] is String) {
+            final text = (line['content'] as String).trim();
+            if (text.isNotEmpty) parts.add(text);
+          }
+        }
+      }
+    }
+
+    return parts.join('\n');
   }
 
   static String _normalizeArabicDigits(String input) {

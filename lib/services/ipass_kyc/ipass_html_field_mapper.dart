@@ -17,6 +17,7 @@ class IpassHtmlFieldMapper {
     'enFather': 'en_father',
     'enGf': 'en_gf',
     'enSurname': 'en_surname',
+    'enMother': 'en_mother',
     'gender': 'gender',
     'nationality': 'nationality',
     'dob': 'dob',

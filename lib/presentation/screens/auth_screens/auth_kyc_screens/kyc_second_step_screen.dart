@@ -28,14 +28,7 @@ import '../../../../services/ipass_kyc/ipass_kyc_service.dart';
 import '../../../sharedProviders/providers/language_provider.dart';
 
 class KycSecondStepScreen extends ConsumerStatefulWidget {
-  final Map<String, dynamic>? alTaifOnboardingData;
-  final IpassKycResult? completedIpassResult;
-
-  const KycSecondStepScreen({
-    super.key,
-    this.alTaifOnboardingData,
-    this.completedIpassResult,
-  });
+  const KycSecondStepScreen({super.key});
 
   @override
   ConsumerState createState() => _KycSecondStepScreenState();
@@ -482,21 +475,7 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
                                 text: AppLocalizations.of(context)!.wait_please,
                               );
                               // Toasts.getSuccessToast(text: "Please Wait...");
-                              // await shuftiProKYC(
-                              //   countryCode: _selectNationality!,
-                              //   alTaifOnboardingData:
-                              //       widget.alTaifOnboardingData,
-                              // );
-
-                              await ipassKyc(
-                                countryCode: _selectNationality!,
-                                alTaifOnboardingData:
-                                    widget.alTaifOnboardingData,
-                                completedIpassResult:
-                                    widget.completedIpassResult,
-                              );
-
-                              //  VerifyIdentitySheet.show(context);
+                              await ipassKyc(countryCode: _selectNationality!);
                             }
                           },
                         ),
@@ -641,71 +620,44 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
     return false;
   }
 
-  Map<String, String> _contactFromAlTaif(Map<String, dynamic>? data) {
-    if (data == null) return {};
-    final step2 = data['step2Contact'];
-    if (step2 is! Map) return {};
-    return {
-      'email': step2['email']?.toString() ?? '',
-      'phone': step2['mobile']?.toString() ?? '',
-    };
-  }
-
   /// iPass KYC via native method channel (Android/iOS SDK).
-  Future<void> ipassKyc({
-    required String countryCode,
-    Map<String, dynamic>? alTaifOnboardingData,
-    IpassKycResult? completedIpassResult,
-  }) async {
+  Future<void> ipassKyc({required String countryCode}) async {
     try {
-      IpassKycResult ipassResult;
+      final config = IpassKycService.instance.loadConfigFromEnv();
+      final email = config.email;
+      final phone = config.phoneNumber;
+      final socialEmail =
+          config.socialMediaEmail.isNotEmpty ? config.socialMediaEmail : email;
 
-      if (completedIpassResult != null) {
-        ipassResult = completedIpassResult;
-      } else {
-        final config = IpassKycService.instance.loadConfigFromEnv();
-        final alTaifContact = _contactFromAlTaif(alTaifOnboardingData);
+      if (!config.isValid && email.isEmpty) {
+        Toasts.getErrorToast(
+          text: 'Configuration error, please try again later.',
+        );
+        return;
+      }
 
-        final email = config.email.isNotEmpty
-            ? config.email
-            : (alTaifContact['email'] ?? '');
-        final phone = config.phoneNumber.isNotEmpty
-            ? config.phoneNumber
-            : (alTaifContact['phone'] ?? '');
-        final socialEmail = config.socialMediaEmail.isNotEmpty
-            ? config.socialMediaEmail
-            : email;
-
-        if (!config.isValid && email.isEmpty) {
-          Toasts.getErrorToast(
-            text: 'Configuration error, please try again later.',
-          );
-          return;
-        }
-
-        if (kDebugMode) {
-          debugPrint(
-            '[iPass] start — workflowId=${config.workflowId} dbType=${config.dbType}',
-          );
-        }
-
-        if (!await _ensureKycMediaPermissions()) {
-          return;
-        }
-
-        ipassResult = await IpassKycService.instance.startKycVerification(
-          email: email,
-          password: config.password,
-          appToken: config.appToken,
-          workflowId: config.workflowId,
-          socialMediaEmail: socialEmail,
-          phoneNumber: phone,
-          serverUrl: config.serverUrl,
-          dbType: config.dbType,
-          useDynamicDb: config.useDynamicDb,
-          enableHologram: config.enableHologram,
+      if (kDebugMode) {
+        debugPrint(
+          '[iPass] start — workflowId=${config.workflowId} dbType=${config.dbType}',
         );
       }
+
+      if (!await _ensureKycMediaPermissions()) {
+        return;
+      }
+
+      final ipassResult = await IpassKycService.instance.startKycVerification(
+        email: email,
+        password: config.password,
+        appToken: config.appToken,
+        workflowId: config.workflowId,
+        socialMediaEmail: socialEmail,
+        phoneNumber: phone,
+        serverUrl: config.serverUrl,
+        dbType: config.dbType,
+        useDynamicDb: config.useDynamicDb,
+        enableHologram: config.enableHologram,
+      );
 
       if (!ipassResult.success || !ipassResult.apiStatus) {
         Toasts.getErrorToast(
@@ -728,7 +680,6 @@ class _KycSecondStepScreenState extends ConsumerState<KycSecondStepScreen> {
         userId: userId,
         countryCode: countryCode,
         ipassResult: ipassResult,
-        bankOnboardingData: alTaifOnboardingData,
       );
 
       await LocalDatabase.instance.saveKycData(

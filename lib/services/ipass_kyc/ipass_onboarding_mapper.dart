@@ -490,6 +490,10 @@ class IpassOnboardingMapper {
     debugPrint('Apistatus: ${envelope['Apistatus']}');
     debugPrint('OverAllStatus: ${dataRoot['OverAllStatus']}');
     debugPrint('DocType: ${dataRoot['DocType']}');
+    debugPrint('NFC data stored: ${hasNfcInScanData(envelope)}');
+    debugPrint(
+      'Field mapping source: ${hasNfcInScanData(envelope) ? 'NFC (chip) + Visual/MRZ fallback' : 'Visual + MRZ'}',
+    );
     debugPrint(
       'NOTE: Log preview only — backend/files keep FULL base64 (not shortened).',
     );
@@ -616,7 +620,7 @@ class IpassOnboardingMapper {
 
     final out = <String, String>{};
     final dataRoot = _resolveDataRoot(ipassData);
-    final docSection = _mergeDocSections(dataRoot);
+    final docSection = _mergeDocSections(dataRoot, target: target);
     final docType = _sectionValue(dataRoot, 'DocType')?.toLowerCase() ?? '';
     final isResidenceDoc = _isResidenceDocument(docType, docSection);
     final isPassportDoc = _isPassportDocument(docType, docSection);
@@ -656,8 +660,11 @@ class IpassOnboardingMapper {
     return current;
   }
 
-  /// Visual overrides MRZ when both exist (human-readable values).
-  static Map<String, dynamic>? _mergeDocSections(Map<String, dynamic> dataRoot) {
+  /// MRZ → Visual → NFC (chip wins on national ID when NFC data is present).
+  static Map<String, dynamic>? _mergeDocSections(
+    Map<String, dynamic> dataRoot, {
+    IpassScanTarget target = IpassScanTarget.nationalId,
+  }) {
     final docDetails = dataRoot['DocDetails'];
     if (docDetails is! Map) return null;
 
@@ -666,9 +673,48 @@ class IpassOnboardingMapper {
     final nfc = docDetails['NFC'];
     final visual = docDetails['Visual'];
     if (mrz is Map) merged.addAll(Map<String, dynamic>.from(mrz));
-    if (nfc is Map) merged.addAll(Map<String, dynamic>.from(nfc));
     if (visual is Map) merged.addAll(Map<String, dynamic>.from(visual));
+
+    final nfcMap = nfc is Map ? Map<String, dynamic>.from(nfc) : null;
+    final useNfc = target == IpassScanTarget.nationalId &&
+        nfcMap != null &&
+        hasMeaningfulNfcData(nfcMap);
+    if (useNfc) {
+      merged.addAll(nfcMap);
+    } else if (nfcMap != null && target != IpassScanTarget.nationalId) {
+      merged.addAll(nfcMap);
+    }
+
     return merged.isEmpty ? null : merged;
+  }
+
+  /// True when chip-read NFC block contains identity fields.
+  static bool hasMeaningfulNfcData(Map<String, dynamic> nfc) {
+    if (nfc.isEmpty) return false;
+    const signalKeys = [
+      'Document Number',
+      'Personal Number',
+      'MRZ Strings',
+      'Surname',
+      'SurnameAr',
+      'Given Names',
+      'Given NamesAr',
+      'DS Certificate Valid From',
+    ];
+    for (final key in signalKeys) {
+      final v = nfc[key]?.toString().trim();
+      if (v != null && v.isNotEmpty) return true;
+    }
+    return false;
+  }
+
+  static bool hasNfcInScanData(Map<String, dynamic>? ipassData) {
+    if (ipassData == null) return false;
+    final root = _resolveDataRoot(ipassData);
+    final docDetails = root['DocDetails'];
+    if (docDetails is! Map) return false;
+    final nfc = docDetails['NFC'];
+    return nfc is Map && hasMeaningfulNfcData(Map<String, dynamic>.from(nfc));
   }
 
   static void _mapFromDocSection(

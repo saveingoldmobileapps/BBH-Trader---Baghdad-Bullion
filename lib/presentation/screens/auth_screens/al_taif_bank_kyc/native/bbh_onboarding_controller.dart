@@ -14,6 +14,7 @@ import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_residence_formdat
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'bbh_onboarding_field_scroll.dart';
 import 'bbh_onboarding_form.dart';
 
 enum BbhOnboardingStep {
@@ -53,7 +54,6 @@ class BbhOnboardingController extends ChangeNotifier {
   BbhOnboardingStep? editReturnStep;
   IpassScanTarget? activeIpassScan;
   bool get ipassInProgress => activeIpassScan != null;
-  IpassKycResult? ipassResult;
   final Map<IpassScanTarget, IpassKycResult> ipassScanResults = {};
   IpassFormDataResultResponse? residenceFormDataFront;
   IpassFormDataResultResponse? residenceFormDataBack;
@@ -113,7 +113,6 @@ class BbhOnboardingController extends ChangeNotifier {
     }
 
     kycReference = raw['kycReference']?.toString();
-    ipassResult = null;
     ipassScanResults.clear();
     notifyListeners();
   }
@@ -169,55 +168,33 @@ class BbhOnboardingController extends ChangeNotifier {
 
   int _stepIndex(BbhOnboardingStep s) => BbhOnboardingStep.values.indexOf(s);
 
+  String? validationFocusField;
+
+  void consumeValidationFocus() => validationFocusField = null;
+
   bool validateCurrent() {
-    switch (step) {
-      case BbhOnboardingStep.purpose:
-        return _require(form.purposeConfirmed, 'Please confirm Section 1.');
-      case BbhOnboardingStep.ocrReview:
-        return _validateOcr();
-      case BbhOnboardingStep.residenceAddress:
-        return _validateResidence();
-      case BbhOnboardingStep.personalDetails:
-        return _validatePersonal();
-      case BbhOnboardingStep.income:
-        return _validateIncome();
-      case BbhOnboardingStep.fatca:
-        return form.fatca != 'Yes' ||
-            (_filled(form.fatcaTin) && _filled(form.fatcaAddr));
-      case BbhOnboardingStep.pep:
-        return form.pep != 'Yes' ||
-            (_filled(form.pepPosition) &&
-                _filled(form.pepCountry) &&
-                _filled(form.pepFrom) &&
-                _filled(form.pepTo));
-      case BbhOnboardingStep.contact:
-        if (!_filled(form.mobile) || !_filled(form.email)) {
-          return _fail('Enter mobile and email.');
-        }
-        if (!form.verifiedEmail.value) {
-          return _fail('Verify email before continuing.');
-        }
-        if (!bypassMobileVerification && !form.verifiedMobile.value) {
-          return _fail('Verify mobile before continuing.');
-        }
-        return true;
-      case BbhOnboardingStep.custodian:
-        if (form.hasAccount == 'Yes') {
-          final iban = form.iban.text.replaceAll(RegExp(r'\s'), '').toUpperCase();
-          if (!RegExp(r'^IQ[A-Z0-9]{21}$').hasMatch(iban)) {
-            return _fail('Enter a valid Iraqi IBAN (IQ + 21 characters).');
-          }
-        }
-        return true;
-      case BbhOnboardingStep.consent:
-        if (!form.hasSignature) return _fail('Please provide your signature.');
-        if (!form.consentConfirmed) {
-          return _fail('Please confirm Section 6 has been read.');
-        }
-        return true;
-      default:
-        return true;
+    final ok = switch (step) {
+      BbhOnboardingStep.purpose => _require(
+          form.purposeConfirmed,
+          'Please confirm Section 1.',
+          fieldKey: 'purpose_confirmed',
+        ),
+      BbhOnboardingStep.ocrReview => _validateOcr(),
+      BbhOnboardingStep.residenceAddress => _validateResidence(),
+      BbhOnboardingStep.personalDetails => _validatePersonal(),
+      BbhOnboardingStep.income => _validateIncome(),
+      BbhOnboardingStep.fatca => _validateFatca(),
+      BbhOnboardingStep.pep => _validatePep(),
+      BbhOnboardingStep.contact => _validateContact(),
+      BbhOnboardingStep.custodian => _validateCustodian(),
+      BbhOnboardingStep.consent => _validateConsent(),
+      _ => true,
+    };
+    if (ok) {
+      BbhOnboardingFieldScroll.clearError();
+      validationFocusField = null;
     }
+    return ok;
   }
 
   bool _validateOcr() {
@@ -240,24 +217,25 @@ class BbhOnboardingController extends ChangeNotifier {
     ];
     for (final key in required) {
       final c = form.controllerFor(key);
-      if (c == null || !_filled(c))
-        return _fail('Please fill all required fields.');
+      if (c == null || !_filled(c)) {
+        return _fail('Please fill all required fields.', fieldKey: key);
+      }
     }
     if (!form.noPassport) {
-      if (!_filled(form.ppNo) ||
-          !_filled(form.ppPlace) ||
-          !_filled(form.ppIssue) ||
-          !_filled(form.ppExpiry)) {
-        return _fail('Complete passport fields or skip passport.');
+      for (final key in ['pp_no', 'pp_place', 'pp_issue', 'pp_expiry']) {
+        final c = form.controllerFor(key);
+        if (c == null || !_filled(c)) {
+          return _fail('Complete passport fields or skip passport.', fieldKey: key);
+        }
       }
     }
     final personal = form.idPersonal.text.trim();
     if (!RegExp(r'^\d{12}$').hasMatch(personal)) {
-      return _fail('Personal Number must be exactly 12 digits.');
+      return _fail('Personal Number must be exactly 12 digits.', fieldKey: 'id_personal');
     }
     final serial = form.idSerial.text.trim().toUpperCase();
     if (!RegExp(r'^[A-Z]\d{8}$').hasMatch(serial)) {
-      return _fail('ID Number must be one letter + 8 digits.');
+      return _fail('ID Number must be one letter + 8 digits.', fieldKey: 'id_serial');
     }
     return true;
   }
@@ -277,38 +255,101 @@ class BbhOnboardingController extends ChangeNotifier {
     ];
     for (final key in required) {
       final c = form.controllerFor(key);
-      if (c == null || !_filled(c))
-        return _fail('Please fill all address fields.');
+      if (c == null || !_filled(c)) {
+        return _fail('Please fill all address fields.', fieldKey: key);
+      }
     }
     if (form.foreignRes == 'Yes' && !_filled(form.foreignResCountry)) {
-      return _fail('Enter foreign residency country.');
+      return _fail('Enter foreign residency country.', fieldKey: 'foreign_res_country');
     }
     if (form.foreignCit == 'Yes' && !_filled(form.foreignCitCountry)) {
-      return _fail('Enter foreign citizenship country.');
+      return _fail('Enter foreign citizenship country.', fieldKey: 'foreign_cit_country');
     }
     return true;
   }
 
   bool _validatePersonal() {
-    if (form.gender == null) return _fail('Select gender.');
-    if (!_filled(form.nationality) ||
-        !_filled(form.dob) ||
-        !_filled(form.countryBirth) ||
-        !_filled(form.placeBirth)) {
-      return _fail('Complete all personal details.');
+    if (form.gender == null) {
+      return _fail('Select gender.', fieldKey: 'gender');
+    }
+    for (final key in ['nationality', 'dob', 'country_birth', 'place_birth']) {
+      final c = form.controllerFor(key);
+      if (c == null || !_filled(c)) {
+        return _fail('Complete all personal details.', fieldKey: key);
+      }
     }
     return true;
   }
 
   bool _validateIncome() {
-    if (form.education == null || form.sector == null) {
-      return _fail('Select education and sector.');
+    if (form.education == null) {
+      return _fail('Select education level.', fieldKey: 'education');
     }
-    if (!_filled(form.income) ||
-        !_filled(form.occupation) ||
-        !_filled(form.employer) ||
-        !_filled(form.employerAddr)) {
-      return _fail('Complete income and employment fields.');
+    if (form.sector == null) {
+      return _fail('Select economic sector.', fieldKey: 'sector');
+    }
+    for (final key in ['income', 'occupation', 'employer', 'employer_addr']) {
+      final c = form.controllerFor(key);
+      if (c == null || !_filled(c)) {
+        return _fail('Complete income and employment fields.', fieldKey: key);
+      }
+    }
+    return true;
+  }
+
+  bool _validateFatca() {
+    if (form.fatca != 'Yes') return true;
+    if (!_filled(form.fatcaTin)) {
+      return _fail('Enter your U.S. TIN / SSN.', fieldKey: 'fatca_tin');
+    }
+    if (!_filled(form.fatcaAddr)) {
+      return _fail('Enter your U.S. address.', fieldKey: 'fatca_addr');
+    }
+    return true;
+  }
+
+  bool _validatePep() {
+    if (form.pep != 'Yes') return true;
+    for (final key in ['pep_position', 'pep_country', 'pep_from', 'pep_to']) {
+      final c = form.controllerFor(key);
+      if (c == null || !_filled(c)) {
+        return _fail('Complete all PEP fields.', fieldKey: key);
+      }
+    }
+    return true;
+  }
+
+  bool _validateContact() {
+    if (!_filled(form.mobile)) {
+      return _fail('Enter your mobile number.', fieldKey: 'mobile');
+    }
+    if (!bypassMobileVerification && !form.verifiedMobile.value) {
+      return _fail('Verify your mobile number before continuing.', fieldKey: 'mobile');
+    }
+    if (!_filled(form.email)) {
+      return _fail('Enter your email address.', fieldKey: 'email');
+    }
+    if (!form.verifiedEmail.value) {
+      return _fail('Verify your email before continuing.', fieldKey: 'email');
+    }
+    return true;
+  }
+
+  bool _validateCustodian() {
+    if (form.hasAccount != 'Yes') return true;
+    final iban = form.iban.text.replaceAll(RegExp(r'\s'), '').toUpperCase();
+    if (!RegExp(r'^IQ[A-Z0-9]{21}$').hasMatch(iban)) {
+      return _fail('Enter a valid Iraqi IBAN (IQ + 21 characters).', fieldKey: 'iban');
+    }
+    return true;
+  }
+
+  bool _validateConsent() {
+    if (!form.hasSignature) {
+      return _fail('Please provide your signature.', fieldKey: 'signature');
+    }
+    if (!form.consentConfirmed) {
+      return _fail('Please confirm Section 6 has been read.', fieldKey: 'consent_confirmed');
     }
     return true;
   }
@@ -319,13 +360,18 @@ class BbhOnboardingController extends ChangeNotifier {
   String? lastWarning;
   String? lastSuccess;
 
-  bool _fail(String msg) {
+  bool _fail(String msg, {String? fieldKey}) {
     lastError = msg;
+    if (fieldKey != null) {
+      validationFocusField = fieldKey;
+      BbhOnboardingFieldScroll.markError(fieldKey);
+    }
     notifyListeners();
     return false;
   }
 
-  bool _require(bool ok, String msg) => ok ? true : _fail(msg);
+  bool _require(bool ok, String msg, {String? fieldKey}) =>
+      ok ? true : _fail(msg, fieldKey: fieldKey);
 
   bool _applyIpassDocumentFields(IpassKycResult result, IpassScanTarget target) {
     final mapped = IpassOnboardingMapper.extractFieldValues(result.data, target: target);
@@ -384,7 +430,6 @@ class BbhOnboardingController extends ChangeNotifier {
   }
 
   Future<bool> _handleIpassResult(IpassKycResult result, IpassScanTarget target) async {
-    ipassResult = result;
     ipassScanResults[target] = result;
     final docApplied = _applyIpassDocumentFields(result, target);
 
@@ -651,13 +696,11 @@ class BbhOnboardingController extends ChangeNotifier {
       submittedAt: submittedAt,
       ipassBundle: ipassBundle,
     );
-    submissionPayload = BbhOnboardingSubmissionBuilder.build(
-    form: form,
-    kycReference: kycReference!,
-    submittedAt: submittedAt,
-    ipassBundle: ipassBundle,
-  );
-    BbhOnboardingSubmissionLogger.logFinalSubmissionOnce(submissionPayload!);
+    try {
+      BbhOnboardingSubmissionLogger.logFinalSubmissionOnce(submissionPayload!);
+    } catch (_) {
+      // Logging must never block the success screen.
+    }
 
     goTo(BbhOnboardingStep.success);
     unawaited(persist());
@@ -669,7 +712,6 @@ class BbhOnboardingController extends ChangeNotifier {
     old.dispose();
     step = BbhOnboardingStep.cover;
     editReturnStep = null;
-    ipassResult = null;
     ipassScanResults.clear();
     residenceFormDataFront = null;
     residenceFormDataBack = null;

@@ -3300,6 +3300,267 @@ class AppLocalizationsEn extends AppLocalizations {
   String get register_for_free_demo => 'Register For Free Demo Account';
 
   @override
+  String get kyc_done => 'Done';
+
+  @override
+  String get kyc_title_contact => 'Contact';
+
+  @override
+  String get kyc_full_name => 'Full Name';
+
+  @override
+  String get kyc_personal_detail => 'Personal Details';
+
+  @override
+  String get kyc_national_id => 'National ID';
+
+  @override
+  String get kyc_income => 'Income & Employment';
+
+  @override
+  String get kyc_address => 'Address';
+
+  @override
+  String get kyc_compliance => 'Compliance';
+
+  @override
+  String get kyc_foreignres => 'Foreign Residency';
+
+  @override
+  String get kyc_foreigncit => 'Foreign Citizenship';
+
+  @override
+  String get kyc_phone_verified => 'Verified ✓';
+
+  @override
+  String get kyc_verify_number => 'Verify Number';
+
+  @override
+  String get kyc_email_verified => 'Verified ✓';
+
+  @override
+  String get kyc_verify_email => 'Verify Email';
+
+  @override
+  String get kyc_update_contact_detail =>
+      'A changed number or email must be verified again before you can submit.';
+
+  @override
+  String get kyc_father_name => 'Father\'s Name';
+
+  @override
+  String get kyc_grand_father_name => 'Grandfather\'s';
+
+  @override
+  String get kyc_surname => 'Surname';
+
+  @override
+  String get kyc_mother_name => 'Mother\'s Name';
+
+  @override
+  String get kyc_gender => 'Gender';
+
+  @override
+  String get kyc_country_of_birth => 'Country of Birth';
+
+  @override
+  String get kyc_place_birth => 'Place of Birth';
+
+  @override
+  String get kyc_personal_number => 'Personal Number';
+
+  @override
+  String get kyc_id_number => 'ID Number (Card Serial)';
+
+  @override
+  String get kyc_place_of_issue => 'Place of Issue';
+
+  @override
+  String get kyc_date_of_issue => 'Date of Issue';
+
+  @override
+  String get kyc_date_of_expiry => 'Date of Expiry';
+
+  @override
+  String get kyc_passport_number => 'Passport Number';
+
+  @override
+  String get kyc_education_level => 'Education Level';
+
+  @override
+  String get kyc_economic_sector => 'Economic Sector';
+
+  @override
+  String get kyc_total_monthly_income => 'Total Monthly Income (IQD)';
+
+  @override
+  String get kyc_employer_address => 'Employer Address';
+
+  @override
+  String get kyc_governorate => 'Governorate';
+
+  @override
+  String get kyc_district => 'District';
+
+  @override
+  String get kyc_city_town => 'City / Town';
+
+  @override
+  String get kyc_mahalla => 'Mahalla';
+
+  @override
+  String get kyc_street => 'Street';
+
+  @override
+  String get kyc_house_no => 'House No.';
+
+  @override
+  String get kyc_nearest_landmark_ar => 'Nearest Landmark (Arabic)';
+
+  @override
+  String get kyc_neares_landmart_eng => 'Nearest Landmark (English)';
+
+  @override
+  String get kyc_are_u_us_person => 'Are you a U.S. person?';
+
+  @override
+  String get kyc_us => 'U.S. TIN / SSN';
+
+  @override
+  String get kyc_us_address => 'U.S. Address';
+
+  @override
+  String get kyc_do_you_fall_into_pep => 'Do you fall into any PEP category?';
+
+  @override
+  String get kyc_position_held => 'Position Held / Relationship to PEP';
+
+  @override
+  String get kyc_from_date => 'From (MM/YYYY)';
+
+  @override
+  String get kyc_from_date_hint => 'From (MM/YYYY)';
+
+  @override
+  String get kyc_to_date => 'To (MM/YYYY)';
+
+  @override
+  String get kyc_to_date_hint => 'To (MM/YYYY)';
+
+  @override
+  String get kyc_permission_to_reside_outside_iraq =>
+      'Permission to reside outside Iraq?';
+
+  @override
+  String get kyc_citizenship => 'Citizenship in another country?';
+
+  @override
+  String get kyc_we_will_send_otp_on_phone =>
+      'We will send a one-time code to your mobile number via WhatsApp.';
+
+  @override
+  String get kyc_we_will_send_otp_on_email =>
+      'We will send a one-time code to your email address.';
+
+  @override
+  String get kyc_didnt_recieve_code => 'Didn\'t receive the code?';
+
+  @override
+  String get kyc_resend_in => 'Resend in';
+
+  @override
+  String get kyc_resend_code => 'Resend code';
+
+  @override
+  String get kyc_sending => 'Sending…';
+
+  @override
+  String get kyc_send_code => 'Send Code';
+
+  @override
+  String get kyc_before_u_begin => 'Before you begin';
+
+  @override
+  String get kyc_have_documents_title => 'Have these documents ready';
+
+  @override
+  String get kyc_lede_doc =>
+      'All three documents below are required to complete onboarding. Please have them with you before continuing.';
+
+  @override
+  String get kyc_national_card_title => 'National Identity Card';
+
+  @override
+  String get kyc_national_card_subtitle =>
+      'Front and back. Both card numbers will be required.';
+
+  @override
+  String get kyc_residence_card_title => 'Residence Card';
+
+  @override
+  String get kyc_residence_card_subtitle => 'Front and back.';
+
+  @override
+  String get kyc_passort_title => 'Passport (if you have one)';
+
+  @override
+  String get kyc_passport_subtitle =>
+      'Used for your name in English. You can continue without it.';
+
+  @override
+  String get kyc_you_will_need => 'You\'ll also need';
+
+  @override
+  String get kyc_roughly_six => 'roughly six (6) minutes to complete the form.';
+
+  @override
+  String get kyc_additional_documents =>
+      'Additional documents may be required if you hold residency or citizenship outside Iraq.';
+
+  @override
+  String get kyc_section_1 => 'Section 1 · Purpose & Scope';
+
+  @override
+  String get kyc_before_we_begin => 'Before we begin';
+
+  @override
+  String get kyc_number_1 => '1.1';
+
+  @override
+  String get kyc_about_bbh_bold => 'About Baghdad Bullion House.';
+
+  @override
+  String get kyc_about_bbh_body =>
+      'BBH is a licensed dealer in precious metals and stones, registered in Iraq under Commercial Registration No. 17240, with four (4) branches in Baghdad and one (1) in Najaf.';
+
+  @override
+  String get kyc_number_2 => '1.2';
+
+  @override
+  String get kyc_number_2_bold => 'What we collect.';
+
+  @override
+  String get kyc_number_2_body =>
+      'This onboarding captures your identifying details, economic profile, and compliance declarations to open your gold account with BBH.';
+
+  @override
+  String get kyc_number_3 => '1.3';
+
+  @override
+  String get kyc_number_3_bold => 'What we keep.';
+
+  @override
+  String get kyc_number_3_body =>
+      'All records are held securely by BBH for the period required by Iraqi law, not less than seven (7) years from the closure of the account or last transaction.';
+
+  @override
+  String get kyc_purpose => 'purpose_confirmed';
+
+  @override
+  String get kyc_purpose_des =>
+      'I have been informed of the above and wish to proceed with BBH onboarding.';
+
+  @override
   String trade_confirm_market_body(String price) {
     return 'Your trade will be executed immediately at the current market price of IQD $price. Ensure you have sufficient balance.';
   }

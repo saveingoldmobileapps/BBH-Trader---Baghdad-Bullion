@@ -53,17 +53,24 @@ class BbhOnboardingSubmissionLogger {
 
     unawaited(_saveFullJsonFile(fullJson));
 
-    final consolePayload = _shortenHeavyFields(payload);
-    final consoleJson = encoder.convert(consolePayload);
+    try {
+      final consolePayload = _shortenHeavyFields(payload);
+      final consoleJson = encoder.convert(consolePayload);
 
-    developer.log(
-      '========== BBH_KYC_FINAL_JSON ==========\n'
-      '$consoleJson\n'
-      '========== END BBH_KYC_FINAL_JSON ==========\n'
-      'NOTE: Console JSON is valid — large base64 fields shortened for readability.\n'
-      'Full payload with ALL base64 saved to: ${lastSavedFilePath ?? '(saving...)'}',
-      name: 'BBH_KYC_FINAL_JSON',
-    );
+      developer.log(
+        '========== BBH_KYC_FINAL_JSON ==========\n'
+        '$consoleJson\n'
+        '========== END BBH_KYC_FINAL_JSON ==========\n'
+        'NOTE: Console JSON is valid — large base64 fields shortened for readability.\n'
+        'Full payload with ALL base64 saved to: ${lastSavedFilePath ?? '(saving...)'}',
+        name: 'BBH_KYC_FINAL_JSON',
+      );
+    } catch (e, st) {
+      developer.log(
+        'BBH_KYC_FINAL_CONSOLE_ERROR: $e\n$st',
+        name: 'BBH_KYC_FINAL_JSON',
+      );
+    }
   }
   
 
@@ -80,19 +87,21 @@ class BbhOnboardingSubmissionLogger {
   }
 
   static Map<String, dynamic> _shortenHeavyFields(Map<String, dynamic> source) {
-    return _walk(source) as Map<String, dynamic>;
+    return _walkMap(source);
+  }
+
+  static Map<String, dynamic> _walkMap(Map map) {
+    final result = <String, dynamic>{};
+    for (final entry in map.entries) {
+      result[entry.key.toString()] =
+          _walkValue(entry.key.toString(), entry.value);
+    }
+    return result;
   }
 
   static dynamic _walk(dynamic value) {
-    if (value is Map) {
-      return {
-        for (final entry in value.entries)
-          entry.key: _walkValue(entry.key.toString(), entry.value),
-      };
-    }
-    if (value is List) {
-      return value.map(_walk).toList();
-    }
+    if (value is Map) return _walkMap(value);
+    if (value is List) return value.map(_walk).toList();
     return value;
   }
 

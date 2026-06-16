@@ -6276,6 +6276,504 @@ abstract class AppLocalizations {
   /// **'Register For Free Demo Account'**
   String get register_for_free_demo;
 
+  /// No description provided for @kyc_done.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get kyc_done;
+
+  /// No description provided for @kyc_title_contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get kyc_title_contact;
+
+  /// No description provided for @kyc_full_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get kyc_full_name;
+
+  /// No description provided for @kyc_personal_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Details'**
+  String get kyc_personal_detail;
+
+  /// No description provided for @kyc_national_id.
+  ///
+  /// In en, this message translates to:
+  /// **'National ID'**
+  String get kyc_national_id;
+
+  /// No description provided for @kyc_income.
+  ///
+  /// In en, this message translates to:
+  /// **'Income & Employment'**
+  String get kyc_income;
+
+  /// No description provided for @kyc_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get kyc_address;
+
+  /// No description provided for @kyc_compliance.
+  ///
+  /// In en, this message translates to:
+  /// **'Compliance'**
+  String get kyc_compliance;
+
+  /// No description provided for @kyc_foreignres.
+  ///
+  /// In en, this message translates to:
+  /// **'Foreign Residency'**
+  String get kyc_foreignres;
+
+  /// No description provided for @kyc_foreigncit.
+  ///
+  /// In en, this message translates to:
+  /// **'Foreign Citizenship'**
+  String get kyc_foreigncit;
+
+  /// No description provided for @kyc_phone_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified ✓'**
+  String get kyc_phone_verified;
+
+  /// No description provided for @kyc_verify_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Number'**
+  String get kyc_verify_number;
+
+  /// No description provided for @kyc_email_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified ✓'**
+  String get kyc_email_verified;
+
+  /// No description provided for @kyc_verify_email.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Email'**
+  String get kyc_verify_email;
+
+  /// No description provided for @kyc_update_contact_detail.
+  ///
+  /// In en, this message translates to:
+  /// **'A changed number or email must be verified again before you can submit.'**
+  String get kyc_update_contact_detail;
+
+  /// No description provided for @kyc_father_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Father\'\'s Name'**
+  String get kyc_father_name;
+
+  /// No description provided for @kyc_grand_father_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Grandfather\'\'s'**
+  String get kyc_grand_father_name;
+
+  /// No description provided for @kyc_surname.
+  ///
+  /// In en, this message translates to:
+  /// **'Surname'**
+  String get kyc_surname;
+
+  /// No description provided for @kyc_mother_name.
+  ///
+  /// In en, this message translates to:
+  /// **'Mother\'\'s Name'**
+  String get kyc_mother_name;
+
+  /// No description provided for @kyc_gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get kyc_gender;
+
+  /// No description provided for @kyc_country_of_birth.
+  ///
+  /// In en, this message translates to:
+  /// **'Country of Birth'**
+  String get kyc_country_of_birth;
+
+  /// No description provided for @kyc_place_birth.
+  ///
+  /// In en, this message translates to:
+  /// **'Place of Birth'**
+  String get kyc_place_birth;
+
+  /// No description provided for @kyc_personal_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Number'**
+  String get kyc_personal_number;
+
+  /// No description provided for @kyc_id_number.
+  ///
+  /// In en, this message translates to:
+  /// **'ID Number (Card Serial)'**
+  String get kyc_id_number;
+
+  /// No description provided for @kyc_place_of_issue.
+  ///
+  /// In en, this message translates to:
+  /// **'Place of Issue'**
+  String get kyc_place_of_issue;
+
+  /// No description provided for @kyc_date_of_issue.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Issue'**
+  String get kyc_date_of_issue;
+
+  /// No description provided for @kyc_date_of_expiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Expiry'**
+  String get kyc_date_of_expiry;
+
+  /// No description provided for @kyc_passport_number.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport Number'**
+  String get kyc_passport_number;
+
+  /// No description provided for @kyc_education_level.
+  ///
+  /// In en, this message translates to:
+  /// **'Education Level'**
+  String get kyc_education_level;
+
+  /// No description provided for @kyc_economic_sector.
+  ///
+  /// In en, this message translates to:
+  /// **'Economic Sector'**
+  String get kyc_economic_sector;
+
+  /// No description provided for @kyc_total_monthly_income.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Monthly Income (IQD)'**
+  String get kyc_total_monthly_income;
+
+  /// No description provided for @kyc_employer_address.
+  ///
+  /// In en, this message translates to:
+  /// **'Employer Address'**
+  String get kyc_employer_address;
+
+  /// No description provided for @kyc_governorate.
+  ///
+  /// In en, this message translates to:
+  /// **'Governorate'**
+  String get kyc_governorate;
+
+  /// No description provided for @kyc_district.
+  ///
+  /// In en, this message translates to:
+  /// **'District'**
+  String get kyc_district;
+
+  /// No description provided for @kyc_city_town.
+  ///
+  /// In en, this message translates to:
+  /// **'City / Town'**
+  String get kyc_city_town;
+
+  /// No description provided for @kyc_mahalla.
+  ///
+  /// In en, this message translates to:
+  /// **'Mahalla'**
+  String get kyc_mahalla;
+
+  /// No description provided for @kyc_street.
+  ///
+  /// In en, this message translates to:
+  /// **'Street'**
+  String get kyc_street;
+
+  /// No description provided for @kyc_house_no.
+  ///
+  /// In en, this message translates to:
+  /// **'House No.'**
+  String get kyc_house_no;
+
+  /// No description provided for @kyc_nearest_landmark_ar.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearest Landmark (Arabic)'**
+  String get kyc_nearest_landmark_ar;
+
+  /// No description provided for @kyc_neares_landmart_eng.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearest Landmark (English)'**
+  String get kyc_neares_landmart_eng;
+
+  /// No description provided for @kyc_are_u_us_person.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you a U.S. person?'**
+  String get kyc_are_u_us_person;
+
+  /// No description provided for @kyc_us.
+  ///
+  /// In en, this message translates to:
+  /// **'U.S. TIN / SSN'**
+  String get kyc_us;
+
+  /// No description provided for @kyc_us_address.
+  ///
+  /// In en, this message translates to:
+  /// **'U.S. Address'**
+  String get kyc_us_address;
+
+  /// No description provided for @kyc_do_you_fall_into_pep.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you fall into any PEP category?'**
+  String get kyc_do_you_fall_into_pep;
+
+  /// No description provided for @kyc_position_held.
+  ///
+  /// In en, this message translates to:
+  /// **'Position Held / Relationship to PEP'**
+  String get kyc_position_held;
+
+  /// No description provided for @kyc_from_date.
+  ///
+  /// In en, this message translates to:
+  /// **'From (MM/YYYY)'**
+  String get kyc_from_date;
+
+  /// No description provided for @kyc_from_date_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'From (MM/YYYY)'**
+  String get kyc_from_date_hint;
+
+  /// No description provided for @kyc_to_date.
+  ///
+  /// In en, this message translates to:
+  /// **'To (MM/YYYY)'**
+  String get kyc_to_date;
+
+  /// No description provided for @kyc_to_date_hint.
+  ///
+  /// In en, this message translates to:
+  /// **'To (MM/YYYY)'**
+  String get kyc_to_date_hint;
+
+  /// No description provided for @kyc_permission_to_reside_outside_iraq.
+  ///
+  /// In en, this message translates to:
+  /// **'Permission to reside outside Iraq?'**
+  String get kyc_permission_to_reside_outside_iraq;
+
+  /// No description provided for @kyc_citizenship.
+  ///
+  /// In en, this message translates to:
+  /// **'Citizenship in another country?'**
+  String get kyc_citizenship;
+
+  /// No description provided for @kyc_we_will_send_otp_on_phone.
+  ///
+  /// In en, this message translates to:
+  /// **'We will send a one-time code to your mobile number via WhatsApp.'**
+  String get kyc_we_will_send_otp_on_phone;
+
+  /// No description provided for @kyc_we_will_send_otp_on_email.
+  ///
+  /// In en, this message translates to:
+  /// **'We will send a one-time code to your email address.'**
+  String get kyc_we_will_send_otp_on_email;
+
+  /// No description provided for @kyc_didnt_recieve_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'\'t receive the code?'**
+  String get kyc_didnt_recieve_code;
+
+  /// No description provided for @kyc_resend_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend in'**
+  String get kyc_resend_in;
+
+  /// No description provided for @kyc_resend_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get kyc_resend_code;
+
+  /// No description provided for @kyc_sending.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending…'**
+  String get kyc_sending;
+
+  /// No description provided for @kyc_send_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Code'**
+  String get kyc_send_code;
+
+  /// No description provided for @kyc_before_u_begin.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you begin'**
+  String get kyc_before_u_begin;
+
+  /// No description provided for @kyc_have_documents_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Have these documents ready'**
+  String get kyc_have_documents_title;
+
+  /// No description provided for @kyc_lede_doc.
+  ///
+  /// In en, this message translates to:
+  /// **'All three documents below are required to complete onboarding. Please have them with you before continuing.'**
+  String get kyc_lede_doc;
+
+  /// No description provided for @kyc_national_card_title.
+  ///
+  /// In en, this message translates to:
+  /// **'National Identity Card'**
+  String get kyc_national_card_title;
+
+  /// No description provided for @kyc_national_card_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Front and back. Both card numbers will be required.'**
+  String get kyc_national_card_subtitle;
+
+  /// No description provided for @kyc_residence_card_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Residence Card'**
+  String get kyc_residence_card_title;
+
+  /// No description provided for @kyc_residence_card_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Front and back.'**
+  String get kyc_residence_card_subtitle;
+
+  /// No description provided for @kyc_passort_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport (if you have one)'**
+  String get kyc_passort_title;
+
+  /// No description provided for @kyc_passport_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Used for your name in English. You can continue without it.'**
+  String get kyc_passport_subtitle;
+
+  /// No description provided for @kyc_you_will_need.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'\'ll also need'**
+  String get kyc_you_will_need;
+
+  /// No description provided for @kyc_roughly_six.
+  ///
+  /// In en, this message translates to:
+  /// **'roughly six (6) minutes to complete the form.'**
+  String get kyc_roughly_six;
+
+  /// No description provided for @kyc_additional_documents.
+  ///
+  /// In en, this message translates to:
+  /// **'Additional documents may be required if you hold residency or citizenship outside Iraq.'**
+  String get kyc_additional_documents;
+
+  /// No description provided for @kyc_section_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Section 1 · Purpose & Scope'**
+  String get kyc_section_1;
+
+  /// No description provided for @kyc_before_we_begin.
+  ///
+  /// In en, this message translates to:
+  /// **'Before we begin'**
+  String get kyc_before_we_begin;
+
+  /// No description provided for @kyc_number_1.
+  ///
+  /// In en, this message translates to:
+  /// **'1.1'**
+  String get kyc_number_1;
+
+  /// No description provided for @kyc_about_bbh_bold.
+  ///
+  /// In en, this message translates to:
+  /// **'About Baghdad Bullion House.'**
+  String get kyc_about_bbh_bold;
+
+  /// No description provided for @kyc_about_bbh_body.
+  ///
+  /// In en, this message translates to:
+  /// **'BBH is a licensed dealer in precious metals and stones, registered in Iraq under Commercial Registration No. 17240, with four (4) branches in Baghdad and one (1) in Najaf.'**
+  String get kyc_about_bbh_body;
+
+  /// No description provided for @kyc_number_2.
+  ///
+  /// In en, this message translates to:
+  /// **'1.2'**
+  String get kyc_number_2;
+
+  /// No description provided for @kyc_number_2_bold.
+  ///
+  /// In en, this message translates to:
+  /// **'What we collect.'**
+  String get kyc_number_2_bold;
+
+  /// No description provided for @kyc_number_2_body.
+  ///
+  /// In en, this message translates to:
+  /// **'This onboarding captures your identifying details, economic profile, and compliance declarations to open your gold account with BBH.'**
+  String get kyc_number_2_body;
+
+  /// No description provided for @kyc_number_3.
+  ///
+  /// In en, this message translates to:
+  /// **'1.3'**
+  String get kyc_number_3;
+
+  /// No description provided for @kyc_number_3_bold.
+  ///
+  /// In en, this message translates to:
+  /// **'What we keep.'**
+  String get kyc_number_3_bold;
+
+  /// No description provided for @kyc_number_3_body.
+  ///
+  /// In en, this message translates to:
+  /// **'All records are held securely by BBH for the period required by Iraqi law, not less than seven (7) years from the closure of the account or last transaction.'**
+  String get kyc_number_3_body;
+
+  /// No description provided for @kyc_purpose.
+  ///
+  /// In en, this message translates to:
+  /// **'purpose_confirmed'**
+  String get kyc_purpose;
+
+  /// No description provided for @kyc_purpose_des.
+  ///
+  /// In en, this message translates to:
+  /// **'I have been informed of the above and wish to proceed with BBH onboarding.'**
+  String get kyc_purpose_des;
+
   /// No description provided for @trade_confirm_market_body.
   ///
   /// In en, this message translates to:

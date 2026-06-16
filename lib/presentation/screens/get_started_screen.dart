@@ -262,8 +262,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
 
                                 const SizedBox(height: 16),
 
-                                /// Bank Client Button
-                                /// want to run the html file here
+                                /// Bank client onboarding (native Flutter flow)
                                 SizedBox(
                                   width: double.infinity,
                                   height: 54,

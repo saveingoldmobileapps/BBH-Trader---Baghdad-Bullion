@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'bbh_onboarding_field_scroll.dart';
 import 'bbh_onboarding_form.dart';
 import 'bbh_onboarding_theme.dart';
 import 'bbh_onboarding_widgets.dart';
@@ -253,6 +254,7 @@ class BbhOnboardingSteps {
       ),
       const SizedBox(height: 8),
       BbhConfirmRow(
+        fieldKey: 'purpose_confirmed',
         text:
             'I have been informed of the above and wish to proceed with BBH onboarding.',
         checked: form.purposeConfirmed,
@@ -370,12 +372,14 @@ class BbhOnboardingSteps {
       ),
       _grid2(
         BbhTextField(
+          fieldKey: 'ar_first',
           controller: form.arFirst,
           label: 'First Name',
           verified: form.isVerified('ar_first'),
           textDirection: TextDirection.rtl,
         ),
         BbhTextField(
+          fieldKey: 'ar_father',
           controller: form.arFather,
           label: "Father's Name",
           verified: form.isVerified('ar_father'),
@@ -384,12 +388,14 @@ class BbhOnboardingSteps {
       ),
       _grid2(
         BbhTextField(
+          fieldKey: 'ar_gf',
           controller: form.arGf,
           label: "Grandfather's",
           verified: form.isVerified('ar_gf'),
           textDirection: TextDirection.rtl,
         ),
         BbhTextField(
+          fieldKey: 'ar_surname',
           controller: form.arSurname,
           label: 'Surname',
           verified: form.isVerified('ar_surname'),
@@ -397,6 +403,7 @@ class BbhOnboardingSteps {
         ),
       ),
       BbhTextField(
+        fieldKey: 'ar_mother',
         controller: form.arMother,
         label: "Mother's Name",
         verified: form.isVerified('ar_mother'),
@@ -411,12 +418,14 @@ class BbhOnboardingSteps {
       ),
       _grid2(
         BbhTextField(
+          fieldKey: 'en_first',
           controller: form.enFirst,
           label: 'First Name',
           verified: form.isVerified('en_first'),
           capitalization: TextCapitalization.words,
         ),
         BbhTextField(
+          fieldKey: 'en_father',
           controller: form.enFather,
           label: "Father's Name",
           verified: form.isVerified('en_father'),
@@ -425,12 +434,14 @@ class BbhOnboardingSteps {
       ),
       _grid2(
         BbhTextField(
+          fieldKey: 'en_gf',
           controller: form.enGf,
           label: "Grandfather's",
           verified: form.isVerified('en_gf'),
           capitalization: TextCapitalization.words,
         ),
         BbhTextField(
+          fieldKey: 'en_surname',
           controller: form.enSurname,
           label: 'Surname',
           verified: form.isVerified('en_surname'),
@@ -438,6 +449,7 @@ class BbhOnboardingSteps {
         ),
       ),
       BbhTextField(
+        fieldKey: 'en_mother',
         controller: form.enMother,
         label: "Mother's Name",
         verified: form.isVerified('en_mother'),
@@ -451,6 +463,7 @@ class BbhOnboardingSteps {
       _grid2(
         _fieldWithHint(
           BbhTextField(
+            fieldKey: 'id_personal',
             controller: form.idPersonal,
             label: 'Personal Number',
             verified: form.isVerified('id_personal'),
@@ -465,6 +478,7 @@ class BbhOnboardingSteps {
         ),
         _fieldWithHint(
           BbhTextField(
+            fieldKey: 'id_serial',
             controller: form.idSerial,
             label: 'ID Number (Card Serial)',
             verified: form.isVerified('id_serial'),
@@ -475,12 +489,14 @@ class BbhOnboardingSteps {
         ),
       ),
       BbhTextField(
+        fieldKey: 'id_issue_place',
         controller: form.idIssuePlace,
         label: 'Place of Issue',
         verified: form.isVerified('id_issue_place'),
       ),
       _grid2(
         BbhTextField(
+          fieldKey: 'id_issue_date',
           controller: form.idIssueDate,
           label: 'Date of Issue',
           readOnly: true,
@@ -488,6 +504,7 @@ class BbhOnboardingSteps {
           onTap: () => pickDate(form.idIssueDate, 'id_issue_date'),
         ),
         BbhTextField(
+          fieldKey: 'id_expiry_date',
           controller: form.idExpiryDate,
           label: 'Date of Expiry',
           readOnly: true,
@@ -500,11 +517,13 @@ class BbhOnboardingSteps {
         _groupTitle('Passport', null),
         _grid2(
           BbhTextField(
+            fieldKey: 'pp_no',
             controller: form.ppNo,
             label: 'Passport Number',
             verified: form.isVerified('pp_no'),
           ),
           BbhTextField(
+            fieldKey: 'pp_place',
             controller: form.ppPlace,
             label: 'Place of Issue',
             verified: form.isVerified('pp_place'),
@@ -512,6 +531,7 @@ class BbhOnboardingSteps {
         ),
         _grid2(
           BbhTextField(
+            fieldKey: 'pp_issue',
             controller: form.ppIssue,
             label: 'Date of Issue',
             readOnly: true,
@@ -519,6 +539,7 @@ class BbhOnboardingSteps {
             onTap: () => pickDate(form.ppIssue, 'pp_issue'),
           ),
           BbhTextField(
+            fieldKey: 'pp_expiry',
             controller: form.ppExpiry,
             label: 'Date of Expiry',
             readOnly: true,
@@ -544,17 +565,20 @@ class BbhOnboardingSteps {
       const SizedBox(height: 20),
       _groupTitle('Residence Card', null),
       BbhTextField(
+        fieldKey: 'res_no',
         controller: form.resNo,
         label: 'Residence Card Number',
         verified: form.isVerified('res_no'),
       ),
       _grid2(
         BbhTextField(
+          fieldKey: 'res_place',
           controller: form.resPlace,
           label: 'Place of Issue',
           verified: form.isVerified('res_place'),
         ),
         BbhTextField(
+          fieldKey: 'res_issue',
           controller: form.resIssue,
           label: 'Date of Issue',
           readOnly: true,
@@ -572,14 +596,17 @@ class BbhOnboardingSteps {
           form.addrGov.text = v ?? '';
           onChanged();
         },
+        fieldKey: 'addr_gov',
       ),
       _grid2(
         BbhTextField(
+          fieldKey: 'addr_district',
           controller: form.addrDistrict,
           label: 'District',
           verified: form.isVerified('addr_district'),
         ),
         BbhTextField(
+          fieldKey: 'addr_city',
           controller: form.addrCity,
           label: 'City / Town',
           verified: form.isVerified('addr_city'),
@@ -587,22 +614,26 @@ class BbhOnboardingSteps {
       ),
       _grid2(
         BbhTextField(
+          fieldKey: 'addr_mahalla',
           controller: form.addrMahalla,
           label: 'Mahalla',
           verified: form.isVerified('addr_mahalla'),
         ),
         BbhTextField(
+          fieldKey: 'addr_street',
           controller: form.addrStreet,
           label: 'Street',
           verified: form.isVerified('addr_street'),
         ),
       ),
       BbhTextField(
+        fieldKey: 'addr_house',
         controller: form.addrHouse,
         label: 'House No.',
         verified: form.isVerified('addr_house'),
       ),
       BbhTextField(
+        fieldKey: 'addr_landmark_ar',
         controller: form.addrLandmarkAr,
         label: 'Nearest Landmark (Arabic)',
         textDirection: TextDirection.rtl,
@@ -625,7 +656,11 @@ class BbhOnboardingSteps {
         },
       ),
       if (form.foreignRes == 'Yes')
-        BbhTextField(controller: form.foreignResCountry, label: 'Country'),
+        BbhTextField(
+          fieldKey: 'foreign_res_country',
+          controller: form.foreignResCountry,
+          label: 'Country',
+        ),
       const SizedBox(height: 18),
       _groupTitle('Additional Citizenship', 'Outside Iraq.'),
       BbhToggleGroup(
@@ -638,7 +673,11 @@ class BbhOnboardingSteps {
         },
       ),
       if (form.foreignCit == 'Yes')
-        BbhTextField(controller: form.foreignCitCountry, label: 'Country'),
+        BbhTextField(
+          fieldKey: 'foreign_cit_country',
+          controller: form.foreignCitCountry,
+          label: 'Country',
+        ),
     ]);
   }
 
@@ -654,6 +693,7 @@ class BbhOnboardingSteps {
       ),
       const SizedBox(height: 20),
       BbhToggleGroup(
+        fieldKey: 'gender',
         label: 'Gender',
         value: form.gender,
         options: const ['Male', 'Female'],
@@ -664,12 +704,14 @@ class BbhOnboardingSteps {
       ),
       const SizedBox(height: 16),
       BbhTextField(
+        fieldKey: 'nationality',
         controller: form.nationality,
         label: 'Nationality',
         verified: form.isVerified('nationality'),
       ),
       _grid2(
         BbhTextField(
+          fieldKey: 'dob',
           controller: form.dob,
           label: 'Date of Birth',
           readOnly: true,
@@ -677,12 +719,14 @@ class BbhOnboardingSteps {
           onTap: () => pickDate(form.dob, 'dob'),
         ),
         BbhTextField(
+          fieldKey: 'country_birth',
           controller: form.countryBirth,
           label: 'Country of Birth',
           verified: form.isVerified('country_birth'),
         ),
       ),
       BbhTextField(
+        fieldKey: 'place_birth',
         controller: form.placeBirth,
         label: 'Place of Birth',
         hint: 'City or town (max 20 chars)',
@@ -699,32 +743,48 @@ class BbhOnboardingSteps {
         title: 'Source of income',
       ),
       const SizedBox(height: 20),
-      _dropdown('Education Level', form.education, educationLevels, (v) {
-        form.education = v;
-        onChanged();
-      }),
+      _dropdown(
+        'Education Level',
+        form.education,
+        educationLevels,
+        (v) {
+          form.education = v;
+          onChanged();
+        },
+        fieldKey: 'education',
+      ),
       const SizedBox(height: 12),
-      _dropdown('Economic Sector', form.sector, sectors, (v) {
-        form.sector = v;
-        onChanged();
-      }),
+      _dropdown(
+        'Economic Sector',
+        form.sector,
+        sectors,
+        (v) {
+          form.sector = v;
+          onChanged();
+        },
+        fieldKey: 'sector',
+      ),
       BbhTextField(
+        fieldKey: 'income',
         controller: form.income,
         label: 'Total Monthly Income (IQD)',
         keyboardType: TextInputType.number,
         hint: 'e.g. 2,500,000',
       ),
       BbhTextField(
+        fieldKey: 'occupation',
         controller: form.occupation,
         label: 'Occupation',
         hint: 'e.g. Goldsmith, Trader, Engineer',
       ),
       BbhTextField(
+        fieldKey: 'employer',
         controller: form.employer,
         label: 'Employer Name',
         hint: 'Or "Retired", "Student", "Housewife", "Unemployed"',
       ),
       BbhTextField(
+        fieldKey: 'employer_addr',
         controller: form.employerAddr,
         label: 'Employer Address',
         maxLines: 3,
@@ -761,8 +821,13 @@ class BbhOnboardingSteps {
         },
       ),
       if (form.fatca == 'Yes') ...[
-        BbhTextField(controller: form.fatcaTin, label: 'U.S. TIN / SSN'),
         BbhTextField(
+          fieldKey: 'fatca_tin',
+          controller: form.fatcaTin,
+          label: 'U.S. TIN / SSN',
+        ),
+        BbhTextField(
+          fieldKey: 'fatca_addr',
           controller: form.fatcaAddr,
           label: 'U.S. Address',
           maxLines: 3,
@@ -803,17 +868,24 @@ class BbhOnboardingSteps {
       ),
       if (form.pep == 'Yes') ...[
         BbhTextField(
+          fieldKey: 'pep_position',
           controller: form.pepPosition,
           label: 'Position Held / Relationship to PEP',
         ),
-        BbhTextField(controller: form.pepCountry, label: 'Country'),
+        BbhTextField(
+          fieldKey: 'pep_country',
+          controller: form.pepCountry,
+          label: 'Country',
+        ),
         _grid2(
           BbhTextField(
+            fieldKey: 'pep_from',
             controller: form.pepFrom,
             label: 'From (MM/YYYY)',
             hint: 'MM/YYYY',
           ),
           BbhTextField(
+            fieldKey: 'pep_to',
             controller: form.pepTo,
             label: 'To (MM/YYYY)',
             hint: 'MM/YYYY',
@@ -822,227 +894,227 @@ class BbhOnboardingSteps {
       ],
     ]);
   }
+
   static Widget contact(
-  BbhOnboardingForm form,
-  VoidCallback onChanged, {
-  required Future<void> Function(BbhOnboardingOtpChannel channel) onVerify,
-}) {
-  return _scroll([
-    const BbhStepHeader(
-      eyebrow: 'Step 8 · Contact & Verification',
-      title: 'Where can we reach you?',
-    ),
-    const SizedBox(height: 20),
-
-    // Mobile First
-    BbhTextField(
-      controller: form.mobile,
-      label: 'Mobile Number',
-      hint: '+964 7XX XXX XXXX',
-      keyboardType: TextInputType.phone,
-      verified: form.verifiedMobile.value,
-      onChanged: (_) {
-        if (form.verifiedMobile.value) {
-          form.verifiedMobile.value = false;
-        }
-        onChanged();
-      },
-    ),
-    const SizedBox(height: 6),
-    Text(
-      'Verify your mobile number first.',
-      style: BbhOnboardingText.manrope(
-        size: 12,
-        color: BbhOnboardingColors.muted,
+    BbhOnboardingForm form,
+    VoidCallback onChanged, {
+    required Future<void> Function(BbhOnboardingOtpChannel channel) onVerify,
+  }) {
+    return _scroll([
+      const BbhStepHeader(
+        eyebrow: 'Step 8 · Contact & Verification',
+        title: 'Where can we reach you?',
       ),
-    ),
-    Align(
-      alignment: Alignment.centerRight,
-      child: SizedBox(
-        width: 148,
-        child: BbhGhostButton(
-          label:
-              form.verifiedMobile.value ? 'Verified ✓' : 'Verify Number',
-          onPressed: form.verifiedMobile.value
-              ? null
-              : () => onVerify(BbhOnboardingOtpChannel.mobile),
+      const SizedBox(height: 20),
+
+      // Mobile First
+      BbhTextField(
+        fieldKey: 'mobile',
+        controller: form.mobile,
+        label: 'Mobile Number',
+        hint: '+964 7XX XXX XXXX',
+        keyboardType: TextInputType.phone,
+        verified: form.verifiedMobile.value,
+        onChanged: (_) {
+          if (form.verifiedMobile.value) {
+            form.verifiedMobile.value = false;
+          }
+          onChanged();
+        },
+      ),
+      const SizedBox(height: 6),
+      Text(
+        'Verify your mobile number first.',
+        style: BbhOnboardingText.manrope(
+          size: 12,
+          color: BbhOnboardingColors.muted,
         ),
       ),
-    ),
-
-    const SizedBox(height: 20),
-
-    // Email Second
-    BbhTextField(
-      controller: form.email,
-      label: 'Email Address',
-      hint: 'client@example.com',
-      keyboardType: TextInputType.emailAddress,
-      verified: form.verifiedEmail.value,
-      capitalization: TextCapitalization.none,
-      onChanged: (_) {
-        if (form.verifiedEmail.value) {
-          form.verifiedEmail.value = false;
-        }
-        onChanged();
-      },
-    ),
-    const SizedBox(height: 6),
-    Text(
-      form.verifiedMobile.value
-          ? 'Lowercase only.'
-          : 'Verify your mobile number first.',
-      style: BbhOnboardingText.manrope(
-        size: 12,
-        color: BbhOnboardingColors.muted,
-      ),
-    ),
-    Align(
-      alignment: Alignment.centerRight,
-      child: SizedBox(
-        width: 148,
-        child: BbhGhostButton(
-          label:
-              form.verifiedEmail.value ? 'Verified ✓' : 'Verify Email',
-          onPressed: form.verifiedEmail.value ||
-                  !form.verifiedMobile.value
-              ? null
-              : () => onVerify(BbhOnboardingOtpChannel.email),
+      Align(
+        alignment: Alignment.centerRight,
+        child: SizedBox(
+          width: 148,
+          child: BbhGhostButton(
+            label: form.verifiedMobile.value ? 'Verified ✓' : 'Verify Number',
+            onPressed: form.verifiedMobile.value
+                ? null
+                : () => onVerify(BbhOnboardingOtpChannel.mobile),
+          ),
         ),
       ),
-    ),
-  ]);
-}
 
-//   static Widget contact(
-//     BbhOnboardingForm form,
-//     VoidCallback onChanged, {
-//     required Future<void> Function(BbhOnboardingOtpChannel channel) onVerify,
-//   }) {
-//     return _scroll([
-//       const BbhStepHeader(
-//         eyebrow: 'Step 8 · Contact & Verification',
-//         title: 'Where can we reach you?',
-//       ),
-//       const SizedBox(height: 20),
-//       BbhTextField(
-//   controller: form.mobile,
-//   label: 'Mobile Number',
-//   hint: '+964 7XX XXX XXXX',
-//   keyboardType: TextInputType.phone,
-//   verified: form.verifiedMobile.value,
-//   onChanged: (_) {
-//     if (form.verifiedMobile.value) {
-//       form.verifiedMobile.value = false;
-//     }
-//     onChanged();
-//   },
-// ),
-//       // BbhTextField(
-//       //   controller: form.email,
-//       //   label: 'Email Address',
-//       //   hint: 'client@example.com',
-//       //   keyboardType: TextInputType.emailAddress,
-//       //   verified: form.verifiedEmail.value,
-//       //   capitalization: TextCapitalization.none,
-//       //   onChanged: (_) {
-//       //     if (form.verifiedEmail.value) {
-//       //       form.verifiedEmail.value = false;
-//       //     }
-//       //     if (form.verifiedMobile.value) {
-//       //       form.verifiedMobile.value = false;
-//       //     }
-//       //     onChanged();
-//       //   },
-//       // ),
-      
-//       const SizedBox(height: 6),
-//       Text(
-//         'Lowercase only. Verify your email first.',
-//         style: BbhOnboardingText.manrope(
-//           size: 12,
-//           color: BbhOnboardingColors.muted,
-//         ),
-//       ),
-//       Align(
-//         alignment: Alignment.centerRight,
-//         child: SizedBox(
-//           width: 148,
-//           child: BbhGhostButton(
-//   label: form.verifiedMobile.value
-//       ? 'Verified ✓'
-//       : 'Verify Number',
-//   onPressed: form.verifiedMobile.value
-//       ? null
-//       : () => onVerify(BbhOnboardingOtpChannel.mobile),
-// ),
-//           // BbhGhostButton(
-//           //   label: form.verifiedEmail.value ? 'Verified ✓' : 'Verify Email',
-//           //   onPressed: form.verifiedEmail.value
-//           //       ? null
-//           //       : () => onVerify(BbhOnboardingOtpChannel.email),
-//           // ),
-//         ),
-//       ),
-//       BbhTextField(
-//   controller: form.email,
-//   label: 'Email Address',
-//   hint: 'client@example.com',
-//   keyboardType: TextInputType.emailAddress,
-//   verified: form.verifiedEmail.value,
-//   capitalization: TextCapitalization.none,
-//   onChanged: (_) {
-//     if (form.verifiedEmail.value) {
-//       form.verifiedEmail.value = false;
-//     }
-//     onChanged();
-//   },
-// ),
-//       // BbhTextField(
-//       //   controller: form.mobile,
-//       //   label: 'Mobile Number',
-//       //   hint: '+964 7XX XXX XXXX',
-//       //   keyboardType: TextInputType.phone,
-//       //   verified: form.verifiedMobile.value,
-//       //   onChanged: (_) {
-//       //     if (form.verifiedMobile.value) {
-//       //       form.verifiedMobile.value = false;
-//       //     }
-//       //     onChanged();
-//       //   },
-//       // ),
-//       const SizedBox(height: 6),
-//       Text(
-//         form.verifiedEmail.value
-//             ? 'International format with country code.'
-//             : 'Verify your email first, then verify your mobile number.',
-//         style: BbhOnboardingText.manrope(
-//           size: 12,
-//           color: BbhOnboardingColors.muted,
-//         ),
-//       ),
-//       Align(
-//         alignment: Alignment.centerRight,
-//         child: SizedBox(
-//           width: 148,
-//           child: BbhGhostButton(
-//   label: form.verifiedEmail.value
-//       ? 'Verified ✓'
-//       : 'Verify Email',
-//   onPressed: form.verifiedEmail.value || !form.verifiedMobile.value
-//       ? null
-//       : () => onVerify(BbhOnboardingOtpChannel.email),
-// ),
-//           // BbhGhostButton(
-//           //   label: form.verifiedMobile.value ? 'Verified ✓' : 'Verify Number',
-//           //   onPressed: form.verifiedMobile.value || !form.verifiedEmail.value
-//           //       ? null
-//           //       : () => onVerify(BbhOnboardingOtpChannel.mobile),
-//           // ),
-//         ),
-//       ),
-//     ]);
-//   }
+      const SizedBox(height: 20),
+
+      // Email Second
+      BbhTextField(
+        fieldKey: 'email',
+        controller: form.email,
+        label: 'Email Address',
+        hint: 'client@example.com',
+        keyboardType: TextInputType.emailAddress,
+        verified: form.verifiedEmail.value,
+        capitalization: TextCapitalization.none,
+        onChanged: (_) {
+          if (form.verifiedEmail.value) {
+            form.verifiedEmail.value = false;
+          }
+          onChanged();
+        },
+      ),
+      const SizedBox(height: 6),
+      Text(
+        form.verifiedMobile.value
+            ? 'Lowercase only.'
+            : 'Verify your mobile number first.',
+        style: BbhOnboardingText.manrope(
+          size: 12,
+          color: BbhOnboardingColors.muted,
+        ),
+      ),
+      Align(
+        alignment: Alignment.centerRight,
+        child: SizedBox(
+          width: 148,
+          child: BbhGhostButton(
+            label: form.verifiedEmail.value ? 'Verified ✓' : 'Verify Email',
+            onPressed: form.verifiedEmail.value || !form.verifiedMobile.value
+                ? null
+                : () => onVerify(BbhOnboardingOtpChannel.email),
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  //   static Widget contact(
+  //     BbhOnboardingForm form,
+  //     VoidCallback onChanged, {
+  //     required Future<void> Function(BbhOnboardingOtpChannel channel) onVerify,
+  //   }) {
+  //     return _scroll([
+  //       const BbhStepHeader(
+  //         eyebrow: 'Step 8 · Contact & Verification',
+  //         title: 'Where can we reach you?',
+  //       ),
+  //       const SizedBox(height: 20),
+  //       BbhTextField(
+  //   controller: form.mobile,
+  //   label: 'Mobile Number',
+  //   hint: '+964 7XX XXX XXXX',
+  //   keyboardType: TextInputType.phone,
+  //   verified: form.verifiedMobile.value,
+  //   onChanged: (_) {
+  //     if (form.verifiedMobile.value) {
+  //       form.verifiedMobile.value = false;
+  //     }
+  //     onChanged();
+  //   },
+  // ),
+  //       // BbhTextField(
+  //       //   controller: form.email,
+  //       //   label: 'Email Address',
+  //       //   hint: 'client@example.com',
+  //       //   keyboardType: TextInputType.emailAddress,
+  //       //   verified: form.verifiedEmail.value,
+  //       //   capitalization: TextCapitalization.none,
+  //       //   onChanged: (_) {
+  //       //     if (form.verifiedEmail.value) {
+  //       //       form.verifiedEmail.value = false;
+  //       //     }
+  //       //     if (form.verifiedMobile.value) {
+  //       //       form.verifiedMobile.value = false;
+  //       //     }
+  //       //     onChanged();
+  //       //   },
+  //       // ),
+
+  //       const SizedBox(height: 6),
+  //       Text(
+  //         'Lowercase only. Verify your email first.',
+  //         style: BbhOnboardingText.manrope(
+  //           size: 12,
+  //           color: BbhOnboardingColors.muted,
+  //         ),
+  //       ),
+  //       Align(
+  //         alignment: Alignment.centerRight,
+  //         child: SizedBox(
+  //           width: 148,
+  //           child: BbhGhostButton(
+  //   label: form.verifiedMobile.value
+  //       ? 'Verified ✓'
+  //       : 'Verify Number',
+  //   onPressed: form.verifiedMobile.value
+  //       ? null
+  //       : () => onVerify(BbhOnboardingOtpChannel.mobile),
+  // ),
+  //           // BbhGhostButton(
+  //           //   label: form.verifiedEmail.value ? 'Verified ✓' : 'Verify Email',
+  //           //   onPressed: form.verifiedEmail.value
+  //           //       ? null
+  //           //       : () => onVerify(BbhOnboardingOtpChannel.email),
+  //           // ),
+  //         ),
+  //       ),
+  //       BbhTextField(
+  //   controller: form.email,
+  //   label: 'Email Address',
+  //   hint: 'client@example.com',
+  //   keyboardType: TextInputType.emailAddress,
+  //   verified: form.verifiedEmail.value,
+  //   capitalization: TextCapitalization.none,
+  //   onChanged: (_) {
+  //     if (form.verifiedEmail.value) {
+  //       form.verifiedEmail.value = false;
+  //     }
+  //     onChanged();
+  //   },
+  // ),
+  //       // BbhTextField(
+  //       //   controller: form.mobile,
+  //       //   label: 'Mobile Number',
+  //       //   hint: '+964 7XX XXX XXXX',
+  //       //   keyboardType: TextInputType.phone,
+  //       //   verified: form.verifiedMobile.value,
+  //       //   onChanged: (_) {
+  //       //     if (form.verifiedMobile.value) {
+  //       //       form.verifiedMobile.value = false;
+  //       //     }
+  //       //     onChanged();
+  //       //   },
+  //       // ),
+  //       const SizedBox(height: 6),
+  //       Text(
+  //         form.verifiedEmail.value
+  //             ? 'International format with country code.'
+  //             : 'Verify your email first, then verify your mobile number.',
+  //         style: BbhOnboardingText.manrope(
+  //           size: 12,
+  //           color: BbhOnboardingColors.muted,
+  //         ),
+  //       ),
+  //       Align(
+  //         alignment: Alignment.centerRight,
+  //         child: SizedBox(
+  //           width: 148,
+  //           child: BbhGhostButton(
+  //   label: form.verifiedEmail.value
+  //       ? 'Verified ✓'
+  //       : 'Verify Email',
+  //   onPressed: form.verifiedEmail.value || !form.verifiedMobile.value
+  //       ? null
+  //       : () => onVerify(BbhOnboardingOtpChannel.email),
+  // ),
+  //           // BbhGhostButton(
+  //           //   label: form.verifiedMobile.value ? 'Verified ✓' : 'Verify Number',
+  //           //   onPressed: form.verifiedMobile.value || !form.verifiedEmail.value
+  //           //       ? null
+  //           //       : () => onVerify(BbhOnboardingOtpChannel.mobile),
+  //           // ),
+  //         ),
+  //       ),
+  //     ]);
+  //   }
 
   static Widget custodian(BbhOnboardingForm form, VoidCallback onChanged) {
     return _scroll([
@@ -1141,6 +1213,7 @@ class BbhOnboardingSteps {
       if (form.hasAccount == 'Yes') ...[
         const SizedBox(height: 4),
         BbhTextField(
+          fieldKey: 'iban',
           controller: form.iban,
           label: 'Account number (IBAN)',
           hint: 'IQ00 0000 0000 0000 0000 000',
@@ -1226,15 +1299,23 @@ class BbhOnboardingSteps {
         child: Text('Signature', style: BbhOnboardingText.fieldLabel()),
       ),
       const SizedBox(height: 8),
-      BbhSignaturePad(
-        hasSignature: form.hasSignature,
-        onSignatureChanged: (value) {
-          form.signature = value;
-          onChanged();
-        },
+      Builder(
+        builder: (context) => BbhSignatureTrigger(
+          fieldKey: 'signature',
+          hasSignature: form.hasSignature,
+          onTap: () => BbhSignatureDialog.show(
+            context,
+            hasSignature: form.hasSignature,
+            onSignatureChanged: (value) {
+              form.signature = value;
+              onChanged();
+            },
+          ),
+        ),
       ),
       const SizedBox(height: 16),
       BbhConfirmRow(
+        fieldKey: 'consent_confirmed',
         text:
             'I have read clauses 6.1 to 6.5, understand them, and give consent.',
         checked: form.consentConfirmed,
@@ -1728,13 +1809,23 @@ class BbhOnboardingSteps {
     );
   }
 
+  static Widget editDropdown(
+    String label,
+    String? value,
+    List<String> items,
+    ValueChanged<String?> onChanged, {
+    String? fieldKey,
+  }) => _dropdown(label, value, items, onChanged, fieldKey: fieldKey);
+
   static Widget _dropdown(
     String label,
     String? value,
     List<String> items,
-    ValueChanged<String?> onChanged,
-  ) {
-    return Padding(
+    ValueChanged<String?> onChanged, {
+    String? fieldKey,
+  }) {
+    final showError = BbhOnboardingFieldScroll.isError(fieldKey);
+    final content = Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1752,18 +1843,27 @@ class BbhOnboardingSteps {
               ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(BbhOnboardingRadii.sm),
-                borderSide: const BorderSide(color: BbhOnboardingColors.rule),
+                borderSide: BorderSide(
+                  color: showError
+                      ? BbhOnboardingColors.error
+                      : BbhOnboardingColors.rule,
+                ),
               ),
             ),
             items: [
               const DropdownMenuItem(value: null, child: Text('Select…')),
               ...items.map((e) => DropdownMenuItem(value: e, child: Text(e))),
             ],
-            onChanged: onChanged,
+            onChanged: (v) {
+              if (showError) BbhOnboardingFieldScroll.clearError();
+              onChanged(v);
+            },
           ),
         ],
       ),
     );
+    if (fieldKey == null) return content;
+    return BbhOnboardingFieldScroll.anchor(fieldKey, content);
   }
 
   static Widget _fieldWithHint(Widget field, String hint) {
@@ -1777,48 +1877,6 @@ class BbhOnboardingSteps {
           style: BbhOnboardingText.fieldHint(),
         ),
       ],
-    );
-  }
-
-  static Widget _calloutWithTitle({
-    required String title,
-    required List<String> paragraphs,
-  }) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(18, 16, 16, 16),
-      margin: const EdgeInsets.only(bottom: 22),
-      decoration: BoxDecoration(
-        color: BbhOnboardingColors.paperWarm,
-        borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
-        border: const Border(
-          left: BorderSide(color: BbhOnboardingColors.gold, width: 3),
-          top: BorderSide(color: BbhOnboardingColors.rule),
-          right: BorderSide(color: BbhOnboardingColors.rule),
-          bottom: BorderSide(color: BbhOnboardingColors.rule),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: BbhOnboardingText.display(size: 16, weight: FontWeight.w600),
-          ),
-          const SizedBox(height: 6),
-          for (var i = 0; i < paragraphs.length; i++) ...[
-            Text(
-              paragraphs[i],
-              style: BbhOnboardingText.manrope(
-                size: 13.5,
-                color: BbhOnboardingColors.inkSoft,
-                height: 1.6,
-              ),
-            ),
-            if (i != paragraphs.length - 1) const SizedBox(height: 8),
-          ],
-        ],
-      ),
     );
   }
 

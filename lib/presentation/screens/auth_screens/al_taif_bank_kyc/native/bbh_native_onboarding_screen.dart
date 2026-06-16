@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'bbh_onboarding_controller.dart';
+import 'bbh_onboarding_edit_sheet.dart';
+import 'bbh_onboarding_field_scroll.dart';
 import 'bbh_onboarding_otp_sheet.dart';
 import 'bbh_onboarding_steps.dart';
 import 'bbh_onboarding_theme.dart';
@@ -41,6 +43,13 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
   }
 
   void _onControllerChanged() {
+    final focusField = _controller.validationFocusField;
+    if (focusField != null) {
+      _controller.consumeValidationFocus();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        BbhOnboardingFieldScroll.scrollTo(focusField);
+      });
+    }
     if (_controller.lastError != null) {
       Toasts.getErrorToast(text: _controller.lastError!);
       _controller.lastError = null;
@@ -164,59 +173,58 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
     await _controller.persist();
     setState(() {});
   }
+
   Future<void> _verifyContact(
-  BbhOnboardingOtpChannel channel,
-) async {
-  FocusScope.of(context).unfocus();
+    BbhOnboardingOtpChannel channel,
+  ) async {
+    FocusScope.of(context).unfocus();
 
-  final mobile = _controller.form.mobile.text.trim();
-  final email = _controller.form.email.text.trim().toLowerCase();
+    final mobile = _controller.form.mobile.text.trim();
+    final email = _controller.form.email.text.trim().toLowerCase();
 
-  if (channel == BbhOnboardingOtpChannel.mobile &&
-      mobile.isEmpty) {
-    Toasts.getErrorToast(
-      text: 'Please enter your mobile number.',
+    if (channel == BbhOnboardingOtpChannel.mobile && mobile.isEmpty) {
+      Toasts.getErrorToast(
+        text: 'Please enter your mobile number.',
+      );
+      return;
+    }
+
+    if (channel == BbhOnboardingOtpChannel.email && email.isEmpty) {
+      Toasts.getErrorToast(
+        text: 'Please enter your email address.',
+      );
+      return;
+    }
+
+    if (channel == BbhOnboardingOtpChannel.email &&
+        !_controller.form.verifiedMobile.value) {
+      Toasts.getErrorToast(
+        text: 'Verify your mobile number before verifying your email.',
+      );
+      return;
+    }
+
+    final verified = await BbhOnboardingOtpSheet.openForVerification(
+      context,
+      channel: channel,
+      phoneNumber: mobile,
+      email: email,
     );
-    return;
+
+    if (!mounted || verified != true) {
+      return;
+    }
+
+    if (channel == BbhOnboardingOtpChannel.mobile) {
+      _controller.form.verifiedMobile.value = true;
+      _controller.lastSuccess = 'Mobile number verified.';
+    } else {
+      _controller.form.verifiedEmail.value = true;
+      _controller.lastSuccess = 'Email address verified.';
+    }
+
+    await _refresh();
   }
-
-  if (channel == BbhOnboardingOtpChannel.email &&
-      email.isEmpty) {
-    Toasts.getErrorToast(
-      text: 'Please enter your email address.',
-    );
-    return;
-  }
-
-  if (channel == BbhOnboardingOtpChannel.email &&
-      !_controller.form.verifiedMobile.value) {
-    Toasts.getErrorToast(
-      text: 'Verify your mobile number before verifying your email.',
-    );
-    return;
-  }
-
-  final verified = await BbhOnboardingOtpSheet.openForVerification(
-    context,
-    channel: channel,
-    phoneNumber: mobile,
-    email: email,
-  );
-
-  if (!mounted || verified != true) {
-    return;
-  }
-
-  if (channel == BbhOnboardingOtpChannel.mobile) {
-    _controller.form.verifiedMobile.value = true;
-    _controller.lastSuccess = 'Mobile number verified.';
-  } else {
-    _controller.form.verifiedEmail.value = true;
-    _controller.lastSuccess = 'Email address verified.';
-  }
-
-  await _refresh();
-}
 
   String _nextLabel() {
     if (_controller.editReturnStep != null) return 'Done';
@@ -225,24 +233,14 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
   }
 
   void _editReviewSection(String key) {
-    final form = _controller.form;
-    final target = switch (key) {
-      'contact' => BbhOnboardingStep.contact,
-      'name' || 'natid' || 'passport' =>
-        form.noPassport && key == 'passport'
-            ? BbhOnboardingStep.documents
-            : BbhOnboardingStep.ocrReview,
-      'personal' => BbhOnboardingStep.personalDetails,
-      'income' => BbhOnboardingStep.income,
-      'address' ||
-      'foreignres' ||
-      'foreigncit' => BbhOnboardingStep.residenceAddress,
-      'compliance' => BbhOnboardingStep.fatca,
-      'biometrics' => BbhOnboardingStep.documents,
-      'custodian' => BbhOnboardingStep.custodian,
-      _ => BbhOnboardingStep.review,
-    };
-    _controller.jumpToEdit(target);
+    BbhOnboardingEditSheet.open(
+      context: context,
+      sectionKey: key,
+      controller: _controller,
+      onChanged: _refresh,
+      pickDate: _pickDate,
+      onVerify: _verifyContact,
+    );
   }
 
   void _onNext() {
@@ -310,7 +308,7 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
       case BbhOnboardingStep.success:
         return BbhOnboardingSteps.success(
           kycRef: _controller.kycReference,
-         onRestart: _controller.resetAll,
+          onRestart: _controller.resetAll,
         );
     }
   }

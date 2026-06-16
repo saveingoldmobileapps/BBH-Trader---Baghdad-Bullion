@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:get_storage/get_storage.dart';
 
-/// Persists HTML onboarding progress so users can resume after app restart.
+/// Persists native bank onboarding progress so users can resume after restart.
 class BbhOnboardingStateStore {
   BbhOnboardingStateStore._();
 

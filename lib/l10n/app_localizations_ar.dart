@@ -3270,6 +3270,269 @@ class AppLocalizationsAr extends AppLocalizations {
   String get register_for_free_demo => 'التسجيل للحصول على حساب تجريبي مجاني';
 
   @override
+  String get kyc_done => 'تم';
+
+  @override
+  String get kyc_title_contact => 'معلومات الاتصال';
+
+  @override
+  String get kyc_full_name => 'الاسم الكامل';
+
+  @override
+  String get kyc_personal_detail => 'البيانات الشخصية';
+
+  @override
+  String get kyc_national_id => 'الهوية الوطنية';
+
+  @override
+  String get kyc_income => 'الدخل والعمل';
+
+  @override
+  String get kyc_address => 'العنوان';
+
+  @override
+  String get kyc_compliance => 'الامتثال';
+
+  @override
+  String get kyc_foreignres => 'الإقامة الأجنبية';
+
+  @override
+  String get kyc_foreigncit => 'الجنسية الأجنبية';
+
+  @override
+  String get kyc_phone_verified => 'تم التحقق ✓';
+
+  @override
+  String get kyc_verify_number => 'التحقق من الرقم';
+
+  @override
+  String get kyc_email_verified => 'تم التحقق ✓';
+
+  @override
+  String get kyc_verify_email => 'التحقق من البريد الإلكتروني';
+
+  @override
+  String get kyc_update_contact_detail =>
+      'في حال تغيير رقم الهاتف أو البريد الإلكتروني، يجب إعادة التحقق منهما قبل إرسال الطلب.';
+
+  @override
+  String get kyc_father_name => 'اسم الأب';
+
+  @override
+  String get kyc_grand_father_name => 'اسم الجد';
+
+  @override
+  String get kyc_surname => 'اللقب';
+
+  @override
+  String get kyc_mother_name => 'اسم الأم';
+
+  @override
+  String get kyc_gender => 'الجنس';
+
+  @override
+  String get kyc_country_of_birth => 'بلد الميلاد';
+
+  @override
+  String get kyc_place_birth => 'مكان الميلاد';
+
+  @override
+  String get kyc_personal_number => 'الرقم الشخصي';
+
+  @override
+  String get kyc_id_number => 'رقم الهوية (الرقم التسلسلي للبطاقة)';
+
+  @override
+  String get kyc_place_of_issue => 'مكان الإصدار';
+
+  @override
+  String get kyc_date_of_issue => 'تاريخ الإصدار';
+
+  @override
+  String get kyc_date_of_expiry => 'تاريخ الانتهاء';
+
+  @override
+  String get kyc_passport_number => 'رقم جواز السفر';
+
+  @override
+  String get kyc_education_level => 'المستوى التعليمي';
+
+  @override
+  String get kyc_economic_sector => 'القطاع الاقتصادي';
+
+  @override
+  String get kyc_total_monthly_income => 'إجمالي الدخل الشهري (دينار عراقي)';
+
+  @override
+  String get kyc_employer_address => 'عنوان جهة العمل';
+
+  @override
+  String get kyc_governorate => 'المحافظة';
+
+  @override
+  String get kyc_district => 'القضاء';
+
+  @override
+  String get kyc_city_town => 'المدينة / البلدة';
+
+  @override
+  String get kyc_mahalla => 'المحلة';
+
+  @override
+  String get kyc_street => 'الشارع';
+
+  @override
+  String get kyc_house_no => 'رقم الدار';
+
+  @override
+  String get kyc_nearest_landmark_ar => 'أقرب معلم (بالعربية)';
+
+  @override
+  String get kyc_neares_landmart_eng => 'أقرب معلم (بالإنجليزية)';
+
+  @override
+  String get kyc_are_u_us_person => 'هل أنت شخص أمريكي؟';
+
+  @override
+  String get kyc_us => 'الرقم الضريبي الأمريكي / رقم الضمان الاجتماعي';
+
+  @override
+  String get kyc_us_address => 'العنوان في الولايات المتحدة';
+
+  @override
+  String get kyc_do_you_fall_into_pep =>
+      'هل تندرج ضمن أي فئة من فئات الأشخاص المعرضين سياسياً (PEP)؟';
+
+  @override
+  String get kyc_position_held =>
+      'المنصب المشغول / صلة القرابة بالشخص المعرض سياسياً';
+
+  @override
+  String get kyc_from_date => 'من (شهر/سنة)';
+
+  @override
+  String get kyc_from_date_hint => 'من (شهر/سنة)';
+
+  @override
+  String get kyc_to_date => 'إلى (شهر/سنة)';
+
+  @override
+  String get kyc_to_date_hint => 'إلى (شهر/سنة)';
+
+  @override
+  String get kyc_permission_to_reside_outside_iraq =>
+      'هل لديك تصريح للإقامة خارج العراق؟';
+
+  @override
+  String get kyc_citizenship => 'هل تحمل جنسية دولة أخرى؟';
+
+  @override
+  String get kyc_we_will_send_otp_on_phone =>
+      'سنرسل رمز تحقق لمرة واحدة إلى رقم هاتفك عبر واتساب.';
+
+  @override
+  String get kyc_we_will_send_otp_on_email =>
+      'سنرسل رمز تحقق لمرة واحدة إلى بريدك الإلكتروني.';
+
+  @override
+  String get kyc_didnt_recieve_code => 'لم تستلم الرمز؟';
+
+  @override
+  String get kyc_resend_in => 'إعادة الإرسال خلال';
+
+  @override
+  String get kyc_resend_code => 'إعادة إرسال الرمز';
+
+  @override
+  String get kyc_sending => 'جارٍ الإرسال…';
+
+  @override
+  String get kyc_send_code => 'إرسال الرمز';
+
+  @override
+  String get kyc_before_u_begin => 'قبل أن تبدأ';
+
+  @override
+  String get kyc_have_documents_title => 'جهّز المستندات التالية';
+
+  @override
+  String get kyc_lede_doc =>
+      'جميع المستندات الثلاثة التالية مطلوبة لإكمال عملية التسجيل. يرجى تجهيزها قبل المتابعة.';
+
+  @override
+  String get kyc_national_card_title => 'البطاقة الوطنية';
+
+  @override
+  String get kyc_national_card_subtitle =>
+      'الوجه الأمامي والخلفي. سيكون كلا رقمي البطاقة مطلوبين.';
+
+  @override
+  String get kyc_residence_card_title => 'بطاقة السكن';
+
+  @override
+  String get kyc_residence_card_subtitle => 'الوجه الأمامي والخلفي.';
+
+  @override
+  String get kyc_passort_title => 'جواز السفر (إن وجد)';
+
+  @override
+  String get kyc_passport_subtitle =>
+      'يُستخدم لكتابة اسمك باللغة الإنجليزية. يمكنك المتابعة بدونه.';
+
+  @override
+  String get kyc_you_will_need => 'ستحتاج أيضاً إلى';
+
+  @override
+  String get kyc_roughly_six => 'حوالي ست (6) دقائق لإكمال النموذج.';
+
+  @override
+  String get kyc_additional_documents =>
+      'قد تكون هناك حاجة إلى مستندات إضافية إذا كنت تحمل إقامة أو جنسية خارج العراق.';
+
+  @override
+  String get kyc_section_1 => 'القسم 1 · الغرض والنطاق';
+
+  @override
+  String get kyc_before_we_begin => 'قبل أن نبدأ';
+
+  @override
+  String get kyc_number_1 => '1.1';
+
+  @override
+  String get kyc_about_bbh_bold => 'نبذة عن بيت بغداد للسبائك.';
+
+  @override
+  String get kyc_about_bbh_body =>
+      'بيت بغداد للسبائك (BBH) تاجر مرخص للمعادن والأحجار الكريمة، مسجل في العراق تحت رقم السجل التجاري 17240، وله أربعة (4) فروع في بغداد وفرع واحد (1) في النجف.';
+
+  @override
+  String get kyc_number_2 => '1.2';
+
+  @override
+  String get kyc_number_2_bold => 'ما الذي نجمعه.';
+
+  @override
+  String get kyc_number_2_body =>
+      'تتضمن هذه العملية جمع بيانات التعريف الخاصة بك، والملف الاقتصادي، وإقرارات الامتثال اللازمة لفتح حساب الذهب الخاص بك لدى BBH.';
+
+  @override
+  String get kyc_number_3 => '1.3';
+
+  @override
+  String get kyc_number_3_bold => 'ما الذي نحتفظ به.';
+
+  @override
+  String get kyc_number_3_body =>
+      'يتم الاحتفاظ بجميع السجلات بشكل آمن لدى BBH للفترة المطلوبة بموجب القانون العراقي، على ألا تقل عن سبع (7) سنوات من تاريخ إغلاق الحساب أو آخر معاملة.';
+
+  @override
+  String get kyc_purpose => 'تأكيد الغرض';
+
+  @override
+  String get kyc_purpose_des =>
+      'لقد تم إبلاغي بما ورد أعلاه وأرغب في متابعة إجراءات التسجيل لدى BBH.';
+
+  @override
   String trade_confirm_market_body(String price) {
     return 'يُنفَّذ تداولك فورًا بسعر السوق الحالي البالغ $price د.ع. تأكد من كفاية رصيدك.';
   }

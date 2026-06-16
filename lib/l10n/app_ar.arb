@@ -1341,6 +1341,111 @@
 "open_real_account": "فتح حساب حقيقي",
 "register_for_free_demo": "التسجيل للحصول على حساب تجريبي مجاني",
 
+
+  "kyc_done": "تم",
+  "kyc_title_contact": "معلومات الاتصال",
+  "kyc_full_name": "الاسم الكامل",
+  "kyc_personal_detail": "البيانات الشخصية",
+  "kyc_national_id": "الهوية الوطنية",
+  "kyc_passport": "جواز السفر",
+  "kyc_income": "الدخل والعمل",
+  "kyc_address": "العنوان",
+  "kyc_compliance": "الامتثال",
+  "kyc_foreignres": "الإقامة الأجنبية",
+  "kyc_foreigncit": "الجنسية الأجنبية",
+  "kyc_phone_verified": "تم التحقق ✓",
+  "kyc_verify_number": "التحقق من الرقم",
+
+  "kyc_email_verified": "تم التحقق ✓",
+  "kyc_verify_email": "التحقق من البريد الإلكتروني",
+  "kyc_update_contact_detail": "في حال تغيير رقم الهاتف أو البريد الإلكتروني، يجب إعادة التحقق منهما قبل إرسال الطلب.",
+
+  "kyc_first_name": "الاسم الأول",
+  "kyc_father_name": "اسم الأب",
+  "kyc_grand_father_name": "اسم الجد",
+  "kyc_surname": "اللقب",
+  "kyc_mother_name": "اسم الأم",
+  "kyc_gender": "الجنس",
+  "kyc_country_of_birth": "بلد الميلاد",
+  "kyc_place_birth": "مكان الميلاد",
+  "kyc_personal_number": "الرقم الشخصي",
+  "kyc_id_number": "رقم الهوية (الرقم التسلسلي للبطاقة)",
+  "kyc_place_of_issue": "مكان الإصدار",
+  "kyc_date_of_issue": "تاريخ الإصدار",
+  "kyc_date_of_expiry": "تاريخ الانتهاء",
+  "kyc_passport_number": "رقم جواز السفر",
+
+  "kyc_education_level": "المستوى التعليمي",
+  "kyc_economic_sector": "القطاع الاقتصادي",
+  "kyc_total_monthly_income": "إجمالي الدخل الشهري (دينار عراقي)",
+  "kyc_employer_address": "عنوان جهة العمل",
+
+  "kyc_governorate": "المحافظة",
+  "kyc_district": "القضاء",
+  "kyc_city_town": "المدينة / البلدة",
+  "kyc_mahalla": "المحلة",
+  "kyc_street": "الشارع",
+  "kyc_house_no": "رقم الدار",
+  "kyc_nearest_landmark_ar": "أقرب معلم (بالعربية)",
+  "kyc_neares_landmart_eng": "أقرب معلم (بالإنجليزية)",
+
+  "kyc_are_u_us_person": "هل أنت شخص أمريكي؟",
+  "kyc_us": "الرقم الضريبي الأمريكي / رقم الضمان الاجتماعي",
+  "kyc_us_address": "العنوان في الولايات المتحدة",
+
+  "kyc_do_you_fall_into_pep": "هل تندرج ضمن أي فئة من فئات الأشخاص المعرضين سياسياً (PEP)؟",
+  "kyc_position_held": "المنصب المشغول / صلة القرابة بالشخص المعرض سياسياً",
+  "kyc_from_date": "من (شهر/سنة)",
+  "kyc_from_date_hint": "من (شهر/سنة)",
+  "kyc_to_date": "إلى (شهر/سنة)",
+  "kyc_to_date_hint": "إلى (شهر/سنة)",
+
+  "kyc_permission_to_reside_outside_iraq": "هل لديك تصريح للإقامة خارج العراق؟",
+  "kyc_citizenship": "هل تحمل جنسية دولة أخرى؟",
+
+  "kyc_we_will_send_otp_on_phone": "سنرسل رمز تحقق لمرة واحدة إلى رقم هاتفك عبر واتساب.",
+  "kyc_we_will_send_otp_on_email": "سنرسل رمز تحقق لمرة واحدة إلى بريدك الإلكتروني.",
+  "kyc_didnt_recieve_code": "لم تستلم الرمز؟",
+  "kyc_resend_in": "إعادة الإرسال خلال",
+  "kyc_resend_code": "إعادة إرسال الرمز",
+  "kyc_sending": "جارٍ الإرسال…",
+  "kyc_send_code": "إرسال الرمز",
+
+  "kyc_before_u_begin": "قبل أن تبدأ",
+  "kyc_have_documents_title": "جهّز المستندات التالية",
+  "kyc_lede_doc": "جميع المستندات الثلاثة التالية مطلوبة لإكمال عملية التسجيل. يرجى تجهيزها قبل المتابعة.",
+
+  "kyc_national_card_title": "البطاقة الوطنية",
+  "kyc_national_card_subtitle": "الوجه الأمامي والخلفي. سيكون كلا رقمي البطاقة مطلوبين.",
+
+  "kyc_residence_card_title": "بطاقة السكن",
+  "kyc_residence_card_subtitle": "الوجه الأمامي والخلفي.",
+
+  "kyc_passort_title": "جواز السفر (إن وجد)",
+  "kyc_passport_subtitle": "يُستخدم لكتابة اسمك باللغة الإنجليزية. يمكنك المتابعة بدونه.",
+
+  "kyc_you_will_need": "ستحتاج أيضاً إلى",
+  "kyc_roughly_six": "حوالي ست (6) دقائق لإكمال النموذج.",
+  "kyc_additional_documents": "قد تكون هناك حاجة إلى مستندات إضافية إذا كنت تحمل إقامة أو جنسية خارج العراق.",
+
+  "kyc_section_1": "القسم 1 · الغرض والنطاق",
+  "kyc_before_we_begin": "قبل أن نبدأ",
+
+  "kyc_number_1": "1.1",
+  "kyc_about_bbh_bold": "نبذة عن بيت بغداد للسبائك.",
+  "kyc_about_bbh_body": "بيت بغداد للسبائك (BBH) تاجر مرخص للمعادن والأحجار الكريمة، مسجل في العراق تحت رقم السجل التجاري 17240، وله أربعة (4) فروع في بغداد وفرع واحد (1) في النجف.",
+
+  "kyc_number_2": "1.2",
+  "kyc_number_2_bold": "ما الذي نجمعه.",
+  "kyc_number_2_body": "تتضمن هذه العملية جمع بيانات التعريف الخاصة بك، والملف الاقتصادي، وإقرارات الامتثال اللازمة لفتح حساب الذهب الخاص بك لدى BBH.",
+
+  "kyc_number_3": "1.3",
+  "kyc_number_3_bold": "ما الذي نحتفظ به.",
+  "kyc_number_3_body": "يتم الاحتفاظ بجميع السجلات بشكل آمن لدى BBH للفترة المطلوبة بموجب القانون العراقي، على ألا تقل عن سبع (7) سنوات من تاريخ إغلاق الحساب أو آخر معاملة.",
+
+  "kyc_purpose": "تأكيد الغرض",
+  "kyc_purpose_des": "لقد تم إبلاغي بما ورد أعلاه وأرغب في متابعة إجراءات التسجيل لدى BBH.",
+
   "trade_confirm_market_body": "يُنفَّذ تداولك فورًا بسعر السوق الحالي البالغ {price} د.ع. تأكد من كفاية رصيدك.",
   "@trade_confirm_market_body": {
     "placeholders": {

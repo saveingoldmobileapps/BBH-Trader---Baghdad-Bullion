@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'dart:developer' as developer;
-import 'dart:math' show min;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'bbh_onboarding_field_scroll.dart';
 import 'bbh_onboarding_theme.dart';
 
 class BbhStepHeader extends StatelessWidget {
@@ -399,6 +398,7 @@ class BbhTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.label,
+    this.fieldKey,
     this.hint,
     this.readOnly = false,
     this.locked = false,
@@ -414,6 +414,7 @@ class BbhTextField extends StatelessWidget {
 
   final TextEditingController controller;
   final String label;
+  final String? fieldKey;
   final String? hint;
   final bool readOnly;
   final bool locked;
@@ -435,9 +436,12 @@ class BbhTextField extends StatelessWidget {
     final fillColor = verified
         ? const Color(0x0F4A6741)
         : (disableInput ? BbhOnboardingColors.paperWarm : BbhOnboardingColors.paper);
-    final borderColor = verified
-        ? BbhOnboardingColors.success.withValues(alpha: 0.55)
-        : BbhOnboardingColors.rule;
+    final showError = BbhOnboardingFieldScroll.isError(fieldKey);
+    final borderColor = showError
+        ? BbhOnboardingColors.error
+        : verified
+            ? BbhOnboardingColors.success.withValues(alpha: 0.55)
+            : BbhOnboardingColors.rule;
 
     Widget field = TextField(
       controller: controller,
@@ -447,7 +451,10 @@ class BbhTextField extends StatelessWidget {
       maxLines: maxLines,
       textDirection: textDirection,
       textCapitalization: capitalization,
-      onChanged: onChanged,
+      onChanged: (value) {
+        if (showError) BbhOnboardingFieldScroll.clearError();
+        onChanged?.call(value);
+      },
       style: textDirection == TextDirection.rtl
           ? BbhOnboardingText.arabic(
               size: 17,
@@ -493,7 +500,7 @@ class BbhTextField extends StatelessWidget {
       );
     }
 
-    return Padding(
+    final content = Padding(
       padding: const EdgeInsets.only(bottom: 18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -504,6 +511,8 @@ class BbhTextField extends StatelessWidget {
         ],
       ),
     );
+    if (fieldKey == null) return content;
+    return BbhOnboardingFieldScroll.anchor(fieldKey!, content);
   }
 }
 
@@ -514,6 +523,7 @@ class BbhToggleGroup extends StatelessWidget {
     required this.value,
     required this.options,
     required this.onChanged,
+    this.fieldKey,
     this.locked = false,
   });
 
@@ -521,11 +531,13 @@ class BbhToggleGroup extends StatelessWidget {
   final String? value;
   final List<String> options;
   final ValueChanged<String> onChanged;
+  final String? fieldKey;
   final bool locked;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final showError = BbhOnboardingFieldScroll.isError(fieldKey);
+    final content = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label.toUpperCase(), style: BbhOnboardingText.fieldLabel()),
@@ -535,14 +547,22 @@ class BbhToggleGroup extends StatelessWidget {
           decoration: BoxDecoration(
             color: BbhOnboardingColors.creamDeep,
             borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
-            border: Border.all(color: BbhOnboardingColors.rule),
+            border: Border.all(
+              color: showError ? BbhOnboardingColors.error : BbhOnboardingColors.rule,
+              width: showError ? 1.5 : 1,
+            ),
           ),
           child: Row(
             children: options.map((opt) {
               final active = value == opt;
               return Expanded(
                 child: GestureDetector(
-                  onTap: locked ? null : () => onChanged(opt),
+                  onTap: locked
+                      ? null
+                      : () {
+                          if (showError) BbhOnboardingFieldScroll.clearError();
+                          onChanged(opt);
+                        },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
                     padding: const EdgeInsets.symmetric(vertical: 12),
@@ -571,6 +591,8 @@ class BbhToggleGroup extends StatelessWidget {
         ),
       ],
     );
+    if (fieldKey == null) return content;
+    return BbhOnboardingFieldScroll.anchor(fieldKey!, content);
   }
 }
 
@@ -580,18 +602,24 @@ class BbhConfirmRow extends StatelessWidget {
     required this.text,
     required this.checked,
     required this.onChanged,
+    this.fieldKey,
   });
 
   final String text;
   final bool checked;
   final ValueChanged<bool> onChanged;
+  final String? fieldKey;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    final showError = BbhOnboardingFieldScroll.isError(fieldKey);
+    final content = Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: () => onChanged(!checked),
+        onTap: () {
+          if (showError) BbhOnboardingFieldScroll.clearError();
+          onChanged(!checked);
+        },
         borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
@@ -600,8 +628,12 @@ class BbhConfirmRow extends StatelessWidget {
             color: checked ? BbhOnboardingColors.paperWarm : BbhOnboardingColors.paper,
             borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
             border: Border.all(
-              color: checked ? BbhOnboardingColors.gold : BbhOnboardingColors.rule,
-              width: checked ? 1.5 : 1,
+              color: showError
+                  ? BbhOnboardingColors.error
+                  : checked
+                      ? BbhOnboardingColors.gold
+                      : BbhOnboardingColors.rule,
+              width: showError || checked ? 1.5 : 1,
             ),
           ),
           child: Row(
@@ -630,6 +662,8 @@ class BbhConfirmRow extends StatelessWidget {
         ),
       ),
     );
+    if (fieldKey == null) return content;
+    return BbhOnboardingFieldScroll.anchor(fieldKey!, content);
   }
 }
 
@@ -1015,18 +1049,25 @@ class BbhSignaturePad extends StatefulWidget {
     super.key,
     required this.onSignatureChanged,
     this.hasSignature = false,
+    this.padHeight = 120,
+    this.inModal = false,
   });
 
   final ValueChanged<String?> onSignatureChanged;
   final bool hasSignature;
+  final double padHeight;
+
+  /// When true, skip parent scroll-hold (used inside a fixed dialog popup).
+  final bool inModal;
 
   @override
   State<BbhSignaturePad> createState() => _BbhSignaturePadState();
 }
 
 class _BbhSignaturePadState extends State<BbhSignaturePad> {
-  static const _padHeight = 120.0;
   static const _strokeColor = Color(0xFF1C2638);
+
+  double get _padHeight => widget.padHeight;
 
   final List<List<Offset>> _strokes = [];
   List<Offset>? _currentStroke;
@@ -1034,6 +1075,7 @@ class _BbhSignaturePadState extends State<BbhSignaturePad> {
   ScrollHoldController? _scrollHold;
 
   void _holdParentScroll() {
+    if (widget.inModal) return;
     _scrollHold?.cancel();
     final scrollable = Scrollable.maybeOf(context);
     _scrollHold = scrollable?.position.hold(() {
@@ -1042,6 +1084,7 @@ class _BbhSignaturePadState extends State<BbhSignaturePad> {
   }
 
   void _releaseParentScroll() {
+    if (widget.inModal) return;
     _scrollHold?.cancel();
     _scrollHold = null;
   }
@@ -1248,4 +1291,169 @@ class _BbhSignaturePainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant _BbhSignaturePainter oldDelegate) =>
       oldDelegate.strokes != strokes;
+}
+
+/// Tap-to-open signature capture — avoids scroll conflicts on the consent step.
+class BbhSignatureTrigger extends StatelessWidget {
+  const BbhSignatureTrigger({
+    super.key,
+    required this.hasSignature,
+    required this.onTap,
+    this.fieldKey,
+  });
+
+  final bool hasSignature;
+  final VoidCallback onTap;
+  final String? fieldKey;
+
+  @override
+  Widget build(BuildContext context) {
+    final showError = BbhOnboardingFieldScroll.isError(fieldKey);
+    final content = Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          if (showError) BbhOnboardingFieldScroll.clearError();
+          onTap();
+        },
+        borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
+          decoration: BoxDecoration(
+            color: BbhOnboardingColors.paper,
+            borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
+            border: Border.all(
+              color: showError
+                  ? BbhOnboardingColors.error
+                  : hasSignature
+                      ? BbhOnboardingColors.success.withValues(alpha: 0.55)
+                      : BbhOnboardingColors.rule,
+              width: showError || hasSignature ? 1.5 : 1,
+            ),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                hasSignature ? Icons.draw_outlined : Icons.gesture_outlined,
+                size: 22,
+                color: hasSignature
+                    ? BbhOnboardingColors.success
+                    : BbhOnboardingColors.muted,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      hasSignature ? 'Signature captured' : 'Tap to sign',
+                      style: BbhOnboardingText.manrope(
+                        size: 14,
+                        weight: FontWeight.w600,
+                        color: BbhOnboardingColors.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      hasSignature
+                          ? 'Tap to view or change your signature'
+                          : 'Opens a signing popup',
+                      style: BbhOnboardingText.manrope(
+                        size: 12,
+                        color: BbhOnboardingColors.muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.chevron_right,
+                color: BbhOnboardingColors.muted,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (fieldKey == null) return content;
+    return BbhOnboardingFieldScroll.anchor(fieldKey!, content);
+  }
+}
+
+/// Centered modal popup for signature capture — fixed position, no sheet drag/scroll.
+class BbhSignatureDialog {
+  BbhSignatureDialog._();
+
+  static Future<void> show(
+    BuildContext context, {
+    required bool hasSignature,
+    required ValueChanged<String?> onSignatureChanged,
+  }) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      useRootNavigator: true,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: BbhOnboardingColors.cream,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 22, vertical: 28),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(BbhOnboardingRadii.lg),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Your signature',
+                          style: BbhOnboardingText.display(
+                            size: 22,
+                            weight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.of(dialogContext).pop(),
+                        icon: const Icon(Icons.close, size: 22),
+                        color: BbhOnboardingColors.muted,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Sign inside the box below using your finger.',
+                    style: BbhOnboardingText.manrope(
+                      size: 13,
+                      color: BbhOnboardingColors.muted,
+                      height: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  BbhSignaturePad(
+                    inModal: true,
+                    padHeight: 180,
+                    hasSignature: hasSignature,
+                    onSignatureChanged: onSignatureChanged,
+                  ),
+                  const SizedBox(height: 16),
+                  BbhGoldButton(
+                    label: 'Done',
+                    onPressed: () => Navigator.of(dialogContext).pop(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

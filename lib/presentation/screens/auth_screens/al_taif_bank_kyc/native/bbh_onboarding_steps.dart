@@ -405,7 +405,7 @@ class BbhOnboardingSteps {
       BbhTextField(
         fieldKey: 'ar_mother',
         controller: form.arMother,
-        label: "Mother's Name",
+        label: "Mother's Name + Maternal Grandfather",
         verified: form.isVerified('ar_mother'),
         textDirection: TextDirection.rtl,
       ),
@@ -451,7 +451,7 @@ class BbhOnboardingSteps {
       BbhTextField(
         fieldKey: 'en_mother',
         controller: form.enMother,
-        label: "Mother's Name",
+        label: "Mother's Name + Maternal Grandfather",
         verified: form.isVerified('en_mother'),
         capitalization: TextCapitalization.words,
       ),
@@ -912,7 +912,7 @@ class BbhOnboardingSteps {
         fieldKey: 'mobile',
         controller: form.mobile,
         label: 'Mobile Number',
-        hint: '+964 7XX XXX XXXX',
+        hint: '+964 7XX XXX XXXX or 00964…',
         keyboardType: TextInputType.phone,
         verified: form.verifiedMobile.value,
         onChanged: (_) {
@@ -924,7 +924,7 @@ class BbhOnboardingSteps {
       ),
       const SizedBox(height: 6),
       Text(
-        'Verify your mobile number first.',
+        'International format: 00… or +…. Verified as 00… for the API.',
         style: BbhOnboardingText.manrope(
           size: 12,
           color: BbhOnboardingColors.muted,

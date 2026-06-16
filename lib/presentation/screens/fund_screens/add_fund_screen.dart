@@ -1,11 +1,10 @@
-import 'package:baghdad_bullion_house/presentation/screens/fund_screens/add_fund_html.dart';
+import 'package:baghdad_bullion_house/presentation/screens/fund_screens/funding_portal/funding_portal_flow.dart';
 import 'package:baghdad_bullion_house/presentation/screens/fund_screens/funding_portal/funding_portal_mobile_flow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/screens/direct_transfer/direct_transfer_get_started.dart';
-import 'package:baghdad_bullion_house/presentation/screens/fund_screens/hyperpay_add_fund_screen.dart';
 
 import '../../widgets/widget_export.dart';
 
@@ -295,11 +294,13 @@ class _AddFundScreenState extends ConsumerState<AddFundScreen> {
                 iconString:
                     "assets/png/iqd_icon.png", //"assets/svg/direct_icon.svg",
                 onTap: () async {
-
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const addFundViewScreen(),
+                      builder: (_) => const FundingPortalMobileFlow(
+                        entry: FundingPortalEntry.depositDemo,
+                        exitOnDone: true,
+                      ),
                     ),
                   );
                 },

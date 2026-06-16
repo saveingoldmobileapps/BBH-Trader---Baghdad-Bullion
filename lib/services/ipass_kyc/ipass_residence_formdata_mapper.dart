@@ -37,14 +37,6 @@ class IpassResidenceFormdataMapper {
     );
     put('resNo', formNo);
 
-    final addressNo = _firstMatch(
-      normalized,
-      [RegExp(r'عنوان\s*السكن\s*([0-9]+)')],
-    );
-    if (addressNo != null) {
-      put('addrHouse', addressNo);
-    }
-
     final neighborhood = _firstMatch(
       normalized,
       [

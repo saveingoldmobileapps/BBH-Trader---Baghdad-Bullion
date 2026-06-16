@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_onboarding_form.dart';
+import 'bbh_phone_number_util.dart';
 
 /// Builds the final backend JSON from all onboarding steps.
 class BbhOnboardingSubmissionBuilder {
@@ -141,7 +142,7 @@ class BbhOnboardingSubmissionBuilder {
       },
       'contactInformation': {
         'email': tc(form.email),
-        'mobile': tc(form.mobile),
+        'mobile': BbhPhoneNumberUtil.toApiFormat(tc(form.mobile)),
         'emailVerified': form.verifiedEmail.value,
         'mobileVerified': form.verifiedMobile.value,
         'address': joinAddress(),

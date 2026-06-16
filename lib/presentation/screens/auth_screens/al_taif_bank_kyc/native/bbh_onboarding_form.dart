@@ -8,6 +8,7 @@ class BbhOnboardingForm {
   bool consentConfirmed = false;
   bool noPassport = false;
   String? signature;
+  
 
   bool get hasSignature => signature != null && signature!.isNotEmpty;
 
@@ -33,6 +34,8 @@ class BbhOnboardingForm {
   final verifiedEmail = ValueNotifier<bool>(false);
   final lockedFields = <String>{};
   final verifiedFields = <String>{};
+
+  final arMotherCombined = TextEditingController();
 
   final mobile = TextEditingController();
   final email = TextEditingController();
@@ -360,8 +363,20 @@ class BbhOnboardingForm {
   void dispose() {
     verifiedMobile.dispose();
     verifiedEmail.dispose();
+    arMotherCombined.dispose();
     for (final e in _allFieldEntries()) {
       e.value.dispose();
     }
   }
+  void initDerivedFields() {
+  void syncMother() {
+    arMotherCombined.text =
+        '${arMother.text} ${arGf.text}'.trim();
+  }
+
+  arMother.addListener(syncMother);
+  arGf.addListener(syncMother);
+
+  syncMother();
+}
 }

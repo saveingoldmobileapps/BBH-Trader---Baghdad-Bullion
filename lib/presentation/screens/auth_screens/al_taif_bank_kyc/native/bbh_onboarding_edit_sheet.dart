@@ -137,18 +137,18 @@ class BbhOnboardingEditSheet {
   }
 
   static String? _titleFor(String key) => switch (key) {
-        'contact' => 'Contact',
-        'name' => 'Full Name',
-        'personal' => 'Personal Details',
-        'natid' => 'National ID',
-        'passport' => 'Passport',
-        'income' => 'Income & Employment',
-        'address' => 'Address',
-        'compliance' => 'Compliance',
-        'foreignres' => 'Foreign Residency',
-        'foreigncit' => 'Foreign Citizenship',
-        _ => null,
-      };
+    'contact' => 'Contact',
+    'name' => 'Full Name',
+    'personal' => 'Personal Details',
+    'natid' => 'National ID',
+    'passport' => 'Passport',
+    'income' => 'Income & Employment',
+    'address' => 'Address',
+    'compliance' => 'Compliance',
+    'foreignres' => 'Foreign Residency',
+    'foreigncit' => 'Foreign Citizenship',
+    _ => null,
+  };
 
   static Widget _buildFields({
     required String sectionKey,
@@ -204,7 +204,7 @@ class BbhOnboardingEditSheet {
         BbhTextField(
           controller: form.mobile,
           label: 'Mobile Number',
-          hint: '+964 7XX XXX XXXX',
+          hint: '+964 7XX XXX XXXX or 00964…',
           keyboardType: TextInputType.phone,
           verified: form.verifiedMobile.value,
           onChanged: (_) {
@@ -294,11 +294,18 @@ class BbhOnboardingEditSheet {
             textDirection: TextDirection.rtl,
           ),
         ),
+        // BbhTextField(
+        //   controller: form.arMother,
+        //   label: "Mother's Name + Maternal Grandfather",
+        //   verified: form.isVerified('ar_mother'),
+        //   textDirection: TextDirection.rtl,
+        // ),
         BbhTextField(
-          controller: form.arMother,
+          controller: form.arMotherCombined,
           label: "Mother's Name",
           verified: form.isVerified('ar_mother'),
           textDirection: TextDirection.rtl,
+          readOnly: true,
         ),
         const SizedBox(height: 12),
         _groupLabel('In English'),

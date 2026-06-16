@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:baghdad_bullion_house/data/models/ipass_model/ipass_formdata_result_response.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_builder.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_logger.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_phone_number_util.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/bbh_onboarding_state_store.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_formdata_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_html_field_mapper.dart';
@@ -323,6 +324,12 @@ class BbhOnboardingController extends ChangeNotifier {
     if (!_filled(form.mobile)) {
       return _fail('Enter your mobile number.', fieldKey: 'mobile');
     }
+    if (!BbhPhoneNumberUtil.isValidInput(form.mobile.text)) {
+      return _fail(
+        'Enter a valid mobile number starting with 00 or +.',
+        fieldKey: 'mobile',
+      );
+    }
     if (!bypassMobileVerification && !form.verifiedMobile.value) {
       return _fail('Verify your mobile number before continuing.', fieldKey: 'mobile');
     }
@@ -601,16 +608,15 @@ class BbhOnboardingController extends ChangeNotifier {
       }
 
       if (htmlFields.isNotEmpty) {
-        form.applyScanValues(IpassScanTarget.residence, htmlFields);
+        // Residence OCR is stored for submission only — form fields stay manual.
       }
 
       form.resFrontCaptured = true;
       form.resBackCaptured = true;
       await persist();
 
-      lastSuccess = htmlFields.isEmpty
-          ? 'Residence document captured (front & back). Enter details on the next screen.'
-          : 'Residence document captured. Details will appear on the next screen.';
+      lastSuccess =
+          'Residence document captured (front & back). Enter details on the next screen.';
       notifyListeners();
       return true;
     } on IpassFormDataException catch (e) {

@@ -7,6 +7,7 @@ class IpassHtmlFieldMapper {
   static const Map<String, String> _mapperToHtml = {
     'mobile': 'mobile',
     'email': 'email',
+    'gender': 'gender',
     'branch': 'branch',
     'arFirst': 'ar_first',
     'arFather': 'ar_father',
@@ -18,7 +19,6 @@ class IpassHtmlFieldMapper {
     'enGf': 'en_gf',
     'enSurname': 'en_surname',
     'enMother': 'en_mother',
-    'gender': 'gender',
     'nationality': 'nationality',
     'dob': 'dob',
     'countryBirth': 'country_birth',
@@ -92,29 +92,41 @@ class IpassHtmlFieldMapper {
       'gender',
       'country_birth',
       'place_birth',
-      'mobile',
-      'email',
-    };
-    const residenceFields = {
-      'res_no',
-      'res_place',
-      'res_issue',
-      'res_expiry',
-      'addr_house',
-      'addr_mahalla',
-      'addr_street',
     };
 
     bool allowed(String key) => switch (target) {
           IpassScanTarget.passport =>
             passportFields.contains(key) || passportShared.contains(key),
           IpassScanTarget.nationalId => nationalIdFields.contains(key),
-          IpassScanTarget.residence => residenceFields.contains(key),
+          // Residence OCR is stored for submission only — form fields are manual.
+          IpassScanTarget.residence => false,
         };
 
     return Map.fromEntries(
       htmlValues.entries.where((e) => allowed(e.key)),
     );
+  }
+
+  /// Keeps only mapper keys allowed for the scan target (post-extraction safety net).
+  static Map<String, String> filterMappedForScan(
+    IpassScanTarget target,
+    Map<String, String> mapped,
+  ) {
+    final html = toHtmlFieldValues(mapped);
+    final allowed = forScanTarget(target, html);
+    final out = <String, String>{};
+    for (final entry in _mapperToHtml.entries) {
+      final htmlKey = entry.value;
+      if (!allowed.containsKey(htmlKey)) continue;
+      final value = mapped[entry.key]?.trim();
+      if (value != null && value.isNotEmpty) {
+        out[entry.key] = value;
+      }
+    }
+    if (allowed.containsKey('gender') && mapped['gender']?.trim().isNotEmpty == true) {
+      out['gender'] = mapped['gender']!.trim();
+    }
+    return out;
   }
 
   /// National ID overwrites its fields; passport overwrites pp_* and English/personal

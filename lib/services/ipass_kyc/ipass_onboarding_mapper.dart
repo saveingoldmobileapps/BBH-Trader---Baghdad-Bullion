@@ -819,12 +819,13 @@ class IpassOnboardingMapper {
 
     put(
       'enMother',
-      _firstSectionValue(section, const [
-        'Mothers Name',
-        "Mother's Name",
-        'Mother Name',
-        'Mothers NameAr',
-      ]),
+      _motherNameWithMaternalGrandfather(section, arabic: false) ??
+          _firstSectionValue(section, const [
+            'Mothers Name',
+            "Mother's Name",
+            'Mother Name',
+            'Mothers NameAr',
+          ]),
     );
 
     put(
@@ -991,11 +992,7 @@ class IpassOnboardingMapper {
       put('arGf', gfAr);
       put(
         'arMother',
-        _firstSectionValue(section, const [
-          'Mothers NameAr',
-          "Mother's NameAr",
-          'Mother NameAr',
-        ]),
+        _motherNameWithMaternalGrandfather(section, arabic: true),
       );
       return;
     }
@@ -1024,6 +1021,55 @@ class IpassOnboardingMapper {
     } else if (parts.length == 2) {
       put('arFirst', parts[0]);
     }
+  }
+
+  /// Iraqi ID: mother's name field = mother + maternal grandfather.
+  static String? _motherNameWithMaternalGrandfather(
+    Map<String, dynamic> section, {
+    required bool arabic,
+  }) {
+    final motherKeys = arabic
+        ? const [
+            'Mothers NameAr',
+            "Mother's NameAr",
+            'Mother NameAr',
+          ]
+        : const [
+            'Mothers Name',
+            "Mother's Name",
+            'Mother Name',
+          ];
+    final maternalGfKeys = arabic
+        ? const [
+            'Mothers Father NameAr',
+            "Mother's Father NameAr",
+            'Mothers Fathers NameAr',
+            'Maternal Grandfather NameAr',
+            'Maternal Grandfathers NameAr',
+            'Mother Father NameAr',
+          ]
+        : const [
+            'Mothers Father Name',
+            "Mother's Father Name",
+            'Maternal Grandfather Name',
+            'Maternal Grandfathers Name',
+            'Mother Father Name',
+          ];
+
+    return _joinNameParts([
+      _firstSectionValue(section, motherKeys),
+      _firstSectionValue(section, maternalGfKeys),
+    ]);
+  }
+
+  static String? _joinNameParts(List<String?> parts) {
+    final tokens = parts
+        .map((p) => p?.trim())
+        .whereType<String>()
+        .where((p) => p.isNotEmpty && !_isPlaceholderValue(p))
+        .toList();
+    if (tokens.isEmpty) return null;
+    return tokens.join(' ');
   }
 
   static bool _looksLikeAllCapsMrz(String value) {
@@ -1146,7 +1192,17 @@ class IpassOnboardingMapper {
           put('enGf', _first(flat, const ['grandfathername', 'grandfathersname']));
         }
         if (!out.containsKey('enMother')) {
-          put('enMother', _first(flat, const ['mothersname', 'mothername']));
+          put(
+            'enMother',
+            _joinNameParts([
+              _first(flat, const ['mothersname', 'mothername']),
+              _first(flat, const [
+                'mothersfathername',
+                'motherfathername',
+                'maternalgrandfathername',
+              ]),
+            ]),
+          );
         }
         put('ppNo', _first(flat, const ['passportnumber', 'passportno', 'documentnumber']));
         put('ppPlace', _first(flat, const ['passportplaceofissue', 'placeofissue', 'issuingstatename']));
@@ -1165,12 +1221,16 @@ class IpassOnboardingMapper {
         put('placeBirth', _first(flat, const ['placeofbirth', 'birthplace']));
         return;
       case IpassScanTarget.nationalId:
-        break;
+        _mapFromFlatNationalId(out, flat, put);
+        return;
     }
+  }
 
-    put('mobile', _first(flat, const ['mobile', 'phone', 'phoneNumber', 'mobileNumber']));
-    put('email', _first(flat, const ['email', 'emailAddress']));
-
+  static void _mapFromFlatNationalId(
+    Map<String, String> out,
+    Map<String, String> flat,
+    void Function(String key, String? value) put,
+  ) {
     if (!out.containsKey('enFirst')) {
       put('enFirst', _first(flat, const ['givennames', 'givenname', 'englishfirstname']));
     }
@@ -1195,7 +1255,18 @@ class IpassOnboardingMapper {
       put('arGf', _first(flat, const ['grandfathernamear', 'grandfathersnamear']));
     }
     if (!out.containsKey('arMother')) {
-      put('arMother', _first(flat, const ['mothersnamear', 'mothernamear']));
+      put(
+        'arMother',
+        _joinNameParts([
+          _first(flat, const ['mothersnamear', 'mothernamear']),
+          _first(flat, const [
+            'mothersfathernamear',
+            'motherfathernamear',
+            'maternalgrandfathernamear',
+            'mothersfathersnamear',
+          ]),
+        ]),
+      );
     }
 
     put('gender', _normalizeGender(_first(flat, const ['sex', 'sexar', 'gender'])));
@@ -1222,30 +1293,16 @@ class IpassOnboardingMapper {
         'optionaldata',
       ]),
     );
-    final looksLikePassport = out.containsKey('ppNo') ||
-        _first(flat, const ['passportnumber', 'passportno']) != null;
-    if (!looksLikePassport) {
-      put('idSerial', _first(flat, const ['documentnumber', 'identitycardnumber', 'cardserialnumber', 'idnumber']));
-      put('idIssuePlace', _first(flat, const [
-        'placeofissue',
-        'placeofissuear',
-        'issueplace',
-        'issuingauthority',
-        'issuingstatename',
-      ]));
-      put('idIssueDate', _normalizeDate(_first(flat, const ['dateofissue', 'issuedate'])));
-      put('idExpiryDate', _normalizeDate(_first(flat, const ['dateofexpiry', 'expirydate'])));
-    }
-
-    put('resNo', _first(flat, const ['residencecardnumber', 'identitycardnumber']));
-    put('resPlace', _first(flat, const ['placeofissue', 'residenceplaceofissue']));
-    put('resIssue', _normalizeDate(_first(flat, const ['dateofissue', 'residenceissuedate'])));
-    put('resExpiry', _normalizeDate(_first(flat, const ['dateofexpiry', 'residenceexpirydate'])));
-
-    put('ppNo', _first(flat, const ['passportnumber', 'passportno']));
-    put('ppPlace', _first(flat, const ['passportplaceofissue']));
-    put('ppIssue', _normalizeDate(_first(flat, const ['passportdateofissue'])));
-    put('ppExpiry', _normalizeDate(_first(flat, const ['passportdateofexpiry'])));
+    put('idSerial', _first(flat, const ['documentnumber', 'identitycardnumber', 'cardserialnumber', 'idnumber']));
+    put('idIssuePlace', _first(flat, const [
+      'placeofissue',
+      'placeofissuear',
+      'issueplace',
+      'issuingauthority',
+      'issuingstatename',
+    ]));
+    put('idIssueDate', _normalizeDate(_first(flat, const ['dateofissue', 'issuedate'])));
+    put('idExpiryDate', _normalizeDate(_first(flat, const ['dateofexpiry', 'expirydate'])));
   }
 
   static Map<String, String> _flatten(

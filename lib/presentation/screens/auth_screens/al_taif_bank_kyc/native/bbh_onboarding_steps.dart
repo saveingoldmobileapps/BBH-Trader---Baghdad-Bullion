@@ -405,57 +405,103 @@ class BbhOnboardingSteps {
       BbhTextField(
         fieldKey: 'ar_mother',
         controller: form.arMother,
-        label: "Mother's Name + Maternal Grandfather",
+        label: "Mother's Name",
         verified: form.isVerified('ar_mother'),
         textDirection: TextDirection.rtl,
       ),
+      
       const SizedBox(height: 24),
-      _groupTitle(
-        'Full name in English',
-        form.noPassport
-            ? 'Your full name in English (Latin letters).'
-            : 'As it appears on the passport.',
-      ),
-      _grid2(
-        BbhTextField(
-          fieldKey: 'en_first',
-          controller: form.enFirst,
-          label: 'First Name',
-          verified: form.isVerified('en_first'),
-          capitalization: TextCapitalization.words,
+      if (!form.noPassport) ...[
+        _groupTitle(
+          'Full name in English',
+          'As it appears on the passport.',
+        ),
+        _grid2(
+          BbhTextField(
+            fieldKey: 'en_first',
+            controller: form.enFirst,
+            label: 'First Name',
+            verified: form.isVerified('en_first'),
+            capitalization: TextCapitalization.words,
+          ),
+          BbhTextField(
+            fieldKey: 'en_father',
+            controller: form.enFather,
+            label: "Father's Name",
+            verified: form.isVerified('en_father'),
+            capitalization: TextCapitalization.words,
+          ),
+        ),
+        _grid2(
+          BbhTextField(
+            fieldKey: 'en_gf',
+            controller: form.enGf,
+            label: "Grandfather's",
+            verified: form.isVerified('en_gf'),
+            capitalization: TextCapitalization.words,
+          ),
+          BbhTextField(
+            fieldKey: 'en_surname',
+            controller: form.enSurname,
+            label: 'Surname',
+            verified: form.isVerified('en_surname'),
+            capitalization: TextCapitalization.words,
+          ),
         ),
         BbhTextField(
-          fieldKey: 'en_father',
-          controller: form.enFather,
-          label: "Father's Name",
-          verified: form.isVerified('en_father'),
+          fieldKey: 'en_mother',
+          controller: form.enMother,
+          label: "Mother's Name",
+          verified: form.isVerified('en_mother'),
           capitalization: TextCapitalization.words,
         ),
-      ),
-      _grid2(
+        const SizedBox(height: 24),
+      ] else ...[
+        _groupTitle(
+          'Full name in English',
+          'From your National ID (Latin letters).',
+        ),
+        _grid2(
+          BbhTextField(
+            fieldKey: 'id_en_first',
+            controller: form.idEnFirst,
+            label: 'First Name',
+            verified: form.isVerified('id_en_first'),
+            capitalization: TextCapitalization.words,
+          ),
+          BbhTextField(
+            fieldKey: 'id_en_father',
+            controller: form.idEnFather,
+            label: "Father's Name",
+            verified: form.isVerified('id_en_father'),
+            capitalization: TextCapitalization.words,
+          ),
+        ),
+        _grid2(
+          BbhTextField(
+            fieldKey: 'id_en_gf',
+            controller: form.idEnGf,
+            label: "Grandfather's",
+            verified: form.isVerified('id_en_gf'),
+            capitalization: TextCapitalization.words,
+          ),
+          BbhTextField(
+            fieldKey: 'id_en_surname',
+            controller: form.idEnSurname,
+            label: 'Surname',
+            verified: form.isVerified('id_en_surname'),
+            capitalization: TextCapitalization.words,
+          ),
+        ),
         BbhTextField(
-          fieldKey: 'en_gf',
-          controller: form.enGf,
-          label: "Grandfather's",
-          verified: form.isVerified('en_gf'),
+          fieldKey: 'id_en_mother',
+          controller: form.idEnMother,
+          label: "Mother's Name",
+          verified: form.isVerified('id_en_mother'),
           capitalization: TextCapitalization.words,
         ),
-        BbhTextField(
-          fieldKey: 'en_surname',
-          controller: form.enSurname,
-          label: 'Surname',
-          verified: form.isVerified('en_surname'),
-          capitalization: TextCapitalization.words,
-        ),
-      ),
-      BbhTextField(
-        fieldKey: 'en_mother',
-        controller: form.enMother,
-        label: "Mother's Name + Maternal Grandfather",
-        verified: form.isVerified('en_mother'),
-        capitalization: TextCapitalization.words,
-      ),
-      const SizedBox(height: 24),
+        const SizedBox(height: 24),
+      ],
       _groupTitle(
         'National Identity Card',
         'Both numbers are printed on the same card.',
@@ -923,8 +969,18 @@ class BbhOnboardingSteps {
         },
       ),
       const SizedBox(height: 6),
+      // Text(
+      //   'International format: 00… or +…. Verified as 00… for the API.',
+      //   style: BbhOnboardingText.manrope(
+      //     size: 12,
+      //     color: BbhOnboardingColors.muted,
+      //   ),
+      // ),
+      // const SizedBox(height: 6),
       Text(
-        'International format: 00… or +…. Verified as 00… for the API.',
+        form.verifiedMobile.value
+            ? 'Lowercase only.'
+            : 'Verify your mobile number first.',
         style: BbhOnboardingText.manrope(
           size: 12,
           color: BbhOnboardingColors.muted,
@@ -961,16 +1017,16 @@ class BbhOnboardingSteps {
           onChanged();
         },
       ),
-      const SizedBox(height: 6),
-      Text(
-        form.verifiedMobile.value
-            ? 'Lowercase only.'
-            : 'Verify your mobile number first.',
-        style: BbhOnboardingText.manrope(
-          size: 12,
-          color: BbhOnboardingColors.muted,
-        ),
-      ),
+      // const SizedBox(height: 6),
+      // Text(
+      //   form.verifiedMobile.value
+      //       ? 'Lowercase only.'
+      //       : 'Verify your mobile number first.',
+      //   style: BbhOnboardingText.manrope(
+      //     size: 12,
+      //     color: BbhOnboardingColors.muted,
+      //   ),
+      // ),
       Align(
         alignment: Alignment.centerRight,
         child: SizedBox(
@@ -1345,10 +1401,10 @@ class BbhOnboardingSteps {
     }
 
     String fullEn() => [
-      v(form.enFirst),
-      v(form.enFather),
-      v(form.enGf),
-      v(form.enSurname),
+      v(form.idEnFirst),
+      v(form.idEnFather),
+      v(form.idEnGf),
+      v(form.idEnSurname),
     ].where((e) => e.isNotEmpty).join(' ');
     String fullAr() => [
       v(form.arFirst),

@@ -19,6 +19,7 @@ enum IpassScanTarget {
 class IpassOnboardingMapper {
   IpassOnboardingMapper._();
 
+
   static String? _lastLoggedPayload;
   static DateTime? _lastLoggedAt;
   static String? lastSavedResponsePath;
@@ -857,66 +858,210 @@ class IpassOnboardingMapper {
     put('gender', _normalizeGender(_firstSectionValue(section, const ['Sex', 'SexAr'])));
   }
 
+  // static void _mapNationalIdFields(Map<String, String> out, Map<String, dynamic> section) {
+  //   void put(String key, String? value) {
+  //     final v = _clean(value);
+  //     if (v != null && !out.containsKey(key)) out[key] = v;
+  //   }
+
+  //   _putArabicNames(out, section);
+
+  //   put('gender', _normalizeGender(_firstSectionValue(section, const ['Sex', 'SexAr'])));
+  //   put(
+  //     'nationality',
+  //     _normalizeNationality(
+  //       _sectionValue(section, 'Nationality') ??
+  //           _nationalityFromCode(_sectionValue(section, 'Nationality Code')),
+  //     ),
+  //   );
+  //   put('dob', _normalizeDate(_sectionValue(section, 'Date of Birth')));
+  //   put(
+  //     'countryBirth',
+  //     _meaningfulSectionValue(section, const [
+  //       'Country of Birth',
+  //       'Issuing State Name',
+  //     ]),
+  //   );
+  //   put(
+  //     'placeBirth',
+  //     _truncatePlaceBirth(
+  //       _meaningfulSectionValue(section, const [
+  //         'Place of Birth',
+  //         'Place of BirthAr',
+  //       ]),
+  //     ),
+  //   );
+
+  //   put(
+  //     'idPersonal',
+  //     _firstSectionValue(section, const [
+  //       'Personal Number',
+  //       'Optional Data',
+  //     ]),
+  //   );
+  //   put(
+  //     'idSerial',
+  //     _firstSectionValue(section, const [
+  //       'Document Number',
+  //       'Identity Card Number',
+  //     ]),
+  //   );
+  //   put(
+  //     'idIssuePlace',
+  //     _meaningfulSectionValue(section, const [
+  //       'Place of Issue',
+  //       'Place of IssueAr',
+  //       'AuthorityAr',
+  //       'Issuing State Name',
+  //     ]),
+  //   );
+  //   put('idIssueDate', _normalizeDate(_sectionValue(section, 'Date of Issue')));
+  //   put('idExpiryDate', _normalizeDate(_sectionValue(section, 'Date of Expiry')));
+  // }
   static void _mapNationalIdFields(Map<String, String> out, Map<String, dynamic> section) {
     void put(String key, String? value) {
       final v = _clean(value);
       if (v != null && !out.containsKey(key)) out[key] = v;
     }
 
-    _putEnglishNames(out, section);
+    _putNationalIdEnglishNames(out, section);
     _putArabicNames(out, section);
 
-    put('gender', _normalizeGender(_firstSectionValue(section, const ['Sex', 'SexAr'])));
-    put(
-      'nationality',
-      _normalizeNationality(
-        _sectionValue(section, 'Nationality') ??
-            _nationalityFromCode(_sectionValue(section, 'Nationality Code')),
-      ),
-    );
-    put('dob', _normalizeDate(_sectionValue(section, 'Date of Birth')));
-    put(
-      'countryBirth',
+  // Ensure mother name with maternal grandfather is set even if _putArabicNames didn't handle it
+  if (!out.containsKey('arMother')) {
+    final motherName = _firstSectionValue(section, const [
+      'Mothers NameAr',
+      "Mother's NameAr",
+      'Mother NameAr',
+    ]);
+    final maternalGf = _firstSectionValue(section, const [
+      'Grandfather Name (maternal)Ar',
+      'Mothers Father NameAr',
+      "Mother's Father NameAr",
+      'Maternal Grandfather NameAr',
+      'Maternal Grandfathers NameAr',
+      'Mother Father NameAr',
+    ]);
+    if (motherName != null || maternalGf != null) {
+      final combined = _joinNameParts([motherName, maternalGf]);
+      if (combined != null) {
+        put('arMother', combined);
+      }
+    }
+  }
+
+  put('gender', _normalizeGender(_firstSectionValue(section, const ['Sex', 'SexAr'])));
+  put(
+    'nationality',
+    _normalizeNationality(
+      _sectionValue(section, 'Nationality') ??
+          _nationalityFromCode(_sectionValue(section, 'Nationality Code')),
+    ),
+  );
+  put('dob', _normalizeDate(_sectionValue(section, 'Date of Birth')));
+  put(
+    'countryBirth',
+    _meaningfulSectionValue(section, const [
+      'Country of Birth',
+      'Issuing State Name',
+    ]),
+  );
+  put(
+    'placeBirth',
+    _truncatePlaceBirth(
       _meaningfulSectionValue(section, const [
-        'Country of Birth',
-        'Issuing State Name',
+        'Place of Birth',
+        'Place of BirthAr',
       ]),
-    );
-    put(
-      'placeBirth',
-      _truncatePlaceBirth(
-        _meaningfulSectionValue(section, const [
-          'Place of Birth',
-          'Place of BirthAr',
-        ]),
-      ),
-    );
+    ),
+  );
+
+  put(
+    'idPersonal',
+    _firstSectionValue(section, const [
+      'Personal Number',
+      'Optional Data',
+    ]),
+  );
+  put(
+    'idSerial',
+    _firstSectionValue(section, const [
+      'Document Number',
+      'Identity Card Number',
+    ]),
+  );
+  put(
+    'idIssuePlace',
+    _meaningfulSectionValue(section, const [
+      'Place of Issue',
+      'Place of IssueAr',
+      'AuthorityAr',
+      'Issuing State Name',
+    ]),
+  );
+  put('idIssueDate', _normalizeDate(_sectionValue(section, 'Date of Issue')));
+  put('idExpiryDate', _normalizeDate(_sectionValue(section, 'Date of Expiry')));
+}
+
+  static void _putNationalIdEnglishNames(
+    Map<String, String> out,
+    Map<String, dynamic> section,
+  ) {
+    void put(String key, String? value) {
+      final v = _clean(value);
+      if (v != null && !out.containsKey(key)) out[key] = v;
+    }
+
+    final surname = _titleCase(_sectionValue(section, 'Surname'));
+    final givenNames = _sectionValue(section, 'Given Names');
+
+    if (surname != null) put('idEnSurname', surname);
+
+    if (givenNames != null) {
+      final parts = givenNames.split(RegExp(r'\s+'));
+      if (parts.isNotEmpty) put('idEnFirst', _titleCase(parts.first));
+      if (parts.length > 1) put('idEnFather', _titleCase(parts[1]));
+      if (parts.length > 2) put('idEnGf', _titleCase(parts[2]));
+    } else {
+      final visualFull = _sectionValue(section, 'Surname And Given Names');
+      if (visualFull != null && !_looksLikeAllCapsMrz(visualFull)) {
+        final parts = visualFull.split(RegExp(r'\s+'));
+        if (parts.length >= 2) {
+          put('idEnFirst', _titleCase(parts.first));
+          if (parts.length == 2) {
+            put('idEnSurname', _titleCase(parts[1]));
+          } else {
+            put('idEnSurname', _titleCase(parts.last));
+            if (parts.length > 2) {
+              put(
+                'idEnFather',
+                _titleCase(parts.sublist(1, parts.length - 1).join(' ')),
+              );
+            }
+          }
+        }
+      } else {
+        final mrzFull = _sectionValue(section, 'Surname And Given Names');
+        if (mrzFull != null) {
+          final parts = mrzFull.split(RegExp(r'\s+'));
+          if (parts.isNotEmpty) put('idEnSurname', _titleCase(parts.first));
+          if (parts.length > 1) put('idEnFirst', _titleCase(parts[1]));
+          if (parts.length > 2) put('idEnFather', _titleCase(parts[2]));
+          if (parts.length > 3) put('idEnGf', _titleCase(parts[3]));
+        }
+      }
+    }
 
     put(
-      'idPersonal',
-      _firstSectionValue(section, const [
-        'Personal Number',
-        'Optional Data',
-      ]),
+      'idEnMother',
+      _motherNameWithMaternalGrandfather(section, arabic: false) ??
+          _firstSectionValue(section, const [
+            'Mothers Name',
+            "Mother's Name",
+            'Mother Name',
+            'Mothers NameAr',
+          ]),
     );
-    put(
-      'idSerial',
-      _firstSectionValue(section, const [
-        'Document Number',
-        'Identity Card Number',
-      ]),
-    );
-    put(
-      'idIssuePlace',
-      _meaningfulSectionValue(section, const [
-        'Place of Issue',
-        'Place of IssueAr',
-        'AuthorityAr',
-        'Issuing State Name',
-      ]),
-    );
-    put('idIssueDate', _normalizeDate(_sectionValue(section, 'Date of Issue')));
-    put('idExpiryDate', _normalizeDate(_sectionValue(section, 'Date of Expiry')));
   }
 
   static void _putEnglishNames(Map<String, String> out, Map<String, dynamic> section) {
@@ -966,101 +1111,263 @@ class IpassOnboardingMapper {
     }
   }
 
+  // static void _putArabicNames(Map<String, String> out, Map<String, dynamic> section) {
+  //   void put(String key, String? value) {
+  //     final v = _clean(value);
+  //     if (v != null && !out.containsKey(key)) out[key] = v;
+  //   }
+
+  //   // Iraqi national ID Visual layout (split Arabic name fields).
+  //   final surnameAr = _sectionValue(section, 'SurnameAr');
+  //   final givenAr = _firstSectionValue(section, const ['Given NamesAr', 'Given NameAr']);
+  //   final fatherAr = _firstSectionValue(section, const [
+  //     'Fathers NameAr',
+  //     "Father's NameAr",
+  //     'Father NameAr',
+  //   ]);
+  //   final gfAr = _firstSectionValue(section, const [
+  //     'Grandfather NameAr',
+  //     'Grandfathers NameAr',
+  //   ]);
+
+  //   if (givenAr != null || surnameAr != null || fatherAr != null || gfAr != null) {
+  //     put('arFirst', givenAr);
+  //     put('arSurname', surnameAr);
+  //     put('arFather', fatherAr);
+  //     put('arGf', gfAr);
+  //     put(
+  //       'arMother',
+  //       _motherNameWithMaternalGrandfather(section, arabic: true),
+  //     );
+  //     return;
+  //   }
+
+  //   final fullAr = _firstSectionValue(section, const [
+  //     'Surname And Given NamesAr',
+  //     'Surname And Given Names Ar',
+  //   ]);
+  //   if (fullAr == null) return;
+
+  //   final parts = fullAr.split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
+  //   if (parts.isEmpty) return;
+
+  //   if (parts.length == 1) {
+  //     put('arFirst', parts[0]);
+  //     return;
+  //   }
+
+  //   put('arSurname', parts.last);
+  //   put('arFirst', parts.first);
+  //   if (parts.length == 3) {
+  //     put('arFather', parts[1]);
+  //   } else if (parts.length > 3) {
+  //     put('arFather', parts[1]);
+  //     put('arGf', parts.sublist(2, parts.length - 1).join(' '));
+  //   } else if (parts.length == 2) {
+  //     put('arFirst', parts[0]);
+  //   }
+  // }
   static void _putArabicNames(Map<String, String> out, Map<String, dynamic> section) {
-    void put(String key, String? value) {
-      final v = _clean(value);
-      if (v != null && !out.containsKey(key)) out[key] = v;
+  void put(String key, String? value) {
+    final v = _clean(value);
+    if (v != null && !out.containsKey(key)) out[key] = v;
+  }
+
+  // Iraqi national ID Visual layout (split Arabic name fields).
+  final surnameAr = _sectionValue(section, 'SurnameAr');
+  final givenAr = _firstSectionValue(section, const [
+    'Given NamesAr', 
+    'Given NameAr',
+    'Surname And Given NamesAr', // NFC might have full name here
+  ]);
+  final fatherAr = _firstSectionValue(section, const [
+    'Fathers NameAr',
+    "Father's NameAr",
+    'Father NameAr',
+  ]);
+  final gfAr = _firstSectionValue(section, const [
+    'Grandfather NameAr',
+    'Grandfathers NameAr',
+  ]);
+
+  // Handle mother + maternal grandfather from NFC
+  final motherName = _firstSectionValue(section, const [
+    'Mothers NameAr',
+    "Mother's NameAr",
+    'Mother NameAr',
+  ]);
+  final maternalGf = _firstSectionValue(section, const [
+    'Grandfather Name (maternal)Ar', // NFC key
+    'Mothers Father NameAr',
+    "Mother's Father NameAr",
+    'Maternal Grandfather NameAr',
+    'Maternal Grandfathers NameAr',
+    'Mother Father NameAr',
+  ]);
+
+  if (givenAr != null || surnameAr != null || fatherAr != null || gfAr != null) {
+    put('arFirst', givenAr);
+    put('arSurname', surnameAr);
+    put('arFather', fatherAr);
+    put('arGf', gfAr);
+    
+    // Handle mother name with maternal grandfather
+    if (motherName != null || maternalGf != null) {
+      final combined = _joinNameParts([motherName, maternalGf]);
+      if (combined != null) {
+        put('arMother', combined);
+      }
     }
+    return;
+  }
 
-    // Iraqi national ID Visual layout (split Arabic name fields).
-    final surnameAr = _sectionValue(section, 'SurnameAr');
-    final givenAr = _firstSectionValue(section, const ['Given NamesAr', 'Given NameAr']);
-    final fatherAr = _firstSectionValue(section, const [
-      'Fathers NameAr',
-      "Father's NameAr",
-      'Father NameAr',
-    ]);
-    final gfAr = _firstSectionValue(section, const [
-      'Grandfather NameAr',
-      'Grandfathers NameAr',
-    ]);
-
-    if (givenAr != null || surnameAr != null || fatherAr != null || gfAr != null) {
-      put('arFirst', givenAr);
-      put('arSurname', surnameAr);
-      put('arFather', fatherAr);
-      put('arGf', gfAr);
-      put(
-        'arMother',
-        _motherNameWithMaternalGrandfather(section, arabic: true),
-      );
-      return;
-    }
-
-    final fullAr = _firstSectionValue(section, const [
-      'Surname And Given NamesAr',
-      'Surname And Given Names Ar',
-    ]);
-    if (fullAr == null) return;
-
+  // If we have full name in Arabic (Surname And Given NamesAr)
+  final fullAr = _firstSectionValue(section, const [
+    'Surname And Given NamesAr',
+    'Surname And Given Names Ar',
+  ]);
+  if (fullAr != null) {
     final parts = fullAr.split(RegExp(r'\s+')).where((p) => p.isNotEmpty).toList();
-    if (parts.isEmpty) return;
-
-    if (parts.length == 1) {
-      put('arFirst', parts[0]);
+    if (parts.isNotEmpty) {
+      if (parts.length == 1) {
+        put('arFirst', parts[0]);
+      } else {
+        put('arSurname', parts.last);
+        put('arFirst', parts.first);
+        if (parts.length >= 3) {
+          put('arFather', parts[1]);
+          if (parts.length > 3) {
+            put('arGf', parts.sublist(2, parts.length - 1).join(' '));
+          }
+        } else if (parts.length == 2) {
+          put('arFirst', parts[0]);
+        }
+      }
+      
+      // Handle mother name with maternal grandfather
+      if (motherName != null || maternalGf != null) {
+        final combined = _joinNameParts([motherName, maternalGf]);
+        if (combined != null) {
+          put('arMother', combined);
+        }
+      }
       return;
-    }
-
-    put('arSurname', parts.last);
-    put('arFirst', parts.first);
-    if (parts.length == 3) {
-      put('arFather', parts[1]);
-    } else if (parts.length > 3) {
-      put('arFather', parts[1]);
-      put('arGf', parts.sublist(2, parts.length - 1).join(' '));
-    } else if (parts.length == 2) {
-      put('arFirst', parts[0]);
     }
   }
+
+  // Last resort: try to extract from individual fields
+  if (motherName != null || maternalGf != null) {
+    final combined = _joinNameParts([motherName, maternalGf]);
+    if (combined != null) {
+      put('arMother', combined);
+    }
+  }
+}
 
   /// Iraqi ID: mother's name field = mother + maternal grandfather.
-  static String? _motherNameWithMaternalGrandfather(
-    Map<String, dynamic> section, {
-    required bool arabic,
-  }) {
-    final motherKeys = arabic
-        ? const [
-            'Mothers NameAr',
-            "Mother's NameAr",
-            'Mother NameAr',
-          ]
-        : const [
-            'Mothers Name',
-            "Mother's Name",
-            'Mother Name',
-          ];
-    final maternalGfKeys = arabic
-        ? const [
-            'Mothers Father NameAr',
-            "Mother's Father NameAr",
-            'Mothers Fathers NameAr',
-            'Maternal Grandfather NameAr',
-            'Maternal Grandfathers NameAr',
-            'Mother Father NameAr',
-          ]
-        : const [
-            'Mothers Father Name',
-            "Mother's Father Name",
-            'Maternal Grandfather Name',
-            'Maternal Grandfathers Name',
-            'Mother Father Name',
-          ];
+  // static String? _motherNameWithMaternalGrandfather(
+  //   Map<String, dynamic> section, {
+  //   required bool arabic,
+  // }) {
+  //   final motherKeys = arabic
+  //       ? const [
+  //           'Mothers NameAr',
+  //           "Mother's NameAr",
+  //           'Mother NameAr',
+  //         ]
+  //       : const [
+  //           'Mothers Name',
+  //           "Mother's Name",
+  //           'Mother Name',
+  //         ];
+  //   final maternalGfKeys = arabic
+  //       ? const [
+  //           'Mothers Father NameAr',
+  //           "Mother's Father NameAr",
+  //           'Mothers Fathers NameAr',
+  //           'Maternal Grandfather NameAr',
+  //           'Maternal Grandfathers NameAr',
+  //           'Mother Father NameAr',
+  //         ]
+  //       : const [
+  //           'Mothers Father Name',
+  //           "Mother's Father Name",
+  //           'Maternal Grandfather Name',
+  //           'Maternal Grandfathers Name',
+  //           'Mother Father Name',
+  //         ];
 
-    return _joinNameParts([
-      _firstSectionValue(section, motherKeys),
-      _firstSectionValue(section, maternalGfKeys),
-    ]);
+  //   return _joinNameParts([
+  //     _firstSectionValue(section, motherKeys),
+  //     _firstSectionValue(section, maternalGfKeys),
+  //   ]);
+  // }
+  static String? _motherNameWithMaternalGrandfather(
+  Map<String, dynamic> section, {
+  required bool arabic,
+}) {
+  final motherKeys = arabic
+      ? const [
+          'Mothers NameAr',
+          "Mother's NameAr",
+          'Mother NameAr',
+          'Mothers Name', // Fallback to English if Arabic not found
+          "Mother's Name",
+          'Mother Name',
+        ]
+      : const [
+          'Mothers Name',
+          "Mother's Name",
+          'Mother Name',
+          'Mothers NameAr', // Fallback to Arabic if English not found
+          "Mother's NameAr",
+          'Mother NameAr',
+        ];
+  
+  final maternalGfKeys = arabic
+      ? const [
+          'Grandfather Name (maternal)Ar', // NFC key
+          'Mothers Father NameAr',
+          "Mother's Father NameAr",
+          'Mothers Fathers NameAr',
+          'Maternal Grandfather NameAr',
+          'Maternal Grandfathers NameAr',
+          'Mother Father NameAr',
+          'Mothers Father Name', // Fallback to English
+          "Mother's Father Name",
+          'Maternal Grandfather Name',
+          'Maternal Grandfathers Name',
+          'Mother Father Name',
+        ]
+      : const [
+          'Grandfather Name (maternal)Ar', // NFC key
+          'Mothers Father Name',
+          "Mother's Father Name",
+          'Maternal Grandfather Name',
+          'Maternal Grandfathers Name',
+          'Mother Father Name',
+          'Mothers Father NameAr', // Fallback to Arabic
+          "Mother's Father NameAr",
+          'Maternal Grandfather NameAr',
+          'Maternal Grandfathers NameAr',
+          'Mother Father NameAr',
+        ];
+
+  final mother = _firstSectionValue(section, motherKeys);
+  final maternalGf = _firstSectionValue(section, maternalGfKeys);
+  
+  // Special handling for the exact NFC keys
+  if (!arabic && mother == null && maternalGf == null) {
+    // Try the Arabic keys as last resort
+    final arabicMother = _firstSectionValue(section, const ['Mothers NameAr', "Mother's NameAr", 'Mother NameAr']);
+    final arabicGf = _firstSectionValue(section, const ['Grandfather Name (maternal)Ar', 'Mothers Father NameAr']);
+    if (arabicMother != null || arabicGf != null) {
+      return _joinNameParts([arabicMother, arabicGf]);
+    }
   }
+  
+  return _joinNameParts([mother, maternalGf]);
+}
 
   static String? _joinNameParts(List<String?> parts) {
     final tokens = parts
@@ -1231,11 +1538,30 @@ class IpassOnboardingMapper {
     Map<String, String> flat,
     void Function(String key, String? value) put,
   ) {
-    if (!out.containsKey('enFirst')) {
-      put('enFirst', _first(flat, const ['givennames', 'givenname', 'englishfirstname']));
+    if (!out.containsKey('idEnFirst')) {
+      put('idEnFirst', _first(flat, const ['givennames', 'givenname', 'englishfirstname']));
     }
-    if (!out.containsKey('enSurname')) {
-      put('enSurname', _first(flat, const ['surname', 'englishsurname', 'familyname']));
+    if (!out.containsKey('idEnSurname')) {
+      put('idEnSurname', _first(flat, const ['surname', 'englishsurname', 'familyname']));
+    }
+    if (!out.containsKey('idEnFather')) {
+      put('idEnFather', _first(flat, const ['fathersname', 'fathername']));
+    }
+    if (!out.containsKey('idEnGf')) {
+      put('idEnGf', _first(flat, const ['grandfathername', 'grandfathersname']));
+    }
+    if (!out.containsKey('idEnMother')) {
+      put(
+        'idEnMother',
+        _joinNameParts([
+          _first(flat, const ['mothersname', 'mothername']),
+          _first(flat, const [
+            'mothersfathername',
+            'motherfathername',
+            'maternalgrandfathername',
+          ]),
+        ]),
+      );
     }
     if (!out.containsKey('arFirst')) {
       put('arFirst', _first(flat, const [

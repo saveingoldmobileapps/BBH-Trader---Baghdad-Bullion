@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:baghdad_bullion_house/data/models/ipass_model/ipass_formdata_result_response.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_builder.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_logger.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_service.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_phone_number_util.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/bbh_onboarding_state_store.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_formdata_service.dart';
@@ -60,6 +61,8 @@ class BbhOnboardingController extends ChangeNotifier {
   IpassFormDataResultResponse? residenceFormDataBack;
   String? kycReference;
   Map<String, dynamic>? submissionPayload;
+  Map<String, dynamic>? lastSubmissionResponse;
+  bool submitInProgress = false;
 
   static const flowSteps = [
     BbhOnboardingStep.preflight,
@@ -205,11 +208,11 @@ class BbhOnboardingController extends ChangeNotifier {
       'ar_gf',
       'ar_surname',
       'ar_mother',
-      'en_first',
-      'en_father',
-      'en_gf',
-      'en_surname',
-      'en_mother',
+      'id_en_first',
+      'id_en_father',
+      'id_en_gf',
+      'id_en_surname',
+      'id_en_mother',
       'id_personal',
       'id_serial',
       'id_issue_place',
@@ -223,7 +226,17 @@ class BbhOnboardingController extends ChangeNotifier {
       }
     }
     if (!form.noPassport) {
-      for (final key in ['pp_no', 'pp_place', 'pp_issue', 'pp_expiry']) {
+      for (final key in [
+        'en_first',
+        'en_father',
+        'en_gf',
+        'en_surname',
+        'en_mother',
+        'pp_no',
+        'pp_place',
+        'pp_issue',
+        'pp_expiry',
+      ]) {
         final c = form.controllerFor(key);
         if (c == null || !_filled(c)) {
           return _fail('Complete passport fields or skip passport.', fieldKey: key);
@@ -681,35 +694,63 @@ class BbhOnboardingController extends ChangeNotifier {
     }
   }
 
-  void submitPack() {
-    kycReference =
-        'BBH-KYC-${DateTime.now().year.toString().substring(2)}'
-        '${DateTime.now().month.toString().padLeft(2, '0')}'
-        '${DateTime.now().day.toString().padLeft(2, '0')}-'
-        '${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+  Future<bool> submitPack() async {
+    if (submitInProgress) return false;
 
-    final ipassBundle = IpassOnboardingMapper.mergeSubmissionBundles(
-      IpassOnboardingMapper.buildSubmissionIpassBundle(ipassScanResults),
-      IpassOnboardingMapper.buildResidenceSubmissionPayload(
-        front: residenceFormDataFront,
-        back: residenceFormDataBack,
-      ),
-    );
-    final submittedAt = DateTime.now();
-    submissionPayload = BbhOnboardingSubmissionBuilder.build(
-      form: form,
-      kycReference: kycReference!,
-      submittedAt: submittedAt,
-      ipassBundle: ipassBundle,
-    );
+    submitInProgress = true;
+    lastError = null;
+    notifyListeners();
+
     try {
-      BbhOnboardingSubmissionLogger.logFinalSubmissionOnce(submissionPayload!);
-    } catch (_) {
-      // Logging must never block the success screen.
-    }
+      kycReference =
+          'BBH-KYC-${DateTime.now().year.toString().substring(2)}'
+          '${DateTime.now().month.toString().padLeft(2, '0')}'
+          '${DateTime.now().day.toString().padLeft(2, '0')}-'
+          '${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
 
-    goTo(BbhOnboardingStep.success);
-    unawaited(persist());
+      final ipassBundle = IpassOnboardingMapper.mergeSubmissionBundles(
+        IpassOnboardingMapper.buildSubmissionIpassBundle(ipassScanResults),
+        IpassOnboardingMapper.buildResidenceSubmissionPayload(
+          front: residenceFormDataFront,
+          back: residenceFormDataBack,
+        ),
+      );
+      final submittedAt = DateTime.now();
+      submissionPayload = BbhOnboardingSubmissionBuilder.build(
+        form: form,
+        kycReference: kycReference!,
+        submittedAt: submittedAt,
+        ipassBundle: ipassBundle,
+      );
+
+      try {
+        BbhOnboardingSubmissionLogger.logFinalSubmissionOnce(submissionPayload!);
+      } catch (_) {
+        // Logging must never block submission.
+      }
+
+      final result = await BbhOnboardingSubmissionService.instance.submit(
+        submissionPayload!,
+      );
+
+      if (!result.success) {
+        lastError = result.message ?? 'Could not submit onboarding pack.';
+        notifyListeners();
+        return false;
+      }
+
+      lastSubmissionResponse = result.responseData;
+      goTo(BbhOnboardingStep.success);
+      unawaited(persist());
+      return true;
+    } catch (e) {
+      lastError = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      submitInProgress = false;
+      notifyListeners();
+    }
   }
 
   void resetAll() {
@@ -723,6 +764,8 @@ class BbhOnboardingController extends ChangeNotifier {
     residenceFormDataBack = null;
     kycReference = null;
     submissionPayload = null;
+    lastSubmissionResponse = null;
+    submitInProgress = false;
     BbhOnboardingStateStore.instance.clear();
     notifyListeners();
   }

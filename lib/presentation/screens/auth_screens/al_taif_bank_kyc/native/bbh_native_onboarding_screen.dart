@@ -243,9 +243,9 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
     );
   }
 
-  void _onNext() {
+  void _onNext() async {
     if (_controller.step == BbhOnboardingStep.review) {
-      _controller.submitPack();
+      await _controller.submitPack();
       return;
     }
     _controller.next();
@@ -369,7 +369,7 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
         nextIsGold:
             step == BbhOnboardingStep.review ||
             _controller.editReturnStep != null,
-        nextLoading: _controller.ipassInProgress,
+        nextLoading: _controller.ipassInProgress || _controller.submitInProgress,
         onBack: _controller.back,
         onNext: _onNext,
         body: _buildStep(),

@@ -66,6 +66,11 @@ class ApiEndpoints {
       "$baseUrl/auth/sendOtpToAnyEmail/${CommonService.lang}";
   static String get preVerifyApiUrl =>
       "$baseUrl/auth/register/preVerify/${CommonService.lang}";
+
+  /// Al-Taif bank KYC onboarding — full iPass pack submit.
+  static String get registerIpassApiUrl =>
+      "$baseUrl/auth/register/iPass/${CommonService.lang}";
+
   // kyc
   static String get kycFirstStepApiUrl =>
       "$baseUrl/auth/kyc/firstStep/${CommonService.lang}";

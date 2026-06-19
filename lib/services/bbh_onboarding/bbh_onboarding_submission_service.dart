@@ -17,15 +17,44 @@ class BbhOnboardingSubmissionResult {
   factory BbhOnboardingSubmissionResult.ok({
     String? message,
     Map<String, dynamic>? responseData,
-  }) =>
-      BbhOnboardingSubmissionResult._(
-        success: true,
-        message: message,
-        responseData: responseData,
-      );
+  }) => BbhOnboardingSubmissionResult._(
+    success: true,
+    message: message,
+    responseData: responseData,
+  );
 
   factory BbhOnboardingSubmissionResult.fail(String message) =>
       BbhOnboardingSubmissionResult._(success: false, message: message);
+}
+
+/// Parses `payload.createdUser.iPassData.submissionMeta.kycReference` only.
+String? parseSubmissionKycReference(Map<String, dynamic>? response) {
+  if (response == null) return null;
+
+  dynamic walk(dynamic node, List<String> keys) {
+    var current = node;
+    for (final key in keys) {
+      if (current is! Map) return null;
+      final map = current is Map<String, dynamic>
+          ? current
+          : Map<String, dynamic>.from(current);
+      current = map[key];
+    }
+    return current;
+  }
+
+  final ref = walk(
+    response,
+    const [
+      'payload',
+      'createdUser',
+      'iPassData',
+      'submissionMeta',
+      'kycReference',
+    ],
+  )?.toString().trim();
+
+  return ref == null || ref.isEmpty ? null : ref;
 }
 
 /// POST full onboarding JSON to `auth/register/iPass/{lang}`.
@@ -46,6 +75,8 @@ class BbhOnboardingSubmissionService {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
+      sendTimeout: const Duration(minutes: 3),
+      receiveTimeout: const Duration(minutes: 3),
     );
 
     switch (response.responseType) {
@@ -66,10 +97,11 @@ class BbhOnboardingSubmissionService {
       final payloadMap = data is Map<String, dynamic>
           ? Map<String, dynamic>.from(data)
           : data is Map
-              ? Map<String, dynamic>.from(data)
-              : null;
+          ? Map<String, dynamic>.from(data)
+          : null;
       return BbhOnboardingSubmissionResult.ok(
-        message: success.message ??
+        message:
+            success.message ??
             success.payload?.message ??
             'Onboarding pack submitted successfully.',
         responseData: payloadMap,
@@ -83,9 +115,27 @@ class BbhOnboardingSubmissionService {
   }
 
   BbhOnboardingSubmissionResult _mapError(ServerResponse<dynamic> response) {
+    final data = response.resultData;
+    if (data is String) {
+      if (data.contains('PayloadTooLargeError') ||
+          data.contains('request entity too large')) {
+        return BbhOnboardingSubmissionResult.fail(
+          'Submission payload is too large. Wait for document uploads to finish, then try again.',
+        );
+      }
+      return BbhOnboardingSubmissionResult.fail(
+        response.message ?? 'Submission failed.',
+      );
+    }
+    if (data is! Map) {
+      return BbhOnboardingSubmissionResult.fail(
+        response.message ?? 'Submission failed.',
+      );
+    }
     try {
       final error = ErrorResponse.fromJson(response.resultData);
-      final msg = error.payload?.message?.toString() ??
+      final msg =
+          error.payload?.message?.toString() ??
           error.message?.toString() ??
           response.message ??
           'Submission failed.';

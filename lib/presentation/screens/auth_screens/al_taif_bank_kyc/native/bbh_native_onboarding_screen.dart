@@ -1,5 +1,6 @@
 import 'dart:io' show File, Platform;
 
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/login_screen.dart';
 import 'package:baghdad_bullion_house/core/theme/const_toasts.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/widgets/documets_camera.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_otp_service.dart';
@@ -299,7 +300,11 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
       case BbhOnboardingStep.custodian:
         return BbhOnboardingSteps.custodian(form, () => _refresh());
       case BbhOnboardingStep.consent:
-        return BbhOnboardingSteps.consent(form, () => _refresh());
+        return BbhOnboardingSteps.consent(
+          form,
+          () => _refresh(),
+          onSignatureChanged: _controller.setSignature,
+        );
       case BbhOnboardingStep.review:
         return BbhOnboardingSteps.review(
           form,
@@ -308,7 +313,13 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
       case BbhOnboardingStep.success:
         return BbhOnboardingSteps.success(
           kycRef: _controller.kycReference,
-          onRestart: _controller.resetAll,
+          onLogin: () {
+            _controller.resetAll();
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              (_) => false,
+            );
+          },
         );
     }
   }
@@ -369,7 +380,8 @@ class _BbhNativeOnboardingScreenState extends State<BbhNativeOnboardingScreen> {
         nextIsGold:
             step == BbhOnboardingStep.review ||
             _controller.editReturnStep != null,
-        nextLoading: _controller.ipassInProgress || _controller.submitInProgress,
+        nextLoading:
+            _controller.ipassInProgress || _controller.submitInProgress,
         onBack: _controller.back,
         onNext: _onNext,
         body: _buildStep(),

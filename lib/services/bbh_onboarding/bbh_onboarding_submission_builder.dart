@@ -12,9 +12,15 @@ class BbhOnboardingSubmissionBuilder {
     required String kycReference,
     required DateTime submittedAt,
     Map<String, dynamic>? ipassBundle,
+    String? signatureImageUrl,
   }) {
     String t(String? value) => value?.trim() ?? '';
     String tc(TextEditingController c) => c.text.trim();
+    String englishOrArabic(TextEditingController en, TextEditingController ar) {
+      final english = en.text.trim();
+      if (english.isNotEmpty) return english;
+      return ar.text.trim();
+    }
 
     String joinAddress() {
       final parts = [
@@ -55,17 +61,17 @@ class BbhOnboardingSubmissionBuilder {
       'nationalIdDetails': {
         'idNumber': tc(form.idPersonal),
         'serialNumber': tc(form.idSerial),
-        'firstName': tc(form.idEnFirst),
-        'fatherName': tc(form.idEnFather),
-        'grandfatherName': tc(form.idEnGf),
-        'lastName': tc(form.idEnSurname),
+        'firstName': englishOrArabic(form.idEnFirst, form.arFirst),
+        'fatherName': englishOrArabic(form.idEnFather, form.arFather),
+        'grandfatherName': englishOrArabic(form.idEnGf, form.arGf),
+        'lastName': englishOrArabic(form.idEnSurname, form.arSurname),
         'mothersName': tc(form.arMother),
         'firstNameArabic': tc(form.arFirst),
         'fatherNameArabic': tc(form.arFather),
         'grandfatherNameArabic': tc(form.arGf),
         'lastNameArabic': tc(form.arSurname),
         'mothersNameArabic': tc(form.arMother),
-        'mothersNameEnglish': tc(form.idEnMother),
+        'mothersNameEnglish': englishOrArabic(form.idEnMother, form.arMother),
         'dateOfBirth': tc(form.dob),
         'nationality': tc(form.nationality),
         'gender': t(form.gender),
@@ -160,8 +166,8 @@ class BbhOnboardingSubmissionBuilder {
         'consentDate': submittedAt.toUtc().toIso8601String(),
       },
       'signature': {
-        'signerName': tc(form.signerName),
-        'signatureImage': form.signature ?? '',
+        'signerName': _signerName(form, englishOrArabic, tc),
+        'signatureImage': signatureImageUrl?.trim() ?? '',
       },
       'documentCaptureStatus': {
         'nationalIdFront': form.idFrontCaptured,
@@ -179,5 +185,19 @@ class BbhOnboardingSubmissionBuilder {
       },
       'ipassVerificationData': ipassBundle ?? <String, dynamic>{},
     };
+  }
+
+  static String _signerName(
+    BbhOnboardingForm form,
+    String Function(TextEditingController, TextEditingController) englishOrArabic,
+    String Function(TextEditingController) tc,
+  ) {
+    final entered = tc(form.signerName);
+    if (entered.isNotEmpty) return entered;
+    final parts = [
+      englishOrArabic(form.idEnFirst, form.arFirst),
+      englishOrArabic(form.idEnSurname, form.arSurname),
+    ].where((p) => p.isNotEmpty).toList();
+    return parts.join(' ');
   }
 }

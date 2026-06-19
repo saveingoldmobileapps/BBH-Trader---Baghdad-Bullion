@@ -273,6 +273,8 @@ class DioNetworkManager {
     dynamic body,
     Map<String, dynamic>? parameters,
     Map<String, dynamic>? myHeaders,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
   }) async {
     /// Create Dio Object
     final dio = _createDio();
@@ -312,6 +314,8 @@ class DioNetworkManager {
           options: Options(
             method: httpMethod.name,
             headers: header, //myHeaders,
+            sendTimeout: sendTimeout,
+            receiveTimeout: receiveTimeout,
           ),
         );
         getLocator<Logger>().i(
@@ -344,11 +348,13 @@ class DioNetworkManager {
     dynamic body,
     Map<String, dynamic>? parameters,
     Map<String, dynamic>? headers,
+    Duration? sendTimeout,
+    Duration? receiveTimeout,
   }) async {
     try {
       //logger
       getLocator<Logger>().i(
-        "Url: $url, body: $body, httpMethod: $httpMethod, Parameters: $parameters, myHeaders: $headers",
+        "Url: $url, httpMethod: $httpMethod, Parameters: $parameters, myHeaders: $headers",
       );
 
       /// Make API Call
@@ -358,6 +364,8 @@ class DioNetworkManager {
         httpMethod: httpMethod,
         parameters: parameters,
         myHeaders: headers,
+        sendTimeout: sendTimeout,
+        receiveTimeout: receiveTimeout,
       );
       getLocator<Logger>().i(
         "performRequestResponse: statusCode: ${response!.statusCode}, ${response.data}",

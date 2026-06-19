@@ -71,6 +71,10 @@ class ApiEndpoints {
   static String get registerIpassApiUrl =>
       "$baseUrl/auth/register/iPass/${CommonService.lang}";
 
+  /// iPass onboarding document image upload (no auth) — returns payload.imageUrl.
+  static String get ipassDocUploadApiUrl =>
+      "$baseUrl/iPass/doc/upload/${CommonService.lang}";
+
   // kyc
   static String get kycFirstStepApiUrl =>
       "$baseUrl/auth/kyc/firstStep/${CommonService.lang}";

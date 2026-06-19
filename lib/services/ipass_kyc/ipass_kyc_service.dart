@@ -331,6 +331,34 @@ class IpassKycResult {
     if (data != null) 'data': data,
     if (rawResponse != null) 'rawResponse': rawResponse,
   };
+
+  factory IpassKycResult.fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic>? data;
+    final dataRaw = json['data'];
+    if (dataRaw is Map<String, dynamic>) {
+      data = dataRaw;
+    } else if (dataRaw is Map) {
+      data = Map<String, dynamic>.from(dataRaw);
+    } else if (dataRaw is String && dataRaw.isNotEmpty) {
+      try {
+        final decoded = jsonDecode(dataRaw);
+        if (decoded is Map<String, dynamic>) {
+          data = decoded;
+        } else if (decoded is Map) {
+          data = Map<String, dynamic>.from(decoded);
+        }
+      } catch (_) {}
+    }
+
+    return IpassKycResult(
+      success: json['success'] == true,
+      apiStatus: json['apiStatus'] == true,
+      transactionId: json['transactionId']?.toString(),
+      scanMessage: json['scanMessage']?.toString(),
+      data: data,
+      rawResponse: json['rawResponse']?.toString(),
+    );
+  }
 }
 
 class IpassKycException implements Exception {

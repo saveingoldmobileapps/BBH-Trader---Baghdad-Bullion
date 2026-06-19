@@ -409,11 +409,56 @@ class BbhOnboardingSteps {
         verified: form.isVerified('ar_mother'),
         textDirection: TextDirection.rtl,
       ),
-      
+
       const SizedBox(height: 24),
+      // Full name in English (National ID) — hidden for now; scan still fills id_en_* for API.
+      // _groupTitle(
+      //   'Full name in English (National ID)',
+      //   'As read from your national identity card (Latin letters).',
+      // ),
+      // _grid2(
+      //   BbhTextField(
+      //     fieldKey: 'id_en_first',
+      //     controller: form.idEnFirst,
+      //     label: 'First Name',
+      //     verified: form.isVerified('id_en_first'),
+      //     capitalization: TextCapitalization.words,
+      //   ),
+      //   BbhTextField(
+      //     fieldKey: 'id_en_father',
+      //     controller: form.idEnFather,
+      //     label: "Father's Name",
+      //     verified: form.isVerified('id_en_father'),
+      //     capitalization: TextCapitalization.words,
+      //   ),
+      // ),
+      // _grid2(
+      //   BbhTextField(
+      //     fieldKey: 'id_en_gf',
+      //     controller: form.idEnGf,
+      //     label: "Grandfather's",
+      //     verified: form.isVerified('id_en_gf'),
+      //     capitalization: TextCapitalization.words,
+      //   ),
+      //   BbhTextField(
+      //     fieldKey: 'id_en_surname',
+      //     controller: form.idEnSurname,
+      //     label: 'Surname',
+      //     verified: form.isVerified('id_en_surname'),
+      //     capitalization: TextCapitalization.words,
+      //   ),
+      // ),
+      // BbhTextField(
+      //   fieldKey: 'id_en_mother',
+      //   controller: form.idEnMother,
+      //   label: "Mother's Name",
+      //   verified: form.isVerified('id_en_mother'),
+      //   capitalization: TextCapitalization.words,
+      // ),
       if (!form.noPassport) ...[
+        const SizedBox(height: 24),
         _groupTitle(
-          'Full name in English',
+          'Full name in English (Passport)',
           'As it appears on the passport.',
         ),
         _grid2(
@@ -455,53 +500,8 @@ class BbhOnboardingSteps {
           verified: form.isVerified('en_mother'),
           capitalization: TextCapitalization.words,
         ),
-        const SizedBox(height: 24),
-      ] else ...[
-        _groupTitle(
-          'Full name in English',
-          'From your National ID (Latin letters).',
-        ),
-        _grid2(
-          BbhTextField(
-            fieldKey: 'id_en_first',
-            controller: form.idEnFirst,
-            label: 'First Name',
-            verified: form.isVerified('id_en_first'),
-            capitalization: TextCapitalization.words,
-          ),
-          BbhTextField(
-            fieldKey: 'id_en_father',
-            controller: form.idEnFather,
-            label: "Father's Name",
-            verified: form.isVerified('id_en_father'),
-            capitalization: TextCapitalization.words,
-          ),
-        ),
-        _grid2(
-          BbhTextField(
-            fieldKey: 'id_en_gf',
-            controller: form.idEnGf,
-            label: "Grandfather's",
-            verified: form.isVerified('id_en_gf'),
-            capitalization: TextCapitalization.words,
-          ),
-          BbhTextField(
-            fieldKey: 'id_en_surname',
-            controller: form.idEnSurname,
-            label: 'Surname',
-            verified: form.isVerified('id_en_surname'),
-            capitalization: TextCapitalization.words,
-          ),
-        ),
-        BbhTextField(
-          fieldKey: 'id_en_mother',
-          controller: form.idEnMother,
-          label: "Mother's Name",
-          verified: form.isVerified('id_en_mother'),
-          capitalization: TextCapitalization.words,
-        ),
-        const SizedBox(height: 24),
       ],
+      const SizedBox(height: 24),
       _groupTitle(
         'National Identity Card',
         'Both numbers are printed on the same card.',
@@ -1299,7 +1299,11 @@ class BbhOnboardingSteps {
     ]);
   }
 
-  static Widget consent(BbhOnboardingForm form, VoidCallback onChanged) {
+  static Widget consent(
+    BbhOnboardingForm form,
+    VoidCallback onChanged, {
+    ValueChanged<String?>? onSignatureChanged,
+  }) {
     return _scroll([
       const BbhStepHeader(
         eyebrow: 'Section 6 · Consent & Authorisation',
@@ -1363,7 +1367,11 @@ class BbhOnboardingSteps {
             context,
             hasSignature: form.hasSignature,
             onSignatureChanged: (value) {
-              form.signature = value;
+              if (onSignatureChanged != null) {
+                onSignatureChanged(value);
+              } else {
+                form.signature = value;
+              }
               onChanged();
             },
           ),
@@ -1620,7 +1628,7 @@ class BbhOnboardingSteps {
 
   static Widget success({
     required String? kycRef,
-    required VoidCallback onRestart,
+    required VoidCallback onLogin,
   }) {
     return ColoredBox(
       color: BbhOnboardingColors.cream,
@@ -1734,8 +1742,8 @@ class BbhOnboardingSteps {
                   ),
                   const SizedBox(height: 24),
                   BbhPrimaryButton(
-                    label: 'Start a new onboarding',
-                    onPressed: onRestart,
+                    label: 'Login',
+                    onPressed: onLogin,
                   ),
                 ],
               ),

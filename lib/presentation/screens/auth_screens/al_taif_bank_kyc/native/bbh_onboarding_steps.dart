@@ -1409,10 +1409,10 @@ class BbhOnboardingSteps {
     }
 
     String fullEn() => [
-      v(form.idEnFirst),
+      v(form.arFirst),
       v(form.idEnFather),
       v(form.idEnGf),
-      v(form.idEnSurname),
+      v(form.arFirst),
     ].where((e) => e.isNotEmpty).join(' ');
     String fullAr() => [
       v(form.arFirst),

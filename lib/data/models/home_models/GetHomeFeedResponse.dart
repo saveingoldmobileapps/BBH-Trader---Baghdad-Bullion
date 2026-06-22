@@ -90,6 +90,8 @@ class Payload {
     bool? applePay,
     bool? temporaryCreditStatus,
     bool? isFrozen,
+
+  String? profileVerificationStatus, // ✅ added
     //double? temporaryCreditAmount,
     WalletExists? walletExists,
     List<Offers>? offers,
@@ -105,6 +107,8 @@ class Payload {
     _applePay = applePay;
     _temporaryCreditStatus = temporaryCreditStatus;
     _isFrozen = isFrozen;
+
+  _profileVerificationStatus = profileVerificationStatus; // ✅ added
     // _temporaryCreditAmount = temporaryCreditAmount;
     _walletExists = walletExists;
     _offers = offers;
@@ -122,6 +126,7 @@ class Payload {
     _applePay = json['applePay'];
     _temporaryCreditStatus = json['temporaryCreditStatus'];
     _isFrozen = json['isFrozen'];
+    _profileVerificationStatus = json['profileVerificationStatus'];
     //_temporaryCreditAmount = json['temporaryCreditAmount'];
     _walletExists = json['walletExists'] != null
         ? WalletExists.fromJson(json['walletExists'])
@@ -148,6 +153,7 @@ class Payload {
   bool? _applePay;
   bool? _temporaryCreditStatus;
   bool? _isFrozen;
+  String? _profileVerificationStatus;// = json['profileVerificationStatus'];
   //double?  _temporaryCreditAmount;
   String? _userType;
   WalletExists? _walletExists;
@@ -191,6 +197,7 @@ class Payload {
 
   bool? get temporaryCreditStatus => _temporaryCreditStatus;
   bool? get isFrozen => _isFrozen;
+  String? get profileVerificationStatus =>_profileVerificationStatus;//= json['profileVerificationStatus'];
   //double? get temporaryCreditAmount => _temporaryCreditAmount;
   WalletExists? get walletExists => _walletExists;
   List<Offers>? get offers => _offers;
@@ -207,6 +214,7 @@ class Payload {
     map['applePay'] = _applePay;
     map['temporaryCreditStatus'] = _temporaryCreditStatus;
     map['isFrozen'] = _isFrozen;
+    map['profileVerificationStatus'] = _profileVerificationStatus;
     //map['temporaryCreditAmount'] = _temporaryCreditAmount;
     if (_walletExists != null) {
       map['walletExists'] = _walletExists?.toJson();

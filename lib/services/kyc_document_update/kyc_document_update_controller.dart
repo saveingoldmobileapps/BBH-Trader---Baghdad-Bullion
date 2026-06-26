@@ -7,13 +7,14 @@ import 'package:baghdad_bullion_house/data/models/user_models/GetUserProfileResp
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_onboarding_form.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_image_upload_queue.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_image_upload_service.dart';
-import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_builder.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_image_url_store.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_document_image_util.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_formdata_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_html_field_mapper.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_kyc_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_residence_formdata_mapper.dart';
+import 'package:baghdad_bullion_house/services/kyc_document_update/kyc_document_update_payload_builder.dart';
 import 'package:baghdad_bullion_house/services/kyc_document_update/kyc_document_update_store.dart';
 import 'package:baghdad_bullion_house/services/kyc_document_update/kyc_document_update_submission_service.dart';
 import 'package:flutter/foundation.dart';
@@ -385,20 +386,31 @@ class KycDocumentUpdateController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final kycReference =
-          'BBH-DOC-${documentType.apiKey}-${DateTime.now().millisecondsSinceEpoch}';
+      await _ensureImagesUploaded();
       final imageUrls = await _latestImageUrls();
-      final submittedAt = DateTime.now();
 
-      final ipassBundle = _buildIpassBundle(imageUrls);
-      final fullPayload = BbhOnboardingSubmissionBuilder.build(
+      final payload = KycDocumentUpdatePayloadBuilder.build(
+        documentType: documentType,
         form: form,
-        kycReference: kycReference,
-        submittedAt: submittedAt,
-        ipassBundle: ipassBundle,
+        imageUrlsByKey: imageUrls,
+        nationalIdOrPassportScan: documentType == KycDocumentType.residency
+            ? null
+            : ipassScanResult,
+        residenceFront: residenceFormDataFront,
+        residenceBack: residenceFormDataBack,
       );
 
-      final payload = _documentScopedPayload(fullPayload, ipassBundle);
+      final documents = _extractDocuments(payload);
+      if (!KycDocumentUpdatePayloadBuilder.hasUploadedDocuments(documents)) {
+        lastError =
+            'Document images are still uploading. Please wait a moment and try again.';
+        notifyListeners();
+        return false;
+      }
+
+      if (kDebugMode) {
+        await KycDocumentUpdateStore.instance.saveImageUrls(imageUrls);
+      }
 
       final result =
           await KycDocumentUpdateSubmissionService.instance.submit(payload);
@@ -424,64 +436,31 @@ class KycDocumentUpdateController extends ChangeNotifier {
     }
   }
 
-  Map<String, dynamic> _documentScopedPayload(
-    Map<String, dynamic> full,
-    Map<String, dynamic> ipassBundle,
-  ) {
-    final scoped = <String, dynamic>{
-      'documentType': documentType.apiKey,
-      'submissionMeta': {
-        'kycReference': full['submissionMeta']?['kycReference'],
-        'submittedAt': full['submissionMeta']?['submittedAt'],
-        'flow': 'bbh_document_update',
-        'version': '1.0',
-        'reviewStatus': reviewStatus.name,
-      },
-      'ipassVerificationData': ipassBundle,
+  List<Map<String, dynamic>> _extractDocuments(Map<String, dynamic> payload) {
+    final details = switch (documentType) {
+      KycDocumentType.nationalId => payload['nationalIdDetails'],
+      KycDocumentType.passport => payload['passportDetails'],
+      KycDocumentType.residency => payload['residencyDetails'],
     };
-
-    switch (documentType) {
-      case KycDocumentType.nationalId:
-        scoped['nationalIdDetails'] = full['nationalIdDetails'];
-      case KycDocumentType.passport:
-        scoped['passportDetails'] = full['passportDetails'];
-      case KycDocumentType.residency:
-        scoped['residencyDetails'] = full['residencyDetails'];
-        scoped['iraqAddressDetails'] = full['iraqAddressDetails'];
-    }
-
-    return scoped;
+    if (details is! Map) return const [];
+    final docs = details['documents'];
+    if (docs is! List) return const [];
+    return docs
+        .whereType<Map>()
+        .map((e) => Map<String, dynamic>.from(e))
+        .toList();
   }
 
-  Map<String, dynamic> _buildIpassBundle(Map<String, String> imageUrls) {
+  Future<void> _ensureImagesUploaded() async {
     if (documentType == KycDocumentType.residency) {
-      return IpassOnboardingMapper.sanitizeBundleForSubmission(
-        IpassOnboardingMapper.buildResidenceSubmissionPayload(
-          front: residenceFormDataFront,
-          back: residenceFormDataBack,
-          imageUrlsByKey: imageUrls,
-          preferImageUrls: true,
-          omitUnuploaded: false,
-        ),
-        imageUrlsByKey: imageUrls,
-      );
+      _enqueueResidenceImages();
+    } else if (ipassScanResult != null) {
+      _enqueueImagesForTarget(documentType.scanTarget);
     }
 
-    final target = documentType.scanTarget;
-    final results = <IpassScanTarget, dynamic>{};
-    if (ipassScanResult != null) {
-      results[target] = ipassScanResult;
-    }
-
-    return IpassOnboardingMapper.sanitizeBundleForSubmission(
-      IpassOnboardingMapper.buildSubmissionIpassBundle(
-        results,
-        imageUrlsByKey: imageUrls,
-        preferImageUrls: true,
-        omitUnuploaded: false,
-      ),
-      imageUrlsByKey: imageUrls,
-    );
+    final queue = BbhOnboardingImageUploadQueue.instance;
+    await queue.waitUntilIdle();
+    await persist();
   }
 
   Future<bool> _handleIpassResult(
@@ -575,8 +554,12 @@ class KycDocumentUpdateController extends ChangeNotifier {
   }
 
   Future<Map<String, String>> _latestImageUrls() async {
-    final fromDisk = await KycDocumentUpdateStore.instance.loadImageUrls();
-    ipassImageUrls.addAll(fromDisk);
+    final fromDocUpdate = await KycDocumentUpdateStore.instance.loadImageUrls();
+    final fromOnboarding = await BbhOnboardingImageUrlStore.instance.load();
+    ipassImageUrls
+      ..clear()
+      ..addAll(fromOnboarding)
+      ..addAll(fromDocUpdate);
     return Map<String, String>.from(ipassImageUrls);
   }
 

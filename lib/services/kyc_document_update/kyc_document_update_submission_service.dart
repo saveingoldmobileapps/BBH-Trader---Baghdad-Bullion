@@ -6,7 +6,6 @@ import 'package:baghdad_bullion_house/data/data_sources/network_sources/api_url.
 import 'package:baghdad_bullion_house/data/data_sources/network_sources/dio_network_manager.dart';
 import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
 import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
-import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -45,23 +44,21 @@ class KycDocumentUpdateSubmissionService {
   Future<KycDocumentUpdateSubmissionResult> submit(
     Map<String, dynamic> payload,
   ) async {
+    final sanitized = _stripBinaryBase64(payload);
+
     if (kDebugMode) {
-      await _saveDebugJson(payload);
-      await BbhOnboardingSubmissionLogger.logPostmanCopyablePayload(payload);
+      await _saveDebugJson(sanitized);
+      debugPrint(
+        'KycDocumentUpdate POST ${ApiEndpoints.updateIpassDocumentApiUrl}',
+      );
     }
 
     final token = await LocalDatabase.instance.getLoginToken();
-    final userId = await LocalDatabase.instance.getUserId();
-
-    final body = Map<String, dynamic>.from(payload);
-    if (userId != null && userId.isNotEmpty) {
-      body['userId'] = userId;
-    }
 
     final response = await DioNetworkManager().callAPI(
       url: ApiEndpoints.updateIpassDocumentApiUrl,
       httpMethod: HttpMethod.post,
-      body: body,
+      body: sanitized,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -81,6 +78,41 @@ class KycDocumentUpdateSubmissionService {
           response.message ?? 'Could not submit document update.',
         );
     }
+  }
+
+  Map<String, dynamic> _stripBinaryBase64(Map<String, dynamic> payload) {
+    final copy = Map<String, dynamic>.from(payload);
+    for (final key in [
+      'nationalIdDetails',
+      'passportDetails',
+      'residencyDetails',
+    ]) {
+      final details = copy[key];
+      if (details is! Map) continue;
+      final detailsMap = Map<String, dynamic>.from(details);
+      final docs = detailsMap['documents'];
+      if (docs is! List) continue;
+      detailsMap['documents'] = docs
+          .whereType<Map>()
+          .map((doc) {
+            final item = Map<String, dynamic>.from(doc);
+            final value = item['base64']?.toString() ?? '';
+            if (value.isNotEmpty &&
+                !value.startsWith('http://') &&
+                !value.startsWith('https://')) {
+              item.remove('base64');
+              item['sizeChars'] = 0;
+            }
+            return item;
+          })
+          .where((doc) {
+            final value = doc['base64']?.toString() ?? '';
+            return value.startsWith('http://') || value.startsWith('https://');
+          })
+          .toList();
+      copy[key] = detailsMap;
+    }
+    return copy;
   }
 
   Future<void> _saveDebugJson(Map<String, dynamic> payload) async {

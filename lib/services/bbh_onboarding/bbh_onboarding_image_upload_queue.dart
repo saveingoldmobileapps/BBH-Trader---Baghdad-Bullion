@@ -102,6 +102,17 @@ class BbhOnboardingImageUploadQueue {
     enqueue(missing, alreadyUploaded: uploaded);
   }
 
+  /// Blocks until the queue is empty or [timeout] elapses.
+  Future<void> waitUntilIdle({
+    Duration timeout = const Duration(minutes: 2),
+  }) async {
+    final deadline = DateTime.now().add(timeout);
+    while (DateTime.now().isBefore(deadline)) {
+      if (pendingCount == 0 && !_draining) return;
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+    }
+  }
+
   Future<void> _drain() async {
     if (_draining) return;
     _draining = true;

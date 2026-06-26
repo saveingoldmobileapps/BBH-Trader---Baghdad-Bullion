@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_status.dart';
+
 /// status : "success"
 /// code : 1
 /// message : "OK: The request has succeeded."
@@ -90,8 +92,9 @@ class Payload {
     bool? applePay,
     bool? temporaryCreditStatus,
     bool? isFrozen,
-
-  String? profileVerificationStatus, // ✅ added
+    KycDocumentReviewStatus? passportReview,
+    KycDocumentReviewStatus? nationalIdReview,
+    KycDocumentReviewStatus? residencyReview,
     //double? temporaryCreditAmount,
     WalletExists? walletExists,
     List<Offers>? offers,
@@ -107,8 +110,9 @@ class Payload {
     _applePay = applePay;
     _temporaryCreditStatus = temporaryCreditStatus;
     _isFrozen = isFrozen;
-
-  _profileVerificationStatus = profileVerificationStatus; // ✅ added
+    _passportReview = passportReview;
+    _nationalIdReview = nationalIdReview;
+    _residencyReview = residencyReview;
     // _temporaryCreditAmount = temporaryCreditAmount;
     _walletExists = walletExists;
     _offers = offers;
@@ -126,7 +130,17 @@ class Payload {
     _applePay = json['applePay'];
     _temporaryCreditStatus = json['temporaryCreditStatus'];
     _isFrozen = json['isFrozen'];
-    _profileVerificationStatus = json['profileVerificationStatus'];
+    _passportReview = KycDocumentReviewStatus.fromApi(
+      json['PassportReview']?.toString() ?? json['passportReview']?.toString(),
+    );
+    _nationalIdReview = KycDocumentReviewStatus.fromApi(
+      json['NationalIdReview']?.toString() ??
+          json['nationalIdReview']?.toString(),
+    );
+    _residencyReview = KycDocumentReviewStatus.fromApi(
+      json['ResidencyReview']?.toString() ??
+          json['residencyReview']?.toString(),
+    );
     //_temporaryCreditAmount = json['temporaryCreditAmount'];
     _walletExists = json['walletExists'] != null
         ? WalletExists.fromJson(json['walletExists'])
@@ -153,7 +167,9 @@ class Payload {
   bool? _applePay;
   bool? _temporaryCreditStatus;
   bool? _isFrozen;
-  String? _profileVerificationStatus;// = json['profileVerificationStatus'];
+  KycDocumentReviewStatus? _passportReview;
+  KycDocumentReviewStatus? _nationalIdReview;
+  KycDocumentReviewStatus? _residencyReview;
   //double?  _temporaryCreditAmount;
   String? _userType;
   WalletExists? _walletExists;
@@ -166,6 +182,13 @@ class Payload {
     bool? isBasicUserVerified,
     bool? sellAtLoss,
     String? userType,
+    bool? googlePay,
+    bool? applePay,
+    bool? temporaryCreditStatus,
+    bool? isFrozen,
+    KycDocumentReviewStatus? passportReview,
+    KycDocumentReviewStatus? nationalIdReview,
+    KycDocumentReviewStatus? residencyReview,
     WalletExists? walletExists,
     List<Offers>? offers,
     List<NewsUpdates>? newsUpdates,
@@ -179,6 +202,9 @@ class Payload {
     applePay: applePay ?? _applePay,
     temporaryCreditStatus: temporaryCreditStatus ?? _temporaryCreditStatus,
     isFrozen: isFrozen ?? _isFrozen,
+    passportReview: passportReview ?? _passportReview,
+    nationalIdReview: nationalIdReview ?? _nationalIdReview,
+    residencyReview: residencyReview ?? _residencyReview,
     //temporaryCreditAmount: temporaryCreditAmount ?? _temporaryCreditAmount,
     userType: userType ?? _userType,
     walletExists: walletExists ?? _walletExists,
@@ -197,7 +223,9 @@ class Payload {
 
   bool? get temporaryCreditStatus => _temporaryCreditStatus;
   bool? get isFrozen => _isFrozen;
-  String? get profileVerificationStatus =>_profileVerificationStatus;//= json['profileVerificationStatus'];
+  KycDocumentReviewStatus? get passportReview => _passportReview;
+  KycDocumentReviewStatus? get nationalIdReview => _nationalIdReview;
+  KycDocumentReviewStatus? get residencyReview => _residencyReview;
   //double? get temporaryCreditAmount => _temporaryCreditAmount;
   WalletExists? get walletExists => _walletExists;
   List<Offers>? get offers => _offers;
@@ -214,7 +242,15 @@ class Payload {
     map['applePay'] = _applePay;
     map['temporaryCreditStatus'] = _temporaryCreditStatus;
     map['isFrozen'] = _isFrozen;
-    map['profileVerificationStatus'] = _profileVerificationStatus;
+    if (_passportReview != null) {
+      map['PassportReview'] = _passportReview!.name;
+    }
+    if (_nationalIdReview != null) {
+      map['NationalIdReview'] = _nationalIdReview!.name;
+    }
+    if (_residencyReview != null) {
+      map['ResidencyReview'] = _residencyReview!.name;
+    }
     //map['temporaryCreditAmount'] = _temporaryCreditAmount;
     if (_walletExists != null) {
       map['walletExists'] = _walletExists?.toJson();

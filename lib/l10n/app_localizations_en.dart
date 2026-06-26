@@ -2129,6 +2129,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verify_account => 'Verify Account';
 
   @override
+  String get kyc_doc_national_id => 'National ID';
+
+  @override
+  String get kyc_doc_passport => 'Passport';
+
+  @override
+  String get kyc_doc_residency => 'Residency document';
+
+  @override
+  String kyc_document_rejected(String document) {
+    return 'Your $document was rejected. Tap to update and resubmit.';
+  }
+
+  @override
+  String kyc_document_pending(String document) {
+    return 'Your $document is pending verification. Tap to update.';
+  }
+
+  @override
+  String get kyc_retake_document => 'Retake document';
+
+  @override
+  String get kyc_complete_verification => 'Complete KYC verification';
+
+  @override
   String get demo_mode_banner => 'You are in Demo Mode';
 
   @override

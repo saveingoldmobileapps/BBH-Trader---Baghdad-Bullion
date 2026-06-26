@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_test_overrides.dart';
 import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart';
 import 'package:baghdad_bullion_house/data/models/AppUpdateResponseModel.dart';
 import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
@@ -108,7 +109,9 @@ class Home extends _$Home {
         switch (serverResponse.responseType) {
           case ServerResponseType.success:
             GetHomeFeedResponse getHomeFeedResponse =
-                GetHomeFeedResponse.fromJson(serverResponse.resultData);
+                KycDocumentReviewTestOverrides.apply(
+              GetHomeFeedResponse.fromJson(serverResponse.resultData),
+            );
 
             // update state
             state = state.copyWith(

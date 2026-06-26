@@ -857,6 +857,23 @@
     }
   },
   "verify_account":"التحقق من الحساب",
+  "kyc_doc_national_id": "البطاقة الوطنية",
+  "kyc_doc_passport": "جواز السفر",
+  "kyc_doc_residency": "وثيقة الإقامة",
+  "kyc_document_rejected": "تم رفض {document}. اضغط للتحديث وإعادة الإرسال.",
+  "@kyc_document_rejected": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_pending": "ما زال {document} قيد المراجعة. اضغط للتحديث.",
+  "@kyc_document_pending": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_retake_document": "إعادة التقاط الوثيقة",
+  "kyc_complete_verification": "إكمال التحقق من الهوية",
   "@DemoMode": {},
   "demo_mode_banner": "أنت في وضع التجربة",
   "demo_mode_go_live": "الانتقال للحساب الحقيقي",

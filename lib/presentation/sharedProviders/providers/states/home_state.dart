@@ -4,7 +4,6 @@ import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
 import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
 import 'package:baghdad_bullion_house/data/models/home_models/GetHomeFeedResponse.dart';
 import 'package:baghdad_bullion_house/data/models/user_models/GetUserProfileResponse.dart';
-
 class HomeState {
   final ErrorResponse errorResponse;
   final SuccessResponse successResponse;
@@ -12,7 +11,7 @@ class HomeState {
   final GetHomeFeedResponse getHomeFeedResponse;
   final GetUserProfileResponse getUserProfileResponse;
 
-  /// state
+  /// variable and enum
   final LoadingState loadingState;
   final bool isButtonState;
   final bool isImageState;
@@ -23,10 +22,7 @@ class HomeState {
   final bool isBasicUserVerified;
   final bool isDemo;
 
-  /// KYC STATUS (NEW)
-  final String profileVerificationStatus;
-
-  /// user info
+  /// Updated: firstName and surname as Map<String, String>
   final Map<String, String> firstName;
   final Map<String, String> surname;
 
@@ -45,18 +41,15 @@ class HomeState {
     GetUserProfileResponse? getUserProfileResponse,
     AppUpdateResponseModel? appUpdateResponse,
 
+    /// variables and enums
     this.loadingState = LoadingState.loading,
     this.isButtonState = false,
     this.isImageState = false,
-
     this.isPhoneVerified = false,
     this.isEmailVerified = false,
     this.isUserKYCVerified = false,
     this.isBasicUserVerified = false,
     this.isDemo = false,
-
-    this.profileVerificationStatus = 'Pending',
-
     this.userEmail = '',
     this.phoneNumber = '',
     this.accountId = '',
@@ -64,11 +57,12 @@ class HomeState {
     this.deviceType = '',
     this.operatingSystem = '',
 
+    /// Updated fields
     Map<String, String>? firstName,
     Map<String, String>? surname,
   })  : errorResponse = errorResponse ?? ErrorResponse(),
-        successResponse = successResponse ?? SuccessResponse(),
         appUpdateResponse = appUpdateResponse ?? AppUpdateResponseModel(),
+        successResponse = successResponse ?? SuccessResponse(),
         getHomeFeedResponse = getHomeFeedResponse ?? GetHomeFeedResponse(),
         getUserProfileResponse =
             getUserProfileResponse ?? GetUserProfileResponse(),
@@ -82,18 +76,15 @@ class HomeState {
     GetUserProfileResponse? getUserProfileResponse,
     AppUpdateResponseModel? appUpdateResponse,
 
+    /// variables and enums
     LoadingState? loadingState,
     bool? isButtonState,
     bool? isImageState,
     bool? isDemo,
-
     bool? isPhoneVerified,
     bool? isEmailVerified,
     bool? isUserKYCVerified,
     bool? isBasicUserVerified,
-
-    String? profileVerificationStatus,
-
     String? userEmail,
     String? phoneNumber,
     String? accountId,
@@ -101,6 +92,7 @@ class HomeState {
     String? deviceType,
     String? operatingSystem,
 
+    /// Updated fields
     Map<String, String>? firstName,
     Map<String, String>? surname,
   }) {
@@ -111,31 +103,22 @@ class HomeState {
       getUserProfileResponse:
           getUserProfileResponse ?? this.getUserProfileResponse,
       appUpdateResponse: appUpdateResponse ?? this.appUpdateResponse,
-
       loadingState: loadingState ?? this.loadingState,
       isButtonState: isButtonState ?? this.isButtonState,
       isImageState: isImageState ?? this.isImageState,
-
       isPhoneVerified: isPhoneVerified ?? this.isPhoneVerified,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
       isUserKYCVerified: isUserKYCVerified ?? this.isUserKYCVerified,
       isBasicUserVerified: isBasicUserVerified ?? this.isBasicUserVerified,
-
-      profileVerificationStatus:
-          profileVerificationStatus ?? this.profileVerificationStatus,
-
-      isDemo: isDemo ?? this.isDemo,
-
       userEmail: userEmail ?? this.userEmail,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       accountId: accountId ?? this.accountId,
-
       deviceName: deviceName ?? this.deviceName,
       deviceType: deviceType ?? this.deviceType,
       operatingSystem: operatingSystem ?? this.operatingSystem,
-
       firstName: firstName ?? this.firstName,
       surname: surname ?? this.surname,
+      isDemo: isDemo ?? this.isDemo,
     );
   }
 }

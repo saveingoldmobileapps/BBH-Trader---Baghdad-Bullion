@@ -2109,6 +2109,31 @@ class AppLocalizationsAr extends AppLocalizations {
   String get verify_account => 'التحقق من الحساب';
 
   @override
+  String get kyc_doc_national_id => 'البطاقة الوطنية';
+
+  @override
+  String get kyc_doc_passport => 'جواز السفر';
+
+  @override
+  String get kyc_doc_residency => 'وثيقة الإقامة';
+
+  @override
+  String kyc_document_rejected(String document) {
+    return 'تم رفض $document. اضغط للتحديث وإعادة الإرسال.';
+  }
+
+  @override
+  String kyc_document_pending(String document) {
+    return 'ما زال $document قيد المراجعة. اضغط للتحديث.';
+  }
+
+  @override
+  String get kyc_retake_document => 'إعادة التقاط الوثيقة';
+
+  @override
+  String get kyc_complete_verification => 'إكمال التحقق من الهوية';
+
+  @override
   String get demo_mode_banner => 'أنت في وضع التجربة';
 
   @override

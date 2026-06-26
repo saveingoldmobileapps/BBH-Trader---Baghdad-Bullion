@@ -71,6 +71,10 @@ class ApiEndpoints {
   static String get registerIpassApiUrl =>
       "$baseUrl/auth/register/iPass/${CommonService.lang}";
 
+  /// Re-submit a single iPass document after admin rejection (logged-in user).
+  static String get updateIpassDocumentApiUrl =>
+      "$baseUrl/auth/update/iPass/${CommonService.lang}";
+
   /// iPass onboarding document image upload (no auth) — returns payload.imageUrl.
   static String get ipassDocUploadApiUrl =>
       "$baseUrl/iPass/doc/upload/${CommonService.lang}";

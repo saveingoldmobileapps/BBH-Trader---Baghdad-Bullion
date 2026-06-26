@@ -4104,6 +4104,48 @@ abstract class AppLocalizations {
   /// **'Verify Account'**
   String get verify_account;
 
+  /// No description provided for @kyc_doc_national_id.
+  ///
+  /// In en, this message translates to:
+  /// **'National ID'**
+  String get kyc_doc_national_id;
+
+  /// No description provided for @kyc_doc_passport.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport'**
+  String get kyc_doc_passport;
+
+  /// No description provided for @kyc_doc_residency.
+  ///
+  /// In en, this message translates to:
+  /// **'Residency document'**
+  String get kyc_doc_residency;
+
+  /// No description provided for @kyc_document_rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} was rejected. Tap to update and resubmit.'**
+  String kyc_document_rejected(String document);
+
+  /// No description provided for @kyc_document_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is pending verification. Tap to update.'**
+  String kyc_document_pending(String document);
+
+  /// No description provided for @kyc_retake_document.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake document'**
+  String get kyc_retake_document;
+
+  /// No description provided for @kyc_complete_verification.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete KYC verification'**
+  String get kyc_complete_verification;
+
   /// No description provided for @demo_mode_banner.
   ///
   /// In en, this message translates to:

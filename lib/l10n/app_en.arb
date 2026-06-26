@@ -849,6 +849,23 @@
     }
   },
   "verify_account": "Verify Account",
+  "kyc_doc_national_id": "National ID",
+  "kyc_doc_passport": "Passport",
+  "kyc_doc_residency": "Residency document",
+  "kyc_document_rejected": "Your {document} was rejected. Tap to update and resubmit.",
+  "@kyc_document_rejected": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_pending": "Your {document} is pending verification. Tap to update.",
+  "@kyc_document_pending": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_retake_document": "Retake document",
+  "kyc_complete_verification": "Complete KYC verification",
   "@DemoMode": {},
   "demo_mode_banner": "You are in Demo Mode",
   "demo_mode_go_live": "Go Live",

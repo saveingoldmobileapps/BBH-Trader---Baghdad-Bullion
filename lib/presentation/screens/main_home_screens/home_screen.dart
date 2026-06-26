@@ -14,6 +14,10 @@ import 'package:baghdad_bullion_house/presentation/screens/news_screen/news_scre
 import 'package:baghdad_bullion_house/presentation/screens/notification_screens/notification_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/setting_screens/setting_screen.dart';
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
+import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_status.dart';
+import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
+import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_native_onboarding_screen.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/kyc_document_warning.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/account_warning.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/demo_banner.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/get_drawer_bar.dart';
@@ -415,11 +419,78 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       visible:
                           mainStateWatchProvider.getHomeFeedResponse.payload !=
                               null &&
+                          mainStateWatchProvider.isDemo == false &&
+                          mainStateWatchProvider.loadingState ==
+                              LoadingState.data &&
+                          mainStateWatchProvider
+                                  .getHomeFeedResponse
+                                  .payload!
+                                  .isUserKYCVerified !=
+                              true &&
+                          KycHomeNavigation.documentsNeedingAction(
+                            mainStateWatchProvider
+                                .getHomeFeedResponse.payload,
+                          ).isEmpty,
+                      child: AccountWarning(
+                        kycStatus: AppLocalizations.of(
+                          context,
+                        )!.kyc_complete_verification,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const BbhNativeOnboardingScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    ...KycHomeNavigation.documentsNeedingAction(
+                      mainStateWatchProvider.getHomeFeedResponse.payload,
+                    ).map(
+                      (docType) => Visibility(
+                        visible:
+                            mainStateWatchProvider
+                                    .getHomeFeedResponse.payload !=
+                                null &&
+                            mainStateWatchProvider.isDemo == false &&
+                            mainStateWatchProvider.loadingState ==
+                                LoadingState.data,
+                        child: KycDocumentWarning(
+                          documentType: docType,
+                          reviewStatus: KycHomeNavigation.reviewStatusFor(
+                                docType,
+                                mainStateWatchProvider
+                                    .getHomeFeedResponse.payload!,
+                              ) ??
+                              KycDocumentReviewStatus.pending,
+                          onTap: () {
+                            KycHomeNavigation.openDocumentUpdate(
+                              context,
+                              docType,
+                              mainStateWatchProvider
+                                  .getHomeFeedResponse.payload!,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+
+                    Visibility(
+                      visible:
+                          mainStateWatchProvider.getHomeFeedResponse.payload !=
+                              null &&
                           (!mainStateWatchProvider.isBasicUserVerified ||
                               !mainStateWatchProvider.isUserKYCVerified) &&
                           mainStateWatchProvider.isDemo == false &&
                           mainStateWatchProvider.loadingState ==
-                              LoadingState.data,
+                              LoadingState.data &&
+                          !KycHomeNavigation.hasPerDocumentReviews(
+                            mainStateWatchProvider
+                                .getHomeFeedResponse.payload,
+                          ),
                       child: AccountWarning(
                         kycStatus: "documents",
                         onTap: () {

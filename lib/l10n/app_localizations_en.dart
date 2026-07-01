@@ -2129,6 +2129,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verify_account => 'Verify Account';
 
   @override
+  String get agreement_account_warning =>
+      'Please sign the user agreement to get access to all the features.';
+
+  @override
+  String get sign_agreement => 'Agreement Signature';
+
+  @override
+  String get kyc_agreement_desc => 'I have read and accept the Agreement';
+
+  @override
+  String get accept_agreement => 'Accept Agreement';
+
+  @override
+  String get sig_agreement => 'Baghdad Bullion House Agreement';
+
+  @override
   String get kyc_doc_national_id => 'National ID';
 
   @override

@@ -16,6 +16,7 @@ import 'package:baghdad_bullion_house/presentation/screens/setting_screens/setti
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_status.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
+import 'package:baghdad_bullion_house/presentation/screens/agreement_screens/user_agreement_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_native_onboarding_screen.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/kyc_document_warning.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/account_warning.dart';
@@ -512,6 +513,38 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                               ),
                             );
                           }
+                        },
+                      ),
+                    ),
+
+                    Visibility(
+                      visible:
+                          mainStateWatchProvider.getHomeFeedResponse.payload !=
+                              null &&
+                          mainStateWatchProvider.isBasicUserVerified &&
+                          mainStateWatchProvider.isUserKYCVerified &&
+                          !mainStateWatchProvider.agreementStatus &&
+                          mainStateWatchProvider.isDemo == false &&
+                          mainStateWatchProvider.loadingState ==
+                              LoadingState.data,
+                      child: AccountWarning(
+                        kycStatus: 'agreement',
+                        warningMessage: AppLocalizations.of(
+                          context,
+                        )!.agreement_account_warning,
+                        actionText: AppLocalizations.of(context)!.sign_agreement,
+                        onTap: () async {
+                          final signed = await Navigator.push<bool>(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UserAgreementScreen(),
+                            ),
+                          );
+                          if (!context.mounted || signed != true) return;
+                          await ref.read(homeProvider.notifier).getHomeFeed(
+                                context: context,
+                                showLoading: false,
+                              );
                         },
                       ),
                     ),

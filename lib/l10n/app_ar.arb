@@ -857,6 +857,11 @@
     }
   },
   "verify_account":"التحقق من الحساب",
+  "agreement_account_warning": "يرجى توقيع اتفاقية المستخدم للحصول على إمكانية الوصول إلى جميع الميزات.",
+  "sign_agreement": "توقيع الاتفاقية",
+  "kyc_agreement_desc": "لقد قرأت وأوافق على الاتفاقية",
+  "accept_agreement": "قبول الاتفاقية",
+  "sig_agreement": "اتفاقية دار بغداد للسبائك",
   "kyc_doc_national_id": "البطاقة الوطنية",
   "kyc_doc_passport": "جواز السفر",
   "kyc_doc_residency": "وثيقة الإقامة",

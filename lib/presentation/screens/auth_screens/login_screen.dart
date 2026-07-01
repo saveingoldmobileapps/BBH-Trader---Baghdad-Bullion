@@ -1,17 +1,16 @@
 import 'dart:io' show Platform;
 
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
-import 'package:baghdad_bullion_house/l10n/app_localizations_en.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/widgets/no_copy_paste_format.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/register_screen.dart';
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/auth_provider.dart';
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/setting_provider/check_device_security.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/button_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'forgot_screens/forgot_password_screen.dart';
 
@@ -238,7 +237,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).viewInsets.bottom+100,
+                      height: MediaQuery.of(context).viewInsets.bottom + 100,
                     ),
                   ],
                 ),
@@ -633,7 +632,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         SvgPicture.asset(
                           country.flag,
                           width: 22,
-                          errorBuilder: (_, __, ___) =>
+                          errorBuilder: (_, _, _) =>
                               const Icon(Icons.flag, color: Colors.white),
                         ),
                       ],
@@ -649,7 +648,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         SvgPicture.asset(
                           country.flag,
                           width: 22,
-                          errorBuilder: (_, __, ___) =>
+                          errorBuilder: (_, _, _) =>
                               const Icon(Icons.flag, color: Colors.white),
                         ),
                         const SizedBox(width: 8),
@@ -812,7 +811,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         Color(0xFFC5A353),
                         BlendMode.srcIn,
                       ),
-                      errorBuilder: (_, __, ___) => Icon(
+                      errorBuilder: (_, _, _) => Icon(
                         isIOS ? Icons.face : Icons.fingerprint,
                         color: const Color(0xFFC5A353),
                         size: 28,

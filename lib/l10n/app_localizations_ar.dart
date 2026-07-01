@@ -2109,6 +2109,22 @@ class AppLocalizationsAr extends AppLocalizations {
   String get verify_account => 'التحقق من الحساب';
 
   @override
+  String get agreement_account_warning =>
+      'يرجى توقيع اتفاقية المستخدم للحصول على إمكانية الوصول إلى جميع الميزات.';
+
+  @override
+  String get sign_agreement => 'توقيع الاتفاقية';
+
+  @override
+  String get kyc_agreement_desc => 'لقد قرأت وأوافق على الاتفاقية';
+
+  @override
+  String get accept_agreement => 'قبول الاتفاقية';
+
+  @override
+  String get sig_agreement => 'اتفاقية دار بغداد للسبائك';
+
+  @override
   String get kyc_doc_national_id => 'البطاقة الوطنية';
 
   @override

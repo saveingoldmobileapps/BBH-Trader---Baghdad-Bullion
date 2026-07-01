@@ -103,6 +103,12 @@ class ApiEndpoints {
   static String get getHomeFeedApiUrl =>
       "$baseUrl/service/homePageData/getById/${CommonService.lang}";
 
+  static String get getAgreementLinkApiUrl =>
+      "$baseUrl/service/agreement/link/${CommonService.lang}";
+
+  static String get updateAgreementApiUrl =>
+      "$baseUrl/service/agreement/update/${CommonService.lang}";
+
   static String get getUserProfileApiUrl =>
       "$baseUrl/auth/userProfile/${CommonService.lang}";
 

@@ -20,6 +20,7 @@ class HomeState {
   final bool isEmailVerified;
   final bool isUserKYCVerified;
   final bool isBasicUserVerified;
+  final bool agreementStatus;
   final bool isDemo;
 
   /// Updated: firstName and surname as Map<String, String>
@@ -49,6 +50,7 @@ class HomeState {
     this.isEmailVerified = false,
     this.isUserKYCVerified = false,
     this.isBasicUserVerified = false,
+    this.agreementStatus = true,
     this.isDemo = false,
     this.userEmail = '',
     this.phoneNumber = '',
@@ -85,6 +87,7 @@ class HomeState {
     bool? isEmailVerified,
     bool? isUserKYCVerified,
     bool? isBasicUserVerified,
+    bool? agreementStatus,
     String? userEmail,
     String? phoneNumber,
     String? accountId,
@@ -110,6 +113,7 @@ class HomeState {
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
       isUserKYCVerified: isUserKYCVerified ?? this.isUserKYCVerified,
       isBasicUserVerified: isBasicUserVerified ?? this.isBasicUserVerified,
+      agreementStatus: agreementStatus ?? this.agreementStatus,
       userEmail: userEmail ?? this.userEmail,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       accountId: accountId ?? this.accountId,

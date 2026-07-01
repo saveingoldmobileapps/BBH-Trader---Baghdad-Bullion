@@ -35,7 +35,10 @@ class KycDocumentUpdatePayloadBuilder {
           imageUrlsByKey: imageUrlsByKey,
         );
         return {
-          'isNationalIdDetailsVerified': true,
+          'isNationalIdDetailsVerified': _isNationalIdDetailsVerified(
+            form: form,
+            scanResult: nationalIdOrPassportScan,
+          ),
           'nationalIdDetails': details,
         };
 
@@ -49,7 +52,10 @@ class KycDocumentUpdatePayloadBuilder {
           imageUrlsByKey: imageUrlsByKey,
         );
         return {
-          'isPassportDetailsVerified': true,
+          'isPassportDetailsVerified': isPassportDetailsVerified(
+            form: form,
+            scanResult: nationalIdOrPassportScan,
+          ),
           'passportDetails': details,
         };
 
@@ -63,10 +69,73 @@ class KycDocumentUpdatePayloadBuilder {
           back: residenceBack,
         );
         return {
-          'isResidencyDetailsVerified': true,
+          'isResidencyDetailsVerified': _isResidencyDetailsVerified(
+            form: form,
+            front: residenceFront,
+            back: residenceBack,
+          ),
           'residencyDetails': details,
         };
     }
+  }
+
+  /// Passport retake — `true` when scan completed and iPass did not reject.
+  static bool isPassportDetailsVerified({
+    required BbhOnboardingForm form,
+    IpassKycResult? scanResult,
+  }) {
+    if (form.noPassport || !form.passportCaptured || scanResult == null) {
+      return false;
+    }
+    return !_isScanRejected(scanResult);
+  }
+
+  static bool _isNationalIdDetailsVerified({
+    required BbhOnboardingForm form,
+    IpassKycResult? scanResult,
+  }) {
+    if (!form.idFrontCaptured || !form.idBackCaptured || scanResult == null) {
+      return false;
+    }
+    return !_isScanRejected(scanResult);
+  }
+
+  static bool _isScanRejected(IpassKycResult scanResult) {
+    final status = _scanOverAllStatus(scanResult.data);
+    if (status == 'REJECTED') return true;
+
+    final data = scanResult.data;
+    if (data == null) return false;
+    var current = data;
+    for (var i = 0; i < 4; i++) {
+      final reasons = current['Reason'];
+      if (reasons is List) {
+        for (final item in reasons) {
+          if (item is Map &&
+              item['Status']?.toString().toUpperCase() == 'REJECTED') {
+            return true;
+          }
+        }
+      }
+      final inner = current['data'];
+      if (inner is Map<String, dynamic>) {
+        current = inner;
+      } else if (inner is Map) {
+        current = Map<String, dynamic>.from(inner);
+      } else {
+        break;
+      }
+    }
+    return false;
+  }
+
+  static bool _isResidencyDetailsVerified({
+    required BbhOnboardingForm form,
+    IpassFormDataResultResponse? front,
+    IpassFormDataResultResponse? back,
+  }) {
+    if (!form.resFrontCaptured || !form.resBackCaptured) return false;
+    return (front?.isSucceeded ?? false) && (back?.isSucceeded ?? false);
   }
 
   static List<Map<String, dynamic>> _documentsForScan({

@@ -92,6 +92,7 @@ class Payload {
     bool? applePay,
     bool? temporaryCreditStatus,
     bool? isFrozen,
+    bool? agreementStatus,
     KycDocumentReviewStatus? passportReview,
     KycDocumentReviewStatus? nationalIdReview,
     KycDocumentReviewStatus? residencyReview,
@@ -110,6 +111,7 @@ class Payload {
     _applePay = applePay;
     _temporaryCreditStatus = temporaryCreditStatus;
     _isFrozen = isFrozen;
+    _agreementStatus = agreementStatus;
     _passportReview = passportReview;
     _nationalIdReview = nationalIdReview;
     _residencyReview = residencyReview;
@@ -130,6 +132,7 @@ class Payload {
     _applePay = json['applePay'];
     _temporaryCreditStatus = json['temporaryCreditStatus'];
     _isFrozen = json['isFrozen'];
+    _agreementStatus = json['agreementStatus'];
     _passportReview = KycDocumentReviewStatus.fromApi(
       json['PassportReview']?.toString() ?? json['passportReview']?.toString(),
     );
@@ -167,6 +170,7 @@ class Payload {
   bool? _applePay;
   bool? _temporaryCreditStatus;
   bool? _isFrozen;
+  bool? _agreementStatus;
   KycDocumentReviewStatus? _passportReview;
   KycDocumentReviewStatus? _nationalIdReview;
   KycDocumentReviewStatus? _residencyReview;
@@ -186,6 +190,7 @@ class Payload {
     bool? applePay,
     bool? temporaryCreditStatus,
     bool? isFrozen,
+    bool? agreementStatus,
     KycDocumentReviewStatus? passportReview,
     KycDocumentReviewStatus? nationalIdReview,
     KycDocumentReviewStatus? residencyReview,
@@ -202,6 +207,7 @@ class Payload {
     applePay: applePay ?? _applePay,
     temporaryCreditStatus: temporaryCreditStatus ?? _temporaryCreditStatus,
     isFrozen: isFrozen ?? _isFrozen,
+    agreementStatus: agreementStatus ?? _agreementStatus,
     passportReview: passportReview ?? _passportReview,
     nationalIdReview: nationalIdReview ?? _nationalIdReview,
     residencyReview: residencyReview ?? _residencyReview,
@@ -223,6 +229,7 @@ class Payload {
 
   bool? get temporaryCreditStatus => _temporaryCreditStatus;
   bool? get isFrozen => _isFrozen;
+  bool? get agreementStatus => _agreementStatus;
   KycDocumentReviewStatus? get passportReview => _passportReview;
   KycDocumentReviewStatus? get nationalIdReview => _nationalIdReview;
   KycDocumentReviewStatus? get residencyReview => _residencyReview;
@@ -242,6 +249,7 @@ class Payload {
     map['applePay'] = _applePay;
     map['temporaryCreditStatus'] = _temporaryCreditStatus;
     map['isFrozen'] = _isFrozen;
+    map['agreementStatus'] = _agreementStatus;
     if (_passportReview != null) {
       map['PassportReview'] = _passportReview!.name;
     }

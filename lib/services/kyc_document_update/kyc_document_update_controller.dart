@@ -408,6 +408,14 @@ class KycDocumentUpdateController extends ChangeNotifier {
         return false;
       }
 
+      if (documentType == KycDocumentType.passport &&
+          payload['isPassportDetailsVerified'] != true) {
+        lastError =
+            'Passport could not be verified. Please retake the scan and try again.';
+        notifyListeners();
+        return false;
+      }
+
       if (kDebugMode) {
         await KycDocumentUpdateStore.instance.saveImageUrls(imageUrls);
       }

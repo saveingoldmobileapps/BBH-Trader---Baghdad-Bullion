@@ -48,6 +48,7 @@ class KycDocumentUpdateSubmissionService {
 
     if (kDebugMode) {
       await _saveDebugJson(sanitized);
+      _logVerificationFlags(sanitized);
       debugPrint(
         'KycDocumentUpdate POST ${ApiEndpoints.updateIpassDocumentApiUrl}',
       );
@@ -119,12 +120,30 @@ class KycDocumentUpdateSubmissionService {
     try {
       final dir = await getApplicationDocumentsDirectory();
       final stamp = DateTime.now().toIso8601String().replaceAll(':', '-');
-      final docType = payload['documentType'] ?? 'document';
+      final docType = payload.containsKey('passportDetails')
+          ? 'passport'
+          : payload.containsKey('nationalIdDetails')
+              ? 'national_id'
+              : payload.containsKey('residencyDetails')
+                  ? 'residency'
+                  : 'document';
       final file = File('${dir.path}/KYC_DOC_UPDATE-$docType-$stamp.json');
       await file.writeAsString(
         const JsonEncoder.withIndent('  ').convert(payload),
       );
     } catch (_) {}
+  }
+
+  void _logVerificationFlags(Map<String, dynamic> payload) {
+    for (final key in [
+      'isNationalIdDetailsVerified',
+      'isPassportDetailsVerified',
+      'isResidencyDetailsVerified',
+    ]) {
+      if (payload.containsKey(key)) {
+        debugPrint('KycDocumentUpdate: $key=${payload[key]}');
+      }
+    }
   }
 
   KycDocumentUpdateSubmissionResult _mapSuccess(dynamic data) {

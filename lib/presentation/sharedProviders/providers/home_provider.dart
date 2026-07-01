@@ -124,6 +124,8 @@ class Home extends _$Home {
                   : false,
               isBasicUserVerified:
                   getHomeFeedResponse.payload?.isBasicUserVerified,
+              agreementStatus:
+                  getHomeFeedResponse.payload?.agreementStatus ?? true,
             );
 
             LocalDatabase.instance.setIsEmailVerified(

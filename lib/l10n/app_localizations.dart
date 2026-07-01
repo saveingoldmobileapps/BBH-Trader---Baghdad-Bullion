@@ -4104,6 +4104,36 @@ abstract class AppLocalizations {
   /// **'Verify Account'**
   String get verify_account;
 
+  /// No description provided for @agreement_account_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign the user agreement to get access to all the features.'**
+  String get agreement_account_warning;
+
+  /// No description provided for @sign_agreement.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreement Signature'**
+  String get sign_agreement;
+
+  /// No description provided for @kyc_agreement_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and accept the Agreement'**
+  String get kyc_agreement_desc;
+
+  /// No description provided for @accept_agreement.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept Agreement'**
+  String get accept_agreement;
+
+  /// No description provided for @sig_agreement.
+  ///
+  /// In en, this message translates to:
+  /// **'Baghdad Bullion House Agreement'**
+  String get sig_agreement;
+
   /// No description provided for @kyc_doc_national_id.
   ///
   /// In en, this message translates to:

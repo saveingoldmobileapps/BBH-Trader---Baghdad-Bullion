@@ -11,7 +11,7 @@ enum KycDocumentReviewStatus {
     switch (value.trim().toLowerCase()) {
       case 'Pending':
         return KycDocumentReviewStatus.pending;
-      case 'approved':
+      case 'Verified':
         return KycDocumentReviewStatus.approved;
       case 'rejected':
         return KycDocumentReviewStatus.rejected;

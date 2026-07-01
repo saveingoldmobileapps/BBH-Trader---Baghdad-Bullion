@@ -849,6 +849,11 @@
     }
   },
   "verify_account": "Verify Account",
+  "agreement_account_warning": "Please sign the user agreement to get access to all the features.",
+  "sign_agreement": "Agreement Signature",
+  "kyc_agreement_desc": "I have read and accept the Agreement",
+  "accept_agreement": "Accept Agreement",
+  "sig_agreement": "Baghdad Bullion House Agreement",
   "kyc_doc_national_id": "National ID",
   "kyc_doc_passport": "Passport",
   "kyc_doc_residency": "Residency document",

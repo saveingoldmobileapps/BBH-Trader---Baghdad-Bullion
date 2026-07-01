@@ -6,10 +6,14 @@ import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 class AccountWarning extends StatelessWidget {
   final String kycStatus;
   final VoidCallback onTap;
+  final String? warningMessage;
+  final String? actionText;
 
   const AccountWarning({
     required this.kycStatus,
     required this.onTap,
+    this.warningMessage,
+    this.actionText,
     super.key,
   });
 
@@ -37,9 +41,10 @@ class AccountWarning extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GetGenericText(
-                    text: AppLocalizations.of(
-                      context,
-                    )!.account_warning(kycStatus),
+                    text: warningMessage ??
+                        AppLocalizations.of(
+                          context,
+                        )!.account_warning(kycStatus),
                     fontSize: sizes!.isPhone ? 12 : 16,
                     fontWeight: sizes!.isPhone
                         ? FontWeight.w400
@@ -49,7 +54,10 @@ class AccountWarning extends StatelessWidget {
                   ),
                   ConstPadding.sizeBoxWithHeight(height: 4),
                   GetGenericText(
-                    text: AppLocalizations.of(context)!.verify_account,
+                    text: actionText ??
+                        AppLocalizations.of(
+                          context,
+                        )!.verify_account,
                     fontSize: sizes!.isPhone ? 12 : 14,
                     fontWeight: FontWeight.w600,
                     color: AppColors.primaryGold500,

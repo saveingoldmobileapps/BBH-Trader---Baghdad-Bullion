@@ -2164,6 +2164,15 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String kyc_document_not_verified(String document) {
+    return 'Your $document is not verified. Tap to update and resubmit.';
+  }
+
+  @override
+  String get profile_verification_pending =>
+      'Your profile verification is pending. We will notify you once the review is complete.';
+
+  @override
   String get kyc_retake_document => 'Retake document';
 
   @override

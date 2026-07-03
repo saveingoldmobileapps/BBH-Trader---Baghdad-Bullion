@@ -93,6 +93,10 @@ class Payload {
     bool? temporaryCreditStatus,
     bool? isFrozen,
     bool? agreementStatus,
+    ProfileVerificationStatus? profileVerificationStatus,
+    bool? isNationalIdDetailsVerified,
+    bool? isPassportDetailsVerified,
+    bool? isResidencyDetailsVerified,
     KycDocumentReviewStatus? passportReview,
     KycDocumentReviewStatus? nationalIdReview,
     KycDocumentReviewStatus? residencyReview,
@@ -112,6 +116,10 @@ class Payload {
     _temporaryCreditStatus = temporaryCreditStatus;
     _isFrozen = isFrozen;
     _agreementStatus = agreementStatus;
+    _profileVerificationStatus = profileVerificationStatus;
+    _isNationalIdDetailsVerified = isNationalIdDetailsVerified;
+    _isPassportDetailsVerified = isPassportDetailsVerified;
+    _isResidencyDetailsVerified = isResidencyDetailsVerified;
     _passportReview = passportReview;
     _nationalIdReview = nationalIdReview;
     _residencyReview = residencyReview;
@@ -133,6 +141,12 @@ class Payload {
     _temporaryCreditStatus = json['temporaryCreditStatus'];
     _isFrozen = json['isFrozen'];
     _agreementStatus = json['agreementStatus'];
+    _profileVerificationStatus = ProfileVerificationStatus.fromApi(
+      json['profileVerificationStatus']?.toString(),
+    );
+    _isNationalIdDetailsVerified = json['isNationalIdDetailsVerified'];
+    _isPassportDetailsVerified = json['isPassportDetailsVerified'];
+    _isResidencyDetailsVerified = json['isResidencyDetailsVerified'];
     _passportReview = KycDocumentReviewStatus.fromApi(
       json['PassportReview']?.toString() ?? json['passportReview']?.toString(),
     );
@@ -171,6 +185,10 @@ class Payload {
   bool? _temporaryCreditStatus;
   bool? _isFrozen;
   bool? _agreementStatus;
+  ProfileVerificationStatus? _profileVerificationStatus;
+  bool? _isNationalIdDetailsVerified;
+  bool? _isPassportDetailsVerified;
+  bool? _isResidencyDetailsVerified;
   KycDocumentReviewStatus? _passportReview;
   KycDocumentReviewStatus? _nationalIdReview;
   KycDocumentReviewStatus? _residencyReview;
@@ -191,6 +209,10 @@ class Payload {
     bool? temporaryCreditStatus,
     bool? isFrozen,
     bool? agreementStatus,
+    ProfileVerificationStatus? profileVerificationStatus,
+    bool? isNationalIdDetailsVerified,
+    bool? isPassportDetailsVerified,
+    bool? isResidencyDetailsVerified,
     KycDocumentReviewStatus? passportReview,
     KycDocumentReviewStatus? nationalIdReview,
     KycDocumentReviewStatus? residencyReview,
@@ -208,6 +230,14 @@ class Payload {
     temporaryCreditStatus: temporaryCreditStatus ?? _temporaryCreditStatus,
     isFrozen: isFrozen ?? _isFrozen,
     agreementStatus: agreementStatus ?? _agreementStatus,
+    profileVerificationStatus:
+        profileVerificationStatus ?? _profileVerificationStatus,
+    isNationalIdDetailsVerified:
+        isNationalIdDetailsVerified ?? _isNationalIdDetailsVerified,
+    isPassportDetailsVerified:
+        isPassportDetailsVerified ?? _isPassportDetailsVerified,
+    isResidencyDetailsVerified:
+        isResidencyDetailsVerified ?? _isResidencyDetailsVerified,
     passportReview: passportReview ?? _passportReview,
     nationalIdReview: nationalIdReview ?? _nationalIdReview,
     residencyReview: residencyReview ?? _residencyReview,
@@ -230,6 +260,11 @@ class Payload {
   bool? get temporaryCreditStatus => _temporaryCreditStatus;
   bool? get isFrozen => _isFrozen;
   bool? get agreementStatus => _agreementStatus;
+  ProfileVerificationStatus? get profileVerificationStatus =>
+      _profileVerificationStatus;
+  bool? get isNationalIdDetailsVerified => _isNationalIdDetailsVerified;
+  bool? get isPassportDetailsVerified => _isPassportDetailsVerified;
+  bool? get isResidencyDetailsVerified => _isResidencyDetailsVerified;
   KycDocumentReviewStatus? get passportReview => _passportReview;
   KycDocumentReviewStatus? get nationalIdReview => _nationalIdReview;
   KycDocumentReviewStatus? get residencyReview => _residencyReview;
@@ -250,6 +285,16 @@ class Payload {
     map['temporaryCreditStatus'] = _temporaryCreditStatus;
     map['isFrozen'] = _isFrozen;
     map['agreementStatus'] = _agreementStatus;
+    if (_profileVerificationStatus != null) {
+      map['profileVerificationStatus'] = switch (_profileVerificationStatus!) {
+        ProfileVerificationStatus.verified => 'Verified',
+        ProfileVerificationStatus.pending => 'Pending',
+        ProfileVerificationStatus.rejected => 'Rejected',
+      };
+    }
+    map['isNationalIdDetailsVerified'] = _isNationalIdDetailsVerified;
+    map['isPassportDetailsVerified'] = _isPassportDetailsVerified;
+    map['isResidencyDetailsVerified'] = _isResidencyDetailsVerified;
     if (_passportReview != null) {
       map['PassportReview'] = _passportReview!.name;
     }

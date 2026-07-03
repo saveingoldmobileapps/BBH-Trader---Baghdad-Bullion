@@ -423,15 +423,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           mainStateWatchProvider.isDemo == false &&
                           mainStateWatchProvider.loadingState ==
                               LoadingState.data &&
-                          mainStateWatchProvider
-                                  .getHomeFeedResponse
-                                  .payload!
-                                  .isUserKYCVerified !=
-                              true &&
-                          KycHomeNavigation.documentsNeedingAction(
-                            mainStateWatchProvider
+                          KycHomeNavigation.showCompleteKycWarning(
+                            payload: mainStateWatchProvider
                                 .getHomeFeedResponse.payload,
-                          ).isEmpty,
+                            isDemo: mainStateWatchProvider.isDemo,
+                            isUserKycVerified:
+                                mainStateWatchProvider.isUserKYCVerified,
+                          ),
                       child: AccountWarning(
                         kycStatus: AppLocalizations.of(
                           context,
@@ -448,6 +446,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       ),
                     ),
 
+                    Visibility(
+                      visible:
+                          mainStateWatchProvider.getHomeFeedResponse.payload !=
+                              null &&
+                          mainStateWatchProvider.isDemo == false &&
+                          mainStateWatchProvider.loadingState ==
+                              LoadingState.data &&
+                          KycHomeNavigation.showProfilePendingWarning(
+                            payload: mainStateWatchProvider
+                                .getHomeFeedResponse.payload,
+                            isDemo: mainStateWatchProvider.isDemo,
+                          ),
+                      child: AccountWarning(
+                        kycStatus: 'profile',
+                        warningMessage: AppLocalizations.of(
+                          context,
+                        )!.profile_verification_pending,
+                        actionText: AppLocalizations.of(context)!.verify_account,
+                        onTap: () {},
+                      ),
+                    ),
                     ...KycHomeNavigation.documentsNeedingAction(
                       mainStateWatchProvider.getHomeFeedResponse.payload,
                     ).map(
@@ -467,6 +486,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                     .getHomeFeedResponse.payload!,
                               ) ??
                               KycDocumentReviewStatus.pending,
+                          notVerified: KycHomeNavigation.useNotVerifiedDocumentMessage(
+                            mainStateWatchProvider.getHomeFeedResponse.payload,
+                          ),
                           onTap: () {
                             KycHomeNavigation.openDocumentUpdate(
                               context,
@@ -483,14 +505,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       visible:
                           mainStateWatchProvider.getHomeFeedResponse.payload !=
                               null &&
-                          (!mainStateWatchProvider.isBasicUserVerified ||
-                              !mainStateWatchProvider.isUserKYCVerified) &&
                           mainStateWatchProvider.isDemo == false &&
                           mainStateWatchProvider.loadingState ==
                               LoadingState.data &&
-                          !KycHomeNavigation.hasPerDocumentReviews(
-                            mainStateWatchProvider
+                          KycHomeNavigation.showLegacyDocumentsWarning(
+                            payload: mainStateWatchProvider
                                 .getHomeFeedResponse.payload,
+                            isDemo: mainStateWatchProvider.isDemo,
+                            isBasicUserVerified:
+                                mainStateWatchProvider.isBasicUserVerified,
+                            isUserKycVerified:
+                                mainStateWatchProvider.isUserKYCVerified,
                           ),
                       child: AccountWarning(
                         kycStatus: "documents",

@@ -4164,6 +4164,18 @@ abstract class AppLocalizations {
   /// **'Your {document} is pending verification. Tap to update.'**
   String kyc_document_pending(String document);
 
+  /// No description provided for @kyc_document_not_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is not verified. Tap to update and resubmit.'**
+  String kyc_document_not_verified(String document);
+
+  /// No description provided for @profile_verification_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile verification is pending. We will notify you once the review is complete.'**
+  String get profile_verification_pending;
+
   /// No description provided for @kyc_retake_document.
   ///
   /// In en, this message translates to:

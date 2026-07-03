@@ -869,6 +869,13 @@
       "document": {"type": "String"}
     }
   },
+  "kyc_document_not_verified": "Your {document} is not verified. Tap to update and resubmit.",
+  "@kyc_document_not_verified": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "profile_verification_pending": "Your profile verification is pending. We will notify you once the review is complete.",
   "kyc_retake_document": "Retake document",
   "kyc_complete_verification": "Complete KYC verification",
   "@DemoMode": {},

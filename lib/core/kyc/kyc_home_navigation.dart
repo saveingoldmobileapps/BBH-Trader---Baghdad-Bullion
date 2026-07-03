@@ -8,15 +8,77 @@ import 'package:flutter/material.dart';
 class KycHomeNavigation {
   KycHomeNavigation._();
 
+  static bool usesProfileVerificationApi(Payload? payload) =>
+      payload?.profileVerificationStatus != null;
+
+  static ProfileVerificationStatus? profileStatus(Payload? payload) =>
+      payload?.profileVerificationStatus;
+
+  static bool showProfilePendingWarning({
+    required Payload? payload,
+    required bool isDemo,
+  }) {
+    if (payload == null || isDemo) return false;
+    if (!usesProfileVerificationApi(payload)) return false;
+    return profileStatus(payload) == ProfileVerificationStatus.pending;
+  }
+
+  static bool hideProfileVerificationWarnings({
+    required Payload? payload,
+    required bool isDemo,
+  }) {
+    if (payload == null || isDemo) return false;
+    if (!usesProfileVerificationApi(payload)) return false;
+    return profileStatus(payload)?.isVerified ?? false;
+  }
+
   static bool hasPerDocumentReviews(Payload? payload) {
     if (payload == null) return false;
+    if (usesProfileVerificationApi(payload)) {
+      return profileStatus(payload) == ProfileVerificationStatus.rejected;
+    }
     return payload.nationalIdReview != null ||
         payload.passportReview != null ||
         payload.residencyReview != null;
   }
 
+  static List<KycDocumentType> unverifiedDocuments(Payload? payload) {
+    if (payload == null) return const [];
+    final out = <KycDocumentType>[];
+    if (payload.isNationalIdDetailsVerified != true) {
+      out.add(KycDocumentType.nationalId);
+    }
+    if (payload.isPassportDetailsVerified != true) {
+      out.add(KycDocumentType.passport);
+    }
+    if (payload.isResidencyDetailsVerified != true) {
+      out.add(KycDocumentType.residency);
+    }
+    return out;
+  }
+
+  /// All three document flags false — user must repeat full native onboarding.
+  static bool requiresFullKyc(Payload? payload) {
+    if (payload == null || !usesProfileVerificationApi(payload)) return false;
+    if (profileStatus(payload) != ProfileVerificationStatus.rejected) {
+      return false;
+    }
+    return payload.isNationalIdDetailsVerified != true &&
+        payload.isPassportDetailsVerified != true &&
+        payload.isResidencyDetailsVerified != true;
+  }
+
   static List<KycDocumentType> documentsNeedingAction(Payload? payload) {
     if (payload == null) return const [];
+
+    if (usesProfileVerificationApi(payload)) {
+      if (profileStatus(payload) != ProfileVerificationStatus.rejected) {
+        return const [];
+      }
+      if (requiresFullKyc(payload)) return const [];
+      return unverifiedDocuments(payload);
+    }
+
     final out = <KycDocumentType>[];
     if (payload.nationalIdReview?.needsAction == true) {
       out.add(KycDocumentType.nationalId);
@@ -35,6 +97,12 @@ class KycHomeNavigation {
     required bool isDemo,
   }) {
     if (payload == null || isDemo) return false;
+    if (hideProfileVerificationWarnings(payload: payload, isDemo: isDemo)) {
+      return false;
+    }
+    if (usesProfileVerificationApi(payload)) {
+      return false;
+    }
     if (hasPerDocumentReviews(payload)) {
       return documentsNeedingAction(payload).isNotEmpty ||
           payload.isUserKYCVerified != true;
@@ -43,10 +111,41 @@ class KycHomeNavigation {
         payload.isUserKYCVerified != true;
   }
 
+  static bool showCompleteKycWarning({
+    required Payload? payload,
+    required bool isDemo,
+    required bool isUserKycVerified,
+  }) {
+    if (payload == null || isDemo) return false;
+    if (hideProfileVerificationWarnings(payload: payload, isDemo: isDemo)) {
+      return false;
+    }
+    if (usesProfileVerificationApi(payload)) {
+      return requiresFullKyc(payload);
+    }
+    if (isUserKycVerified) return false;
+    return documentsNeedingAction(payload).isEmpty;
+  }
+
+  static bool showLegacyDocumentsWarning({
+    required Payload? payload,
+    required bool isDemo,
+    required bool isBasicUserVerified,
+    required bool isUserKycVerified,
+  }) {
+    if (payload == null || isDemo) return false;
+    if (hideProfileVerificationWarnings(payload: payload, isDemo: isDemo)) {
+      return false;
+    }
+    if (usesProfileVerificationApi(payload)) return false;
+    if (isBasicUserVerified && isUserKycVerified) return false;
+    return !hasPerDocumentReviews(payload);
+  }
+
   static void openKycFlow(BuildContext context, {Payload? payload}) {
     if (payload == null) return;
 
-    if (payload.isUserKYCVerified != true) {
+    if (requiresFullKyc(payload) || payload.isUserKYCVerified != true) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -84,10 +183,21 @@ class KycHomeNavigation {
     KycDocumentType type,
     Payload payload,
   ) {
+    if (usesProfileVerificationApi(payload) &&
+        profileStatus(payload) == ProfileVerificationStatus.rejected) {
+      return KycDocumentReviewStatus.rejected;
+    }
+
     return switch (type) {
       KycDocumentType.nationalId => payload.nationalIdReview,
       KycDocumentType.passport => payload.passportReview,
       KycDocumentType.residency => payload.residencyReview,
     };
+  }
+
+  static bool useNotVerifiedDocumentMessage(Payload? payload) {
+    if (payload == null) return false;
+    return usesProfileVerificationApi(payload) &&
+        profileStatus(payload) == ProfileVerificationStatus.rejected;
   }
 }

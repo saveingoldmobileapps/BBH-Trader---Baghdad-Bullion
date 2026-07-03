@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:baghdad_bullion_house/core/kyc/ipass_document_rejection_policy.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_status.dart';
 import 'package:baghdad_bullion_house/data/models/ipass_model/ipass_formdata_result_response.dart';
 import 'package:baghdad_bullion_house/data/models/user_models/GetUserProfileResponse.dart';
@@ -301,6 +302,19 @@ class KycDocumentUpdateController extends ChangeNotifier {
       );
       residenceFormDataBack = backResult;
 
+      final residenceAccepted = IpassDocumentRejectionPolicy.isResidenceOcrAccepted(
+        front: residenceFormDataFront,
+        back: backResult,
+      );
+      final bypassResidency =
+          IpassDocumentRejectionPolicy.bypassResidencyRejection;
+      if (!residenceAccepted && !bypassResidency) {
+        lastError =
+            'Residence document could not be verified. Please retake the scan.';
+        notifyListeners();
+        return false;
+      }
+
       final htmlFields = IpassResidenceFormdataMapper.toHtmlFields(
         front: residenceFormDataFront,
         back: backResult,
@@ -314,7 +328,9 @@ class KycDocumentUpdateController extends ChangeNotifier {
       _clearImageUrlsForScanKey('residence');
       await persist();
       _enqueueResidenceImages();
-      lastSuccess = 'Residence document captured. Review your details.';
+      lastSuccess = !residenceAccepted && bypassResidency
+          ? 'Residence captured (demo mode). Review your details.'
+          : 'Residence document captured. Review your details.';
       notifyListeners();
       return true;
     } on IpassFormDataException catch (e) {
@@ -475,7 +491,10 @@ class KycDocumentUpdateController extends ChangeNotifier {
     IpassKycResult result,
     IpassScanTarget target,
   ) async {
-    if (_isIpassDocumentRejected(result.data)) {
+    final rejected = IpassDocumentRejectionPolicy.isScanRejected(result.data);
+    final bypass = IpassDocumentRejectionPolicy.bypassRejectionFor(target);
+
+    if (rejected && !bypass) {
       lastError = _ipassRejectionMessage(result.data, target);
       notifyListeners();
       return false;
@@ -512,7 +531,9 @@ class KycDocumentUpdateController extends ChangeNotifier {
     await KycDocumentUpdateStore.instance.saveIpassScan(documentType, result);
     await persist();
 
-    lastSuccess = 'Document captured. Review your details before submitting.';
+    lastSuccess = rejected && bypass
+        ? 'Document captured (demo mode). Review your details before submitting.'
+        : 'Document captured. Review your details before submitting.';
     notifyListeners();
     return true;
   }
@@ -575,20 +596,6 @@ class KycDocumentUpdateController extends ChangeNotifier {
     final prefix = '$scanKey|';
     ipassImageUrls.removeWhere((key, _) => key.startsWith(prefix));
     BbhOnboardingImageUploadQueue.instance.clearForScanKey(scanKey);
-  }
-
-  bool _isIpassDocumentRejected(Map<String, dynamic>? data) {
-    if (data == null) return false;
-    final root = _resolveScanDataRoot(data);
-    final overall = root['OverAllStatus']?.toString().toUpperCase();
-    if (overall == 'REJECTED') return true;
-    final reasons = root['Reason'];
-    if (reasons is! List) return false;
-    for (final item in reasons) {
-      if (item is! Map) continue;
-      if (item['Status']?.toString().toUpperCase() == 'REJECTED') return true;
-    }
-    return false;
   }
 
   Map<String, dynamic> _resolveScanDataRoot(Map<String, dynamic> data) {

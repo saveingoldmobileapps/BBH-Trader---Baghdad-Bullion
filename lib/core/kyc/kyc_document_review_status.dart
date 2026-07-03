@@ -1,5 +1,28 @@
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper.dart';
 
+/// Overall profile review status from the home feed API.
+enum ProfileVerificationStatus {
+  verified,
+  pending,
+  rejected;
+
+  static ProfileVerificationStatus? fromApi(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    switch (value.trim().toLowerCase()) {
+      case 'verified':
+        return ProfileVerificationStatus.verified;
+      case 'pending':
+        return ProfileVerificationStatus.pending;
+      case 'rejected':
+        return ProfileVerificationStatus.rejected;
+      default:
+        return null;
+    }
+  }
+
+  bool get isVerified => this == ProfileVerificationStatus.verified;
+}
+
 /// Admin review status for an individual KYC document from the home feed API.
 enum KycDocumentReviewStatus {
   pending,
@@ -9,9 +32,10 @@ enum KycDocumentReviewStatus {
   static KycDocumentReviewStatus? fromApi(String? value) {
     if (value == null || value.trim().isEmpty) return null;
     switch (value.trim().toLowerCase()) {
-      case 'Pending':
+      case 'pending':
         return KycDocumentReviewStatus.pending;
-      case 'Verified':
+      case 'verified':
+      case 'approved':
         return KycDocumentReviewStatus.approved;
       case 'rejected':
         return KycDocumentReviewStatus.rejected;

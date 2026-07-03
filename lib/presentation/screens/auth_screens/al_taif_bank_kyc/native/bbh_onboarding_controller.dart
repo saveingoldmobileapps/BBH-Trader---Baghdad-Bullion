@@ -17,6 +17,7 @@ import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_html_field_mapper
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_kyc_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_residence_formdata_mapper.dart';
+import 'package:baghdad_bullion_house/core/kyc/ipass_document_rejection_policy.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -52,9 +53,7 @@ class BbhOnboardingController extends ChangeNotifier {
   /// Temporary — allow continuing without WhatsApp/mobile OTP until numbers are available.
   static const bypassMobileVerification = true;
 
-  /// When false, iPass REJECTED scans block the flow and ask the user to retake.
-  /// When true (dev/demo without real cards), rejected scans still fill form data.
-  static const bypassIpassDocumentRejection = true;
+  /// Per-document iPass rejection bypass — see [IpassDocumentRejectionPolicy].
 
   /// Stable key for signature upload in [ipassImageUrls].
   static const signatureImageKey = 'signature|consent|signatureImage';
@@ -583,22 +582,6 @@ class BbhOnboardingController extends ChangeNotifier {
     return true;
   }
 
-  bool _isIpassDocumentRejected(Map<String, dynamic>? data) {
-    if (data == null) return false;
-    final root = _resolveScanDataRoot(data);
-    final overall = root['OverAllStatus']?.toString().toUpperCase();
-    if (overall == 'REJECTED') return true;
-
-    final reasons = root['Reason'];
-    if (reasons is! List) return false;
-    for (final item in reasons) {
-      if (item is! Map) continue;
-      final status = item['Status']?.toString().toUpperCase();
-      if (status == 'REJECTED') return true;
-    }
-    return false;
-  }
-
   String _ipassRejectionMessage(
     Map<String, dynamic>? data,
     IpassScanTarget target,
@@ -747,9 +730,10 @@ class BbhOnboardingController extends ChangeNotifier {
     IpassKycResult result,
     IpassScanTarget target,
   ) async {
-    final rejected = _isIpassDocumentRejected(result.data);
+    final rejected = IpassDocumentRejectionPolicy.isScanRejected(result.data);
+    final bypass = IpassDocumentRejectionPolicy.bypassRejectionFor(target);
 
-    if (rejected && !bypassIpassDocumentRejection) {
+    if (rejected && !bypass) {
       lastError = _ipassRejectionMessage(result.data, target);
       lastWarning = null;
       lastSuccess = null;
@@ -763,7 +747,7 @@ class BbhOnboardingController extends ChangeNotifier {
 
     var docApplied = _applyIpassDocumentFields(result, target);
     var usedDemoFallback = false;
-    if (!docApplied && rejected && bypassIpassDocumentRejection) {
+    if (!docApplied && rejected && bypass) {
       docApplied = _applyDemoDocumentFields(target);
       usedDemoFallback = docApplied;
     }
@@ -783,7 +767,7 @@ class BbhOnboardingController extends ChangeNotifier {
 
       switch (target) {
         case IpassScanTarget.nationalId:
-          if (rejected && bypassIpassDocumentRejection) {
+          if (rejected && bypass) {
             lastWarning = usedDemoFallback
                 ? 'Demo mode: iPass rejected this scan. Sample national ID data was filled for testing.'
                 : 'Demo mode: iPass rejected this scan but OCR data was filled for testing.';
@@ -795,7 +779,7 @@ class BbhOnboardingController extends ChangeNotifier {
           lastSuccess =
               'Residence card captured. Details will appear on the next screen.';
         case IpassScanTarget.passport:
-          if (rejected && bypassIpassDocumentRejection) {
+          if (rejected && bypass) {
             lastWarning = usedDemoFallback
                 ? 'Demo mode: iPass rejected this scan. Sample passport data was filled for testing.'
                 : 'Demo mode: iPass rejected this scan but OCR data was filled for testing.';
@@ -913,6 +897,19 @@ class BbhOnboardingController extends ChangeNotifier {
       final frontResult = residenceFormDataFront!;
       residenceFormDataBack = backResult;
 
+      final residenceAccepted = IpassDocumentRejectionPolicy.isResidenceOcrAccepted(
+        front: frontResult,
+        back: backResult,
+      );
+      final bypassResidency =
+          IpassDocumentRejectionPolicy.bypassResidencyRejection;
+      if (!residenceAccepted && !bypassResidency) {
+        lastError =
+            'Residence document could not be verified. Please retake the scan.';
+        notifyListeners();
+        return false;
+      }
+
       final htmlFields = IpassResidenceFormdataMapper.toHtmlFields(
         front: frontResult,
         back: backResult,
@@ -959,8 +956,9 @@ class BbhOnboardingController extends ChangeNotifier {
       await persist();
       _enqueueResidenceImages();
 
-      lastSuccess =
-          'Residence document captured (front & back). Enter details on the next screen.';
+      lastSuccess = !residenceAccepted && bypassResidency
+          ? 'Residence captured (demo mode). Enter details on the next screen.'
+          : 'Residence document captured (front & back). Enter details on the next screen.';
       notifyListeners();
       return true;
     } on IpassFormDataException catch (e) {

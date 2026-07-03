@@ -877,6 +877,13 @@
       "document": {"type": "String"}
     }
   },
+  "kyc_document_not_verified": "لم يتم التحقق من {document}. اضغط للتحديث وإعادة الإرسال.",
+  "@kyc_document_not_verified": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "profile_verification_pending": "التحقق من ملفك الشخصي قيد المراجعة. سنخطرك عند اكتمال المراجعة.",
   "kyc_retake_document": "إعادة التقاط الوثيقة",
   "kyc_complete_verification": "إكمال التحقق من الهوية",
   "@DemoMode": {},

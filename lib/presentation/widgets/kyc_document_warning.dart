@@ -10,12 +10,14 @@ class KycDocumentWarning extends StatelessWidget {
     required this.documentType,
     required this.reviewStatus,
     required this.onTap,
+    this.notVerified = false,
     super.key,
   });
 
   final KycDocumentType documentType;
   final KycDocumentReviewStatus reviewStatus;
   final VoidCallback onTap;
+  final bool notVerified;
 
   String _documentLabel(AppLocalizations l10n) => switch (documentType) {
         KycDocumentType.nationalId => l10n.kyc_doc_national_id,
@@ -28,7 +30,9 @@ class KycDocumentWarning extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final isRejected = reviewStatus.isRejected;
     final borderColor = isRejected ? const Color(0xffE04c4E) : AppColors.primaryGold500;
-    final message = isRejected
+    final message = notVerified
+        ? l10n.kyc_document_not_verified(_documentLabel(l10n))
+        : isRejected
         ? l10n.kyc_document_rejected(_documentLabel(l10n))
         : l10n.kyc_document_pending(_documentLabel(l10n));
     final action = isRejected ? l10n.kyc_retake_document : l10n.verify_account;

@@ -2144,6 +2144,15 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String kyc_document_not_verified(String document) {
+    return 'لم يتم التحقق من $document. اضغط للتحديث وإعادة الإرسال.';
+  }
+
+  @override
+  String get profile_verification_pending =>
+      'التحقق من ملفك الشخصي قيد المراجعة. سنخطرك عند اكتمال المراجعة.';
+
+  @override
   String get kyc_retake_document => 'إعادة التقاط الوثيقة';
 
   @override

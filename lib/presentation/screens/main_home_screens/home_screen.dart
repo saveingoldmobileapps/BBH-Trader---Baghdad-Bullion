@@ -423,15 +423,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           mainStateWatchProvider.isDemo == false &&
                           mainStateWatchProvider.loadingState ==
                               LoadingState.data &&
-                          KycHomeNavigation.showCompleteKycWarning(
+                          KycHomeNavigation.showProfileRejectedFullKycWarning(
                             payload: mainStateWatchProvider
                                 .getHomeFeedResponse.payload,
                             isDemo: mainStateWatchProvider.isDemo,
-                            isUserKycVerified:
-                                mainStateWatchProvider.isUserKYCVerified,
                           ),
                       child: AccountWarning(
-                        kycStatus: AppLocalizations.of(
+                        kycStatus: 'profile',
+                        warningMessage: AppLocalizations.of(
+                          context,
+                        )!.profile_verification_rejected_full_kyc,
+                        actionText: AppLocalizations.of(
                           context,
                         )!.kyc_complete_verification,
                         onTap: () {
@@ -467,10 +469,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         onTap: () {},
                       ),
                     ),
-                    ...KycHomeNavigation.documentsNeedingAction(
+                    ...KycHomeNavigation.documentsForHomeWarnings(
                       mainStateWatchProvider.getHomeFeedResponse.payload,
                     ).map(
-                      (docType) => Visibility(
+                      (docType) {
+                        final payload =
+                            mainStateWatchProvider.getHomeFeedResponse.payload!;
+                        return Visibility(
                         visible:
                             mainStateWatchProvider
                                     .getHomeFeedResponse.payload !=
@@ -482,23 +487,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           documentType: docType,
                           reviewStatus: KycHomeNavigation.reviewStatusFor(
                                 docType,
-                                mainStateWatchProvider
-                                    .getHomeFeedResponse.payload!,
+                                payload,
                               ) ??
                               KycDocumentReviewStatus.pending,
                           notVerified: KycHomeNavigation.useNotVerifiedDocumentMessage(
                             mainStateWatchProvider.getHomeFeedResponse.payload,
+                            docType,
                           ),
                           onTap: () {
+                            if (!KycHomeNavigation.canNavigateToDocument(
+                              payload,
+                              docType,
+                            )) {
+                              return;
+                            }
                             KycHomeNavigation.openDocumentUpdate(
                               context,
                               docType,
-                              mainStateWatchProvider
-                                  .getHomeFeedResponse.payload!,
+                              payload,
                             );
                           },
                         ),
-                      ),
+                      );
+                      },
                     ),
 
                     Visibility(
@@ -512,32 +523,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             payload: mainStateWatchProvider
                                 .getHomeFeedResponse.payload,
                             isDemo: mainStateWatchProvider.isDemo,
-                            isBasicUserVerified:
-                                mainStateWatchProvider.isBasicUserVerified,
-                            isUserKycVerified:
-                                mainStateWatchProvider.isUserKYCVerified,
                           ),
                       child: AccountWarning(
                         kycStatus: "documents",
                         onTap: () {
-                          if (!mainStateWatchProvider.isBasicUserVerified) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => KycFirstStepScreen(),
-                              ),
-                            );
-                          }
-
-                          if (mainStateWatchProvider.isBasicUserVerified &&
-                              !mainStateWatchProvider.isUserKYCVerified) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => KycSecondStepScreen(),
-                              ),
-                            );
-                          }
+                          KycHomeNavigation.showBlockedActionPopup(
+                            context,
+                            payload: mainStateWatchProvider
+                                .getHomeFeedResponse.payload,
+                          );
                         },
                       ),
                     ),
@@ -546,8 +540,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       visible:
                           mainStateWatchProvider.getHomeFeedResponse.payload !=
                               null &&
-                          mainStateWatchProvider.isBasicUserVerified &&
-                          mainStateWatchProvider.isUserKYCVerified &&
+                          mainStateWatchProvider.isProfileVerified &&
                           !mainStateWatchProvider.agreementStatus &&
                           mainStateWatchProvider.isDemo == false &&
                           mainStateWatchProvider.loadingState ==
@@ -613,20 +606,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                               null,
                       child: HomeQuickActions(
                       onAddFunds: () async {
+                        final payload =
+                            mainStateWatchProvider.getHomeFeedResponse.payload;
                         final isEmailVerified =
-                            await LocalDatabase.instance.getIsEmailVerified() ??
-                            false;
-
-                        final isUserBasicKycVerified =
-                            await LocalDatabase.instance
-                                .getIsUserBasicKycVerified() ??
-                            false;
-                        final isUserKycVerified =
-                            await LocalDatabase.instance
-                                .getIsUserBasicKycVerified() ??
-                            false;
+                            payload?.isEmailVerified ??
+                            mainStateWatchProvider.isEmailVerified;
+                        final isProfileVerified =
+                            KycHomeNavigation.isProfileVerified(payload);
                         final isDemo =
-                            await LocalDatabase.instance.getIsDemo() ?? false;
+                            mainStateWatchProvider.isDemo ||
+                            (payload?.userType == 'Demo');
 
                         if (isDemo) {
                           if (!context.mounted) return;
@@ -673,71 +662,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           return;
                         }
 
-                        //if email verified and Residency documents not verified.
-                        if (isEmailVerified && !isUserBasicKycVerified) {
+                        if (isEmailVerified && !isProfileVerified) {
                           if (!context.mounted) return;
-                          await genericPopUpWidget(
-                            isLoadingState: false,
-                            context: context,
-                            heading: AppLocalizations.of(
-                              context,
-                            )!.residency_document_required, //"Residency Document Required",
-                            subtitle: AppLocalizations.of(
-                              context,
-                            )!.residency_verification_message, //"To continue, please complete your residency document verification. Would you like to proceed now?",
-                            noButtonTitle: AppLocalizations.of(
-                              context,
-                            )!.later, //"Later",
-                            yesButtonTitle: AppLocalizations.of(
-                              context,
-                            )!.proceed, //"Proceed",
-                            onNoPress: () async {
-                              Navigator.pop(context);
-                            },
-                            onYesPress: () async {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => KycFirstStepScreen(),
-                                ),
-                              );
-                            },
-                          );
-                          return;
-                        }
-                        //if email and residency document verified and kyc not verified
-                        if (isEmailVerified &&
-                            isUserBasicKycVerified &&
-                            !isUserKycVerified) {
-                          if (!context.mounted) return;
-                          await genericPopUpWidget(
-                            isLoadingState: false,
-                            context: context,
-                            heading: AppLocalizations.of(
-                              context,
-                            )!.kyc_verification_required, //"KYC Verification Required",
-                            subtitle: AppLocalizations.of(
-                              context,
-                            )!.residency_verification_message, //"To continue, please complete your KYC verification. Would you like to proceed now?",
-                            noButtonTitle: AppLocalizations.of(
-                              context,
-                            )!.later, //"Later",
-                            yesButtonTitle: AppLocalizations.of(
-                              context,
-                            )!.proceed, //"Proceed",
-                            onNoPress: () async {
-                              Navigator.pop(context);
-                            },
-                            onYesPress: () async {
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => KycSecondStepScreen(),
-                                ),
-                              );
-                            },
+                          await KycHomeNavigation.showBlockedActionPopup(
+                            context,
+                            payload: payload,
                           );
                           return;
                         }
@@ -752,20 +681,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                         );
                       },
                       onWithdraw: () async {
+                        final payload =
+                            mainStateWatchProvider.getHomeFeedResponse.payload;
                         final isEmailVerified =
-                            await LocalDatabase.instance.getIsEmailVerified() ??
-                            false;
-                        final isUserBasicKycVerified =
-                            await LocalDatabase.instance
-                                .getIsUserBasicKycVerified() ??
-                            false;
-                        final isUserKycVerified =
-                            await LocalDatabase.instance
-                                .getIsUserBasicKycVerified() ??
-                            false;
+                            payload?.isEmailVerified ??
+                            mainStateWatchProvider.isEmailVerified;
+                        final isProfileVerified =
+                            KycHomeNavigation.isProfileVerified(payload);
 
                         final isDemo =
-                            await LocalDatabase.instance.getIsDemo() ?? false;
+                            mainStateWatchProvider.isDemo ||
+                            (payload?.userType == 'Demo');
                         if (isDemo) {
                           if (!context.mounted) return;
                           await UpgradeAccountPopup.show(
@@ -849,72 +775,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           );
                           return;
                         }
-                        // Email verified but Residency Document not verified
-                        if (isEmailVerified && !isUserBasicKycVerified) {
+                        if (isEmailVerified && !isProfileVerified) {
                           if (!context.mounted) return;
-                          await genericPopUpWidget(
-                            isLoadingState: false,
-                            context: context,
-                            heading: AppLocalizations.of(
-                              context,
-                            )!.residency_document_required, //"Residency Document Required",
-                            subtitle: AppLocalizations.of(
-                              context,
-                            )!.residency_verification_message, //"You must complete Residency Document verification first. Proceed now?",
-                            noButtonTitle: AppLocalizations.of(
-                              context,
-                            )!.later, //"Later",
-                            yesButtonTitle: AppLocalizations.of(
-                              context,
-                            )!.proceed, //"Proceed",
-                            onNoPress: () async {
-                              Navigator.pop(context);
-                            },
-                            onYesPress: () async {
-                              Navigator.pop(context);
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => KycFirstStepScreen(),
-                                ),
-                              );
-                            },
-                          );
-                          return;
-                        }
-
-                        // Email and Residency verified but KYC not verified
-                        if (isEmailVerified &&
-                            isUserBasicKycVerified &&
-                            !isUserKycVerified) {
-                          if (!context.mounted) return;
-                          await genericPopUpWidget(
-                            isLoadingState: false,
-                            context: context,
-                            heading: AppLocalizations.of(
-                              context,
-                            )!.kyc_verification_required, //"KYC Verification Required",
-                            subtitle: AppLocalizations.of(
-                              context,
-                            )!.kyc_verification_message, //"You must complete KYC verification to continue. Proceed now?",
-                            noButtonTitle: AppLocalizations.of(
-                              context,
-                            )!.later, //"Later",
-                            yesButtonTitle: AppLocalizations.of(
-                              context,
-                            )!.proceed, //"Proceed",
-                            onNoPress: () async {
-                              Navigator.pop(context);
-                            },
-                            onYesPress: () async {
-                              Navigator.pop(context);
-                              await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => KycSecondStepScreen(),
-                                ),
-                              );
-                            },
+                          await KycHomeNavigation.showBlockedActionPopup(
+                            context,
+                            payload: payload,
                           );
                           return;
                         }

@@ -1,11 +1,12 @@
 import 'dart:io';
 
+import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/widget_export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:baghdad_bullion_house/core/core_export.dart';
-import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
-import 'package:baghdad_bullion_house/presentation/widgets/widget_export.dart';
 
 import '../../../data/data_sources/local_database/local_database.dart';
 import '../../sharedProviders/providers/home_provider.dart';
@@ -191,6 +192,18 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
                         title: l10n.trade_gold,
                         onTap: () {
                           if (!canOpenTradeBuy) return;
+                          final payload = mainStateWatchProvider
+                              .getHomeFeedResponse
+                              .payload;
+                          if (KycHomeNavigation.blocksVerifiedActions(
+                            payload,
+                          )) {
+                            KycHomeNavigation.showBlockedActionPopup(
+                              context,
+                              payload: payload,
+                            );
+                            return;
+                          }
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -236,7 +249,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
                   );
                 },
                 loading: () => const SizedBox.shrink(),
-                error: (_, __) => const SizedBox.shrink(),
+                error: (_, _) => const SizedBox.shrink(),
               ),
             ],
           ),
@@ -346,7 +359,7 @@ class _TradeScreenState extends ConsumerState<TradeScreen> {
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.primaryGold500),
         ),
-        error: (_, __) => Center(
+        error: (_, _) => Center(
           child: Text(
             l10n.error_loading_prices,
             style: const TextStyle(color: Colors.red),

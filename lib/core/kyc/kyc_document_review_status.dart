@@ -3,6 +3,7 @@ import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper
 /// Overall profile review status from the home feed API.
 enum ProfileVerificationStatus {
   verified,
+  approved,
   pending,
   rejected;
 
@@ -11,6 +12,9 @@ enum ProfileVerificationStatus {
     switch (value.trim().toLowerCase()) {
       case 'verified':
         return ProfileVerificationStatus.verified;
+      case 'approved':
+      case 'accepted':
+        return ProfileVerificationStatus.approved;
       case 'pending':
         return ProfileVerificationStatus.pending;
       case 'rejected':
@@ -20,7 +24,51 @@ enum ProfileVerificationStatus {
     }
   }
 
-  bool get isVerified => this == ProfileVerificationStatus.verified;
+  bool get isApprovedOrVerified =>
+      this == ProfileVerificationStatus.verified ||
+      this == ProfileVerificationStatus.approved;
+
+  bool get isVerified => isApprovedOrVerified;
+
+  /// Parses a home-feed verification status field (camelCase or PascalCase key).
+  static ProfileVerificationStatus? fromJsonField(
+    dynamic json,
+    String camelKey,
+    String pascalKey,
+  ) {
+    final raw = json[camelKey] ?? json[pascalKey];
+    if (raw == null) return null;
+    return fromApi(raw.toString()) ?? ProfileVerificationStatus.pending;
+  }
+
+  /// Parses API values that may be a bool (legacy) or status string.
+  static ProfileVerificationStatus? parseFlexible(dynamic raw) {
+    if (raw == null) return null;
+    if (raw is bool) {
+      return raw
+          ? ProfileVerificationStatus.verified
+          : ProfileVerificationStatus.rejected;
+    }
+    return fromApi(raw.toString());
+  }
+
+  /// Resolves a document status from `*VerificationStatus` or `is*DetailsVerified`.
+  static ProfileVerificationStatus? resolveDocumentStatus(
+    dynamic json, {
+    required String verificationCamel,
+    required String verificationPascal,
+    required String detailsCamel,
+  }) {
+    return fromJsonField(json, verificationCamel, verificationPascal) ??
+        parseFlexible(json[detailsCamel]);
+  }
+
+  String get apiLabel => switch (this) {
+        ProfileVerificationStatus.verified => 'Verified',
+        ProfileVerificationStatus.approved => 'Approved',
+        ProfileVerificationStatus.pending => 'Pending',
+        ProfileVerificationStatus.rejected => 'Rejected',
+      };
 }
 
 /// Admin review status for an individual KYC document from the home feed API.
@@ -36,6 +84,7 @@ enum KycDocumentReviewStatus {
         return KycDocumentReviewStatus.pending;
       case 'verified':
       case 'approved':
+      case 'accepted':
         return KycDocumentReviewStatus.approved;
       case 'rejected':
         return KycDocumentReviewStatus.rejected;

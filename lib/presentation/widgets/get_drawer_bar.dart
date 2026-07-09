@@ -5,9 +5,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
+import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
+import 'package:baghdad_bullion_house/data/models/home_models/GetHomeFeedResponse.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
-import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/kyc_first_step_screen.dart';
-import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/kyc_second_step_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/email_verify_code_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/esouq_screens/esouq_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/gift_fund_screens/gift_fund_screen.dart';
@@ -302,8 +302,8 @@ class _GetDrawerBarState extends ConsumerState<GetDrawerBar> {
     }
 
     final isEmailVerified = await db.getIsEmailVerified() ?? false;
-    final isBasicKyc = await db.getIsUserBasicKycVerified() ?? false;
-    final isFullKyc = await db.getIsUserBasicKycVerified() ?? false;
+    final payload = mainProvider.getHomeFeedResponse.payload;
+    final isProfileVerified = KycHomeNavigation.isProfileVerified(payload);
     final tempCredit = await db.getIsUsertemporaryCreditStatus() ?? false;
 
     if (!context.mounted) return;
@@ -330,59 +330,61 @@ class _GetDrawerBarState extends ConsumerState<GetDrawerBar> {
     }
 
     if (!isEmailVerified) {
-      _showKycPopup(context, "email", mainProvider.userEmail);
+      _showKycPopup(
+        context,
+        "email",
+        payload,
+        email: mainProvider.userEmail,
+      );
       return;
     }
-    if (!isBasicKyc) {
-      _showKycPopup(context, "residency", "");
-      return;
-    }
-    if (!isFullKyc) {
-      _showKycPopup(context, "kyc", "");
+    if (!isProfileVerified) {
+      _showKycPopup(context, "kyc", payload);
       return;
     }
 
-    if (mainProvider.getHomeFeedResponse.payload != null) {
+    if (payload != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (_) => GiftFundScreen(
-            walletExists:
-                mainProvider.getHomeFeedResponse.payload!.walletExists!,
+            walletExists: payload!.walletExists!,
           ),
         ),
       );
     }
   }
 
-  void _showKycPopup(BuildContext context, String type, String email) {
+  void _showKycPopup(
+    BuildContext context,
+    String type,
+    Payload? payload, {
+    String email = '',
+  }) {
     final l10n = AppLocalizations.of(context)!;
-    genericPopUpWidget(
-      isLoadingState: false,
-      context: context,
-      heading: type == "email"
-          ? l10n.email_verification_required
-          : (type == "residency"
-                ? l10n.residency_document_required
-                : l10n.kyc_verification_required),
-      subtitle: type == "email"
-          ? l10n.email_verification_message
-          : (type == "residency"
-                ? l10n.residency_verification_message
-                : l10n.kyc_verification_message),
-      noButtonTitle: l10n.later,
-      yesButtonTitle: l10n.proceed,
-      onNoPress: () => Navigator.pop(context),
-      onYesPress: () async {
-        Navigator.pop(context);
-        Widget screen = type == "email"
-            ? EmailVerifyCodeScreen(email: email)
-            : (type == "residency"
-                  ? KycFirstStepScreen()
-                  : KycSecondStepScreen());
-        Navigator.push(context, MaterialPageRoute(builder: (_) => screen));
-      },
-    );
+    if (type == "email") {
+      genericPopUpWidget(
+        isLoadingState: false,
+        context: context,
+        heading: l10n.email_verification_required,
+        subtitle: l10n.email_verification_message,
+        noButtonTitle: l10n.later,
+        yesButtonTitle: l10n.proceed,
+        onNoPress: () => Navigator.pop(context),
+        onYesPress: () async {
+          Navigator.pop(context);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => EmailVerifyCodeScreen(email: email),
+            ),
+          );
+        },
+      );
+      return;
+    }
+
+    KycHomeNavigation.showBlockedActionPopup(context, payload: payload);
   }
 
   Future<void> _handleLogout(

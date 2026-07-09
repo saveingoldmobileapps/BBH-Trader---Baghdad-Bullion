@@ -884,6 +884,7 @@
     }
   },
   "profile_verification_pending": "التحقق من ملفك الشخصي قيد المراجعة. سنخطرك عند اكتمال المراجعة.",
+  "profile_verification_rejected_full_kyc": "تم رفض التحقق من ملفك الشخصي. يرجى إكمال التحقق من الهوية بالكامل مرة أخرى.",
   "kyc_retake_document": "إعادة التقاط الوثيقة",
   "kyc_complete_verification": "إكمال التحقق من الهوية",
   "@DemoMode": {},

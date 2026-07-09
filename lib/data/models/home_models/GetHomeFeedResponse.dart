@@ -94,9 +94,9 @@ class Payload {
     bool? isFrozen,
     bool? agreementStatus,
     ProfileVerificationStatus? profileVerificationStatus,
-    bool? isNationalIdDetailsVerified,
-    bool? isPassportDetailsVerified,
-    bool? isResidencyDetailsVerified,
+    ProfileVerificationStatus? nationalIdVerificationStatus,
+    ProfileVerificationStatus? passportVerificationStatus,
+    ProfileVerificationStatus? residencyVerificationStatus,
     KycDocumentReviewStatus? passportReview,
     KycDocumentReviewStatus? nationalIdReview,
     KycDocumentReviewStatus? residencyReview,
@@ -117,9 +117,9 @@ class Payload {
     _isFrozen = isFrozen;
     _agreementStatus = agreementStatus;
     _profileVerificationStatus = profileVerificationStatus;
-    _isNationalIdDetailsVerified = isNationalIdDetailsVerified;
-    _isPassportDetailsVerified = isPassportDetailsVerified;
-    _isResidencyDetailsVerified = isResidencyDetailsVerified;
+    _nationalIdVerificationStatus = nationalIdVerificationStatus;
+    _passportVerificationStatus = passportVerificationStatus;
+    _residencyVerificationStatus = residencyVerificationStatus;
     _passportReview = passportReview;
     _nationalIdReview = nationalIdReview;
     _residencyReview = residencyReview;
@@ -141,12 +141,29 @@ class Payload {
     _temporaryCreditStatus = json['temporaryCreditStatus'];
     _isFrozen = json['isFrozen'];
     _agreementStatus = json['agreementStatus'];
-    _profileVerificationStatus = ProfileVerificationStatus.fromApi(
-      json['profileVerificationStatus']?.toString(),
+    _profileVerificationStatus = ProfileVerificationStatus.fromJsonField(
+      json,
+      'profileVerificationStatus',
+      'ProfileVerificationStatus',
     );
-    _isNationalIdDetailsVerified = json['isNationalIdDetailsVerified'];
-    _isPassportDetailsVerified = json['isPassportDetailsVerified'];
-    _isResidencyDetailsVerified = json['isResidencyDetailsVerified'];
+    _nationalIdVerificationStatus = ProfileVerificationStatus.resolveDocumentStatus(
+      json,
+      verificationCamel: 'nationalIdVerificationStatus',
+      verificationPascal: 'NationalIdVerificationStatus',
+      detailsCamel: 'isNationalIdDetailsVerified',
+    );
+    _passportVerificationStatus = ProfileVerificationStatus.resolveDocumentStatus(
+      json,
+      verificationCamel: 'passportVerificationStatus',
+      verificationPascal: 'PassportVerificationStatus',
+      detailsCamel: 'isPassportDetailsVerified',
+    );
+    _residencyVerificationStatus = ProfileVerificationStatus.resolveDocumentStatus(
+      json,
+      verificationCamel: 'residencyVerificationStatus',
+      verificationPascal: 'ResidencyVerificationStatus',
+      detailsCamel: 'isResidencyDetailsVerified',
+    );
     _passportReview = KycDocumentReviewStatus.fromApi(
       json['PassportReview']?.toString() ?? json['passportReview']?.toString(),
     );
@@ -186,9 +203,9 @@ class Payload {
   bool? _isFrozen;
   bool? _agreementStatus;
   ProfileVerificationStatus? _profileVerificationStatus;
-  bool? _isNationalIdDetailsVerified;
-  bool? _isPassportDetailsVerified;
-  bool? _isResidencyDetailsVerified;
+  ProfileVerificationStatus? _nationalIdVerificationStatus;
+  ProfileVerificationStatus? _passportVerificationStatus;
+  ProfileVerificationStatus? _residencyVerificationStatus;
   KycDocumentReviewStatus? _passportReview;
   KycDocumentReviewStatus? _nationalIdReview;
   KycDocumentReviewStatus? _residencyReview;
@@ -210,9 +227,9 @@ class Payload {
     bool? isFrozen,
     bool? agreementStatus,
     ProfileVerificationStatus? profileVerificationStatus,
-    bool? isNationalIdDetailsVerified,
-    bool? isPassportDetailsVerified,
-    bool? isResidencyDetailsVerified,
+    ProfileVerificationStatus? nationalIdVerificationStatus,
+    ProfileVerificationStatus? passportVerificationStatus,
+    ProfileVerificationStatus? residencyVerificationStatus,
     KycDocumentReviewStatus? passportReview,
     KycDocumentReviewStatus? nationalIdReview,
     KycDocumentReviewStatus? residencyReview,
@@ -232,12 +249,12 @@ class Payload {
     agreementStatus: agreementStatus ?? _agreementStatus,
     profileVerificationStatus:
         profileVerificationStatus ?? _profileVerificationStatus,
-    isNationalIdDetailsVerified:
-        isNationalIdDetailsVerified ?? _isNationalIdDetailsVerified,
-    isPassportDetailsVerified:
-        isPassportDetailsVerified ?? _isPassportDetailsVerified,
-    isResidencyDetailsVerified:
-        isResidencyDetailsVerified ?? _isResidencyDetailsVerified,
+    nationalIdVerificationStatus:
+        nationalIdVerificationStatus ?? _nationalIdVerificationStatus,
+    passportVerificationStatus:
+        passportVerificationStatus ?? _passportVerificationStatus,
+    residencyVerificationStatus:
+        residencyVerificationStatus ?? _residencyVerificationStatus,
     passportReview: passportReview ?? _passportReview,
     nationalIdReview: nationalIdReview ?? _nationalIdReview,
     residencyReview: residencyReview ?? _residencyReview,
@@ -262,9 +279,21 @@ class Payload {
   bool? get agreementStatus => _agreementStatus;
   ProfileVerificationStatus? get profileVerificationStatus =>
       _profileVerificationStatus;
-  bool? get isNationalIdDetailsVerified => _isNationalIdDetailsVerified;
-  bool? get isPassportDetailsVerified => _isPassportDetailsVerified;
-  bool? get isResidencyDetailsVerified => _isResidencyDetailsVerified;
+  ProfileVerificationStatus? get nationalIdVerificationStatus =>
+      _nationalIdVerificationStatus;
+  ProfileVerificationStatus? get passportVerificationStatus =>
+      _passportVerificationStatus;
+  ProfileVerificationStatus? get residencyVerificationStatus =>
+      _residencyVerificationStatus;
+
+  /// Legacy bool view — true when document status is verified/approved.
+  bool? get isNationalIdDetailsVerified =>
+      _nationalIdVerificationStatus?.isApprovedOrVerified;
+  bool? get isPassportDetailsVerified =>
+      _passportVerificationStatus?.isApprovedOrVerified;
+  bool? get isResidencyDetailsVerified =>
+      _residencyVerificationStatus?.isApprovedOrVerified;
+
   KycDocumentReviewStatus? get passportReview => _passportReview;
   KycDocumentReviewStatus? get nationalIdReview => _nationalIdReview;
   KycDocumentReviewStatus? get residencyReview => _residencyReview;
@@ -286,15 +315,33 @@ class Payload {
     map['isFrozen'] = _isFrozen;
     map['agreementStatus'] = _agreementStatus;
     if (_profileVerificationStatus != null) {
-      map['profileVerificationStatus'] = switch (_profileVerificationStatus!) {
-        ProfileVerificationStatus.verified => 'Verified',
-        ProfileVerificationStatus.pending => 'Pending',
-        ProfileVerificationStatus.rejected => 'Rejected',
-      };
+      map['profileVerificationStatus'] =
+          _profileVerificationStatus!.apiLabel;
     }
-    map['isNationalIdDetailsVerified'] = _isNationalIdDetailsVerified;
-    map['isPassportDetailsVerified'] = _isPassportDetailsVerified;
-    map['isResidencyDetailsVerified'] = _isResidencyDetailsVerified;
+    if (_nationalIdVerificationStatus != null) {
+      map['nationalIdVerificationStatus'] =
+          _nationalIdVerificationStatus!.apiLabel;
+    }
+    if (_passportVerificationStatus != null) {
+      map['passportVerificationStatus'] =
+          _passportVerificationStatus!.apiLabel;
+    }
+    if (_residencyVerificationStatus != null) {
+      map['residencyVerificationStatus'] =
+          _residencyVerificationStatus!.apiLabel;
+    }
+    if (_nationalIdVerificationStatus != null) {
+      map['isNationalIdDetailsVerified'] =
+          _nationalIdVerificationStatus!.apiLabel;
+    }
+    if (_passportVerificationStatus != null) {
+      map['isPassportDetailsVerified'] =
+          _passportVerificationStatus!.apiLabel;
+    }
+    if (_residencyVerificationStatus != null) {
+      map['isResidencyDetailsVerified'] =
+          _residencyVerificationStatus!.apiLabel;
+    }
     if (_passportReview != null) {
       map['PassportReview'] = _passportReview!.name;
     }

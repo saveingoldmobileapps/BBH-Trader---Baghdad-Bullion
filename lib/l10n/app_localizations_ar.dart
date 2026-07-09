@@ -2153,6 +2153,10 @@ class AppLocalizationsAr extends AppLocalizations {
       'التحقق من ملفك الشخصي قيد المراجعة. سنخطرك عند اكتمال المراجعة.';
 
   @override
+  String get profile_verification_rejected_full_kyc =>
+      'تم رفض التحقق من ملفك الشخصي. يرجى إكمال التحقق من الهوية بالكامل مرة أخرى.';
+
+  @override
   String get kyc_retake_document => 'إعادة التقاط الوثيقة';
 
   @override

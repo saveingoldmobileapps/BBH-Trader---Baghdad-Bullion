@@ -18,8 +18,7 @@ class HomeState {
 
   final bool isPhoneVerified;
   final bool isEmailVerified;
-  final bool isUserKYCVerified;
-  final bool isBasicUserVerified;
+  final bool isProfileVerified;
   final bool agreementStatus;
   final bool isDemo;
 
@@ -48,8 +47,7 @@ class HomeState {
     this.isImageState = false,
     this.isPhoneVerified = false,
     this.isEmailVerified = false,
-    this.isUserKYCVerified = false,
-    this.isBasicUserVerified = false,
+    this.isProfileVerified = false,
     this.agreementStatus = true,
     this.isDemo = false,
     this.userEmail = '',
@@ -85,8 +83,7 @@ class HomeState {
     bool? isDemo,
     bool? isPhoneVerified,
     bool? isEmailVerified,
-    bool? isUserKYCVerified,
-    bool? isBasicUserVerified,
+    bool? isProfileVerified,
     bool? agreementStatus,
     String? userEmail,
     String? phoneNumber,
@@ -111,8 +108,7 @@ class HomeState {
       isImageState: isImageState ?? this.isImageState,
       isPhoneVerified: isPhoneVerified ?? this.isPhoneVerified,
       isEmailVerified: isEmailVerified ?? this.isEmailVerified,
-      isUserKYCVerified: isUserKYCVerified ?? this.isUserKYCVerified,
-      isBasicUserVerified: isBasicUserVerified ?? this.isBasicUserVerified,
+      isProfileVerified: isProfileVerified ?? this.isProfileVerified,
       agreementStatus: agreementStatus ?? this.agreementStatus,
       userEmail: userEmail ?? this.userEmail,
       phoneNumber: phoneNumber ?? this.phoneNumber,

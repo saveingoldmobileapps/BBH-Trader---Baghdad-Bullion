@@ -7,8 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/core/decimal_text_input_formatter.dart';
-import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/kyc_first_step_screen.dart';
-import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/kyc_second_step_screen.dart';
+import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/email_verify_code_screen.dart';
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/trade_provider/trade_provider.dart';
@@ -281,57 +280,13 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                   return;
                 }
 
-                ///If email verified and residency not verified.
-                if (mainStateWatchProvider.isEmailVerified &&
-                    !mainStateWatchProvider.isBasicUserVerified) {
-                  await genericPopUpWidget(
-                    isLoadingState: false,
-                    context: context,
-                    heading: "Residency Verification Required",
-                    subtitle:
-                        "To continue, please complete your residency document verification. Would you like to proceed now?",
-                    noButtonTitle: "Not Now",
-                    yesButtonTitle: "Verify Now",
-                    onNoPress: () async {
-                      Navigator.pop(context);
-                    },
-                    onYesPress: () async {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => KycFirstStepScreen(),
-                        ),
-                      );
-                    },
-                  );
-                  return;
-                }
-
-                ///if email and residency document verified and kyc not verified
-                if (mainStateWatchProvider.isEmailVerified &&
-                    mainStateWatchProvider.isBasicUserVerified &&
-                    !mainStateWatchProvider.isUserKYCVerified) {
-                  await genericPopUpWidget(
-                    isLoadingState: false,
-                    context: context,
-                    heading: "KYC Verification Required",
-                    subtitle:
-                        "To continue, please complete your KYC verification. Would you like to proceed now?",
-                    noButtonTitle: "Later",
-                    yesButtonTitle: "Proceed",
-                    onNoPress: () async {
-                      Navigator.pop(context);
-                    },
-                    onYesPress: () async {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => KycSecondStepScreen(),
-                        ),
-                      );
-                    },
+                /// Profile verification check (always use live home-feed payload)
+                final payload =
+                    mainStateWatchProvider.getHomeFeedResponse.payload;
+                if (KycHomeNavigation.blocksVerifiedActions(payload)) {
+                  await KycHomeNavigation.showBlockedActionPopup(
+                    context,
+                    payload: payload,
                   );
                   return;
                 }

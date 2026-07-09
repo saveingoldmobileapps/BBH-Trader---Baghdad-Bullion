@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_test_overrides.dart';
+import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
 import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart';
 import 'package:baghdad_bullion_house/data/models/AppUpdateResponseModel.dart';
 import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
@@ -114,39 +115,35 @@ class Home extends _$Home {
             );
 
             // update state
+            final payload = getHomeFeedResponse.payload;
+            final isProfileVerified = KycHomeNavigation.isProfileVerified(payload);
+
             state = state.copyWith(
               getHomeFeedResponse: getHomeFeedResponse,
-              isEmailVerified: getHomeFeedResponse.payload?.isEmailVerified,
-              isPhoneVerified: getHomeFeedResponse.payload?.isPhoneVerified,
-              isUserKYCVerified: getHomeFeedResponse.payload?.isUserKYCVerified,
-              isDemo: getHomeFeedResponse.payload?.userType == "Demo"
+              isEmailVerified: payload?.isEmailVerified,
+              isPhoneVerified: payload?.isPhoneVerified,
+              isProfileVerified: isProfileVerified,
+              isDemo: payload?.userType == "Demo"
                   ? true
                   : false,
-              isBasicUserVerified:
-                  getHomeFeedResponse.payload?.isBasicUserVerified,
               agreementStatus:
-                  getHomeFeedResponse.payload?.agreementStatus ?? true,
+                  payload?.agreementStatus ?? true,
             );
 
             LocalDatabase.instance.setIsEmailVerified(
-              isVerified: getHomeFeedResponse.payload?.isEmailVerified ?? false,
+              isVerified: payload?.isEmailVerified ?? false,
             );
             LocalDatabase.instance.setIsDemo(
-              isDemo: getHomeFeedResponse.payload?.userType == "Demo"
+              isDemo: payload?.userType == "Demo"
                   ? true
                   : false,
             );
-            LocalDatabase.instance.setIsUserBasicKycVerified(
-              isVerified:
-                  getHomeFeedResponse.payload?.isBasicUserVerified ?? false,
+            LocalDatabase.instance.setIsProfileVerified(
+              isVerified: isProfileVerified,
             );
             LocalDatabase.instance.setIsUsertemporaryCreditStatus(
               temporaryCreditStatusIsVerified:
-                  getHomeFeedResponse.payload?.temporaryCreditStatus ?? false,
-            );
-            LocalDatabase.instance.setIsUserKycVerified(
-              isVerified:
-                  getHomeFeedResponse.payload?.isUserKYCVerified ?? false,
+                  payload?.temporaryCreditStatus ?? false,
             );
 
             if (showLoading) {
@@ -405,8 +402,6 @@ class Home extends _$Home {
                   getUserProfileResponse.payload?.userProfile?.isEmailVerified,
               isPhoneVerified:
                   getUserProfileResponse.payload?.userProfile?.isPhoneVerified,
-              isUserKYCVerified: getUserProfileResponse
-                  .payload?.userProfile?.isUserKYCVerified,
               isDemo: getUserProfileResponse.payload?.userProfile?.userType ==
                       "Demo"
                   ? true

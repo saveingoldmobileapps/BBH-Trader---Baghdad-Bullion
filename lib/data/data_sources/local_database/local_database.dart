@@ -300,6 +300,30 @@ class LocalDatabase {
     }
   }
 
+  Future<void> setIsProfileVerified({
+    required bool isVerified,
+  }) async {
+    try {
+      await getStorageInstance
+          .write(Strings.isProfileVerified, isVerified)
+          .then(
+            (value) => _logger.i("isProfileVerified: $isVerified"),
+          );
+    } catch (e) {
+      getLocator<Logger>().e("errorToken: $e");
+    }
+  }
+
+  Future<bool?> getIsProfileVerified() async {
+    try {
+      final result = await getStorageInstance.read(Strings.isProfileVerified);
+      return result;
+    } catch (e) {
+      getLocator<Logger>().e("errorToken: $e");
+      return null;
+    }
+  }
+
   Future<bool?> getAutoLogin() async {
     try {
       final result = await getStorageInstance.read(Strings.autoLogin);

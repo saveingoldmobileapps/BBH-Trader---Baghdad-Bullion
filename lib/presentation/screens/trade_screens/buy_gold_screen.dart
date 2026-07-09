@@ -7,9 +7,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/core/decimal_text_input_formatter.dart';
+import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
 import 'package:baghdad_bullion_house/data/data_sources/local_database/local_database.dart';
-import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/kyc_first_step_screen.dart';
-import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/kyc_second_step_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/email_verify_code_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/fund_screens/add_fund_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/setting_screens/setting_screen.dart';
@@ -669,56 +668,17 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
     final isDemo = await LocalDatabase.instance.getIsDemo() ?? false;
     if (!context.mounted) return;
 
-    // 2. Residency Verification Check
-    if (!isDemo &&
-        mainStateWatchProvider.isEmailVerified &&
-        !mainStateWatchProvider.isBasicUserVerified) {
-      await genericPopUpWidget(
-        isLoadingState: false,
-        context: context,
-        heading: AppLocalizations.of(context)!.residency_verification_required,
-        subtitle: AppLocalizations.of(context)!.residency_verification_message,
-        noButtonTitle: AppLocalizations.of(context)!.not_now,
-        yesButtonTitle: AppLocalizations.of(context)!.verify_now,
-        onNoPress: () => Navigator.pop(context),
-        onYesPress: () async {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const KycFirstStepScreen()),
-          );
-        },
+    // 2. Profile verification check (always use live home-feed payload)
+    final payload = mainStateWatchProvider.getHomeFeedResponse.payload;
+    if (!isDemo && KycHomeNavigation.blocksVerifiedActions(payload)) {
+      await KycHomeNavigation.showBlockedActionPopup(
+        context,
+        payload: payload,
       );
       return;
     }
 
-    // 3. KYC Verification Check
-    if (!isDemo &&
-        mainStateWatchProvider.isEmailVerified &&
-        mainStateWatchProvider.isBasicUserVerified &&
-        !mainStateWatchProvider.isUserKYCVerified) {
-      await genericPopUpWidget(
-        isLoadingState: false,
-        context: context,
-        heading: AppLocalizations.of(context)!.kyc_verification_required,
-        subtitle: AppLocalizations.of(context)!.kyc_verification_message,
-        noButtonTitle: AppLocalizations.of(context)!.later,
-        yesButtonTitle: AppLocalizations.of(context)!.proceed,
-        onNoPress: () => Navigator.pop(context),
-        onYesPress: () async {
-          Navigator.pop(context);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const KycSecondStepScreen(),
-            ),
-          );
-        },
-      );
-      return;
-    }
-
-    // 4. Balance Checks
+    // 3. Balance Checks
     final walletBalance =
         double.tryParse(
           mainStateWatchProvider

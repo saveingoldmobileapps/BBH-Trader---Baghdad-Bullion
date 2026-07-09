@@ -2173,6 +2173,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your profile verification is pending. We will notify you once the review is complete.';
 
   @override
+  String get profile_verification_rejected_full_kyc =>
+      'Your profile verification was rejected. Please complete full KYC verification again.';
+
+  @override
   String get kyc_retake_document => 'Retake document';
 
   @override

@@ -4,8 +4,10 @@ import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper
 enum ProfileVerificationStatus {
   verified,
   approved,
+  reviewing,
   pending,
-  rejected;
+  rejected
+  ;
 
   static ProfileVerificationStatus? fromApi(String? value) {
     if (value == null || value.trim().isEmpty) return null;
@@ -15,6 +17,8 @@ enum ProfileVerificationStatus {
       case 'approved':
       case 'accepted':
         return ProfileVerificationStatus.approved;
+      case 'reviewing':
+        return ProfileVerificationStatus.reviewing;
       case 'pending':
         return ProfileVerificationStatus.pending;
       case 'rejected':
@@ -29,6 +33,13 @@ enum ProfileVerificationStatus {
       this == ProfileVerificationStatus.approved;
 
   bool get isVerified => isApprovedOrVerified;
+
+  bool get isReviewing => this == ProfileVerificationStatus.reviewing;
+
+  bool get isAwaitingVerification =>
+      this == ProfileVerificationStatus.reviewing ||
+      this == ProfileVerificationStatus.pending ||
+      this == ProfileVerificationStatus.rejected;
 
   /// Parses a home-feed verification status field (camelCase or PascalCase key).
   static ProfileVerificationStatus? fromJsonField(
@@ -52,35 +63,46 @@ enum ProfileVerificationStatus {
     return fromApi(raw.toString());
   }
 
-  /// Resolves a document status from `*VerificationStatus` or `is*DetailsVerified`.
+  /// Resolves a document status from `is*DetailsVerified` or `*VerificationStatus`.
+  ///
+  /// The home API may send both; `is*DetailsVerified` is preferred because it is
+  /// the field updated during profile review.
   static ProfileVerificationStatus? resolveDocumentStatus(
     dynamic json, {
     required String verificationCamel,
     required String verificationPascal,
     required String detailsCamel,
+    required String detailsPascal,
   }) {
-    return fromJsonField(json, verificationCamel, verificationPascal) ??
-        parseFlexible(json[detailsCamel]);
+    final fromDetails = parseFlexible(
+      json[detailsCamel] ?? json[detailsPascal],
+    );
+    if (fromDetails != null) return fromDetails;
+    return fromJsonField(json, verificationCamel, verificationPascal);
   }
 
   String get apiLabel => switch (this) {
-        ProfileVerificationStatus.verified => 'Verified',
-        ProfileVerificationStatus.approved => 'Approved',
-        ProfileVerificationStatus.pending => 'Pending',
-        ProfileVerificationStatus.rejected => 'Rejected',
-      };
+    ProfileVerificationStatus.verified => 'Verified',
+    ProfileVerificationStatus.approved => 'Approved',
+    ProfileVerificationStatus.reviewing => 'Reviewing',
+    ProfileVerificationStatus.pending => 'Pending',
+    ProfileVerificationStatus.rejected => 'Rejected',
+  };
 }
 
 /// Admin review status for an individual KYC document from the home feed API.
 enum KycDocumentReviewStatus {
   pending,
   approved,
-  rejected;
+  rejected
+  ;
 
   static KycDocumentReviewStatus? fromApi(String? value) {
     if (value == null || value.trim().isEmpty) return null;
     switch (value.trim().toLowerCase()) {
       case 'pending':
+        return KycDocumentReviewStatus.pending;
+      case 'reviewing':
         return KycDocumentReviewStatus.pending;
       case 'verified':
       case 'approved':
@@ -102,17 +124,21 @@ enum KycDocumentReviewStatus {
 enum KycDocumentType {
   nationalId,
   passport,
-  residency;
+  residency
+  ;
 
   IpassScanTarget get scanTarget => switch (this) {
-        KycDocumentType.nationalId => IpassScanTarget.nationalId,
-        KycDocumentType.passport => IpassScanTarget.passport,
-        KycDocumentType.residency => IpassScanTarget.residence,
-      };
+    KycDocumentType.nationalId => IpassScanTarget.nationalId,
+    KycDocumentType.passport => IpassScanTarget.passport,
+    KycDocumentType.residency => IpassScanTarget.residence,
+  };
 
   String get apiKey => switch (this) {
-        KycDocumentType.nationalId => 'national_id',
-        KycDocumentType.passport => 'passport',
-        KycDocumentType.residency => 'residence',
-      };
+    KycDocumentType.nationalId => 'national_id',
+    KycDocumentType.passport => 'passport',
+    KycDocumentType.residency => 'residence',
+  };
 }
+
+/// Rows shown in the home profile verification status panel.
+enum KycProfileStatusItemType { nationalId, passport, residency, agreement }

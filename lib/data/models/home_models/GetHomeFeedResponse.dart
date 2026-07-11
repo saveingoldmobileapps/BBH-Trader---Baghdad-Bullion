@@ -151,18 +151,21 @@ class Payload {
       verificationCamel: 'nationalIdVerificationStatus',
       verificationPascal: 'NationalIdVerificationStatus',
       detailsCamel: 'isNationalIdDetailsVerified',
+      detailsPascal: 'IsNationalIdDetailsVerified',
     );
     _passportVerificationStatus = ProfileVerificationStatus.resolveDocumentStatus(
       json,
       verificationCamel: 'passportVerificationStatus',
       verificationPascal: 'PassportVerificationStatus',
       detailsCamel: 'isPassportDetailsVerified',
+      detailsPascal: 'IsPassportDetailsVerified',
     );
     _residencyVerificationStatus = ProfileVerificationStatus.resolveDocumentStatus(
       json,
       verificationCamel: 'residencyVerificationStatus',
       verificationPascal: 'ResidencyVerificationStatus',
       detailsCamel: 'isResidencyDetailsVerified',
+      detailsPascal: 'IsResidencyDetailsVerified',
     );
     _passportReview = KycDocumentReviewStatus.fromApi(
       json['PassportReview']?.toString() ?? json['passportReview']?.toString(),

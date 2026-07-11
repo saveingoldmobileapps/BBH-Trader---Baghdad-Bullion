@@ -11,6 +11,8 @@ class KycDocumentWarning extends StatelessWidget {
     required this.reviewStatus,
     required this.onTap,
     this.notVerified = false,
+    this.showAction = true,
+    this.verificationStatus,
     super.key,
   });
 
@@ -18,6 +20,8 @@ class KycDocumentWarning extends StatelessWidget {
   final KycDocumentReviewStatus reviewStatus;
   final VoidCallback onTap;
   final bool notVerified;
+  final bool showAction;
+  final ProfileVerificationStatus? verificationStatus;
 
   String _documentLabel(AppLocalizations l10n) => switch (documentType) {
         KycDocumentType.nationalId => l10n.kyc_doc_national_id,
@@ -28,40 +32,68 @@ class KycDocumentWarning extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final isRejected = reviewStatus.isRejected;
-    final borderColor = isRejected ? const Color(0xffE04c4E) : AppColors.primaryGold500;
-    final message = notVerified
-        ? l10n.kyc_document_not_verified(_documentLabel(l10n))
-        : isRejected
-        ? l10n.kyc_document_rejected(_documentLabel(l10n))
-        : l10n.kyc_document_pending(_documentLabel(l10n));
-    final action = isRejected ? l10n.kyc_retake_document : l10n.verify_account;
+    final docLabel = _documentLabel(l10n);
+    final status = verificationStatus;
+    final isRejected = status == ProfileVerificationStatus.rejected ||
+        (status == null && reviewStatus.isRejected);
+    final isVerified = status?.isApprovedOrVerified ??
+        (status == null && reviewStatus == KycDocumentReviewStatus.approved);
+    final isReviewing = status == ProfileVerificationStatus.reviewing;
+    final isPending = status == ProfileVerificationStatus.pending ||
+        (status == null && reviewStatus == KycDocumentReviewStatus.pending);
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        decoration: BoxDecoration(
-          border: Border.all(color: borderColor, width: 1.5),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SvgPicture.asset('assets/svg/alert_icon.svg'),
-            ConstPadding.sizeBoxWithWidth(width: 4),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GetGenericText(
-                    text: message,
-                    fontSize: sizes!.isPhone ? 12 : 16,
-                    fontWeight:
-                        sizes!.isPhone ? FontWeight.w400 : FontWeight.w600,
-                    color: AppColors.whiteColor,
-                    isInter: true,
-                  ),
+    final borderColor = isRejected
+        ? const Color(0xffE04c4E)
+        : isVerified
+        ? const Color(0xff4CAF50)
+        : AppColors.primaryGold500;
+
+    final message = notVerified
+        ? l10n.kyc_document_not_verified(docLabel)
+        : isRejected
+        ? l10n.kyc_document_rejected(docLabel)
+        : isVerified
+        ? l10n.kyc_document_verified(docLabel)
+        : isReviewing
+        ? l10n.kyc_document_reviewing(docLabel)
+        : isPending
+        ? (showAction
+            ? l10n.kyc_document_pending(docLabel)
+            : l10n.kyc_document_pending_review(docLabel))
+        : showAction
+        ? l10n.kyc_document_pending(docLabel)
+        : l10n.kyc_document_pending_review(docLabel);
+
+    final action = isRejected
+        ? l10n.kyc_retake_document
+        : isVerified
+        ? null
+        : l10n.verify_account;
+
+    final content = Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor, width: 1.5),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SvgPicture.asset('assets/svg/alert_icon.svg'),
+          ConstPadding.sizeBoxWithWidth(width: 4),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GetGenericText(
+                  text: message,
+                  fontSize: sizes!.isPhone ? 12 : 16,
+                  fontWeight:
+                      sizes!.isPhone ? FontWeight.w400 : FontWeight.w600,
+                  color: AppColors.whiteColor,
+                  isInter: true,
+                ),
+                if (showAction && action != null) ...[
                   ConstPadding.sizeBoxWithHeight(height: 4),
                   GetGenericText(
                     text: action,
@@ -72,11 +104,18 @@ class KycDocumentWarning extends StatelessWidget {
                     isUnderline: true,
                   ),
                 ],
-              ),
+              ],
             ),
-          ],
-        ).get6VerticalPadding(),
-      ),
+          ),
+        ],
+      ).get6VerticalPadding(),
+    );
+
+    if (!showAction || action == null) return content;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: content,
     );
   }
 }

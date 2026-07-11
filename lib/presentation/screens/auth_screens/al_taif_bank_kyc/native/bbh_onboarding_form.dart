@@ -43,6 +43,7 @@ class BbhOnboardingForm {
   final arGf = TextEditingController();
   final arSurname = TextEditingController();
   final arMother = TextEditingController();
+  final arSurnameAndGivenNames = TextEditingController();
   final idEnFirst = TextEditingController();
   final idEnFather = TextEditingController();
   final idEnGf = TextEditingController();
@@ -193,6 +194,7 @@ class BbhOnboardingForm {
         'ar_gf_mom' => motherCombined,
         'ar_surname' => arSurname,
         'ar_mother' => arMother,
+        'ar_surname_and_given_names' => arSurnameAndGivenNames,
         'id_en_first' => idEnFirst,
         'id_en_father' => idEnFather,
         'id_en_gf' => idEnGf,
@@ -325,6 +327,7 @@ class BbhOnboardingForm {
     yield MapEntry('ar_gf_mom', motherCombined);
     yield MapEntry('ar_surname', arSurname);
     yield MapEntry('ar_mother', arMother);
+    yield MapEntry('ar_surname_and_given_names', arSurnameAndGivenNames);
     yield MapEntry('id_en_first', idEnFirst);
     yield MapEntry('id_en_father', idEnFather);
     yield MapEntry('id_en_gf', idEnGf);

@@ -4164,6 +4164,12 @@ abstract class AppLocalizations {
   /// **'Your {document} is pending verification. Tap to update.'**
   String kyc_document_pending(String document);
 
+  /// No description provided for @kyc_document_pending_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is pending verification.'**
+  String kyc_document_pending_review(String document);
+
   /// No description provided for @kyc_document_not_verified.
   ///
   /// In en, this message translates to:
@@ -4176,11 +4182,53 @@ abstract class AppLocalizations {
   /// **'Your profile verification is pending. We will notify you once the review is complete.'**
   String get profile_verification_pending;
 
+  /// No description provided for @profile_verification_reviewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile verification is under review. We will notify you once the review is complete.'**
+  String get profile_verification_reviewing;
+
+  /// No description provided for @profile_verification_rejected_partial.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile verification was rejected. Please update the required documents.'**
+  String get profile_verification_rejected_partial;
+
   /// No description provided for @profile_verification_rejected_full_kyc.
   ///
   /// In en, this message translates to:
   /// **'Your profile verification was rejected. Please complete full KYC verification again.'**
   String get profile_verification_rejected_full_kyc;
+
+  /// No description provided for @kyc_document_reviewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is under review.'**
+  String kyc_document_reviewing(String document);
+
+  /// No description provided for @kyc_document_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is verified.'**
+  String kyc_document_verified(String document);
+
+  /// No description provided for @kyc_documents_status_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile verification status'**
+  String get kyc_documents_status_title;
+
+  /// No description provided for @kyc_status_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get kyc_status_verified;
+
+  /// No description provided for @kyc_status_reviewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Under review'**
+  String get kyc_status_reviewing;
 
   /// No description provided for @kyc_retake_document.
   ///

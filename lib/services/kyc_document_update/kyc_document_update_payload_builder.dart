@@ -80,26 +80,44 @@ class KycDocumentUpdatePayloadBuilder {
   }
 
   /// Passport retake — `true` when scan completed and iPass did not reject.
-  static bool isPassportDetailsVerified({
-    required BbhOnboardingForm form,
-    IpassKycResult? scanResult,
-  }) {
-    if (form.noPassport || !form.passportCaptured || scanResult == null) {
-      return false;
-    }
-    return !_isScanRejected(scanResult);
+  // static bool isPassportDetailsVerified({
+  //   required BbhOnboardingForm form,
+  //   IpassKycResult? scanResult,
+  // }) {
+  //   if (form.noPassport || !form.passportCaptured || scanResult == null) {
+  //     return false;
+  //   }
+  //   return !_isScanRejected(scanResult);
+  // }
+static bool isPassportDetailsVerified({
+  required BbhOnboardingForm form,
+  IpassKycResult? scanResult,
+}) {
+  if (form.noPassport) {
+    return false;
   }
 
-  static bool _isNationalIdDetailsVerified({
-    required BbhOnboardingForm form,
-    IpassKycResult? scanResult,
-  }) {
-    if (!form.idFrontCaptured || !form.idBackCaptured || scanResult == null) {
-      return false;
-    }
-    return !_isScanRejected(scanResult);
+  return form.passportCaptured;
+}
+  // static bool _isNationalIdDetailsVerified({
+  //   required BbhOnboardingForm form,
+  //   IpassKycResult? scanResult,
+  // }) {
+  //   if (!form.idFrontCaptured || !form.idBackCaptured || scanResult == null) {
+  //     return false;
+  //   }
+  //   return !_isScanRejected(scanResult);
+  // }
+static bool _isNationalIdDetailsVerified({
+  required BbhOnboardingForm form,
+  IpassKycResult? scanResult,
+}) {
+  if (!form.idFrontCaptured || !form.idBackCaptured) {
+    return false;
   }
 
+  return true;
+}
   static bool _isScanRejected(IpassKycResult scanResult) {
     final status = _scanOverAllStatus(scanResult.data);
     if (status == 'REJECTED') return true;

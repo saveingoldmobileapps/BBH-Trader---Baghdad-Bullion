@@ -1471,6 +1471,7 @@ class IpassOnboardingMapper {
       'SurnameAr',
       'Given Names',
       'Given NamesAr',
+      'Surname And Given NamesAr',
       'DS Certificate Valid From',
     ];
     for (final key in signalKeys) {
@@ -1784,42 +1785,53 @@ class IpassOnboardingMapper {
       if (v != null && !out.containsKey(key)) out[key] = v;
     }
 
-    final surname = _titleCase(_sectionValue(section, 'Surname'));
-    final givenNames = _sectionValue(section, 'Given Names');
+    final rawSurname = _sectionValue(section, 'Surname');
+    final givenNamesAr = _sectionValue(section, 'Given NamesAr');
+    final hasSurnameGivenArPair =
+        rawSurname != null && givenNamesAr != null;
 
-    if (surname != null) put('idEnSurname', surname);
-
-    if (givenNames != null) {
-      final parts = givenNames.split(RegExp(r'\s+'));
-      if (parts.isNotEmpty) put('idEnFirst', _titleCase(parts.first));
-      if (parts.length > 1) put('idEnFather', _titleCase(parts[1]));
-      if (parts.length > 2) put('idEnGf', _titleCase(parts[2]));
+    // Iraqi NFC / visual: prefer Latin surname + Arabic given name for backend.
+    if (hasSurnameGivenArPair) {
+      put('idEnSurname', _titleCase(rawSurname));
+      put('idEnFirst', givenNamesAr);
     } else {
-      final visualFull = _sectionValue(section, 'Surname And Given Names');
-      if (visualFull != null && !_looksLikeAllCapsMrz(visualFull)) {
-        final parts = visualFull.split(RegExp(r'\s+'));
-        if (parts.length >= 2) {
-          put('idEnFirst', _titleCase(parts.first));
-          if (parts.length == 2) {
-            put('idEnSurname', _titleCase(parts[1]));
-          } else {
-            put('idEnSurname', _titleCase(parts.last));
-            if (parts.length > 2) {
-              put(
-                'idEnFather',
-                _titleCase(parts.sublist(1, parts.length - 1).join(' ')),
-              );
+      final surname = _titleCase(rawSurname);
+      final givenNames = _sectionValue(section, 'Given Names');
+
+      if (surname != null) put('idEnSurname', surname);
+
+      if (givenNames != null) {
+        final parts = givenNames.split(RegExp(r'\s+'));
+        if (parts.isNotEmpty) put('idEnFirst', _titleCase(parts.first));
+        if (parts.length > 1) put('idEnFather', _titleCase(parts[1]));
+        if (parts.length > 2) put('idEnGf', _titleCase(parts[2]));
+      } else {
+        final visualFull = _sectionValue(section, 'Surname And Given Names');
+        if (visualFull != null && !_looksLikeAllCapsMrz(visualFull)) {
+          final parts = visualFull.split(RegExp(r'\s+'));
+          if (parts.length >= 2) {
+            put('idEnFirst', _titleCase(parts.first));
+            if (parts.length == 2) {
+              put('idEnSurname', _titleCase(parts[1]));
+            } else {
+              put('idEnSurname', _titleCase(parts.last));
+              if (parts.length > 2) {
+                put(
+                  'idEnFather',
+                  _titleCase(parts.sublist(1, parts.length - 1).join(' ')),
+                );
+              }
             }
           }
-        }
-      } else {
-        final mrzFull = _sectionValue(section, 'Surname And Given Names');
-        if (mrzFull != null) {
-          final parts = mrzFull.split(RegExp(r'\s+'));
-          if (parts.isNotEmpty) put('idEnSurname', _titleCase(parts.first));
-          if (parts.length > 1) put('idEnFirst', _titleCase(parts[1]));
-          if (parts.length > 2) put('idEnFather', _titleCase(parts[2]));
-          if (parts.length > 3) put('idEnGf', _titleCase(parts[3]));
+        } else {
+          final mrzFull = _sectionValue(section, 'Surname And Given Names');
+          if (mrzFull != null) {
+            final parts = mrzFull.split(RegExp(r'\s+'));
+            if (parts.isNotEmpty) put('idEnSurname', _titleCase(parts.first));
+            if (parts.length > 1) put('idEnFirst', _titleCase(parts[1]));
+            if (parts.length > 2) put('idEnFather', _titleCase(parts[2]));
+            if (parts.length > 3) put('idEnGf', _titleCase(parts[3]));
+          }
         }
       }
     }
@@ -1945,12 +1957,20 @@ class IpassOnboardingMapper {
     if (v != null && !out.containsKey(key)) out[key] = v;
   }
 
+  // NFC full Arabic name — preserve for backend when chip provides it.
+  final surnameAndGivenNamesAr = _firstSectionValue(section, const [
+    'Surname And Given NamesAr',
+    'Surname And Given Names Ar',
+  ]);
+  if (surnameAndGivenNamesAr != null) {
+    put('surnameAndGivenNamesAr', surnameAndGivenNamesAr);
+  }
+
   // Iraqi national ID Visual layout (split Arabic name fields).
   final surnameAr = _sectionValue(section, 'SurnameAr');
   final givenAr = _firstSectionValue(section, const [
-    'Given NamesAr', 
+    'Given NamesAr',
     'Given NameAr',
-    'Surname And Given NamesAr', // NFC might have full name here
   ]);
   final fatherAr = _firstSectionValue(section, const [
     'Fathers NameAr',
@@ -2366,6 +2386,10 @@ class IpassOnboardingMapper {
         ]),
       );
     }
+    put(
+      'surnameAndGivenNamesAr',
+      _first(flat, const ['surnameandgivennamesar', 'surnameandgivennames']),
+    );
 
     put('gender', _normalizeGender(_first(flat, const ['sex', 'sexar', 'gender'])));
     put(

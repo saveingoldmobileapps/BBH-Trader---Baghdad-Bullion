@@ -71,6 +71,8 @@ class BbhOnboardingSubmissionBuilder {
         'grandfatherNameArabic': tc(form.arGf),
         'lastNameArabic': tc(form.arSurname),
         'mothersNameArabic': tc(form.arMother),
+        if (tc(form.arSurnameAndGivenNames).isNotEmpty)
+          'surnameAndGivenNamesAr': tc(form.arSurnameAndGivenNames),
         'mothersNameEnglish': englishOrArabic(form.idEnMother, form.arMother),
         'dateOfBirth': tc(form.dob),
         'nationality': tc(form.nationality),

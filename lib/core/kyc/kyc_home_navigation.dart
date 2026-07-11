@@ -1,7 +1,9 @@
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_status.dart';
 import 'package:baghdad_bullion_house/data/models/home_models/GetHomeFeedResponse.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_native_onboarding_screen.dart';
+import 'package:baghdad_bullion_house/presentation/screens/agreement_screens/user_agreement_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/kyc_document_update/kyc_document_update_screen.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/pop_up_widget.dart';
 import 'package:flutter/material.dart';
@@ -54,9 +56,183 @@ class KycHomeNavigation {
     required Payload? payload,
     required bool isDemo,
   }) {
+    return showProfileVerificationPanel(payload: payload, isDemo: isDemo) &&
+        profileStatus(payload) == ProfileVerificationStatus.pending;
+  }
+
+  /// Home panel when profile is Reviewing, Pending, or Rejected.
+  static bool showProfileVerificationPanel({
+    required Payload? payload,
+    required bool isDemo,
+  }) {
     if (payload == null || isDemo) return false;
     if (!usesProfileVerificationApi(payload)) return false;
-    return profileStatus(payload) == ProfileVerificationStatus.pending;
+    if (isProfileVerified(payload)) return false;
+    return profileStatus(payload)?.isAwaitingVerification ?? false;
+  }
+
+  static List<KycDocumentType> allDocumentsForStatusPanel(Payload? payload) {
+    if (payload == null) return const [];
+    return KycDocumentType.values;
+  }
+
+  static List<KycProfileStatusItemType> allProfileStatusItemsForPanel(
+    Payload? payload,
+  ) {
+    if (payload == null) return const [];
+    return KycProfileStatusItemType.values;
+  }
+
+  static bool isAgreementSigned(Payload? payload) =>
+      payload?.agreementStatus == true;
+
+  static ProfileVerificationStatus agreementStatus(Payload? payload) {
+    return isAgreementSigned(payload)
+        ? ProfileVerificationStatus.verified
+        : ProfileVerificationStatus.pending;
+  }
+
+  static ProfileVerificationStatus? profileStatusItemStatus(
+    Payload? payload,
+    KycProfileStatusItemType item,
+  ) {
+    if (payload == null) return null;
+    return switch (item) {
+      KycProfileStatusItemType.nationalId =>
+        documentStatus(payload, KycDocumentType.nationalId),
+      KycProfileStatusItemType.passport =>
+        documentStatus(payload, KycDocumentType.passport),
+      KycProfileStatusItemType.residency =>
+        documentStatus(payload, KycDocumentType.residency),
+      KycProfileStatusItemType.agreement => agreementStatus(payload),
+    };
+  }
+
+  static bool canNavigateToProfileStatusItem(
+    Payload? payload,
+    KycProfileStatusItemType item,
+  ) {
+    if (payload == null) return false;
+    return switch (item) {
+      KycProfileStatusItemType.agreement => !isAgreementSigned(payload),
+      _ => shouldUseFullKycOnDocumentTap(payload) ||
+          profileStatusItemStatus(payload, item) ==
+              ProfileVerificationStatus.rejected,
+    };
+  }
+
+  static KycDocumentType? documentTypeForProfileStatusItem(
+    KycProfileStatusItemType item,
+  ) {
+    return switch (item) {
+      KycProfileStatusItemType.nationalId => KycDocumentType.nationalId,
+      KycProfileStatusItemType.passport => KycDocumentType.passport,
+      KycProfileStatusItemType.residency => KycDocumentType.residency,
+      KycProfileStatusItemType.agreement => null,
+    };
+  }
+
+  static String profileStatusItemLabel(
+    KycProfileStatusItemType item,
+    AppLocalizations l10n,
+  ) =>
+      switch (item) {
+        KycProfileStatusItemType.nationalId => l10n.kyc_doc_national_id,
+        KycProfileStatusItemType.passport => l10n.kyc_doc_passport,
+        KycProfileStatusItemType.residency => l10n.kyc_doc_residency,
+        KycProfileStatusItemType.agreement => l10n.sig_agreement,
+      };
+
+  static Future<void> onProfileStatusItemTap(
+    BuildContext context,
+    Payload payload,
+    KycProfileStatusItemType item, {
+    Future<void> Function()? onAgreementSigned,
+  }) async {
+    if (item == KycProfileStatusItemType.agreement) {
+      if (!canNavigateToProfileStatusItem(payload, item)) return;
+      final signed = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const UserAgreementScreen(),
+        ),
+      );
+      if (signed == true) {
+        await onAgreementSigned?.call();
+      }
+      return;
+    }
+
+    final docType = documentTypeForProfileStatusItem(item);
+    if (docType != null) {
+      onDocumentStatusCardTap(context, payload, docType);
+    }
+  }
+
+  static bool shouldUseFullKycOnDocumentTap(Payload? payload) {
+    if (payload == null || isProfileVerified(payload)) return false;
+    return allDocumentsRejected(payload);
+  }
+
+  static String profileWarningMessage(
+    Payload? payload,
+    AppLocalizations l10n,
+  ) {
+    if (payload != null && allDocumentsRejected(payload)) {
+      return l10n.profile_verification_rejected_full_kyc;
+    }
+    return switch (profileStatus(payload)) {
+      ProfileVerificationStatus.reviewing =>
+        l10n.profile_verification_reviewing,
+      ProfileVerificationStatus.pending => l10n.profile_verification_pending,
+      ProfileVerificationStatus.rejected =>
+        l10n.profile_verification_rejected_partial,
+      _ => l10n.profile_verification_pending,
+    };
+  }
+
+  static Color profileWarningBorderColor(Payload? payload) {
+    return switch (profileStatus(payload)) {
+      ProfileVerificationStatus.rejected => const Color(0xffE04c4E),
+      _ => AppColors.primaryGold500,
+    };
+  }
+
+  static bool showProfileWarningAction(Payload? payload) {
+    return shouldUseFullKycOnDocumentTap(payload);
+  }
+
+  static void onDocumentStatusCardTap(
+    BuildContext context,
+    Payload payload,
+    KycDocumentType type,
+  ) {
+    if (shouldUseFullKycOnDocumentTap(payload)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const BbhNativeOnboardingScreen(),
+        ),
+      );
+      return;
+    }
+    if (canNavigateToDocument(payload, type)) {
+      openDocumentUpdate(context, type, payload);
+    }
+  }
+
+  static void openProfileWarningAction(
+    BuildContext context,
+    Payload payload,
+  ) {
+    if (showProfileWarningAction(payload)) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const BbhNativeOnboardingScreen(),
+        ),
+      );
+    }
   }
 
   static bool hideProfileVerificationWarnings({
@@ -162,6 +338,25 @@ class KycHomeNavigation {
     return requiresFullKyc(payload);
   }
 
+  /// Documents still under review while profile verification is pending.
+  static List<KycDocumentType> documentsPendingReview(Payload? payload) {
+    if (payload == null) return const [];
+    if (profileStatus(payload) != ProfileVerificationStatus.pending) {
+      return const [];
+    }
+    final out = <KycDocumentType>[];
+    for (final type in KycDocumentType.values) {
+      final status = documentStatus(payload, type);
+      if (status == ProfileVerificationStatus.pending || status == null) {
+        out.add(type);
+      }
+    }
+    if (out.isEmpty) {
+      return KycDocumentType.values.toList();
+    }
+    return out;
+  }
+
   /// Documents the user must update after a rejected profile review.
   static List<KycDocumentType> documentsNeedingUpdate(Payload? payload) {
     if (payload == null) return const [];
@@ -172,6 +367,16 @@ class KycHomeNavigation {
       }
     }
     return out;
+  }
+
+  /// Rejected documents for full native onboarding retry.
+  static List<KycDocumentType> documentsForFullKycRetry(Payload? payload) {
+    final rejected = documentsNeedingUpdate(payload);
+    if (rejected.isNotEmpty) return rejected;
+    if (requiresFullKyc(payload)) {
+      return KycDocumentType.values.toList();
+    }
+    return const [];
   }
 
   /// Home banners — rejected docs only. When profile is pending, only the profile banner is shown.
@@ -265,20 +470,21 @@ class KycHomeNavigation {
     if (payload == null) return;
 
     if (usesProfileVerificationApi(payload)) {
+      if (shouldUseFullKycOnDocumentTap(payload)) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const BbhNativeOnboardingScreen(),
+          ),
+        );
+        return;
+      }
       final status = profileStatus(payload);
-      if (status == ProfileVerificationStatus.pending) {
+      if (status == ProfileVerificationStatus.pending ||
+          status == ProfileVerificationStatus.reviewing) {
         return;
       }
       if (status == ProfileVerificationStatus.rejected) {
-        if (requiresFullKyc(payload)) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => const BbhNativeOnboardingScreen(),
-            ),
-          );
-          return;
-        }
         final docs = documentsNeedingUpdate(payload);
         if (docs.isNotEmpty) {
           openDocumentUpdate(context, docs.first, payload);
@@ -337,25 +543,28 @@ class KycHomeNavigation {
     }
 
     if (usesProfileVerificationApi(payload)) {
-      final status = profileStatus(payload);
-      if (status == ProfileVerificationStatus.pending) {
+      if (shouldUseFullKycOnDocumentTap(payload)) {
         return KycBlockedActionCopy(
           heading: l10n.kyc_verification_required,
-          subtitle: l10n.profile_verification_pending,
+          subtitle: l10n.profile_verification_rejected_full_kyc,
+          noButtonTitle: l10n.later,
+          yesButtonTitle: l10n.proceed,
+          navigateOnConfirm: true,
+        );
+      }
+      final status = profileStatus(payload);
+      if (status == ProfileVerificationStatus.pending ||
+          status == ProfileVerificationStatus.reviewing) {
+        return KycBlockedActionCopy(
+          heading: l10n.kyc_verification_required,
+          subtitle: status == ProfileVerificationStatus.reviewing
+              ? l10n.profile_verification_reviewing
+              : l10n.profile_verification_pending,
           yesButtonTitle: l10n.close,
           navigateOnConfirm: false,
         );
       }
       if (status == ProfileVerificationStatus.rejected) {
-        if (requiresFullKyc(payload)) {
-          return KycBlockedActionCopy(
-            heading: l10n.kyc_verification_required,
-            subtitle: l10n.profile_verification_rejected_full_kyc,
-            noButtonTitle: l10n.later,
-            yesButtonTitle: l10n.proceed,
-            navigateOnConfirm: true,
-          );
-        }
         final docs = documentsNeedingUpdate(payload);
         if (docs.isNotEmpty) {
           final doc = docs.first;
@@ -433,6 +642,7 @@ class KycHomeNavigation {
       return switch (docStatus) {
         ProfileVerificationStatus.rejected => KycDocumentReviewStatus.rejected,
         ProfileVerificationStatus.pending => KycDocumentReviewStatus.pending,
+        ProfileVerificationStatus.reviewing => KycDocumentReviewStatus.pending,
         ProfileVerificationStatus.verified ||
         ProfileVerificationStatus.approved =>
           KycDocumentReviewStatus.approved,

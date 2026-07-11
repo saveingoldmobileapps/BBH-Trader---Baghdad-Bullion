@@ -869,6 +869,12 @@
       "document": {"type": "String"}
     }
   },
+  "kyc_document_pending_review": "Your {document} is pending verification.",
+  "@kyc_document_pending_review": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
   "kyc_document_not_verified": "Your {document} is not verified. Tap to update and resubmit.",
   "@kyc_document_not_verified": {
     "placeholders": {
@@ -876,7 +882,24 @@
     }
   },
   "profile_verification_pending": "Your profile verification is pending. We will notify you once the review is complete.",
+  "profile_verification_reviewing": "Your profile verification is under review. We will notify you once the review is complete.",
+  "profile_verification_rejected_partial": "Your profile verification was rejected. Please update the required documents.",
   "profile_verification_rejected_full_kyc": "Your profile verification was rejected. Please complete full KYC verification again.",
+  "kyc_document_reviewing": "Your {document} is under review.",
+  "@kyc_document_reviewing": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_verified": "Your {document} is verified.",
+  "@kyc_document_verified": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_documents_status_title": "Profile verification status",
+  "kyc_status_verified": "Verified",
+  "kyc_status_reviewing": "Under review",
   "kyc_retake_document": "Retake document",
   "kyc_complete_verification": "Complete KYC verification",
   "@DemoMode": {},

@@ -2164,6 +2164,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String kyc_document_pending_review(String document) {
+    return 'Your $document is pending verification.';
+  }
+
+  @override
   String kyc_document_not_verified(String document) {
     return 'Your $document is not verified. Tap to update and resubmit.';
   }
@@ -2173,8 +2178,35 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your profile verification is pending. We will notify you once the review is complete.';
 
   @override
+  String get profile_verification_reviewing =>
+      'Your profile verification is under review. We will notify you once the review is complete.';
+
+  @override
+  String get profile_verification_rejected_partial =>
+      'Your profile verification was rejected. Please update the required documents.';
+
+  @override
   String get profile_verification_rejected_full_kyc =>
       'Your profile verification was rejected. Please complete full KYC verification again.';
+
+  @override
+  String kyc_document_reviewing(String document) {
+    return 'Your $document is under review.';
+  }
+
+  @override
+  String kyc_document_verified(String document) {
+    return 'Your $document is verified.';
+  }
+
+  @override
+  String get kyc_documents_status_title => 'Profile verification status';
+
+  @override
+  String get kyc_status_verified => 'Verified';
+
+  @override
+  String get kyc_status_reviewing => 'Under review';
 
   @override
   String get kyc_retake_document => 'Retake document';

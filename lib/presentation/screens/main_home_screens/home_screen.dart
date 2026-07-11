@@ -14,11 +14,9 @@ import 'package:baghdad_bullion_house/presentation/screens/news_screen/news_scre
 import 'package:baghdad_bullion_house/presentation/screens/notification_screens/notification_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/setting_screens/setting_screen.dart';
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
-import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_status.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
 import 'package:baghdad_bullion_house/presentation/screens/agreement_screens/user_agreement_screen.dart';
-import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_native_onboarding_screen.dart';
-import 'package:baghdad_bullion_house/presentation/widgets/kyc_document_warning.dart';
+import 'package:baghdad_bullion_house/presentation/widgets/kyc_rejected_docs_see_more.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/account_warning.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/demo_banner.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/get_drawer_bar.dart';
@@ -201,6 +199,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     sizes!.refreshSize(context);
     final mainStateWatchProvider = ref.watch(homeProvider);
+    final homePayload = mainStateWatchProvider.getHomeFeedResponse.payload;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -416,101 +415,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       ),
                     ),
 
-                    Visibility(
-                      visible:
-                          mainStateWatchProvider.getHomeFeedResponse.payload !=
-                              null &&
-                          mainStateWatchProvider.isDemo == false &&
-                          mainStateWatchProvider.loadingState ==
-                              LoadingState.data &&
-                          KycHomeNavigation.showProfileRejectedFullKycWarning(
-                            payload: mainStateWatchProvider
-                                .getHomeFeedResponse.payload,
-                            isDemo: mainStateWatchProvider.isDemo,
-                          ),
-                      child: AccountWarning(
-                        kycStatus: 'profile',
-                        warningMessage: AppLocalizations.of(
-                          context,
-                        )!.profile_verification_rejected_full_kyc,
-                        actionText: AppLocalizations.of(
-                          context,
-                        )!.kyc_complete_verification,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const BbhNativeOnboardingScreen(),
+                    if (homePayload != null &&
+                        mainStateWatchProvider.isDemo == false &&
+                        mainStateWatchProvider.loadingState ==
+                            LoadingState.data &&
+                        KycHomeNavigation.showProfileVerificationPanel(
+                          payload: homePayload,
+                          isDemo: mainStateWatchProvider.isDemo,
+                        ))
+                      KycProfileVerificationSeeMore(
+                        payload: homePayload,
+                        onAgreementSigned: () => ref
+                            .read(homeProvider.notifier)
+                            .getHomeFeed(
+                              context: context,
+                              showLoading: false,
                             ),
-                          );
-                        },
                       ),
-                    ),
-
-                    Visibility(
-                      visible:
-                          mainStateWatchProvider.getHomeFeedResponse.payload !=
-                              null &&
-                          mainStateWatchProvider.isDemo == false &&
-                          mainStateWatchProvider.loadingState ==
-                              LoadingState.data &&
-                          KycHomeNavigation.showProfilePendingWarning(
-                            payload: mainStateWatchProvider
-                                .getHomeFeedResponse.payload,
-                            isDemo: mainStateWatchProvider.isDemo,
-                          ),
-                      child: AccountWarning(
-                        kycStatus: 'profile',
-                        warningMessage: AppLocalizations.of(
-                          context,
-                        )!.profile_verification_pending,
-                        actionText: AppLocalizations.of(context)!.verify_account,
-                        onTap: () {},
-                      ),
-                    ),
-                    ...KycHomeNavigation.documentsForHomeWarnings(
-                      mainStateWatchProvider.getHomeFeedResponse.payload,
-                    ).map(
-                      (docType) {
-                        final payload =
-                            mainStateWatchProvider.getHomeFeedResponse.payload!;
-                        return Visibility(
-                        visible:
-                            mainStateWatchProvider
-                                    .getHomeFeedResponse.payload !=
-                                null &&
-                            mainStateWatchProvider.isDemo == false &&
-                            mainStateWatchProvider.loadingState ==
-                                LoadingState.data,
-                        child: KycDocumentWarning(
-                          documentType: docType,
-                          reviewStatus: KycHomeNavigation.reviewStatusFor(
-                                docType,
-                                payload,
-                              ) ??
-                              KycDocumentReviewStatus.pending,
-                          notVerified: KycHomeNavigation.useNotVerifiedDocumentMessage(
-                            mainStateWatchProvider.getHomeFeedResponse.payload,
-                            docType,
-                          ),
-                          onTap: () {
-                            if (!KycHomeNavigation.canNavigateToDocument(
-                              payload,
-                              docType,
-                            )) {
-                              return;
-                            }
-                            KycHomeNavigation.openDocumentUpdate(
-                              context,
-                              docType,
-                              payload,
-                            );
-                          },
-                        ),
-                      );
-                      },
-                    ),
 
                     Visibility(
                       visible:

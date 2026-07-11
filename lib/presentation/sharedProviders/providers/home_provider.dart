@@ -1,9 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_test_overrides.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
@@ -14,6 +10,10 @@ import 'package:baghdad_bullion_house/data/models/home_models/GetHomeFeedRespons
 import 'package:baghdad_bullion_house/data/models/user_models/GetUserProfileResponse.dart';
 import 'package:baghdad_bullion_house/presentation/feature_injection.dart';
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../../data/data_sources/network_sources/network_export.dart';
@@ -88,8 +88,9 @@ class Home extends _$Home {
 
         final token = await LocalDatabase.instance.getLoginToken();
         final userId = await LocalDatabase.instance.getUserId();
-        getLocator<Logger>()
-            .i("Attempt $attempt | userId: $userId | token: $token");
+        getLocator<Logger>().i(
+          "Attempt $attempt | userId: $userId | token: $token",
+        );
 
         final headers = {
           "Content-Type": "application/json",
@@ -111,32 +112,29 @@ class Home extends _$Home {
           case ServerResponseType.success:
             GetHomeFeedResponse getHomeFeedResponse =
                 KycDocumentReviewTestOverrides.apply(
-              GetHomeFeedResponse.fromJson(serverResponse.resultData),
-            );
+                  GetHomeFeedResponse.fromJson(serverResponse.resultData),
+                );
 
             // update state
             final payload = getHomeFeedResponse.payload;
-            final isProfileVerified = KycHomeNavigation.isProfileVerified(payload);
+            final isProfileVerified = KycHomeNavigation.isProfileVerified(
+              payload,
+            );
 
             state = state.copyWith(
               getHomeFeedResponse: getHomeFeedResponse,
               isEmailVerified: payload?.isEmailVerified,
               isPhoneVerified: payload?.isPhoneVerified,
               isProfileVerified: isProfileVerified,
-              isDemo: payload?.userType == "Demo"
-                  ? true
-                  : false,
-              agreementStatus:
-                  payload?.agreementStatus ?? true,
+              isDemo: payload?.userType == "Demo" ? true : false,
+              agreementStatus: payload?.agreementStatus ?? true,
             );
 
             LocalDatabase.instance.setIsEmailVerified(
               isVerified: payload?.isEmailVerified ?? false,
             );
             LocalDatabase.instance.setIsDemo(
-              isDemo: payload?.userType == "Demo"
-                  ? true
-                  : false,
+              isDemo: payload?.userType == "Demo" ? true : false,
             );
             LocalDatabase.instance.setIsProfileVerified(
               isVerified: isProfileVerified,
@@ -153,13 +151,17 @@ class Home extends _$Home {
             }
 
             setLoadingState(LoadingState.data);
-            checkFreeze(context,getHomeFeedResponse.payload!.isFrozen??false);
+            checkFreeze(
+              context,
+              getHomeFeedResponse.payload!.isFrozen ?? false,
+            );
             return; // ✅ stop loop on success
 
           case ServerResponseType.error:
             if (showLoading) {
-              ErrorResponse errorResponse =
-                  ErrorResponse.fromJson(serverResponse.resultData);
+              ErrorResponse errorResponse = ErrorResponse.fromJson(
+                serverResponse.resultData,
+              );
               state = state.copyWith(errorResponse: errorResponse);
               getLocator<Logger>().e(
                 "error: ${errorResponse.payload?.message.toString()}",
@@ -196,8 +198,9 @@ class Home extends _$Home {
 
       attempt++;
       if (attempt < maxRetries) {
-        getLocator<Logger>()
-            .w("Retrying getHomeFeed... attempt ${attempt + 1}");
+        getLocator<Logger>().w(
+          "Retrying getHomeFeed... attempt ${attempt + 1}",
+        );
         await Future.delayed(const Duration(seconds: 2)); // wait before retry
       }
     }
@@ -392,8 +395,8 @@ class Home extends _$Home {
           case ServerResponseType.success:
             GetUserProfileResponse getUserProfileResponse =
                 GetUserProfileResponse.fromJson(
-              serverResponse.resultData,
-            );
+                  serverResponse.resultData,
+                );
 
             /// update state
             state = state.copyWith(
@@ -402,7 +405,8 @@ class Home extends _$Home {
                   getUserProfileResponse.payload?.userProfile?.isEmailVerified,
               isPhoneVerified:
                   getUserProfileResponse.payload?.userProfile?.isPhoneVerified,
-              isDemo: getUserProfileResponse.payload?.userProfile?.userType ==
+              isDemo:
+                  getUserProfileResponse.payload?.userProfile?.userType ==
                       "Demo"
                   ? true
                   : false,
@@ -413,10 +417,13 @@ class Home extends _$Home {
                   getUserProfileResponse.payload?.userProfile?.imageUrl ?? "",
             );
             LocalDatabase.instance.storeUserName(
-              name: getUserProfileResponse.payload?.userProfile?.firstName!.en ?? "",
+              name:
+                  getUserProfileResponse.payload?.userProfile?.firstName!.en ??
+                  "",
             );
             LocalDatabase.instance.storeUserLastName(
-              name: getUserProfileResponse.payload?.userProfile?.surname!.en ??
+              name:
+                  getUserProfileResponse.payload?.userProfile?.surname!.en ??
                   "",
             );
             LocalDatabase.instance.saveUserAccountID(
@@ -427,11 +434,12 @@ class Home extends _$Home {
                 CommonService.lang) {
               final languageNotifier = ref.read(languageProvider.notifier);
               languageNotifier.updateLanguage(
-                  language: CommonService.lang,
-                  context: navigatorKey.currentContext!,
-                  isDashboard: false,
-                  showToast: false,
-                  navigateToHome: false);
+                language: CommonService.lang,
+                context: navigatorKey.currentContext!,
+                isDashboard: false,
+                showToast: false,
+                navigateToHome: false,
+              );
             }
             getLocator<Logger>().i(
               "getUserProfileResponse: ${getUserProfileResponse.payload?.toJson()}",
@@ -441,8 +449,9 @@ class Home extends _$Home {
             return; //  success, stop retrying
 
           case ServerResponseType.error:
-            ErrorResponse errorResponse =
-                ErrorResponse.fromJson(serverResponse.resultData);
+            ErrorResponse errorResponse = ErrorResponse.fromJson(
+              serverResponse.resultData,
+            );
             state = state.copyWith(errorResponse: errorResponse);
 
             getLocator<Logger>().e(
@@ -469,8 +478,9 @@ class Home extends _$Home {
 
       attempt++;
       if (attempt < maxRetries) {
-        getLocator<Logger>()
-            .w("Retrying getUserProfile... attempt ${attempt + 1}");
+        getLocator<Logger>().w(
+          "Retrying getUserProfile... attempt ${attempt + 1}",
+        );
         await Future.delayed(const Duration(seconds: 2)); // wait before retry
       }
     }
@@ -583,8 +593,8 @@ class Home extends _$Home {
         case ServerResponseType.success:
           AppUpdateResponseModel appUpdateResponse =
               AppUpdateResponseModel.fromJson(
-            serverResponse.resultData,
-          );
+                serverResponse.resultData,
+              );
 
           /// update state
           state = state.copyWith(appUpdateResponse: appUpdateResponse);

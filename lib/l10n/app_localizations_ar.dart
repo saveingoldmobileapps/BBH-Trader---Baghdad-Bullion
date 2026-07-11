@@ -2144,6 +2144,11 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String kyc_document_pending_review(String document) {
+    return 'ما زال $document قيد المراجعة.';
+  }
+
+  @override
   String kyc_document_not_verified(String document) {
     return 'لم يتم التحقق من $document. اضغط للتحديث وإعادة الإرسال.';
   }
@@ -2153,8 +2158,35 @@ class AppLocalizationsAr extends AppLocalizations {
       'التحقق من ملفك الشخصي قيد المراجعة. سنخطرك عند اكتمال المراجعة.';
 
   @override
+  String get profile_verification_reviewing =>
+      'التحقق من ملفك الشخصي قيد المراجعة حالياً. سنخطرك عند اكتمال المراجعة.';
+
+  @override
+  String get profile_verification_rejected_partial =>
+      'تم رفض التحقق من ملفك الشخصي. يرجى تحديث المستندات المطلوبة.';
+
+  @override
   String get profile_verification_rejected_full_kyc =>
       'تم رفض التحقق من ملفك الشخصي. يرجى إكمال التحقق من الهوية بالكامل مرة أخرى.';
+
+  @override
+  String kyc_document_reviewing(String document) {
+    return 'ما زال $document قيد المراجعة.';
+  }
+
+  @override
+  String kyc_document_verified(String document) {
+    return 'تم التحقق من $document.';
+  }
+
+  @override
+  String get kyc_documents_status_title => 'حالة التحقق من الملف الشخصي';
+
+  @override
+  String get kyc_status_verified => 'تم التحقق';
+
+  @override
+  String get kyc_status_reviewing => 'قيد المراجعة';
 
   @override
   String get kyc_retake_document => 'إعادة التقاط الوثيقة';

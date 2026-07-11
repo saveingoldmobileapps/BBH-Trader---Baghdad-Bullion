@@ -8,50 +8,52 @@ class AccountWarning extends StatelessWidget {
   final VoidCallback onTap;
   final String? warningMessage;
   final String? actionText;
+  final bool showAction;
+  final Color? borderColor;
 
   const AccountWarning({
     required this.kycStatus,
     required this.onTap,
     this.warningMessage,
     this.actionText,
+    this.showAction = true,
+    this.borderColor,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Color(0xffE04c4E), 
-            width: 1.5,
-          ),
-          borderRadius: BorderRadius.circular(12), 
+    final content = Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: borderColor ?? const Color(0xffE04c4E),
+          width: 1.5,
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SvgPicture.asset(
-              "assets/svg/alert_icon.svg",
-            ),
-            ConstPadding.sizeBoxWithWidth(width: 4),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GetGenericText(
-                    text: warningMessage ??
-                        AppLocalizations.of(
-                          context,
-                        )!.account_warning(kycStatus),
-                    fontSize: sizes!.isPhone ? 12 : 16,
-                    fontWeight: sizes!.isPhone
-                        ? FontWeight.w400
-                        : FontWeight.w600,
-                    color: AppColors.whiteColor,
-                    isInter: true,
-                  ),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SvgPicture.asset(
+            "assets/svg/alert_icon.svg",
+          ),
+          ConstPadding.sizeBoxWithWidth(width: 4),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                GetGenericText(
+                  text: warningMessage ??
+                      AppLocalizations.of(
+                        context,
+                      )!.account_warning(kycStatus),
+                  fontSize: sizes!.isPhone ? 12 : 16,
+                  fontWeight:
+                      sizes!.isPhone ? FontWeight.w400 : FontWeight.w600,
+                  color: AppColors.whiteColor,
+                  isInter: true,
+                ),
+                if (showAction) ...[
                   ConstPadding.sizeBoxWithHeight(height: 4),
                   GetGenericText(
                     text: actionText ??
@@ -65,11 +67,18 @@ class AccountWarning extends StatelessWidget {
                     isUnderline: true,
                   ),
                 ],
-              ),
+              ],
             ),
-          ],
-        ).get6VerticalPadding(),
-      ),
+          ),
+        ],
+      ).get6VerticalPadding(),
+    );
+
+    if (!showAction) return content;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: content,
     );
   }
 }

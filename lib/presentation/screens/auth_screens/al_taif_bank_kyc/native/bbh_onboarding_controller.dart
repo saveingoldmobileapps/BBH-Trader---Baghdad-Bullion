@@ -516,6 +516,7 @@ class BbhOnboardingController extends ChangeNotifier {
     return true;
   }
 
+
   bool _filled(TextEditingController c) => c.text.trim().isNotEmpty;
 
   bool _fieldFilled(String key) {
@@ -529,6 +530,7 @@ class BbhOnboardingController extends ChangeNotifier {
   String? lastError;
   String? lastWarning;
   String? lastSuccess;
+
 
   bool _fail(String msg, {String? fieldKey}) {
     lastError = msg;

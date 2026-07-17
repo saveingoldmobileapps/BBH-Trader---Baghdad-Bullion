@@ -354,63 +354,82 @@ class BbhOnboardingSteps {
   static Widget ocrReview(
     BbhOnboardingForm form,
     VoidCallback onChanged,
-    Future<void> Function(TextEditingController, String) pickDate,
-  ) {
-    final hasScan = form.idFrontCaptured;
+    Future<void> Function(TextEditingController, String) pickDate, {
+    bool showNationalIdFields = true,
+    bool showPassportFields = true,
+  }) {
+    final passportOnly = showPassportFields && !showNationalIdFields;
+    final nationalIdOnly = showNationalIdFields && !showPassportFields;
+    final showPassportSection =
+        showPassportFields && (passportOnly || !form.noPassport);
+    final hasScan = passportOnly
+        ? form.passportCaptured
+        : form.idFrontCaptured;
     return _scroll([
       BbhStepHeader(
-        eyebrow: 'Step 2 · Your Details',
-        title: hasScan ? 'Check what we read' : 'Enter your details',
+        eyebrow: passportOnly ? 'Passport details' : 'Step 2 · Your Details',
+        title: hasScan
+            ? (passportOnly
+                ? 'Check your passport details'
+                : 'Check what we read')
+            : (passportOnly
+                ? 'Enter your passport details'
+                : 'Enter your details'),
         lede: hasScan
-            ? 'These details were read from your documents. Please check each field and correct anything that looks wrong before continuing.'
-            : 'Please enter the following details exactly as they appear on your documents.',
+            ? (passportOnly
+                ? 'These details were read from your passport. Please check each field and correct anything that looks wrong before submitting.'
+                : 'These details were read from your documents. Please check each field and correct anything that looks wrong before continuing.')
+            : (passportOnly
+                ? 'Please enter your passport details exactly as they appear on the document.'
+                : 'Please enter the following details exactly as they appear on your documents.'),
       ),
       if (hasScan) const BbhInfoBanner(text: 'Auto-filled from your documents'),
-      _groupTitle(
-        'Full name in Arabic',
-        'As written on the national identity card.',
-      ),
-      _grid2(
-        BbhTextField(
-          fieldKey: 'ar_first',
-          controller: form.arFirst,
-          label: 'First Name',
-          verified: form.isVerified('ar_first'),
-          textDirection: TextDirection.rtl,
+      if (showNationalIdFields) ...[
+        _groupTitle(
+          'Full name in Arabic',
+          'As written on the national identity card.',
+        ),
+        _grid2(
+          BbhTextField(
+            fieldKey: 'ar_first',
+            controller: form.arFirst,
+            label: 'First Name',
+            verified: form.isVerified('ar_first'),
+            textDirection: TextDirection.rtl,
+          ),
+          BbhTextField(
+            fieldKey: 'ar_father',
+            controller: form.arFather,
+            label: "Father's Name",
+            verified: form.isVerified('ar_father'),
+            textDirection: TextDirection.rtl,
+          ),
+        ),
+        _grid2(
+          BbhTextField(
+            fieldKey: 'ar_gf',
+            controller: form.arGf,
+            label: "Grandfather's",
+            verified: form.isVerified('ar_gf'),
+            textDirection: TextDirection.rtl,
+          ),
+          BbhTextField(
+            fieldKey: 'ar_surname',
+            controller: form.arSurname,
+            label: 'Surname',
+            verified: form.isVerified('ar_surname'),
+            textDirection: TextDirection.rtl,
+          ),
         ),
         BbhTextField(
-          fieldKey: 'ar_father',
-          controller: form.arFather,
-          label: "Father's Name",
-          verified: form.isVerified('ar_father'),
+          fieldKey: 'ar_mother',
+          controller: form.arMother,
+          label: "Mother's Name",
+          verified: form.isVerified('ar_mother'),
           textDirection: TextDirection.rtl,
         ),
-      ),
-      _grid2(
-        BbhTextField(
-          fieldKey: 'ar_gf',
-          controller: form.arGf,
-          label: "Grandfather's",
-          verified: form.isVerified('ar_gf'),
-          textDirection: TextDirection.rtl,
-        ),
-        BbhTextField(
-          fieldKey: 'ar_surname',
-          controller: form.arSurname,
-          label: 'Surname',
-          verified: form.isVerified('ar_surname'),
-          textDirection: TextDirection.rtl,
-        ),
-      ),
-      BbhTextField(
-        fieldKey: 'ar_mother',
-        controller: form.arMother,
-        label: "Mother's Name",
-        verified: form.isVerified('ar_mother'),
-        textDirection: TextDirection.rtl,
-      ),
+      ],
 
-      const SizedBox(height: 24),
       // Full name in English (National ID) — hidden for now; scan still fills id_en_* for API.
       // _groupTitle(
       //   'Full name in English (National ID)',
@@ -455,8 +474,8 @@ class BbhOnboardingSteps {
       //   verified: form.isVerified('id_en_mother'),
       //   capitalization: TextCapitalization.words,
       // ),
-      if (!form.noPassport) ...[
-        const SizedBox(height: 24),
+      if (showPassportSection) ...[
+        if (!nationalIdOnly) const SizedBox(height: 24),
         _groupTitle(
           'Full name in English (Passport)',
           'As it appears on the passport.',
@@ -501,64 +520,66 @@ class BbhOnboardingSteps {
           capitalization: TextCapitalization.words,
         ),
       ],
-      const SizedBox(height: 24),
-      _groupTitle(
-        'National Identity Card',
-        'Both numbers are printed on the same card.',
-      ),
-      _grid2(
-        _fieldWithHint(
-          BbhTextField(
-            fieldKey: 'id_personal',
-            controller: form.idPersonal,
-            label: 'Personal Number',
-            verified: form.isVerified('id_personal'),
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(12),
-            ],
-            hint: '123456789012',
-          ),
-          '12 digits. Same across renewals.',
+      if (showNationalIdFields) ...[
+        const SizedBox(height: 24),
+        _groupTitle(
+          'National Identity Card',
+          'Both numbers are printed on the same card.',
         ),
-        _fieldWithHint(
-          BbhTextField(
-            fieldKey: 'id_serial',
-            controller: form.idSerial,
-            label: 'ID Number (Card Serial)',
-            verified: form.isVerified('id_serial'),
-            capitalization: TextCapitalization.characters,
-            hint: 'A12345678',
+        _grid2(
+          _fieldWithHint(
+            BbhTextField(
+              fieldKey: 'id_personal',
+              controller: form.idPersonal,
+              label: 'Personal Number',
+              verified: form.isVerified('id_personal'),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(12),
+              ],
+              hint: '123456789012',
+            ),
+            '12 digits. Same across renewals.',
           ),
-          'One letter + 8 digits. Changes on renewal.',
-        ),
-      ),
-      BbhTextField(
-        fieldKey: 'id_issue_place',
-        controller: form.idIssuePlace,
-        label: 'Place of Issue',
-        verified: form.isVerified('id_issue_place'),
-      ),
-      _grid2(
-        BbhTextField(
-          fieldKey: 'id_issue_date',
-          controller: form.idIssueDate,
-          label: 'Date of Issue',
-          readOnly: true,
-          verified: form.isVerified('id_issue_date'),
-          onTap: () => pickDate(form.idIssueDate, 'id_issue_date'),
+          _fieldWithHint(
+            BbhTextField(
+              fieldKey: 'id_serial',
+              controller: form.idSerial,
+              label: 'ID Number (Card Serial)',
+              verified: form.isVerified('id_serial'),
+              capitalization: TextCapitalization.characters,
+              hint: 'A12345678',
+            ),
+            'One letter + 8 digits. Changes on renewal.',
+          ),
         ),
         BbhTextField(
-          fieldKey: 'id_expiry_date',
-          controller: form.idExpiryDate,
-          label: 'Date of Expiry',
-          readOnly: true,
-          verified: form.isVerified('id_expiry_date'),
-          onTap: () => pickDate(form.idExpiryDate, 'id_expiry_date'),
+          fieldKey: 'id_issue_place',
+          controller: form.idIssuePlace,
+          label: 'Place of Issue',
+          verified: form.isVerified('id_issue_place'),
         ),
-      ),
-      if (!form.noPassport) ...[
+        _grid2(
+          BbhTextField(
+            fieldKey: 'id_issue_date',
+            controller: form.idIssueDate,
+            label: 'Date of Issue',
+            readOnly: true,
+            verified: form.isVerified('id_issue_date'),
+            onTap: () => pickDate(form.idIssueDate, 'id_issue_date'),
+          ),
+          BbhTextField(
+            fieldKey: 'id_expiry_date',
+            controller: form.idExpiryDate,
+            label: 'Date of Expiry',
+            readOnly: true,
+            verified: form.isVerified('id_expiry_date'),
+            onTap: () => pickDate(form.idExpiryDate, 'id_expiry_date'),
+          ),
+        ),
+      ],
+      if (showPassportSection) ...[
         const SizedBox(height: 24),
         _groupTitle('Passport', null),
         _grid2(

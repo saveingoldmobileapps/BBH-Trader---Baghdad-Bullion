@@ -22,6 +22,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 enum KycDocumentUpdateStep {
+  blocked,
   rejection,
   scan,
   review,
@@ -32,19 +33,59 @@ enum KycDocumentUpdateStep {
 class KycDocumentUpdateController extends ChangeNotifier {
   KycDocumentUpdateController({
     required this.documentType,
-    required this.reviewStatus,
+    ProfileVerificationStatus? verificationStatus,
+    bool canRetake = true,
     BbhOnboardingForm? form,
   }) : form = form ?? BbhOnboardingForm() {
     BbhOnboardingImageUploadQueue.instance.onUploaded = (key, url) {
       ipassImageUrls[key] = url;
     };
-    step = reviewStatus.isRejected
-        ? KycDocumentUpdateStep.rejection
-        : KycDocumentUpdateStep.scan;
+    step = _initialStep(
+      verificationStatus: verificationStatus,
+      canRetake: canRetake,
+    );
   }
 
   final KycDocumentType documentType;
-  final KycDocumentReviewStatus reviewStatus;
+
+  static KycDocumentUpdateStep _initialStep({
+    required ProfileVerificationStatus? verificationStatus,
+    required bool canRetake,
+  }) {
+    if (!canRetake) return KycDocumentUpdateStep.blocked;
+    if (verificationStatus == ProfileVerificationStatus.rejected) {
+      return KycDocumentUpdateStep.rejection;
+    }
+    return KycDocumentUpdateStep.scan;
+  }
+
+  void syncDocumentStatus({
+    required ProfileVerificationStatus? verificationStatus,
+    required bool canRetake,
+  }) {
+    if (step == KycDocumentUpdateStep.success) return;
+
+    if (!canRetake) {
+      if (step != KycDocumentUpdateStep.blocked) {
+        step = KycDocumentUpdateStep.blocked;
+        notifyListeners();
+      }
+      return;
+    }
+
+    if (verificationStatus == ProfileVerificationStatus.rejected) {
+      if (step != KycDocumentUpdateStep.rejection) {
+        step = KycDocumentUpdateStep.rejection;
+        notifyListeners();
+      }
+      return;
+    }
+
+    if (step == KycDocumentUpdateStep.blocked) {
+      step = KycDocumentUpdateStep.scan;
+      notifyListeners();
+    }
+  }
 
   BbhOnboardingForm form;
   KycDocumentUpdateStep step = KycDocumentUpdateStep.scan;
@@ -348,8 +389,7 @@ class KycDocumentUpdateController extends ChangeNotifier {
   }
 
   bool validateReviewFields() {
-    String tc(TextEditingController c) => c.text.trim();
-    bool filled(TextEditingController c) => tc(c).isNotEmpty;
+    bool filled(TextEditingController c) => c.text.trim().isNotEmpty;
 
     switch (documentType) {
       case KycDocumentType.nationalId:
@@ -368,12 +408,9 @@ class KycDocumentUpdateController extends ChangeNotifier {
             return false;
           }
         }
+        return true;
       case KycDocumentType.passport:
-        if (form.noPassport) {
-          lastError = 'Please scan your passport to continue.';
-          notifyListeners();
-          return false;
-        }
+        form.noPassport = false;
         for (final c in [form.ppNo, form.ppIssue, form.ppExpiry, form.ppPlace]) {
           if (!filled(c)) {
             lastError = 'Please complete all passport fields.';
@@ -381,16 +418,40 @@ class KycDocumentUpdateController extends ChangeNotifier {
             return false;
           }
         }
+        return true;
       case KycDocumentType.residency:
-        for (final c in [form.resNo, form.resIssue, form.resExpiry]) {
-          if (!filled(c)) {
-            lastError = 'Please complete all residence card fields.';
+        const required = [
+          'res_no',
+          'res_place',
+          'res_issue',
+          'addr_gov',
+          'addr_district',
+          'addr_city',
+          'addr_mahalla',
+          'addr_street',
+          'addr_house',
+          'addr_landmark_ar',
+        ];
+        for (final key in required) {
+          final c = form.controllerFor(key);
+          if (c == null || !filled(c)) {
+            lastError = 'Please fill all address fields.';
             notifyListeners();
             return false;
           }
         }
+        if (form.foreignRes == 'Yes' && !filled(form.foreignResCountry)) {
+          lastError = 'Enter foreign residency country.';
+          notifyListeners();
+          return false;
+        }
+        if (form.foreignCit == 'Yes' && !filled(form.foreignCitCountry)) {
+          lastError = 'Enter foreign citizenship country.';
+          notifyListeners();
+          return false;
+        }
+        return true;
     }
-    return true;
   }
 
   Future<bool> submitDocument() async {
@@ -425,7 +486,10 @@ class KycDocumentUpdateController extends ChangeNotifier {
       }
 
       if (documentType == KycDocumentType.passport &&
-          payload['isPassportDetailsVerified'] != true) {
+          !KycDocumentUpdatePayloadBuilder.isPassportReadyToSubmit(
+            form: form,
+            scanResult: ipassScanResult,
+          )) {
         lastError =
             'Passport could not be verified. Please retake the scan and try again.';
         notifyListeners();
@@ -523,6 +587,7 @@ class KycDocumentUpdateController extends ChangeNotifier {
         form.idBackCaptured = true;
       case IpassScanTarget.passport:
         form.passportCaptured = true;
+        form.noPassport = false;
       case IpassScanTarget.residence:
         form.resFrontCaptured = true;
         form.resBackCaptured = true;

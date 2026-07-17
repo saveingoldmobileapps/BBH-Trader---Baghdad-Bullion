@@ -8,6 +8,19 @@ import 'package:baghdad_bullion_house/presentation/screens/kyc_document_update/k
 import 'package:baghdad_bullion_house/presentation/widgets/pop_up_widget.dart';
 import 'package:flutter/material.dart';
 
+/// Document status message resolved the same way as the home status panel.
+class KycDocumentStatusCopy {
+  const KycDocumentStatusCopy({
+    required this.status,
+    required this.message,
+    required this.canRetake,
+  });
+
+  final ProfileVerificationStatus? status;
+  final String message;
+  final bool canRetake;
+}
+
 /// Copy shown when a gated action is blocked by KYC / profile verification.
 class KycBlockedActionCopy {
   const KycBlockedActionCopy({
@@ -98,12 +111,18 @@ class KycHomeNavigation {
   ) {
     if (payload == null) return null;
     return switch (item) {
-      KycProfileStatusItemType.nationalId =>
-        documentStatus(payload, KycDocumentType.nationalId),
-      KycProfileStatusItemType.passport =>
-        documentStatus(payload, KycDocumentType.passport),
-      KycProfileStatusItemType.residency =>
-        documentStatus(payload, KycDocumentType.residency),
+      KycProfileStatusItemType.nationalId => documentStatus(
+        payload,
+        KycDocumentType.nationalId,
+      ),
+      KycProfileStatusItemType.passport => documentStatus(
+        payload,
+        KycDocumentType.passport,
+      ),
+      KycProfileStatusItemType.residency => documentStatus(
+        payload,
+        KycDocumentType.residency,
+      ),
       KycProfileStatusItemType.agreement => agreementStatus(payload),
     };
   }
@@ -115,9 +134,12 @@ class KycHomeNavigation {
     if (payload == null) return false;
     return switch (item) {
       KycProfileStatusItemType.agreement => !isAgreementSigned(payload),
-      _ => shouldUseFullKycOnDocumentTap(payload) ||
-          profileStatusItemStatus(payload, item) ==
-              ProfileVerificationStatus.rejected,
+      _ =>
+        shouldUseFullKycOnDocumentTap(payload) ||
+            canResubmitDocument(
+              payload,
+              documentTypeForProfileStatusItem(item)!,
+            ),
     };
   }
 
@@ -135,13 +157,12 @@ class KycHomeNavigation {
   static String profileStatusItemLabel(
     KycProfileStatusItemType item,
     AppLocalizations l10n,
-  ) =>
-      switch (item) {
-        KycProfileStatusItemType.nationalId => l10n.kyc_doc_national_id,
-        KycProfileStatusItemType.passport => l10n.kyc_doc_passport,
-        KycProfileStatusItemType.residency => l10n.kyc_doc_residency,
-        KycProfileStatusItemType.agreement => l10n.sig_agreement,
-      };
+  ) => switch (item) {
+    KycProfileStatusItemType.nationalId => l10n.kyc_doc_national_id,
+    KycProfileStatusItemType.passport => l10n.kyc_doc_passport,
+    KycProfileStatusItemType.residency => l10n.kyc_doc_residency,
+    KycProfileStatusItemType.agreement => l10n.sig_agreement,
+  };
 
   static Future<void> onProfileStatusItemTap(
     BuildContext context,
@@ -247,11 +268,12 @@ class KycHomeNavigation {
   static bool hasPerDocumentReviews(Payload? payload) {
     if (payload == null) return false;
     if (usesProfileVerificationApi(payload)) {
-      return profileStatus(payload) == ProfileVerificationStatus.rejected;
+      return profileStatus(payload)?.isAwaitingVerification ?? false;
     }
-    return payload.nationalIdReview != null ||
-        payload.passportReview != null ||
-        payload.residencyReview != null;
+    for (final type in KycDocumentType.values) {
+      if (documentStatus(payload, type) != null) return true;
+    }
+    return false;
   }
 
   static ProfileVerificationStatus? documentStatus(
@@ -260,9 +282,9 @@ class KycHomeNavigation {
   ) {
     if (payload == null) return null;
     return switch (type) {
-      KycDocumentType.nationalId => payload.nationalIdVerificationStatus,
-      KycDocumentType.passport => payload.passportVerificationStatus,
-      KycDocumentType.residency => payload.residencyVerificationStatus,
+      KycDocumentType.nationalId => payload.nationalIdDetailsStatus,
+      KycDocumentType.passport => payload.passportDetailsStatus,
+      KycDocumentType.residency => payload.residencyDetailsStatus,
     };
   }
 
@@ -273,6 +295,15 @@ class KycHomeNavigation {
     Payload? payload,
     KycDocumentType type,
   ) {
+    return canResubmitDocument(payload, type);
+  }
+
+  /// True when the user may open the single-document resubmit flow.
+  static bool canResubmitDocument(
+    Payload? payload,
+    KycDocumentType type,
+  ) {
+    if (payload == null) return false;
     return documentStatus(payload, type) == ProfileVerificationStatus.rejected;
   }
 
@@ -401,14 +432,10 @@ class KycHomeNavigation {
   static List<KycDocumentType> documentsNeedingActionLegacy(Payload? payload) {
     if (payload == null) return const [];
     final out = <KycDocumentType>[];
-    if (payload.nationalIdReview?.needsAction == true) {
-      out.add(KycDocumentType.nationalId);
-    }
-    if (payload.passportReview?.needsAction == true) {
-      out.add(KycDocumentType.passport);
-    }
-    if (payload.residencyReview?.needsAction == true) {
-      out.add(KycDocumentType.residency);
+    for (final type in KycDocumentType.values) {
+      if (!isDocumentVerified(documentStatus(payload, type))) {
+        out.add(type);
+      }
     }
     return out;
   }
@@ -521,12 +548,11 @@ class KycHomeNavigation {
   static String documentLabel(
     KycDocumentType type,
     AppLocalizations l10n,
-  ) =>
-      switch (type) {
-        KycDocumentType.nationalId => l10n.kyc_doc_national_id,
-        KycDocumentType.passport => l10n.kyc_doc_passport,
-        KycDocumentType.residency => l10n.kyc_doc_residency,
-      };
+  ) => switch (type) {
+    KycDocumentType.nationalId => l10n.kyc_doc_national_id,
+    KycDocumentType.passport => l10n.kyc_doc_passport,
+    KycDocumentType.residency => l10n.kyc_doc_residency,
+  };
 
   static KycBlockedActionCopy blockedActionCopy(
     Payload? payload,
@@ -621,15 +647,50 @@ class KycHomeNavigation {
     KycDocumentType type,
     Payload payload,
   ) {
-    final status = reviewStatusFor(type, payload);
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => KycDocumentUpdateScreen(
-          documentType: type,
-          reviewStatus: status ?? KycDocumentReviewStatus.pending,
-        ),
+        builder: (_) => KycDocumentUpdateScreen(documentType: type),
       ),
+    );
+  }
+
+  /// Same status + user-facing message logic used on home document warnings.
+  static KycDocumentStatusCopy documentStatusCopy(
+    Payload? payload,
+    KycDocumentType type,
+    AppLocalizations l10n, {
+    bool showRetakeHint = false,
+  }) {
+    final docLabel = documentLabel(type, l10n);
+    final status = documentStatus(payload, type);
+    final canRetake = canResubmitDocument(payload, type);
+
+    final message = switch (status) {
+      ProfileVerificationStatus.rejected => l10n.kyc_document_rejected(
+        docLabel,
+      ),
+      ProfileVerificationStatus.verified ||
+      ProfileVerificationStatus.approved => l10n.kyc_document_verified(
+        docLabel,
+      ),
+      ProfileVerificationStatus.reviewing => l10n.kyc_document_reviewing(
+        docLabel,
+      ),
+      ProfileVerificationStatus.pending =>
+        showRetakeHint
+            ? l10n.kyc_document_pending(docLabel)
+            : l10n.kyc_document_pending_review(docLabel),
+      null =>
+        showRetakeHint
+            ? l10n.kyc_document_pending(docLabel)
+            : l10n.kyc_document_pending_review(docLabel),
+    };
+
+    return KycDocumentStatusCopy(
+      status: status,
+      message: message,
+      canRetake: canRetake,
     );
   }
 
@@ -638,21 +699,13 @@ class KycHomeNavigation {
     Payload payload,
   ) {
     final docStatus = documentStatus(payload, type);
-    if (usesProfileVerificationApi(payload) && docStatus != null) {
-      return switch (docStatus) {
-        ProfileVerificationStatus.rejected => KycDocumentReviewStatus.rejected,
-        ProfileVerificationStatus.pending => KycDocumentReviewStatus.pending,
-        ProfileVerificationStatus.reviewing => KycDocumentReviewStatus.pending,
-        ProfileVerificationStatus.verified ||
-        ProfileVerificationStatus.approved =>
-          KycDocumentReviewStatus.approved,
-      };
-    }
-
-    return switch (type) {
-      KycDocumentType.nationalId => payload.nationalIdReview,
-      KycDocumentType.passport => payload.passportReview,
-      KycDocumentType.residency => payload.residencyReview,
+    if (docStatus == null) return null;
+    return switch (docStatus) {
+      ProfileVerificationStatus.rejected => KycDocumentReviewStatus.rejected,
+      ProfileVerificationStatus.pending => KycDocumentReviewStatus.pending,
+      ProfileVerificationStatus.reviewing => KycDocumentReviewStatus.pending,
+      ProfileVerificationStatus.verified ||
+      ProfileVerificationStatus.approved => KycDocumentReviewStatus.approved,
     };
   }
 

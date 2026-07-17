@@ -94,12 +94,9 @@ class Payload {
     bool? isFrozen,
     bool? agreementStatus,
     ProfileVerificationStatus? profileVerificationStatus,
-    ProfileVerificationStatus? nationalIdVerificationStatus,
-    ProfileVerificationStatus? passportVerificationStatus,
-    ProfileVerificationStatus? residencyVerificationStatus,
-    KycDocumentReviewStatus? passportReview,
-    KycDocumentReviewStatus? nationalIdReview,
-    KycDocumentReviewStatus? residencyReview,
+    ProfileVerificationStatus? nationalIdDetailsStatus,
+    ProfileVerificationStatus? passportDetailsStatus,
+    ProfileVerificationStatus? residencyDetailsStatus,
     //double? temporaryCreditAmount,
     WalletExists? walletExists,
     List<Offers>? offers,
@@ -117,12 +114,9 @@ class Payload {
     _isFrozen = isFrozen;
     _agreementStatus = agreementStatus;
     _profileVerificationStatus = profileVerificationStatus;
-    _nationalIdVerificationStatus = nationalIdVerificationStatus;
-    _passportVerificationStatus = passportVerificationStatus;
-    _residencyVerificationStatus = residencyVerificationStatus;
-    _passportReview = passportReview;
-    _nationalIdReview = nationalIdReview;
-    _residencyReview = residencyReview;
+    _nationalIdDetailsStatus = nationalIdDetailsStatus;
+    _passportDetailsStatus = passportDetailsStatus;
+    _residencyDetailsStatus = residencyDetailsStatus;
     // _temporaryCreditAmount = temporaryCreditAmount;
     _walletExists = walletExists;
     _offers = offers;
@@ -146,37 +140,20 @@ class Payload {
       'profileVerificationStatus',
       'ProfileVerificationStatus',
     );
-    _nationalIdVerificationStatus = ProfileVerificationStatus.resolveDocumentStatus(
+    _nationalIdDetailsStatus = ProfileVerificationStatus.resolveDocumentStatus(
       json,
-      verificationCamel: 'nationalIdVerificationStatus',
-      verificationPascal: 'NationalIdVerificationStatus',
       detailsCamel: 'isNationalIdDetailsVerified',
       detailsPascal: 'IsNationalIdDetailsVerified',
     );
-    _passportVerificationStatus = ProfileVerificationStatus.resolveDocumentStatus(
+    _passportDetailsStatus = ProfileVerificationStatus.resolveDocumentStatus(
       json,
-      verificationCamel: 'passportVerificationStatus',
-      verificationPascal: 'PassportVerificationStatus',
       detailsCamel: 'isPassportDetailsVerified',
       detailsPascal: 'IsPassportDetailsVerified',
     );
-    _residencyVerificationStatus = ProfileVerificationStatus.resolveDocumentStatus(
+    _residencyDetailsStatus = ProfileVerificationStatus.resolveDocumentStatus(
       json,
-      verificationCamel: 'residencyVerificationStatus',
-      verificationPascal: 'ResidencyVerificationStatus',
       detailsCamel: 'isResidencyDetailsVerified',
       detailsPascal: 'IsResidencyDetailsVerified',
-    );
-    _passportReview = KycDocumentReviewStatus.fromApi(
-      json['PassportReview']?.toString() ?? json['passportReview']?.toString(),
-    );
-    _nationalIdReview = KycDocumentReviewStatus.fromApi(
-      json['NationalIdReview']?.toString() ??
-          json['nationalIdReview']?.toString(),
-    );
-    _residencyReview = KycDocumentReviewStatus.fromApi(
-      json['ResidencyReview']?.toString() ??
-          json['residencyReview']?.toString(),
     );
     //_temporaryCreditAmount = json['temporaryCreditAmount'];
     _walletExists = json['walletExists'] != null
@@ -206,12 +183,9 @@ class Payload {
   bool? _isFrozen;
   bool? _agreementStatus;
   ProfileVerificationStatus? _profileVerificationStatus;
-  ProfileVerificationStatus? _nationalIdVerificationStatus;
-  ProfileVerificationStatus? _passportVerificationStatus;
-  ProfileVerificationStatus? _residencyVerificationStatus;
-  KycDocumentReviewStatus? _passportReview;
-  KycDocumentReviewStatus? _nationalIdReview;
-  KycDocumentReviewStatus? _residencyReview;
+  ProfileVerificationStatus? _nationalIdDetailsStatus;
+  ProfileVerificationStatus? _passportDetailsStatus;
+  ProfileVerificationStatus? _residencyDetailsStatus;
   //double?  _temporaryCreditAmount;
   String? _userType;
   WalletExists? _walletExists;
@@ -230,12 +204,9 @@ class Payload {
     bool? isFrozen,
     bool? agreementStatus,
     ProfileVerificationStatus? profileVerificationStatus,
-    ProfileVerificationStatus? nationalIdVerificationStatus,
-    ProfileVerificationStatus? passportVerificationStatus,
-    ProfileVerificationStatus? residencyVerificationStatus,
-    KycDocumentReviewStatus? passportReview,
-    KycDocumentReviewStatus? nationalIdReview,
-    KycDocumentReviewStatus? residencyReview,
+    ProfileVerificationStatus? nationalIdDetailsStatus,
+    ProfileVerificationStatus? passportDetailsStatus,
+    ProfileVerificationStatus? residencyDetailsStatus,
     WalletExists? walletExists,
     List<Offers>? offers,
     List<NewsUpdates>? newsUpdates,
@@ -252,15 +223,11 @@ class Payload {
     agreementStatus: agreementStatus ?? _agreementStatus,
     profileVerificationStatus:
         profileVerificationStatus ?? _profileVerificationStatus,
-    nationalIdVerificationStatus:
-        nationalIdVerificationStatus ?? _nationalIdVerificationStatus,
-    passportVerificationStatus:
-        passportVerificationStatus ?? _passportVerificationStatus,
-    residencyVerificationStatus:
-        residencyVerificationStatus ?? _residencyVerificationStatus,
-    passportReview: passportReview ?? _passportReview,
-    nationalIdReview: nationalIdReview ?? _nationalIdReview,
-    residencyReview: residencyReview ?? _residencyReview,
+    nationalIdDetailsStatus:
+        nationalIdDetailsStatus ?? _nationalIdDetailsStatus,
+    passportDetailsStatus: passportDetailsStatus ?? _passportDetailsStatus,
+    residencyDetailsStatus:
+        residencyDetailsStatus ?? _residencyDetailsStatus,
     //temporaryCreditAmount: temporaryCreditAmount ?? _temporaryCreditAmount,
     userType: userType ?? _userType,
     walletExists: walletExists ?? _walletExists,
@@ -282,24 +249,20 @@ class Payload {
   bool? get agreementStatus => _agreementStatus;
   ProfileVerificationStatus? get profileVerificationStatus =>
       _profileVerificationStatus;
-  ProfileVerificationStatus? get nationalIdVerificationStatus =>
-      _nationalIdVerificationStatus;
-  ProfileVerificationStatus? get passportVerificationStatus =>
-      _passportVerificationStatus;
-  ProfileVerificationStatus? get residencyVerificationStatus =>
-      _residencyVerificationStatus;
+  ProfileVerificationStatus? get nationalIdDetailsStatus =>
+      _nationalIdDetailsStatus;
+  ProfileVerificationStatus? get passportDetailsStatus =>
+      _passportDetailsStatus;
+  ProfileVerificationStatus? get residencyDetailsStatus =>
+      _residencyDetailsStatus;
 
   /// Legacy bool view — true when document status is verified/approved.
   bool? get isNationalIdDetailsVerified =>
-      _nationalIdVerificationStatus?.isApprovedOrVerified;
+      _nationalIdDetailsStatus?.isApprovedOrVerified;
   bool? get isPassportDetailsVerified =>
-      _passportVerificationStatus?.isApprovedOrVerified;
+      _passportDetailsStatus?.isApprovedOrVerified;
   bool? get isResidencyDetailsVerified =>
-      _residencyVerificationStatus?.isApprovedOrVerified;
-
-  KycDocumentReviewStatus? get passportReview => _passportReview;
-  KycDocumentReviewStatus? get nationalIdReview => _nationalIdReview;
-  KycDocumentReviewStatus? get residencyReview => _residencyReview;
+      _residencyDetailsStatus?.isApprovedOrVerified;
   //double? get temporaryCreditAmount => _temporaryCreditAmount;
   WalletExists? get walletExists => _walletExists;
   List<Offers>? get offers => _offers;
@@ -321,38 +284,16 @@ class Payload {
       map['profileVerificationStatus'] =
           _profileVerificationStatus!.apiLabel;
     }
-    if (_nationalIdVerificationStatus != null) {
-      map['nationalIdVerificationStatus'] =
-          _nationalIdVerificationStatus!.apiLabel;
-    }
-    if (_passportVerificationStatus != null) {
-      map['passportVerificationStatus'] =
-          _passportVerificationStatus!.apiLabel;
-    }
-    if (_residencyVerificationStatus != null) {
-      map['residencyVerificationStatus'] =
-          _residencyVerificationStatus!.apiLabel;
-    }
-    if (_nationalIdVerificationStatus != null) {
+    if (_nationalIdDetailsStatus != null) {
       map['isNationalIdDetailsVerified'] =
-          _nationalIdVerificationStatus!.apiLabel;
+          _nationalIdDetailsStatus!.apiLabel;
     }
-    if (_passportVerificationStatus != null) {
-      map['isPassportDetailsVerified'] =
-          _passportVerificationStatus!.apiLabel;
+    if (_passportDetailsStatus != null) {
+      map['isPassportDetailsVerified'] = _passportDetailsStatus!.apiLabel;
     }
-    if (_residencyVerificationStatus != null) {
+    if (_residencyDetailsStatus != null) {
       map['isResidencyDetailsVerified'] =
-          _residencyVerificationStatus!.apiLabel;
-    }
-    if (_passportReview != null) {
-      map['PassportReview'] = _passportReview!.name;
-    }
-    if (_nationalIdReview != null) {
-      map['NationalIdReview'] = _nationalIdReview!.name;
-    }
-    if (_residencyReview != null) {
-      map['ResidencyReview'] = _residencyReview!.name;
+          _residencyDetailsStatus!.apiLabel;
     }
     //map['temporaryCreditAmount'] = _temporaryCreditAmount;
     if (_walletExists != null) {

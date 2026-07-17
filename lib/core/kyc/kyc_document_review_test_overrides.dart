@@ -38,11 +38,11 @@ class KycDocumentReviewTestOverrides {
 
         profileVerificationStatus: ProfileVerificationStatus.rejected,
 
-        nationalIdVerificationStatus: ProfileVerificationStatus.verified,
+        nationalIdDetailsStatus: ProfileVerificationStatus.verified,
 
-        passportVerificationStatus: ProfileVerificationStatus.verified,
+        passportDetailsStatus: ProfileVerificationStatus.verified,
 
-        residencyVerificationStatus: ProfileVerificationStatus.rejected,
+        residencyDetailsStatus: ProfileVerificationStatus.rejected,
 
       ),
 

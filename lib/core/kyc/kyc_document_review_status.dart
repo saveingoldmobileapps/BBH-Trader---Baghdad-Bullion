@@ -63,22 +63,17 @@ enum ProfileVerificationStatus {
     return fromApi(raw.toString());
   }
 
-  /// Resolves a document status from `is*DetailsVerified` or `*VerificationStatus`.
+  /// Parses document status from `is*DetailsVerified` only.
   ///
-  /// The home API may send both; `is*DetailsVerified` is preferred because it is
-  /// the field updated during profile review.
+  /// Ignores legacy `*VerificationStatus` and `*Review` fields — the home feed
+  /// uses `isNationalIdDetailsVerified`, `isPassportDetailsVerified`, and
+  /// `isResidencyDetailsVerified` as the source of truth.
   static ProfileVerificationStatus? resolveDocumentStatus(
     dynamic json, {
-    required String verificationCamel,
-    required String verificationPascal,
     required String detailsCamel,
     required String detailsPascal,
   }) {
-    final fromDetails = parseFlexible(
-      json[detailsCamel] ?? json[detailsPascal],
-    );
-    if (fromDetails != null) return fromDetails;
-    return fromJsonField(json, verificationCamel, verificationPascal);
+    return parseFlexible(json[detailsCamel] ?? json[detailsPascal]);
   }
 
   String get apiLabel => switch (this) {

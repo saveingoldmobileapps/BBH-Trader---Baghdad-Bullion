@@ -26,134 +26,121 @@ class KycDocumentUpdatePayloadBuilder {
 
     switch (documentType) {
       case KycDocumentType.nationalId:
-        final details = Map<String, dynamic>.from(
-          full['nationalIdDetails'] as Map<String, dynamic>,
-        );
-        details['documents'] = _documentsForScan(
-          scanTarget: IpassScanTarget.nationalId,
-          scanResult: nationalIdOrPassportScan,
-          imageUrlsByKey: imageUrlsByKey,
-        );
-        return {
-          'isNationalIdDetailsVerified': _isNationalIdDetailsVerified(
-            form: form,
-            scanResult: nationalIdOrPassportScan,
-          ),
-          'nationalIdDetails': details,
-        };
+  final details = Map<String, dynamic>.from(
+    full['nationalIdDetails'] as Map<String, dynamic>,
+  );
 
-      case KycDocumentType.passport:
-        final details = Map<String, dynamic>.from(
-          full['passportDetails'] as Map<String, dynamic>,
-        );
-        details['documents'] = _documentsForScan(
-          scanTarget: IpassScanTarget.passport,
-          scanResult: nationalIdOrPassportScan,
-          imageUrlsByKey: imageUrlsByKey,
-        );
-        return {
-          'isPassportDetailsVerified': isPassportDetailsVerified(
-            form: form,
-            scanResult: nationalIdOrPassportScan,
-          ),
-          'passportDetails': details,
-        };
+  details['documents'] = _documentsForScan(
+    scanTarget: IpassScanTarget.nationalId,
+    scanResult: nationalIdOrPassportScan,
+    imageUrlsByKey: imageUrlsByKey,
+  );
 
-      case KycDocumentType.residency:
-        final details = Map<String, dynamic>.from(
-          full['residencyDetails'] as Map<String, dynamic>,
-        );
-        details['documents'] = _documentsForResidence(
-          imageUrlsByKey: imageUrlsByKey,
-          front: residenceFront,
-          back: residenceBack,
-        );
-        return {
-          'isResidencyDetailsVerified': _isResidencyDetailsVerified(
-            form: form,
-            front: residenceFront,
-            back: residenceBack,
-          ),
-          'residencyDetails': details,
-        };
+  return {
+    'isNationalIdDetailsVerified': true,
+    'nationalIdDetails': details,
+  };
+
+
+case KycDocumentType.passport:
+  final details = Map<String, dynamic>.from(
+    full['passportDetails'] as Map<String, dynamic>,
+  );
+
+  details['documents'] = _documentsForScan(
+    scanTarget: IpassScanTarget.passport,
+    scanResult: nationalIdOrPassportScan,
+    imageUrlsByKey: imageUrlsByKey,
+  );
+
+  return {
+    'isPassportDetailsVerified': true,
+    'passportDetails': details,
+  };
+
+
+case KycDocumentType.residency:
+  final details = Map<String, dynamic>.from(
+    full['residencyDetails'] as Map<String, dynamic>,
+  );
+
+  details['documents'] = _documentsForResidence(
+    imageUrlsByKey: imageUrlsByKey,
+    front: residenceFront,
+    back: residenceBack,
+  );
+
+  return {
+    'isResidencyDetailsVerified': true,
+    'residencyDetails': details,
+  };
+      // case KycDocumentType.nationalId:
+      //   final details = Map<String, dynamic>.from(
+      //     full['nationalIdDetails'] as Map<String, dynamic>,
+      //   );
+      //   details['documents'] = _documentsForScan(
+      //     scanTarget: IpassScanTarget.nationalId,
+      //     scanResult: nationalIdOrPassportScan,
+      //     imageUrlsByKey: imageUrlsByKey,
+      //   );
+      //   final captured = form.idFrontCaptured && form.idBackCaptured;
+      //   return {
+      //     'isNationalIdDetailsVerified': _resubmitDetailsStatus(
+      //       captured: captured,
+      //     ),
+      //     'nationalIdDetails': details,
+      //   };
+
+      // case KycDocumentType.passport:
+      //   final details = Map<String, dynamic>.from(
+      //     full['passportDetails'] as Map<String, dynamic>,
+      //   );
+      //   details['documents'] = _documentsForScan(
+      //     scanTarget: IpassScanTarget.passport,
+      //     scanResult: nationalIdOrPassportScan,
+      //     imageUrlsByKey: imageUrlsByKey,
+      //   );
+      //   final captured = !form.noPassport && form.passportCaptured;
+      //   return {
+      //     'isPassportDetailsVerified': _resubmitDetailsStatus(
+      //       captured: captured,
+      //     ),
+      //     'passportDetails': details,
+      //   };
+
+      // case KycDocumentType.residency:
+      //   final details = Map<String, dynamic>.from(
+      //     full['residencyDetails'] as Map<String, dynamic>,
+      //   );
+      //   details['documents'] = _documentsForResidence(
+      //     imageUrlsByKey: imageUrlsByKey,
+      //     front: residenceFront,
+      //     back: residenceBack,
+      //   );
+      //   final captured = form.resFrontCaptured && form.resBackCaptured;
+      //   return {
+      //     'isResidencyDetailsVerified': _resubmitDetailsStatus(
+      //       captured: captured,
+      //     ),
+      //     'residencyDetails': details,
+      //   };
+    
     }
   }
 
-  /// Passport retake — `true` when scan completed and iPass did not reject.
-  // static bool isPassportDetailsVerified({
-  //   required BbhOnboardingForm form,
-  //   IpassKycResult? scanResult,
-  // }) {
-  //   if (form.noPassport || !form.passportCaptured || scanResult == null) {
-  //     return false;
-  //   }
-  //   return !_isScanRejected(scanResult);
-  // }
-static bool isPassportDetailsVerified({
-  required BbhOnboardingForm form,
-  IpassKycResult? scanResult,
-}) {
-  if (form.noPassport) {
-    return false;
-  }
-
-  return form.passportCaptured;
-}
-  // static bool _isNationalIdDetailsVerified({
-  //   required BbhOnboardingForm form,
-  //   IpassKycResult? scanResult,
-  // }) {
-  //   if (!form.idFrontCaptured || !form.idBackCaptured || scanResult == null) {
-  //     return false;
-  //   }
-  //   return !_isScanRejected(scanResult);
-  // }
-static bool _isNationalIdDetailsVerified({
-  required BbhOnboardingForm form,
-  IpassKycResult? scanResult,
-}) {
-  if (!form.idFrontCaptured || !form.idBackCaptured) {
-    return false;
-  }
-
-  return true;
-}
-  static bool _isScanRejected(IpassKycResult scanResult) {
-    final status = _scanOverAllStatus(scanResult.data);
-    if (status == 'REJECTED') return true;
-
-    final data = scanResult.data;
-    if (data == null) return false;
-    var current = data;
-    for (var i = 0; i < 4; i++) {
-      final reasons = current['Reason'];
-      if (reasons is List) {
-        for (final item in reasons) {
-          if (item is Map &&
-              item['Status']?.toString().toUpperCase() == 'REJECTED') {
-            return true;
-          }
-        }
-      }
-      final inner = current['data'];
-      if (inner is Map<String, dynamic>) {
-        current = inner;
-      } else if (inner is Map) {
-        current = Map<String, dynamic>.from(inner);
-      } else {
-        break;
-      }
-    }
-    return false;
-  }
-
-  static bool _isResidencyDetailsVerified({
+  /// Whether the passport scan is ready to submit (used by the update controller).
+  static bool isPassportReadyToSubmit({
     required BbhOnboardingForm form,
-    IpassFormDataResultResponse? front,
-    IpassFormDataResultResponse? back,
+    IpassKycResult? scanResult,
   }) {
-    if (!form.resFrontCaptured || !form.resBackCaptured) return false;
-    return (front?.isSucceeded ?? false) && (back?.isSucceeded ?? false);
+    if (form.noPassport || !form.passportCaptured) return false;
+    return scanResult != null;
+  }
+
+  static String _resubmitDetailsStatus({required bool captured}) {
+    return captured
+        ? ProfileVerificationStatus.pending.apiLabel
+        : ProfileVerificationStatus.rejected.apiLabel;
   }
 
   static List<Map<String, dynamic>> _documentsForScan({

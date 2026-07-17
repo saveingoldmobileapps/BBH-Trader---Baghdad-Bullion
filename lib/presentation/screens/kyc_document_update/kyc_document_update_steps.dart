@@ -17,14 +17,16 @@ class KycDocumentUpdateSteps {
   static Widget rejection({
     required KycDocumentType documentType,
     required VoidCallback onRetake,
+    String? message,
   }) {
+    final title = documentTitle(documentType);
     return _scroll([
       BbhStepHeader(
         eyebrow: 'Document Review',
-        title: '${documentTitle(documentType)} rejected',
-        lede:
-            'Your ${documentTitle(documentType).toLowerCase()} was not approved. '
-            'Please retake a clear scan and submit updated details.',
+        title: '$title rejected',
+        lede: message ??
+            'Your ${title.toLowerCase()} was not approved. '
+                'Please retake a clear scan and submit updated details.',
       ),
       const SizedBox(height: 12),
       const BbhInfoBanner(
@@ -33,6 +35,25 @@ class KycDocumentUpdateSteps {
       ),
       const SizedBox(height: 24),
       BbhPrimaryButton(label: 'Retake scan', onPressed: onRetake),
+    ]);
+  }
+
+  static Widget statusBlocked({
+    required KycDocumentType documentType,
+    required String message,
+  }) {
+    final title = documentTitle(documentType);
+    return _scroll([
+      BbhStepHeader(
+        eyebrow: 'Document Review',
+        title: title,
+        lede: message,
+      ),
+      const SizedBox(height: 16),
+      const BbhInfoBanner(
+        text:
+            'Pull to refresh on the home screen after review completes, or return later.',
+      ),
     ]);
   }
 
@@ -113,23 +134,26 @@ class KycDocumentUpdateSteps {
     BbhOnboardingForm form,
     Future<void> Function(TextEditingController, String) pickDate,
   ) {
-    final savedNoPassport = form.noPassport;
-    form.noPassport = true;
-    final widget = BbhOnboardingSteps.ocrReview(form, () {}, pickDate);
-    form.noPassport = savedNoPassport;
-    return widget;
+    return BbhOnboardingSteps.ocrReview(
+      form,
+      () {},
+      pickDate,
+      showNationalIdFields: true,
+      showPassportFields: false,
+    );
   }
 
   static Widget _passportReview(
     BbhOnboardingForm form,
     Future<void> Function(TextEditingController, String) pickDate,
   ) {
-    final savedNoPassport = form.noPassport;
-    form.noPassport = false;
-    form.passportCaptured = true;
-    final widget = BbhOnboardingSteps.ocrReview(form, () {}, pickDate);
-    form.noPassport = savedNoPassport;
-    return widget;
+    return BbhOnboardingSteps.ocrReview(
+      form,
+      () {},
+      pickDate,
+      showNationalIdFields: false,
+      showPassportFields: true,
+    );
   }
 
   static Widget _scroll(List<Widget> children) {

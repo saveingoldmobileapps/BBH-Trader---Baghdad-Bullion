@@ -1,7 +1,9 @@
 import 'dart:io' show File, Platform;
 
 import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_status.dart';
+import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
 import 'package:baghdad_bullion_house/core/theme/const_toasts.dart';
+import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/auth_kyc_screens/widgets/documets_camera.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_onboarding_theme.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_onboarding_widgets.dart';
@@ -18,11 +20,9 @@ class KycDocumentUpdateScreen extends ConsumerStatefulWidget {
   const KycDocumentUpdateScreen({
     super.key,
     required this.documentType,
-    required this.reviewStatus,
   });
 
   final KycDocumentType documentType;
-  final KycDocumentReviewStatus reviewStatus;
 
   @override
   ConsumerState<KycDocumentUpdateScreen> createState() =>
@@ -33,24 +33,70 @@ class _KycDocumentUpdateScreenState
     extends ConsumerState<KycDocumentUpdateScreen> {
   late final KycDocumentUpdateController _controller;
   bool _hydrated = false;
+  KycDocumentStatusCopy? _statusCopy;
 
   @override
   void initState() {
     super.initState();
+    final payload = ref.read(homeProvider).getHomeFeedResponse.payload;
     _controller = KycDocumentUpdateController(
       documentType: widget.documentType,
-      reviewStatus: widget.reviewStatus,
+      verificationStatus:
+          KycHomeNavigation.documentStatus(payload, widget.documentType),
+      canRetake: KycHomeNavigation.canResubmitDocument(
+        payload,
+        widget.documentType,
+      ),
     );
     _controller.addListener(_onControllerChanged);
     _hydrate();
   }
 
+  KycDocumentStatusCopy _resolveStatusCopy() {
+    final payload = ref.read(homeProvider).getHomeFeedResponse.payload;
+    final l10n = AppLocalizations.of(context)!;
+    return KycHomeNavigation.documentStatusCopy(
+      payload,
+      widget.documentType,
+      l10n,
+    );
+  }
+
+  void _applyHomeDocumentStatus() {
+    final copy = _resolveStatusCopy();
+    _statusCopy = copy;
+    _controller.syncDocumentStatus(
+      verificationStatus: copy.status,
+      canRetake: copy.canRetake,
+    );
+  }
+
   Future<void> _hydrate() async {
+    await ref
+        .read(homeProvider.notifier)
+        .getHomeFeed(context: context, showLoading: false);
+
     await _controller.loadPersistedState();
+    _applyHomeDocumentStatus();
+
     final profile =
         ref.read(homeProvider).getUserProfileResponse.payload?.userProfile;
     _controller.prefillFromProfile(profile);
     if (mounted) setState(() => _hydrated = true);
+  }
+
+  Future<bool> _ensureCanRetake() async {
+    await ref
+        .read(homeProvider.notifier)
+        .getHomeFeed(context: context, showLoading: false);
+    _applyHomeDocumentStatus();
+
+    final copy = _statusCopy;
+    if (copy == null || copy.canRetake) return true;
+
+    Toasts.getErrorToast(text: copy.message);
+    setState(() {});
+    return false;
   }
 
   void _onControllerChanged() {
@@ -83,6 +129,7 @@ class _KycDocumentUpdateScreenState
 
   Future<void> _runCapture() async {
     if (_controller.ipassInProgress) return;
+    if (!await _ensureCanRetake()) return;
 
     if (widget.documentType == KycDocumentType.residency) {
       if (!await _ensureKycMediaPermissions(documentOnly: true)) return;
@@ -165,6 +212,7 @@ class _KycDocumentUpdateScreenState
 
   String _primaryLabel() {
     return switch (_controller.step) {
+      KycDocumentUpdateStep.blocked => 'Back to Home',
       KycDocumentUpdateStep.rejection => 'Retake scan',
       KycDocumentUpdateStep.scan => 'Continue',
       KycDocumentUpdateStep.review => 'Submit',
@@ -174,15 +222,20 @@ class _KycDocumentUpdateScreenState
 
   Future<void> _onPrimary() async {
     switch (_controller.step) {
+      case KycDocumentUpdateStep.blocked:
+        if (mounted) Navigator.of(context).pop();
       case KycDocumentUpdateStep.rejection:
+        if (!await _ensureCanRetake()) return;
         _controller.goToScan();
       case KycDocumentUpdateStep.scan:
+        if (!await _ensureCanRetake()) return;
         if (_controller.documentCaptured) {
           _controller.goToReview();
         } else {
           await _runCapture();
         }
       case KycDocumentUpdateStep.review:
+        if (!await _ensureCanRetake()) return;
         final ok = await _controller.submitDocument();
         if (ok && mounted) {
           await ref
@@ -199,9 +252,17 @@ class _KycDocumentUpdateScreenState
       return const Center(child: CircularProgressIndicator());
     }
 
+    final statusMessage = _statusCopy?.message;
+
     return switch (_controller.step) {
+      KycDocumentUpdateStep.blocked => KycDocumentUpdateSteps.statusBlocked(
+          documentType: widget.documentType,
+          message: statusMessage ??
+              'Your document is pending verification.',
+        ),
       KycDocumentUpdateStep.rejection => KycDocumentUpdateSteps.rejection(
           documentType: widget.documentType,
+          message: statusMessage,
           onRetake: _controller.goToScan,
         ),
       KycDocumentUpdateStep.scan => KycDocumentUpdateSteps.scan(

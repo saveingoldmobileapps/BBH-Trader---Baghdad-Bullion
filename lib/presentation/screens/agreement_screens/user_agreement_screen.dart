@@ -667,7 +667,7 @@ class _SignAgreementSheetState extends State<_SignAgreementSheet> {
                           Container(
                             height: 160,
                             decoration: BoxDecoration(
-                              color: AppColors.greyScale900,
+                              color: AppColors.whiteColor,
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: _hasSignature
@@ -687,27 +687,27 @@ class _SignAgreementSheetState extends State<_SignAgreementSheet> {
                               ),
                             ),
                           ),
-                          if (!_hasSignature)
-                            Positioned(
-                              left: 0,
-                              right: 0,
-                              bottom: 20,
-                              child: IgnorePointer(
-                                child: Center(
-                                  child: GetGenericText(
-                                    text: widget.isRtl
-                                        ? 'وقّع هنا'
-                                        : 'Sign here',
-                                    fontSize: sizes!.responsiveFont(
-                                      phoneVal: 14,
-                                      tabletVal: 16,
-                                    ),
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.greyScale800,
-                                  ),
-                                ),
-                              ),
-                            ),
+                          // if (!_hasSignature)
+                          //   Positioned(
+                          //     left: 0,
+                          //     right: 0,
+                          //     bottom: 40,
+                          //     child: IgnorePointer(
+                          //       child: Center(
+                          //         child: GetGenericText(
+                          //           text: widget.isRtl
+                          //               ? 'وقّع هنا'
+                          //               : 'Sign here',
+                          //           fontSize: sizes!.responsiveFont(
+                          //             phoneVal: 14,
+                          //             tabletVal: 16,
+                          //           ),
+                          //           fontWeight: FontWeight.w400,
+                          //           color: Colors.black,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
                         ],
                       ),
                       Align(

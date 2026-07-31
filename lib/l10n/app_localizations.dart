@@ -4134,6 +4134,24 @@ abstract class AppLocalizations {
   /// **'Baghdad Bullion House Agreement'**
   String get sig_agreement;
 
+  /// No description provided for @kyc_signature.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature'**
+  String get kyc_signature;
+
+  /// No description provided for @signature_account_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide your signature to complete your profile.'**
+  String get signature_account_warning;
+
+  /// No description provided for @signature_capture_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw your signature in the box below to complete verification.'**
+  String get signature_capture_message;
+
   /// No description provided for @kyc_doc_national_id.
   ///
   /// In en, this message translates to:

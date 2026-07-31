@@ -93,6 +93,7 @@ class Payload {
     bool? temporaryCreditStatus,
     bool? isFrozen,
     bool? agreementStatus,
+    ProfileVerificationStatus? signatureStatus,
     ProfileVerificationStatus? profileVerificationStatus,
     ProfileVerificationStatus? nationalIdDetailsStatus,
     ProfileVerificationStatus? passportDetailsStatus,
@@ -113,6 +114,7 @@ class Payload {
     _temporaryCreditStatus = temporaryCreditStatus;
     _isFrozen = isFrozen;
     _agreementStatus = agreementStatus;
+    _signatureStatus = signatureStatus;
     _profileVerificationStatus = profileVerificationStatus;
     _nationalIdDetailsStatus = nationalIdDetailsStatus;
     _passportDetailsStatus = passportDetailsStatus;
@@ -121,6 +123,19 @@ class Payload {
     _walletExists = walletExists;
     _offers = offers;
     _newsUpdates = newsUpdates;
+  }
+
+  /// Tolerates bool, "true"/"false" strings, and 0/1 numbers; null otherwise.
+  static bool? _asBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is String) {
+      final lower = value.toLowerCase();
+      if (lower == 'true') return true;
+      if (lower == 'false') return false;
+      return null;
+    }
+    if (value is num) return value != 0;
+    return null;
   }
 
   Payload.fromJson(dynamic json) {
@@ -134,7 +149,12 @@ class Payload {
     _applePay = json['applePay'];
     _temporaryCreditStatus = json['temporaryCreditStatus'];
     _isFrozen = json['isFrozen'];
-    _agreementStatus = json['agreementStatus'];
+    _agreementStatus = _asBool(json['agreementStatus']);
+    // isSignatureVerified arrives as a status string ("Pending", "Verified",
+    // "Rejected", ...) like the document statuses; legacy bools still parse.
+    _signatureStatus = ProfileVerificationStatus.parseFlexible(
+      json['isSignatureVerified'],
+    );
     _profileVerificationStatus = ProfileVerificationStatus.fromJsonField(
       json,
       'profileVerificationStatus',
@@ -182,6 +202,7 @@ class Payload {
   bool? _temporaryCreditStatus;
   bool? _isFrozen;
   bool? _agreementStatus;
+  ProfileVerificationStatus? _signatureStatus;
   ProfileVerificationStatus? _profileVerificationStatus;
   ProfileVerificationStatus? _nationalIdDetailsStatus;
   ProfileVerificationStatus? _passportDetailsStatus;
@@ -203,6 +224,7 @@ class Payload {
     bool? temporaryCreditStatus,
     bool? isFrozen,
     bool? agreementStatus,
+    ProfileVerificationStatus? signatureStatus,
     ProfileVerificationStatus? profileVerificationStatus,
     ProfileVerificationStatus? nationalIdDetailsStatus,
     ProfileVerificationStatus? passportDetailsStatus,
@@ -221,6 +243,7 @@ class Payload {
     temporaryCreditStatus: temporaryCreditStatus ?? _temporaryCreditStatus,
     isFrozen: isFrozen ?? _isFrozen,
     agreementStatus: agreementStatus ?? _agreementStatus,
+    signatureStatus: signatureStatus ?? _signatureStatus,
     profileVerificationStatus:
         profileVerificationStatus ?? _profileVerificationStatus,
     nationalIdDetailsStatus:
@@ -247,6 +270,11 @@ class Payload {
   bool? get temporaryCreditStatus => _temporaryCreditStatus;
   bool? get isFrozen => _isFrozen;
   bool? get agreementStatus => _agreementStatus;
+  ProfileVerificationStatus? get signatureStatus => _signatureStatus;
+
+  /// Legacy bool view — true when signature status is verified/approved,
+  /// null when the API did not send the field.
+  bool? get isSignatureVerified => _signatureStatus?.isApprovedOrVerified;
   ProfileVerificationStatus? get profileVerificationStatus =>
       _profileVerificationStatus;
   ProfileVerificationStatus? get nationalIdDetailsStatus =>
@@ -280,6 +308,9 @@ class Payload {
     map['temporaryCreditStatus'] = _temporaryCreditStatus;
     map['isFrozen'] = _isFrozen;
     map['agreementStatus'] = _agreementStatus;
+    if (_signatureStatus != null) {
+      map['isSignatureVerified'] = _signatureStatus!.apiLabel;
+    }
     if (_profileVerificationStatus != null) {
       map['profileVerificationStatus'] =
           _profileVerificationStatus!.apiLabel;

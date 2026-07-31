@@ -16,6 +16,7 @@ import 'package:baghdad_bullion_house/presentation/screens/setting_screens/setti
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/home_provider.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
 import 'package:baghdad_bullion_house/presentation/screens/agreement_screens/user_agreement_screen.dart';
+import 'package:baghdad_bullion_house/presentation/screens/agreement_screens/user_signature_screen.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/kyc_rejected_docs_see_more.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/account_warning.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/demo_banner.dart';
@@ -246,6 +247,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     height: 36,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
+                      color: imageToShow.isEmpty
+                          ? Colors.grey.shade400
+                          : null,
                       border: Border.all(
                         color: AppColors.goldLightColor,
                         width: 1.2,
@@ -258,13 +262,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                         as ImageProvider,
                               fit: BoxFit.cover,
                             )
-                          : const DecorationImage(
-                              image: AssetImage(
-                                "assets/images/user_avatar.png",
-                              ),
-                              fit: BoxFit.cover,
-                            ),
+                          : null,
                     ),
+                    child: imageToShow.isEmpty
+                        ? Center(
+                            child: SvgPicture.asset(
+                              "assets/svg/user_icon.svg",
+                              width: 18,
+                              height: 18,
+                            ),
+                          )
+                        : null,
                   ),
                 );
               },
@@ -477,6 +485,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                             context,
                             MaterialPageRoute(
                               builder: (context) => const UserAgreementScreen(),
+                            ),
+                          );
+                          if (!context.mounted || signed != true) return;
+                          await ref.read(homeProvider.notifier).getHomeFeed(
+                                context: context,
+                                showLoading: false,
+                              );
+                        },
+                      ),
+                    ),
+
+                    Visibility(
+                      visible:
+                          mainStateWatchProvider.getHomeFeedResponse.payload !=
+                              null &&
+                          mainStateWatchProvider.isProfileVerified &&
+                          KycHomeNavigation.canResubmitSignature(
+                            mainStateWatchProvider
+                                .getHomeFeedResponse.payload,
+                          ) &&
+                          mainStateWatchProvider.isDemo == false &&
+                          mainStateWatchProvider.loadingState ==
+                              LoadingState.data,
+                      child: AccountWarning(
+                        kycStatus: 'signature',
+                        warningMessage: AppLocalizations.of(
+                          context,
+                        )!.signature_account_warning,
+                        actionText: AppLocalizations.of(context)!.sign_agreement,
+                        onTap: () async {
+                          final signed = await Navigator.push<bool>(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UserSignatureScreen(),
                             ),
                           );
                           if (!context.mounted || signed != true) return;

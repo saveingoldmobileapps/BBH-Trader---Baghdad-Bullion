@@ -136,4 +136,4 @@ enum KycDocumentType {
 }
 
 /// Rows shown in the home profile verification status panel.
-enum KycProfileStatusItemType { nationalId, passport, residency, agreement }
+enum KycProfileStatusItemType { nationalId, passport, residency, agreement, signature }

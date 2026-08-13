@@ -46,6 +46,8 @@ class IpassKycService {
       workflowId: workflowId,
       documentOnlyWorkflowId: documentOnlyWorkflowId,
       serverUrl: dotenv.env['IPASS_SERVER_URL'] ?? '',
+      // FULL_DB covers Iraqi national ID / passport / residence (no Iraq-only AAR DB).
+      // Do not switch to *_JORDAN — those DBs omit Iraqi documents.
       dbType: dotenv.env['IPASS_DB_TYPE'] ?? 'FULL_DB',
       useDynamicDb: _parseBool(dotenv.env['IPASS_USE_DYNAMIC_DB'], false),
       enableHologram: _parseBool(dotenv.env['IPASS_ENABLE_HOLOGRAM'], false),

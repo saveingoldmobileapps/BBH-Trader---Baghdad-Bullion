@@ -2125,6 +2125,17 @@ class AppLocalizationsAr extends AppLocalizations {
   String get sig_agreement => 'اتفاقية دار بغداد للسبائك';
 
   @override
+  String get kyc_signature => 'التوقيع';
+
+  @override
+  String get signature_account_warning =>
+      'يرجى تقديم توقيعك لإكمال ملفك الشخصي.';
+
+  @override
+  String get signature_capture_message =>
+      'ارسم توقيعك في المربع أدناه لإكمال التحقق.';
+
+  @override
   String get kyc_doc_national_id => 'البطاقة الوطنية';
 
   @override

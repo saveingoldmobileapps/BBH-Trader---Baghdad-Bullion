@@ -92,7 +92,7 @@ class SignaturePadWidgetState extends State<SignaturePadWidget> {
                         : 'Sign here',
                     fontSize: sizes!.responsiveFont(phoneVal: 14, tabletVal: 16),
                     fontWeight: FontWeight.w400,
-                    color: AppColors.grey3Color,
+                    color: Colors.black,
                   ),
           ),
         ),
@@ -113,10 +113,10 @@ class _SignaturePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 2.5
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
+  ..color = Colors.black
+  ..strokeWidth = 2.5
+  ..strokeCap = StrokeCap.round
+  ..style = PaintingStyle.stroke;
 
     for (final stroke in [...strokes, currentStroke]) {
       if (stroke.length < 2) continue;

@@ -2145,6 +2145,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sig_agreement => 'Baghdad Bullion House Agreement';
 
   @override
+  String get kyc_signature => 'Signature';
+
+  @override
+  String get signature_account_warning =>
+      'Please provide your signature to complete your profile.';
+
+  @override
+  String get signature_capture_message =>
+      'Draw your signature in the box below to complete verification.';
+
+  @override
   String get kyc_doc_national_id => 'National ID';
 
   @override

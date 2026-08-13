@@ -155,7 +155,7 @@ class DioNetworkManager {
       },
       onResponse: (response, handler) {
         getLocator<Logger>().i(
-          "InterceptorOnResponse: ${response.statusCode}, ${response.data}",
+          "InterceptorOnResponse: ${response.statusCode} ${response.requestOptions.path}",
         );
         return handler.next(response);
       },
@@ -319,7 +319,7 @@ class DioNetworkManager {
           ),
         );
         getLocator<Logger>().i(
-          "dioSuccess: -> ${response.statusCode} | $response ",
+          "dioSuccess: -> ${response.statusCode} | ${response.requestOptions.path}",
         );
         return response;
       } on DioException catch (exception, stackTrace) {
@@ -368,7 +368,7 @@ class DioNetworkManager {
         receiveTimeout: receiveTimeout,
       );
       getLocator<Logger>().i(
-        "performRequestResponse: statusCode: ${response!.statusCode}, ${response.data}",
+        "performRequestResponse: statusCode: ${response!.statusCode}",
       );
 
       /// Check Response data not null

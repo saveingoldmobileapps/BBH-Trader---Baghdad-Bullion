@@ -119,12 +119,16 @@ class AgreementService {
 
   static Future<AgreementSubmitResult> _updateAgreement({
     required String signatureLink,
+    bool signatureOnly = false,
   }) async {
     final headers = await _loginAuthHeaders();
-    final body = {
-      'agreementStatus': true,
+    final body = <String, dynamic>{
       'signatureLink': signatureLink,
+      'isSignatureVerified': true,
     };
+    if (!signatureOnly) {
+      body['agreementStatus'] = true;
+    }
 
     final serverResponse = await DioNetworkManager().callAPI(
       url: ApiEndpoints.updateAgreementApiUrl,
@@ -173,6 +177,32 @@ class AgreementService {
       return _updateAgreement(signatureLink: signatureUrl);
     } catch (e) {
       getLocator<Logger>().e('submitSignature failed: $e');
+      return AgreementSubmitResult(
+        success: false,
+        message: e.toString(),
+      );
+    }
+  }
+
+  /// Uploads signature without marking the agreement as signed.
+  static Future<AgreementSubmitResult> submitSignatureOnly({
+    required Uint8List signaturePngBytes,
+  }) async {
+    try {
+      final signatureUrl = await _uploadSignatureImage(signaturePngBytes);
+      if (signatureUrl == null) {
+        return const AgreementSubmitResult(
+          success: false,
+          message: 'Failed to upload signature image',
+        );
+      }
+
+      return _updateAgreement(
+        signatureLink: signatureUrl,
+        signatureOnly: true,
+      );
+    } catch (e) {
+      getLocator<Logger>().e('submitSignatureOnly failed: $e');
       return AgreementSubmitResult(
         success: false,
         message: e.toString(),

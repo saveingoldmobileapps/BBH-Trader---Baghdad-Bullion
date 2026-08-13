@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Prevent shrinkResources from dropping SDK resources loaded by name. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ipass_logo,@drawable/overview,@drawable/circles,@drawable/rounded,@layout/loading,@layout/simple_dialog,@raw/amplifyconfiguration,@raw/awsconfiguration,@anim/rotate360" />

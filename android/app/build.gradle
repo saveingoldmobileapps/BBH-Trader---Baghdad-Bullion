@@ -77,10 +77,11 @@ android {
     //         signingConfig = signingConfigs.release
     //     }
     release {
-    minifyEnabled false
-    shrinkResources false
-    signingConfig = signingConfigs.release
-}
+        minifyEnabled true
+        shrinkResources true
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        signingConfig = signingConfigs.release
+    }
     }
 }
 
@@ -115,4 +116,24 @@ dependencies {
 
 flutter {
     source = "../.."
+}
+
+// Iraq document scanning uses FULL_DB (db_all.dat ~79MB).
+// Strip unused Jordan-only DBs (~75MB) that ship in iPass Native AAR.
+android.applicationVariants.configureEach { variant ->
+    variant.mergeAssetsProvider.configure {
+        doLast {
+            def unusedJordanDbs = [
+                'database/db_full_auth_jordan.dat',
+                'database/db_basic_jordan.dat',
+            ]
+            unusedJordanDbs.each { relativePath ->
+                def file = new File(outputDir.get().asFile, relativePath)
+                if (file.exists()) {
+                    println("Stripping unused iPass DB from APK: ${relativePath} (${(file.length() / (1024 * 1024)).intValue()} MB)")
+                    file.delete()
+                }
+            }
+        }
+    }
 }

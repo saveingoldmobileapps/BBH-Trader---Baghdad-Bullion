@@ -4,6 +4,7 @@ import 'package:baghdad_bullion_house/data/models/home_models/GetHomeFeedRespons
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/screens/auth_screens/al_taif_bank_kyc/native/bbh_native_onboarding_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/agreement_screens/user_agreement_screen.dart';
+import 'package:baghdad_bullion_house/presentation/screens/agreement_screens/user_signature_screen.dart';
 import 'package:baghdad_bullion_house/presentation/screens/kyc_document_update/kyc_document_update_screen.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/pop_up_widget.dart';
 import 'package:flutter/material.dart';
@@ -99,10 +100,24 @@ class KycHomeNavigation {
   static bool isAgreementSigned(Payload? payload) =>
       payload?.agreementStatus == true;
 
+  static bool isSignatureVerified(Payload? payload) =>
+      payload?.signatureStatus?.isApprovedOrVerified ?? false;
+
+  /// Same rule as [canResubmitDocument]: only rejected signatures can be retaken.
+  /// Pending / reviewing are locked until admin review finishes.
+  static bool canResubmitSignature(Payload? payload) {
+    if (payload == null) return false;
+    return signatureStatus(payload) == ProfileVerificationStatus.rejected;
+  }
+
   static ProfileVerificationStatus agreementStatus(Payload? payload) {
     return isAgreementSigned(payload)
         ? ProfileVerificationStatus.verified
         : ProfileVerificationStatus.pending;
+  }
+
+  static ProfileVerificationStatus signatureStatus(Payload? payload) {
+    return payload?.signatureStatus ?? ProfileVerificationStatus.pending;
   }
 
   static ProfileVerificationStatus? profileStatusItemStatus(
@@ -124,6 +139,7 @@ class KycHomeNavigation {
         KycDocumentType.residency,
       ),
       KycProfileStatusItemType.agreement => agreementStatus(payload),
+      KycProfileStatusItemType.signature => signatureStatus(payload),
     };
   }
 
@@ -134,6 +150,7 @@ class KycHomeNavigation {
     if (payload == null) return false;
     return switch (item) {
       KycProfileStatusItemType.agreement => !isAgreementSigned(payload),
+      KycProfileStatusItemType.signature => canResubmitSignature(payload),
       _ =>
         shouldUseFullKycOnDocumentTap(payload) ||
             canResubmitDocument(
@@ -151,6 +168,7 @@ class KycHomeNavigation {
       KycProfileStatusItemType.passport => KycDocumentType.passport,
       KycProfileStatusItemType.residency => KycDocumentType.residency,
       KycProfileStatusItemType.agreement => null,
+      KycProfileStatusItemType.signature => null,
     };
   }
 
@@ -162,6 +180,7 @@ class KycHomeNavigation {
     KycProfileStatusItemType.passport => l10n.kyc_doc_passport,
     KycProfileStatusItemType.residency => l10n.kyc_doc_residency,
     KycProfileStatusItemType.agreement => l10n.sig_agreement,
+    KycProfileStatusItemType.signature => l10n.kyc_signature,
   };
 
   static Future<void> onProfileStatusItemTap(
@@ -176,6 +195,20 @@ class KycHomeNavigation {
         context,
         MaterialPageRoute(
           builder: (_) => const UserAgreementScreen(),
+        ),
+      );
+      if (signed == true) {
+        await onAgreementSigned?.call();
+      }
+      return;
+    }
+
+    if (item == KycProfileStatusItemType.signature) {
+      if (!canNavigateToProfileStatusItem(payload, item)) return;
+      final signed = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const UserSignatureScreen(),
         ),
       );
       if (signed == true) {

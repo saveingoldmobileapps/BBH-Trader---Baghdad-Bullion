@@ -128,6 +128,9 @@ class Home extends _$Home {
               isProfileVerified: isProfileVerified,
               isDemo: payload?.userType == "Demo" ? true : false,
               agreementStatus: payload?.agreementStatus ?? true,
+              // TODO(debug): null case forced to false to surface the
+              // signature banner; revert to `?? true` before release.
+              isSignatureVerified: payload?.isSignatureVerified ?? false,
             );
 
             LocalDatabase.instance.setIsEmailVerified(

@@ -91,18 +91,14 @@ if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
       if (item.tradeType?.toLowerCase() == "buy" || item.tradeType?.toLowerCase() == "sell") {
         // Buy adds grams
         totalGrams += (item.tradeMetal ?? 0);
-        print('BUY: Added ${item.tradeMetal}g from order: ${item.id}');
       } 
       else if (item.tradeType?.toLowerCase() == "sell") {
         // Sell subtracts grams
         totalGrams -= (item.tradeMetal ?? 0);
-        print('SELL: Subtracted ${item.tradeMetal}g from order: ${item.id}');
       }
     }
   }
 }
-
-    print('Total grams (excluding buy at price orders): $totalGrams');
 
     return Scaffold(
       key: _scaffoldKey,
@@ -153,6 +149,9 @@ if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
                             height: 40,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
+                              color: imageToShow.isEmpty
+                                  ? Colors.grey.shade400
+                                  : null,
                               border: Border.all(
                                 color: AppColors.goldLightColor,
                                 width: 1.2,
@@ -165,13 +164,17 @@ if (gramStateWatchProvider.gramApiResponseModel.payload != null) {
                                                 as ImageProvider,
                                       fit: BoxFit.cover,
                                     )
-                                  : const DecorationImage(
-                                      image: AssetImage(
-                                        "assets/images/user_avatar.png",
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
+                                  : null,
                             ),
+                            child: imageToShow.isEmpty
+                                ? Center(
+                                    child: SvgPicture.asset(
+                                      "assets/svg/user_icon.svg",
+                                      width: 20,
+                                      height: 20,
+                                    ),
+                                  )
+                                : null,
                           ),
                         );
                       },

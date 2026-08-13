@@ -473,6 +473,7 @@ class IpassKycPlugin :
     }
 
     private fun resolveDbType(dbType: String?): String {
+        // Iraq docs require FULL_DB. Jordan DB types do not include Iraqi documents.
         return when (dbType?.uppercase()) {
             "BASIC_JORDAN" -> DatabaseType.BASIC_JORDAN
             "FULL_AUTH_JORDAN" -> DatabaseType.FULL_AUTH_JORDAN

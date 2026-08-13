@@ -66,6 +66,19 @@ class ApiEndpoints {
       "$baseUrl/auth/sendOtpToAnyEmail/${CommonService.lang}";
   static String get preVerifyApiUrl =>
       "$baseUrl/auth/register/preVerify/${CommonService.lang}";
+
+  /// Al-Taif bank KYC onboarding — full iPass pack submit.
+  static String get registerIpassApiUrl =>
+      "$baseUrl/auth/register/iPass/${CommonService.lang}";
+
+  /// Re-submit a single iPass document after admin rejection (logged-in user).
+  static String get updateIpassDocumentApiUrl =>
+      "$baseUrl/auth/update/iPass/${CommonService.lang}";
+
+  /// iPass onboarding document image upload (no auth) — returns payload.imageUrl.
+  static String get ipassDocUploadApiUrl =>
+      "$baseUrl/iPass/doc/upload/${CommonService.lang}";
+
   // kyc
   static String get kycFirstStepApiUrl =>
       "$baseUrl/auth/kyc/firstStep/${CommonService.lang}";
@@ -89,6 +102,12 @@ class ApiEndpoints {
   ///
   static String get getHomeFeedApiUrl =>
       "$baseUrl/service/homePageData/getById/${CommonService.lang}";
+
+  static String get getAgreementLinkApiUrl =>
+      "$baseUrl/service/agreement/link/${CommonService.lang}";
+
+  static String get updateAgreementApiUrl =>
+      "$baseUrl/service/agreement/update/${CommonService.lang}";
 
   static String get getUserProfileApiUrl =>
       "$baseUrl/auth/userProfile/${CommonService.lang}";

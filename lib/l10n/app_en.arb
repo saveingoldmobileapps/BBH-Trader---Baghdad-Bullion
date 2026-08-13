@@ -849,6 +849,62 @@
     }
   },
   "verify_account": "Verify Account",
+  "agreement_account_warning": "Please sign the user agreement to get access to all the features.",
+  "sign_agreement": "Agreement Signature",
+  "kyc_agreement_desc": "I have read and accept the Agreement",
+  "accept_agreement": "Accept Agreement",
+  "sig_agreement": "Baghdad Bullion House Agreement",
+  "kyc_signature": "Signature",
+  "signature_account_warning": "Please provide your signature to complete your profile.",
+  "signature_capture_message": "Draw your signature in the box below to complete verification.",
+  "kyc_doc_national_id": "National ID",
+  "kyc_doc_passport": "Passport",
+  "kyc_doc_residency": "Residency document",
+  "kyc_document_rejected": "Your {document} was rejected. Tap to update and resubmit.",
+  "@kyc_document_rejected": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_pending": "Your {document} is pending verification. Tap to update.",
+  "@kyc_document_pending": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_pending_review": "Your {document} is pending verification.",
+  "@kyc_document_pending_review": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_not_verified": "Your {document} is not verified. Tap to update and resubmit.",
+  "@kyc_document_not_verified": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "profile_verification_pending": "Your profile verification is pending. We will notify you once the review is complete.",
+  "profile_verification_reviewing": "Your profile verification is under review. We will notify you once the review is complete.",
+  "profile_verification_rejected_partial": "Your profile verification was rejected. Please update the required documents.",
+  "profile_verification_rejected_full_kyc": "Your profile verification was rejected. Please complete full KYC verification again.",
+  "kyc_document_reviewing": "Your {document} is under review.",
+  "@kyc_document_reviewing": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_verified": "Your {document} is verified.",
+  "@kyc_document_verified": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_documents_status_title": "Profile verification status",
+  "kyc_status_verified": "Verified",
+  "kyc_status_reviewing": "Under review",
+  "kyc_retake_document": "Retake document",
+  "kyc_complete_verification": "Complete KYC verification",
   "@DemoMode": {},
   "demo_mode_banner": "You are in Demo Mode",
   "demo_mode_go_live": "Go Live",

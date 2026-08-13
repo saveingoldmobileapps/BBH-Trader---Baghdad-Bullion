@@ -34,6 +34,8 @@ class BbhOnboardingForm {
   final lockedFields = <String>{};
   final verifiedFields = <String>{};
 
+
+  final motherCombined = TextEditingController();
   final mobile = TextEditingController();
   final email = TextEditingController();
   final arFirst = TextEditingController();
@@ -41,6 +43,12 @@ class BbhOnboardingForm {
   final arGf = TextEditingController();
   final arSurname = TextEditingController();
   final arMother = TextEditingController();
+  final arSurnameAndGivenNames = TextEditingController();
+  final idEnFirst = TextEditingController();
+  final idEnFather = TextEditingController();
+  final idEnGf = TextEditingController();
+  final idEnSurname = TextEditingController();
+  final idEnMother = TextEditingController();
   final enFirst = TextEditingController();
   final enFather = TextEditingController();
   final enGf = TextEditingController();
@@ -183,8 +191,15 @@ class BbhOnboardingForm {
         'ar_first' => arFirst,
         'ar_father' => arFather,
         'ar_gf' => arGf,
+        'ar_gf_mom' => motherCombined,
         'ar_surname' => arSurname,
         'ar_mother' => arMother,
+        'ar_surname_and_given_names' => arSurnameAndGivenNames,
+        'id_en_first' => idEnFirst,
+        'id_en_father' => idEnFather,
+        'id_en_gf' => idEnGf,
+        'id_en_surname' => idEnSurname,
+        'id_en_mother' => idEnMother,
         'en_first' => enFirst,
         'en_father' => enFather,
         'en_gf' => enGf,
@@ -309,8 +324,15 @@ class BbhOnboardingForm {
     yield MapEntry('ar_first', arFirst);
     yield MapEntry('ar_father', arFather);
     yield MapEntry('ar_gf', arGf);
+    yield MapEntry('ar_gf_mom', motherCombined);
     yield MapEntry('ar_surname', arSurname);
     yield MapEntry('ar_mother', arMother);
+    yield MapEntry('ar_surname_and_given_names', arSurnameAndGivenNames);
+    yield MapEntry('id_en_first', idEnFirst);
+    yield MapEntry('id_en_father', idEnFather);
+    yield MapEntry('id_en_gf', idEnGf);
+    yield MapEntry('id_en_surname', idEnSurname);
+    yield MapEntry('id_en_mother', idEnMother);
     yield MapEntry('en_first', enFirst);
     yield MapEntry('en_father', enFather);
     yield MapEntry('en_gf', enGf);

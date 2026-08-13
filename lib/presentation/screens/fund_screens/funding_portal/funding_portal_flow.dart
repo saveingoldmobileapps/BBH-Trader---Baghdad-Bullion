@@ -1,10 +1,14 @@
 /// Funding portal flows from BBH prototype (mobile UI only).
 enum FundingPortalFlow { link, instant, wire }
 
+/// Entry mode — [depositDemo] matches `BBH_Deposit_UI_2.html` (link + instant only).
+enum FundingPortalEntry { fullPrototype, depositDemo }
+
 enum FundingPortalScreenId {
   // Link
   linkHome,
   linkEnter,
+  linkOtp,
   linkVerify,
   linkSuccess,
   // Instant

@@ -7,18 +7,24 @@ class IpassHtmlFieldMapper {
   static const Map<String, String> _mapperToHtml = {
     'mobile': 'mobile',
     'email': 'email',
+    'gender': 'gender',
     'branch': 'branch',
     'arFirst': 'ar_first',
     'arFather': 'ar_father',
     'arGf': 'ar_gf',
     'arSurname': 'ar_surname',
     'arMother': 'ar_mother',
+    'surnameAndGivenNamesAr': 'ar_surname_and_given_names',
+    'idEnFirst': 'id_en_first',
+    'idEnFather': 'id_en_father',
+    'idEnGf': 'id_en_gf',
+    'idEnSurname': 'id_en_surname',
+    'idEnMother': 'id_en_mother',
     'enFirst': 'en_first',
     'enFather': 'en_father',
     'enGf': 'en_gf',
     'enSurname': 'en_surname',
     'enMother': 'en_mother',
-    'gender': 'gender',
     'nationality': 'nationality',
     'dob': 'dob',
     'countryBirth': 'country_birth',
@@ -77,11 +83,12 @@ class IpassHtmlFieldMapper {
       'ar_gf',
       'ar_surname',
       'ar_mother',
-      'en_first',
-      'en_father',
-      'en_gf',
-      'en_surname',
-      'en_mother',
+      'ar_surname_and_given_names',
+      'id_en_first',
+      'id_en_father',
+      'id_en_gf',
+      'id_en_surname',
+      'id_en_mother',
       'id_personal',
       'id_serial',
       'id_issue_place',
@@ -92,29 +99,41 @@ class IpassHtmlFieldMapper {
       'gender',
       'country_birth',
       'place_birth',
-      'mobile',
-      'email',
-    };
-    const residenceFields = {
-      'res_no',
-      'res_place',
-      'res_issue',
-      'res_expiry',
-      'addr_house',
-      'addr_mahalla',
-      'addr_street',
     };
 
     bool allowed(String key) => switch (target) {
           IpassScanTarget.passport =>
             passportFields.contains(key) || passportShared.contains(key),
           IpassScanTarget.nationalId => nationalIdFields.contains(key),
-          IpassScanTarget.residence => residenceFields.contains(key),
+          // Residence OCR is stored for submission only — form fields are manual.
+          IpassScanTarget.residence => false,
         };
 
     return Map.fromEntries(
       htmlValues.entries.where((e) => allowed(e.key)),
     );
+  }
+
+  /// Keeps only mapper keys allowed for the scan target (post-extraction safety net).
+  static Map<String, String> filterMappedForScan(
+    IpassScanTarget target,
+    Map<String, String> mapped,
+  ) {
+    final html = toHtmlFieldValues(mapped);
+    final allowed = forScanTarget(target, html);
+    final out = <String, String>{};
+    for (final entry in _mapperToHtml.entries) {
+      final htmlKey = entry.value;
+      if (!allowed.containsKey(htmlKey)) continue;
+      final value = mapped[entry.key]?.trim();
+      if (value != null && value.isNotEmpty) {
+        out[entry.key] = value;
+      }
+    }
+    if (allowed.containsKey('gender') && mapped['gender']?.trim().isNotEmpty == true) {
+      out['gender'] = mapped['gender']!.trim();
+    }
+    return out;
   }
 
   /// National ID overwrites its fields; passport overwrites pp_* and English/personal

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:baghdad_bullion_house/core/kyc/kyc_document_review_status.dart';
+
 /// status : "success"
 /// code : 1
 /// message : "OK: The request has succeeded."
@@ -90,6 +92,12 @@ class Payload {
     bool? applePay,
     bool? temporaryCreditStatus,
     bool? isFrozen,
+    bool? agreementStatus,
+    ProfileVerificationStatus? signatureStatus,
+    ProfileVerificationStatus? profileVerificationStatus,
+    ProfileVerificationStatus? nationalIdDetailsStatus,
+    ProfileVerificationStatus? passportDetailsStatus,
+    ProfileVerificationStatus? residencyDetailsStatus,
     //double? temporaryCreditAmount,
     WalletExists? walletExists,
     List<Offers>? offers,
@@ -105,10 +113,29 @@ class Payload {
     _applePay = applePay;
     _temporaryCreditStatus = temporaryCreditStatus;
     _isFrozen = isFrozen;
+    _agreementStatus = agreementStatus;
+    _signatureStatus = signatureStatus;
+    _profileVerificationStatus = profileVerificationStatus;
+    _nationalIdDetailsStatus = nationalIdDetailsStatus;
+    _passportDetailsStatus = passportDetailsStatus;
+    _residencyDetailsStatus = residencyDetailsStatus;
     // _temporaryCreditAmount = temporaryCreditAmount;
     _walletExists = walletExists;
     _offers = offers;
     _newsUpdates = newsUpdates;
+  }
+
+  /// Tolerates bool, "true"/"false" strings, and 0/1 numbers; null otherwise.
+  static bool? _asBool(dynamic value) {
+    if (value is bool) return value;
+    if (value is String) {
+      final lower = value.toLowerCase();
+      if (lower == 'true') return true;
+      if (lower == 'false') return false;
+      return null;
+    }
+    if (value is num) return value != 0;
+    return null;
   }
 
   Payload.fromJson(dynamic json) {
@@ -122,6 +149,32 @@ class Payload {
     _applePay = json['applePay'];
     _temporaryCreditStatus = json['temporaryCreditStatus'];
     _isFrozen = json['isFrozen'];
+    _agreementStatus = _asBool(json['agreementStatus']);
+    // isSignatureVerified arrives as a status string ("Pending", "Verified",
+    // "Rejected", ...) like the document statuses; legacy bools still parse.
+    _signatureStatus = ProfileVerificationStatus.parseFlexible(
+      json['isSignatureVerified'],
+    );
+    _profileVerificationStatus = ProfileVerificationStatus.fromJsonField(
+      json,
+      'profileVerificationStatus',
+      'ProfileVerificationStatus',
+    );
+    _nationalIdDetailsStatus = ProfileVerificationStatus.resolveDocumentStatus(
+      json,
+      detailsCamel: 'isNationalIdDetailsVerified',
+      detailsPascal: 'IsNationalIdDetailsVerified',
+    );
+    _passportDetailsStatus = ProfileVerificationStatus.resolveDocumentStatus(
+      json,
+      detailsCamel: 'isPassportDetailsVerified',
+      detailsPascal: 'IsPassportDetailsVerified',
+    );
+    _residencyDetailsStatus = ProfileVerificationStatus.resolveDocumentStatus(
+      json,
+      detailsCamel: 'isResidencyDetailsVerified',
+      detailsPascal: 'IsResidencyDetailsVerified',
+    );
     //_temporaryCreditAmount = json['temporaryCreditAmount'];
     _walletExists = json['walletExists'] != null
         ? WalletExists.fromJson(json['walletExists'])
@@ -148,6 +201,12 @@ class Payload {
   bool? _applePay;
   bool? _temporaryCreditStatus;
   bool? _isFrozen;
+  bool? _agreementStatus;
+  ProfileVerificationStatus? _signatureStatus;
+  ProfileVerificationStatus? _profileVerificationStatus;
+  ProfileVerificationStatus? _nationalIdDetailsStatus;
+  ProfileVerificationStatus? _passportDetailsStatus;
+  ProfileVerificationStatus? _residencyDetailsStatus;
   //double?  _temporaryCreditAmount;
   String? _userType;
   WalletExists? _walletExists;
@@ -160,6 +219,16 @@ class Payload {
     bool? isBasicUserVerified,
     bool? sellAtLoss,
     String? userType,
+    bool? googlePay,
+    bool? applePay,
+    bool? temporaryCreditStatus,
+    bool? isFrozen,
+    bool? agreementStatus,
+    ProfileVerificationStatus? signatureStatus,
+    ProfileVerificationStatus? profileVerificationStatus,
+    ProfileVerificationStatus? nationalIdDetailsStatus,
+    ProfileVerificationStatus? passportDetailsStatus,
+    ProfileVerificationStatus? residencyDetailsStatus,
     WalletExists? walletExists,
     List<Offers>? offers,
     List<NewsUpdates>? newsUpdates,
@@ -173,6 +242,15 @@ class Payload {
     applePay: applePay ?? _applePay,
     temporaryCreditStatus: temporaryCreditStatus ?? _temporaryCreditStatus,
     isFrozen: isFrozen ?? _isFrozen,
+    agreementStatus: agreementStatus ?? _agreementStatus,
+    signatureStatus: signatureStatus ?? _signatureStatus,
+    profileVerificationStatus:
+        profileVerificationStatus ?? _profileVerificationStatus,
+    nationalIdDetailsStatus:
+        nationalIdDetailsStatus ?? _nationalIdDetailsStatus,
+    passportDetailsStatus: passportDetailsStatus ?? _passportDetailsStatus,
+    residencyDetailsStatus:
+        residencyDetailsStatus ?? _residencyDetailsStatus,
     //temporaryCreditAmount: temporaryCreditAmount ?? _temporaryCreditAmount,
     userType: userType ?? _userType,
     walletExists: walletExists ?? _walletExists,
@@ -191,6 +269,28 @@ class Payload {
 
   bool? get temporaryCreditStatus => _temporaryCreditStatus;
   bool? get isFrozen => _isFrozen;
+  bool? get agreementStatus => _agreementStatus;
+  ProfileVerificationStatus? get signatureStatus => _signatureStatus;
+
+  /// Legacy bool view — true when signature status is verified/approved,
+  /// null when the API did not send the field.
+  bool? get isSignatureVerified => _signatureStatus?.isApprovedOrVerified;
+  ProfileVerificationStatus? get profileVerificationStatus =>
+      _profileVerificationStatus;
+  ProfileVerificationStatus? get nationalIdDetailsStatus =>
+      _nationalIdDetailsStatus;
+  ProfileVerificationStatus? get passportDetailsStatus =>
+      _passportDetailsStatus;
+  ProfileVerificationStatus? get residencyDetailsStatus =>
+      _residencyDetailsStatus;
+
+  /// Legacy bool view — true when document status is verified/approved.
+  bool? get isNationalIdDetailsVerified =>
+      _nationalIdDetailsStatus?.isApprovedOrVerified;
+  bool? get isPassportDetailsVerified =>
+      _passportDetailsStatus?.isApprovedOrVerified;
+  bool? get isResidencyDetailsVerified =>
+      _residencyDetailsStatus?.isApprovedOrVerified;
   //double? get temporaryCreditAmount => _temporaryCreditAmount;
   WalletExists? get walletExists => _walletExists;
   List<Offers>? get offers => _offers;
@@ -207,6 +307,25 @@ class Payload {
     map['applePay'] = _applePay;
     map['temporaryCreditStatus'] = _temporaryCreditStatus;
     map['isFrozen'] = _isFrozen;
+    map['agreementStatus'] = _agreementStatus;
+    if (_signatureStatus != null) {
+      map['isSignatureVerified'] = _signatureStatus!.apiLabel;
+    }
+    if (_profileVerificationStatus != null) {
+      map['profileVerificationStatus'] =
+          _profileVerificationStatus!.apiLabel;
+    }
+    if (_nationalIdDetailsStatus != null) {
+      map['isNationalIdDetailsVerified'] =
+          _nationalIdDetailsStatus!.apiLabel;
+    }
+    if (_passportDetailsStatus != null) {
+      map['isPassportDetailsVerified'] = _passportDetailsStatus!.apiLabel;
+    }
+    if (_residencyDetailsStatus != null) {
+      map['isResidencyDetailsVerified'] =
+          _residencyDetailsStatus!.apiLabel;
+    }
     //map['temporaryCreditAmount'] = _temporaryCreditAmount;
     if (_walletExists != null) {
       map['walletExists'] = _walletExists?.toJson();

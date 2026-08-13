@@ -204,7 +204,7 @@ class BbhOnboardingEditSheet {
         BbhTextField(
           controller: form.mobile,
           label: 'Mobile Number',
-          hint: '+964 7XX XXX XXXX',
+          hint: '+964 7XX XXX XXXX or 00964…',
           keyboardType: TextInputType.phone,
           verified: form.verifiedMobile.value,
           onChanged: (_) {
@@ -294,6 +294,12 @@ class BbhOnboardingEditSheet {
             textDirection: TextDirection.rtl,
           ),
         ),
+        // BbhTextField(
+        //   controller: form.arMother,
+        //   label: "Mother's Name + Maternal Grandfather",
+        //   verified: form.isVerified('ar_mother'),
+        //   textDirection: TextDirection.rtl,
+        // ),
         BbhTextField(
           controller: form.arMother,
           label: "Mother's Name",
@@ -301,39 +307,39 @@ class BbhOnboardingEditSheet {
           textDirection: TextDirection.rtl,
         ),
         const SizedBox(height: 12),
-        _groupLabel('In English'),
+        _groupLabel('In English (from National ID)'),
         _grid2(
           BbhTextField(
-            controller: form.enFirst,
+            controller: form.idEnFirst,
             label: 'First Name',
-            verified: form.isVerified('en_first'),
+            verified: form.isVerified('id_en_first'),
             capitalization: TextCapitalization.words,
           ),
           BbhTextField(
-            controller: form.enFather,
+            controller: form.idEnFather,
             label: "Father's Name",
-            verified: form.isVerified('en_father'),
+            verified: form.isVerified('id_en_father'),
             capitalization: TextCapitalization.words,
           ),
         ),
         _grid2(
           BbhTextField(
-            controller: form.enGf,
+            controller: form.idEnGf,
             label: "Grandfather's",
-            verified: form.isVerified('en_gf'),
+            verified: form.isVerified('id_en_gf'),
             capitalization: TextCapitalization.words,
           ),
           BbhTextField(
-            controller: form.enSurname,
+            controller: form.idEnSurname,
             label: 'Surname',
-            verified: form.isVerified('en_surname'),
+            verified: form.isVerified('id_en_surname'),
             capitalization: TextCapitalization.words,
           ),
         ),
         BbhTextField(
-          controller: form.enMother,
+          controller: form.idEnMother,
           label: "Mother's Name",
-          verified: form.isVerified('en_mother'),
+          verified: form.isVerified('id_en_mother'),
           capitalization: TextCapitalization.words,
         ),
       ],

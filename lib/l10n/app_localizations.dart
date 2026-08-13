@@ -4104,6 +4104,162 @@ abstract class AppLocalizations {
   /// **'Verify Account'**
   String get verify_account;
 
+  /// No description provided for @agreement_account_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Please sign the user agreement to get access to all the features.'**
+  String get agreement_account_warning;
+
+  /// No description provided for @sign_agreement.
+  ///
+  /// In en, this message translates to:
+  /// **'Agreement Signature'**
+  String get sign_agreement;
+
+  /// No description provided for @kyc_agreement_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and accept the Agreement'**
+  String get kyc_agreement_desc;
+
+  /// No description provided for @accept_agreement.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept Agreement'**
+  String get accept_agreement;
+
+  /// No description provided for @sig_agreement.
+  ///
+  /// In en, this message translates to:
+  /// **'Baghdad Bullion House Agreement'**
+  String get sig_agreement;
+
+  /// No description provided for @kyc_signature.
+  ///
+  /// In en, this message translates to:
+  /// **'Signature'**
+  String get kyc_signature;
+
+  /// No description provided for @signature_account_warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Please provide your signature to complete your profile.'**
+  String get signature_account_warning;
+
+  /// No description provided for @signature_capture_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Draw your signature in the box below to complete verification.'**
+  String get signature_capture_message;
+
+  /// No description provided for @kyc_doc_national_id.
+  ///
+  /// In en, this message translates to:
+  /// **'National ID'**
+  String get kyc_doc_national_id;
+
+  /// No description provided for @kyc_doc_passport.
+  ///
+  /// In en, this message translates to:
+  /// **'Passport'**
+  String get kyc_doc_passport;
+
+  /// No description provided for @kyc_doc_residency.
+  ///
+  /// In en, this message translates to:
+  /// **'Residency document'**
+  String get kyc_doc_residency;
+
+  /// No description provided for @kyc_document_rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} was rejected. Tap to update and resubmit.'**
+  String kyc_document_rejected(String document);
+
+  /// No description provided for @kyc_document_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is pending verification. Tap to update.'**
+  String kyc_document_pending(String document);
+
+  /// No description provided for @kyc_document_pending_review.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is pending verification.'**
+  String kyc_document_pending_review(String document);
+
+  /// No description provided for @kyc_document_not_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is not verified. Tap to update and resubmit.'**
+  String kyc_document_not_verified(String document);
+
+  /// No description provided for @profile_verification_pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile verification is pending. We will notify you once the review is complete.'**
+  String get profile_verification_pending;
+
+  /// No description provided for @profile_verification_reviewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile verification is under review. We will notify you once the review is complete.'**
+  String get profile_verification_reviewing;
+
+  /// No description provided for @profile_verification_rejected_partial.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile verification was rejected. Please update the required documents.'**
+  String get profile_verification_rejected_partial;
+
+  /// No description provided for @profile_verification_rejected_full_kyc.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile verification was rejected. Please complete full KYC verification again.'**
+  String get profile_verification_rejected_full_kyc;
+
+  /// No description provided for @kyc_document_reviewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is under review.'**
+  String kyc_document_reviewing(String document);
+
+  /// No description provided for @kyc_document_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Your {document} is verified.'**
+  String kyc_document_verified(String document);
+
+  /// No description provided for @kyc_documents_status_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile verification status'**
+  String get kyc_documents_status_title;
+
+  /// No description provided for @kyc_status_verified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get kyc_status_verified;
+
+  /// No description provided for @kyc_status_reviewing.
+  ///
+  /// In en, this message translates to:
+  /// **'Under review'**
+  String get kyc_status_reviewing;
+
+  /// No description provided for @kyc_retake_document.
+  ///
+  /// In en, this message translates to:
+  /// **'Retake document'**
+  String get kyc_retake_document;
+
+  /// No description provided for @kyc_complete_verification.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete KYC verification'**
+  String get kyc_complete_verification;
+
   /// No description provided for @demo_mode_banner.
   ///
   /// In en, this message translates to:

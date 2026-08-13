@@ -193,7 +193,6 @@ Future<void> _startSSE({
               return;
             }
             _lastEventTime = DateTime.now();
-            getLocator<Logger>().d("SSE event received: ${raw.length} chars");
 
             try {
               // final decoded = jsonDecode(event.data ?? "{}");
@@ -215,9 +214,6 @@ Future<void> _startSSE({
               //   return;
               // }
               final List<dynamic> jsonList = jsonDecode(event.data ?? "[]");
-              getLocator<Logger>().d(
-                "SSE payload decoded, entries: ${jsonList.length}",
-              );
 
               final response = SSEGetGoldPriceResponse.fromJson(jsonList);
 
@@ -288,12 +284,6 @@ Future<void> _startSSE({
 
               final buyingMargin = lastBuyingMargin;
               final sellingMargin = lastSellingMargin;
-
-              getLocator<Logger>().i(
-                "SSE computed: sellOz=$sellingPx buyOz=$buyingPx low=$lowPx high=$highPx "
-                "buyRate=$buyingExchangeRate sellRate=$sellingExchangeRate "
-                "buyMargin=$buyingMargin sellMargin=$sellingMargin",
-              );
 
               // final oneGramBuyIqd = CommonService.oneGramBuyingPriceInIqd(
               //   ounceUsd: buyingPx,
@@ -368,12 +358,6 @@ Future<void> _startSSE({
                 getGoldPriceResponse: response,
               );
 
-              print(
-                "SSE state emitted: gramBuy=${state.oneGramBuyingPriceInIQD} gramSell=${state.oneGramSellingPriceInIQD}",
-              );
-              print(
-                "Exchange Rates$buyingExchangeRate gramSell=$sellingExchangeRate",
-              );
               onData(state);
             } catch (e) {
               getLocator<Logger>().e(

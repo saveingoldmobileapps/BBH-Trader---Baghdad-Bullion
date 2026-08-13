@@ -3,6 +3,8 @@ import 'package:baghdad_bullion_house/data/data_sources/network_sources/dio_netw
 import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
 import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
 
+import 'bbh_phone_number_util.dart';
+
 enum BbhOnboardingOtpChannel { mobile, email }
 
 class BbhOnboardingOtpResult {
@@ -41,11 +43,16 @@ class BbhOnboardingOtpService {
     required String phoneNumber,
     required String email,
   }) async {
-    final phone = phoneNumber.trim();
+    final phone = BbhPhoneNumberUtil.toApiFormat(phoneNumber);
     final mail = email.trim().toLowerCase();
 
     if (phone.isEmpty) {
       return BbhOnboardingOtpResult.fail('Enter your mobile number first.');
+    }
+    if (!BbhPhoneNumberUtil.isValidInput(phoneNumber)) {
+      return BbhOnboardingOtpResult.fail(
+        'Enter a valid mobile number starting with 00 or +.',
+      );
     }
     // if (mail.isEmpty) {
     //   return BbhOnboardingOtpResult.fail('Enter your email address first.');
@@ -88,7 +95,7 @@ class BbhOnboardingOtpService {
       return BbhOnboardingOtpResult.fail('Enter the 6-digit code.');
     }
 
-    final phone = phoneNumber.trim();
+    final phone = BbhPhoneNumberUtil.toApiFormat(phoneNumber);
     final mail = email.trim().toLowerCase();
 
     final url = channel == BbhOnboardingOtpChannel.mobile

@@ -35,6 +35,7 @@ class Strings {
   static const String isDemo = "isDemo";
   static const String isUserBasicKycVerified = "isUserBasiKycVerified";
   static const String isUserKycVerified = "isUserKycVerified";
+  static const String isProfileVerified = "isProfileVerified";
   static const String temporaryCreditStatus = "temporaryCreditStatus";
 
   /// user tokens

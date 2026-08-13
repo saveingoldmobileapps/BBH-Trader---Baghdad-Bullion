@@ -2109,6 +2109,103 @@ class AppLocalizationsAr extends AppLocalizations {
   String get verify_account => 'التحقق من الحساب';
 
   @override
+  String get agreement_account_warning =>
+      'يرجى توقيع اتفاقية المستخدم للحصول على إمكانية الوصول إلى جميع الميزات.';
+
+  @override
+  String get sign_agreement => 'توقيع الاتفاقية';
+
+  @override
+  String get kyc_agreement_desc => 'لقد قرأت وأوافق على الاتفاقية';
+
+  @override
+  String get accept_agreement => 'قبول الاتفاقية';
+
+  @override
+  String get sig_agreement => 'اتفاقية دار بغداد للسبائك';
+
+  @override
+  String get kyc_signature => 'التوقيع';
+
+  @override
+  String get signature_account_warning =>
+      'يرجى تقديم توقيعك لإكمال ملفك الشخصي.';
+
+  @override
+  String get signature_capture_message =>
+      'ارسم توقيعك في المربع أدناه لإكمال التحقق.';
+
+  @override
+  String get kyc_doc_national_id => 'البطاقة الوطنية';
+
+  @override
+  String get kyc_doc_passport => 'جواز السفر';
+
+  @override
+  String get kyc_doc_residency => 'وثيقة الإقامة';
+
+  @override
+  String kyc_document_rejected(String document) {
+    return 'تم رفض $document. اضغط للتحديث وإعادة الإرسال.';
+  }
+
+  @override
+  String kyc_document_pending(String document) {
+    return 'ما زال $document قيد المراجعة. اضغط للتحديث.';
+  }
+
+  @override
+  String kyc_document_pending_review(String document) {
+    return 'ما زال $document قيد المراجعة.';
+  }
+
+  @override
+  String kyc_document_not_verified(String document) {
+    return 'لم يتم التحقق من $document. اضغط للتحديث وإعادة الإرسال.';
+  }
+
+  @override
+  String get profile_verification_pending =>
+      'التحقق من ملفك الشخصي قيد المراجعة. سنخطرك عند اكتمال المراجعة.';
+
+  @override
+  String get profile_verification_reviewing =>
+      'التحقق من ملفك الشخصي قيد المراجعة حالياً. سنخطرك عند اكتمال المراجعة.';
+
+  @override
+  String get profile_verification_rejected_partial =>
+      'تم رفض التحقق من ملفك الشخصي. يرجى تحديث المستندات المطلوبة.';
+
+  @override
+  String get profile_verification_rejected_full_kyc =>
+      'تم رفض التحقق من ملفك الشخصي. يرجى إكمال التحقق من الهوية بالكامل مرة أخرى.';
+
+  @override
+  String kyc_document_reviewing(String document) {
+    return 'ما زال $document قيد المراجعة.';
+  }
+
+  @override
+  String kyc_document_verified(String document) {
+    return 'تم التحقق من $document.';
+  }
+
+  @override
+  String get kyc_documents_status_title => 'حالة التحقق من الملف الشخصي';
+
+  @override
+  String get kyc_status_verified => 'تم التحقق';
+
+  @override
+  String get kyc_status_reviewing => 'قيد المراجعة';
+
+  @override
+  String get kyc_retake_document => 'إعادة التقاط الوثيقة';
+
+  @override
+  String get kyc_complete_verification => 'إكمال التحقق من الهوية';
+
+  @override
   String get demo_mode_banner => 'أنت في وضع التجربة';
 
   @override

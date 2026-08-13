@@ -157,13 +157,7 @@ class _EditPersonalInfoScreenState
     final authStateWatchProvider = ref.watch(authProvider);
     final authStateReadProvider = ref.read(authProvider.notifier);
     final mainStateWatchProvider = ref.watch(homeProvider);
-    // bool isKycVerfied = mainStateWatchProvider.isUserKYCVerified &&
-    //       mainStateWatchProvider.isBasicUserVerified;
-    //       final isDemo =  LocalDatabase.instance.getIsDemo() ?? false;
-    bool isKycVerfied =
-        mainStateWatchProvider.isUserKYCVerified &&
-        mainStateWatchProvider.isBasicUserVerified &&
-        mainStateWatchProvider.isBasicUserVerified;
+    bool isKycVerfied = mainStateWatchProvider.isProfileVerified;
 
     // force to bool
     final bool isDemo = LocalDatabase.instance.getIsDemo() == true;

@@ -9,14 +9,26 @@ import 'package:intl/intl.dart';
 
 /// BBH Funding Portal — mobile `.app` UI only (matches HTML prototype).
 class FundingPortalMobileFlow extends StatefulWidget {
-  const FundingPortalMobileFlow({super.key});
+  const FundingPortalMobileFlow({
+    super.key,
+    this.entry = FundingPortalEntry.fullPrototype,
+    this.exitOnDone = false,
+  });
+
+  /// [depositDemo] = `BBH_Deposit_UI_2.html` link + instant sequence only.
+  final FundingPortalEntry entry;
+
+  /// When true, fund-success "Done" pops this route (used from Add Funds).
+  final bool exitOnDone;
 
   @override
   State<FundingPortalMobileFlow> createState() => _FundingPortalMobileFlowState();
 }
 
 class _FundingPortalMobileFlowState extends State<FundingPortalMobileFlow> {
-  FundingPortalScreenId _screen = FundingPortalScreenId.linkHome;
+  late FundingPortalScreenId _screen;
+
+  bool get _depositDemo => widget.entry == FundingPortalEntry.depositDemo;
 
   bool _linked = false;
   String _linkedMasked = '—';
@@ -26,21 +38,56 @@ class _FundingPortalMobileFlowState extends State<FundingPortalMobileFlow> {
 
   late final TextEditingController _tibAccountController;
   late final TextEditingController _accountHolderController;
+  late final TextEditingController _amountController;
+  String? _amountError;
+
+  static const _minAmount = 10000;
+  static const _maxAmount = 5000000;
 
   @override
   void initState() {
     super.initState();
+    _screen = FundingPortalScreenId.linkHome;
     _tibAccountController =
         TextEditingController(text: '0042-1108-8675309');
-    _accountHolderController =
-        TextEditingController(text: 'Ahmed Al-Sayed');
+    _accountHolderController = TextEditingController(
+      text: _depositDemo ? 'Hussein Hammoodi' : 'Ahmed Al-Sayed',
+    );
+    _amountController = TextEditingController(text: '250000');
   }
 
   @override
   void dispose() {
     _tibAccountController.dispose();
     _accountHolderController.dispose();
+    _amountController.dispose();
     super.dispose();
+  }
+
+  num? _parseAmount(String raw) {
+    final digits = raw.replaceAll(RegExp(r'[^\d]'), '');
+    if (digits.isEmpty) return null;
+    return num.tryParse(digits);
+  }
+
+  bool _validateAndSaveAmount() {
+    final amount = _parseAmount(_amountController.text);
+    if (amount == null) {
+      setState(() => _amountError = 'Enter an amount in IQD.');
+      return false;
+    }
+    if (amount < _minAmount || amount > _maxAmount) {
+      setState(
+        () => _amountError =
+            'Amount must be between ${_minAmount.toStringAsFixed(0)} and ${_maxAmount.toStringAsFixed(0)} IQD.',
+      );
+      return false;
+    }
+    setState(() {
+      _amountError = null;
+      _fundingAmount = amount;
+    });
+    return true;
   }
 
   void _go(FundingPortalScreenId screen) => setState(() => _screen = screen);
@@ -56,6 +103,19 @@ class _FundingPortalMobileFlowState extends State<FundingPortalMobileFlow> {
   }
 
   void _back() {
+    if (_depositDemo) {
+      switch (_screen) {
+        case FundingPortalScreenId.linkEnter:
+          _go(FundingPortalScreenId.linkHome);
+        case FundingPortalScreenId.fundAmount:
+          _go(FundingPortalScreenId.fundHome);
+        case FundingPortalScreenId.fundReview:
+          _go(FundingPortalScreenId.fundAmount);
+        default:
+          break;
+      }
+      return;
+    }
     switch (_screen) {
       case FundingPortalScreenId.linkEnter:
         _go(FundingPortalScreenId.linkHome);
@@ -98,6 +158,7 @@ Widget build(BuildContext context) {
       backgroundColor: FundingPortalColors.cream,
       body: switch (_screen) {
         FundingPortalScreenId.linkVerify ||
+        FundingPortalScreenId.linkOtp ||
         FundingPortalScreenId.fundProcessing ||
         FundingPortalScreenId.wireWebhook =>
           _buildAutoAdvanceScreen(),
@@ -110,6 +171,7 @@ Widget build(BuildContext context) {
 
   Widget _buildAutoAdvanceScreen() {
     return switch (_screen) {
+      FundingPortalScreenId.linkOtp => _linkOtp(),
       FundingPortalScreenId.linkVerify => _linkVerify(),
       FundingPortalScreenId.fundProcessing => _fundProcessing(),
       FundingPortalScreenId.wireWebhook => _wireWebhook(),
@@ -148,21 +210,25 @@ Widget build(BuildContext context) {
       FundingPortalScreenId.linkEnter => FundingPortalBtnStack(
         children: [
           FundingPortalPrimaryButton(
-            label: 'Verify with TIB',
-            onPressed: () => _go(FundingPortalScreenId.linkVerify),
+            label: _depositDemo ? 'Send OTP' : 'Verify with TIB',
+            onPressed: () => _go(
+              _depositDemo
+                  ? FundingPortalScreenId.linkOtp
+                  : FundingPortalScreenId.linkVerify,
+            ),
           ),
         ],
       ),
       FundingPortalScreenId.linkSuccess => FundingPortalBtnStack(
         children: [
           FundingPortalPrimaryButton(
-            label: 'Continue · Try Funding',
+            label: _depositDemo ? 'Continue · Add Funds' : 'Continue · Try Funding',
             onPressed: () {
               setState(() {
                 _linked = true;
-                _linkedMasked = '···· ···· ···· 5309';
+                _linkedMasked = _depositDemo ? '···· 5309' : '···· ···· ···· 5309';
               });
-              _switchFlow(FundingPortalFlow.instant);
+              _go(FundingPortalScreenId.fundHome);
             },
           ),
         ],
@@ -171,11 +237,16 @@ Widget build(BuildContext context) {
         children: [
           FundingPortalPrimaryButton(
             label: 'Add Funds',
-            enabled: _linked,
-            onPressed:
-                _linked ? () => _go(FundingPortalScreenId.fundChoose) : null,
+            enabled: _depositDemo ? _linked : _linked,
+            onPressed: _linked
+                ? () => _go(
+                      _depositDemo
+                          ? FundingPortalScreenId.fundAmount
+                          : FundingPortalScreenId.fundChoose,
+                    )
+                : null,
           ),
-          if (!_linked)
+          if (!_linked && !_depositDemo)
             FundingPortalSecondaryButton(
               label: 'Send a wire instead',
               onPressed: () => _switchFlow(FundingPortalFlow.wire),
@@ -187,7 +258,7 @@ Widget build(BuildContext context) {
           FundingPortalPrimaryButton(
             label: 'Continue',
             onPressed: () {
-              setState(() => _fundingAmount = 250000);
+              if (!_validateAndSaveAmount()) return;
               _go(FundingPortalScreenId.fundReview);
             },
           ),
@@ -208,8 +279,20 @@ Widget build(BuildContext context) {
       FundingPortalScreenId.fundSuccess => FundingPortalBtnStack(
         children: [
           FundingPortalPrimaryButton(
-            label: 'Done · Try Wire Flow',
+            label: 'Done',
             onPressed: () {
+              if (widget.exitOnDone) {
+                Navigator.of(context).pop();
+                return;
+              }
+              if (_depositDemo) {
+                setState(() {
+                  _linked = false;
+                  _linkedMasked = '—';
+                  _screen = FundingPortalScreenId.linkHome;
+                });
+                return;
+              }
               setState(() => _balanceIqd += _fundingAmount);
               _switchFlow(FundingPortalFlow.wire);
             },
@@ -298,6 +381,9 @@ Widget build(BuildContext context) {
   Widget _linkEnterBody() {
     const introFontSize = 12.5;
     const introLineHeight = 1.6;
+    final intro = _depositDemo
+        ? "We'll send a verification code to the phone on file for this account."
+        : "We'll verify with Al-Taif Islamic Bank that this account belongs to you.";
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -313,7 +399,7 @@ Widget build(BuildContext context) {
         ),
         const SizedBox(height: 12),
         Text(
-          "We'll verify with Al-Taif Islamic Bank that this account belongs to you.",
+          intro,
           softWrap: true,
           style: FundingPortalTypography.bodyMuted,
           strutStyle: const StrutStyle(
@@ -324,17 +410,81 @@ Widget build(BuildContext context) {
           ),
         ),
         const SizedBox(height: 22),
-        FundingPortalTextField(
-          label: 'TIB Account Number',
-          controller: _tibAccountController,
-        ),
-        FundingPortalTextField(
-          label: 'Account Holder Name',
-          controller: _accountHolderController,
-          textCapitalization: TextCapitalization.words,
-          hint: 'Must match the name on the TIB account exactly.',
-        ),
+        if (_depositDemo) ...[
+          const FundingPortalReadOnlyField(
+            label: 'TIB Account Number',
+            value: '0042-1108-8675309',
+          ),
+          const FundingPortalReadOnlyField(
+            label: 'Account Holder Name',
+            value: 'Hussein Hammoodi',
+            hint: 'Must match the name on the TIB account exactly.',
+          ),
+        ] else ...[
+          FundingPortalTextField(
+            label: 'TIB Account Number',
+            controller: _tibAccountController,
+          ),
+          FundingPortalTextField(
+            label: 'Account Holder Name',
+            controller: _accountHolderController,
+            textCapitalization: TextCapitalization.words,
+            hint: 'Must match the name on the TIB account exactly.',
+          ),
+        ],
       ],
+    );
+  }
+
+  Widget _linkOtp() {
+    return FundingPortalScreenShell(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const FundingPortalAppHeader(title: 'Verification'),
+          Text(
+            'Enter the code from TIB',
+            textAlign: TextAlign.center,
+            softWrap: true,
+            style: FundingPortalTypography.manrope(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w600,
+              color: FundingPortalColors.ink,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Sent to ··· ··· 4421 · valid for 5 minutes',
+            textAlign: TextAlign.center,
+            softWrap: true,
+            style: FundingPortalTypography.bodyMuted,
+          ),
+          const SizedBox(height: 18),
+          FundingPortalOtpGrid(
+            onComplete: () {
+              if (mounted) _go(FundingPortalScreenId.linkVerify);
+            },
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Resend in 24s',
+            textAlign: TextAlign.center,
+            style: FundingPortalTypography.manrope(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+              color: FundingPortalColors.goldDeep,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 16),
+          const FundingPortalFootnote(
+            text:
+                'Linking an account requires OTP verification.\n'
+                'Your code is sent directly by Al-Taif Islamic Bank.',
+          ),
+        ],
+      ),
     );
   }
 
@@ -386,7 +536,7 @@ Widget build(BuildContext context) {
         _walletSection(greeting: 'Welcome back'),
         if (_linked)
           FundingPortalLinkedAccountChip(masked: _linkedMasked)
-        else
+        else if (!_depositDemo)
           const FundingPortalLinkPrompt(
             title: 'No linked account yet',
             body:
@@ -467,7 +617,13 @@ Widget build(BuildContext context) {
           softWrap: true,
         ),
         const SizedBox(height: 24),
-        const FundingPortalAmountField(value: '250,000'),
+        FundingPortalAmountField(
+          controller: _amountController,
+          errorText: _amountError,
+          onChanged: (_) {
+            if (_amountError != null) setState(() => _amountError = null);
+          },
+        ),
       ],
     );
   }
@@ -504,53 +660,51 @@ Widget build(BuildContext context) {
   }
 
   Widget _fundOtpBody() {
-    return FundingPortalScreenShell(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const FundingPortalAppHeader(title: 'Verification'),
-          Text(
-            'Enter the code from TIB',
-            textAlign: TextAlign.center,
-            softWrap: true,
-            style: FundingPortalTypography.manrope(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w600,
-              color: FundingPortalColors.ink,
-              height: 1.4,
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const FundingPortalAppHeader(title: 'Verification'),
+        Text(
+          'Enter the code from TIB',
+          textAlign: TextAlign.center,
+          softWrap: true,
+          style: FundingPortalTypography.manrope(
+            fontSize: 12.5,
+            fontWeight: FontWeight.w600,
+            color: FundingPortalColors.ink,
+            height: 1.4,
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Sent to ··· ··· 4421 · valid for 5 minutes',
-            textAlign: TextAlign.center,
-            softWrap: true,
-            style: FundingPortalTypography.bodyMuted,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Sent to ··· ··· 4421 · valid for 5 minutes',
+          textAlign: TextAlign.center,
+          softWrap: true,
+          style: FundingPortalTypography.bodyMuted,
+        ),
+        const SizedBox(height: 18),
+        FundingPortalOtpGrid(
+          onComplete: () {
+            if (mounted) _go(FundingPortalScreenId.fundProcessing);
+          },
+        ),
+        const SizedBox(height: 12),
+        Text(
+          'Resend in 24s',
+          textAlign: TextAlign.center,
+          style: FundingPortalTypography.manrope(
+            fontSize: 11.5,
+            fontWeight: FontWeight.w600,
+            color: FundingPortalColors.goldDeep,
+            letterSpacing: 0.5,
           ),
-          const SizedBox(height: 18),
-          FundingPortalOtpGrid(
-            onComplete: () {
-              if (mounted) _go(FundingPortalScreenId.fundProcessing);
-            },
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Resend in 24s',
-            textAlign: TextAlign.center,
-            style: FundingPortalTypography.manrope(
-              fontSize: 11.5,
-              fontWeight: FontWeight.w600,
-              color: FundingPortalColors.goldDeep,
-              letterSpacing: 0.5,
-            ),
-          ),
-          const SizedBox(height: 16),
-          const FundingPortalFootnote(
-            text:
-                "BBH never sees your OTP in clear text.\nIt's verified directly by Al-Taif Islamic Bank via API 3.2.",
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(height: 16),
+        const FundingPortalFootnote(
+          text:
+              "BBH never sees your OTP in clear text.\nIt's verified directly by Al-Taif Islamic Bank via API 3.2.",
+        ),
+      ],
     );
   }
 

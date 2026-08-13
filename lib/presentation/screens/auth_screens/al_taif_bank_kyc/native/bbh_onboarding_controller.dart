@@ -2,15 +2,22 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:baghdad_bullion_house/data/models/ipass_model/ipass_formdata_result_response.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_image_upload_queue.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_image_upload_service.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_image_url_store.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_scan_store.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_builder.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_logger.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_submission_service.dart';
+import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_phone_number_util.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/bbh_onboarding_state_store.dart';
+import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_document_image_util.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_formdata_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_html_field_mapper.dart';
-import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_document_image_util.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_kyc_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_residence_formdata_mapper.dart';
+import 'package:baghdad_bullion_house/core/kyc/ipass_document_rejection_policy.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -46,8 +53,17 @@ class BbhOnboardingController extends ChangeNotifier {
   /// Temporary — allow continuing without WhatsApp/mobile OTP until numbers are available.
   static const bypassMobileVerification = true;
 
+  /// Per-document iPass rejection bypass — see [IpassDocumentRejectionPolicy].
+
+  /// Stable key for signature upload in [ipassImageUrls].
+  static const signatureImageKey = 'signature|consent|signatureImage';
+
   BbhOnboardingController({BbhOnboardingForm? form})
-    : form = form ?? BbhOnboardingForm();
+    : form = form ?? BbhOnboardingForm() {
+    BbhOnboardingImageUploadQueue.instance.onUploaded = (key, url) {
+      ipassImageUrls[key] = url;
+    };
+  }
 
   BbhOnboardingForm form;
   BbhOnboardingStep step = BbhOnboardingStep.cover;
@@ -55,10 +71,13 @@ class BbhOnboardingController extends ChangeNotifier {
   IpassScanTarget? activeIpassScan;
   bool get ipassInProgress => activeIpassScan != null;
   final Map<IpassScanTarget, IpassKycResult> ipassScanResults = {};
+  final Map<String, String> ipassImageUrls = {};
   IpassFormDataResultResponse? residenceFormDataFront;
   IpassFormDataResultResponse? residenceFormDataBack;
   String? kycReference;
   Map<String, dynamic>? submissionPayload;
+  Map<String, dynamic>? lastSubmissionResponse;
+  bool submitInProgress = false;
 
   static const flowSteps = [
     BbhOnboardingStep.preflight,
@@ -86,35 +105,126 @@ class BbhOnboardingController extends ChangeNotifier {
 
   Future<void> loadPersistedState() async {
     final raw = BbhOnboardingStateStore.instance.load();
-    if (raw == null) {
-      notifyListeners();
+
+    if (raw != null) {
+      final formJson = raw['form'];
+      if (formJson is Map) {
+        final restored = BbhOnboardingForm.fromJson(
+          Map<String, dynamic>.from(formJson),
+        );
+        _copyForm(restored);
+      }
+
+      final stepName = raw['step']?.toString();
+      if (stepName != null && stepName.isNotEmpty) {
+        final restoredStep = BbhOnboardingStep.values.firstWhere(
+          (s) => s.name == stepName,
+          orElse: () => BbhOnboardingStep.cover,
+        );
+        if (restoredStep != BbhOnboardingStep.cover &&
+            restoredStep != BbhOnboardingStep.success) {
+          step = restoredStep;
+        }
+      }
+
+      kycReference = raw['kycReference']?.toString();
+    }
+
+    final scans = await BbhOnboardingScanStore.instance.loadIpassScans();
+    ipassScanResults
+      ..clear()
+      ..addAll(scans);
+
+    final residence = await BbhOnboardingScanStore.instance
+        .loadResidenceScans();
+    residenceFormDataFront = residence.front;
+    residenceFormDataBack = residence.back;
+
+    ipassImageUrls
+      ..clear()
+      ..addAll(await BbhOnboardingImageUrlStore.instance.load());
+
+    _resumeBackgroundImageUploads();
+    _resumeSignatureUploadIfNeeded();
+
+    notifyListeners();
+  }
+
+  void _resumeSignatureUploadIfNeeded() {
+    if (!BbhOnboardingImageUploadService.enabled) return;
+    final existing = ipassImageUrls[signatureImageKey]?.trim();
+    if (existing != null && existing.isNotEmpty) return;
+    final sig = form.signature?.trim();
+    if (sig == null || sig.isEmpty) return;
+    unawaited(_uploadSignature(sig));
+  }
+
+  /// Stores signature locally and uploads to iPass doc endpoint in background.
+  void setSignature(String? base64) {
+    form.signature = base64;
+    ipassImageUrls.remove(signatureImageKey);
+    notifyListeners();
+
+    if (base64 == null || base64.trim().isEmpty) {
+      unawaited(BbhOnboardingImageUrlStore.instance.save(ipassImageUrls));
       return;
     }
+    unawaited(_uploadSignature(base64.trim()));
+  }
 
-    final formJson = raw['form'];
-    if (formJson is Map) {
-      final restored = BbhOnboardingForm.fromJson(
-        Map<String, dynamic>.from(formJson),
-      );
-      _copyForm(restored);
-    }
+  Future<String?> _ensureSignatureImageUrl() async {
+    final cached = ipassImageUrls[signatureImageKey]?.trim();
+    if (cached != null && cached.isNotEmpty) return cached;
 
-    final stepName = raw['step']?.toString();
-    if (stepName != null && stepName.isNotEmpty) {
-      final restoredStep = BbhOnboardingStep.values.firstWhere(
-        (s) => s.name == stepName,
-        orElse: () => BbhOnboardingStep.cover,
-      );
-      // Resume in-progress onboarding — skip cover when a later step was saved.
-      if (restoredStep != BbhOnboardingStep.cover &&
-          restoredStep != BbhOnboardingStep.success) {
-        step = restoredStep;
+    final fromDisk = await BbhOnboardingImageUrlStore.instance.load();
+    ipassImageUrls.addAll(fromDisk);
+    final stored = ipassImageUrls[signatureImageKey]?.trim();
+    if (stored != null && stored.isNotEmpty) return stored;
+
+    final sig = form.signature?.trim();
+    if (sig == null || sig.isEmpty) return null;
+
+    return _uploadSignature(sig);
+  }
+
+  Future<String?> _uploadSignature(String base64) async {
+    if (!BbhOnboardingImageUploadService.enabled) return null;
+
+    final url = await BbhOnboardingImageUploadService.instance.uploadBase64Image(
+      base64: base64,
+      fileNameStem: 'bbh_signature',
+      mimeType: 'image/png',
+    );
+
+    if (url != null && url.isNotEmpty) {
+      ipassImageUrls[signatureImageKey] = url;
+      await BbhOnboardingImageUrlStore.instance.save(ipassImageUrls);
+      if (kDebugMode) {
+        debugPrint('BbhImageUpload: signature uploaded → $url');
       }
+      notifyListeners();
+      return url;
     }
 
-    kycReference = raw['kycReference']?.toString();
-    ipassScanResults.clear();
-    notifyListeners();
+    if (kDebugMode) {
+      debugPrint('BbhImageUpload: signature upload failed');
+    }
+    return null;
+  }
+
+  /// Re-queue any scan images that still need uploading after app restart.
+  void _resumeBackgroundImageUploads() {
+    if (!BbhOnboardingImageUploadService.enabled) return;
+
+    final allImages = IpassOnboardingMapper.collectUploadableImages(
+      scanResults: ipassScanResults,
+      residenceFront: residenceFormDataFront,
+      residenceBack: residenceFormDataBack,
+    );
+    BbhOnboardingImageUploadQueue.instance.enqueueMissing(
+      allImages: allImages,
+      uploaded: ipassImageUrls,
+    );
   }
 
   void _copyForm(BbhOnboardingForm source) {
@@ -122,6 +232,12 @@ class BbhOnboardingController extends ChangeNotifier {
   }
 
   Future<void> persist() async {
+    await BbhOnboardingScanStore.instance.saveIpassScans(ipassScanResults);
+    await BbhOnboardingScanStore.instance.saveResidenceScans(
+      front: residenceFormDataFront,
+      back: residenceFormDataBack,
+    );
+    await BbhOnboardingImageUrlStore.instance.save(ipassImageUrls);
     await BbhOnboardingStateStore.instance.save({
       'step': step.name,
       'form': form.toJson(),
@@ -175,10 +291,10 @@ class BbhOnboardingController extends ChangeNotifier {
   bool validateCurrent() {
     final ok = switch (step) {
       BbhOnboardingStep.purpose => _require(
-          form.purposeConfirmed,
-          'Please confirm Section 1.',
-          fieldKey: 'purpose_confirmed',
-        ),
+        form.purposeConfirmed,
+        'Please confirm Section 1.',
+        fieldKey: 'purpose_confirmed',
+      ),
       BbhOnboardingStep.ocrReview => _validateOcr(),
       BbhOnboardingStep.residenceAddress => _validateResidence(),
       BbhOnboardingStep.personalDetails => _validatePersonal(),
@@ -204,11 +320,8 @@ class BbhOnboardingController extends ChangeNotifier {
       'ar_gf',
       'ar_surname',
       'ar_mother',
-      'en_first',
-      'en_father',
-      'en_gf',
-      'en_surname',
-      'en_mother',
+      // 'id_en_first',
+      // 'id_en_surname',
       'id_personal',
       'id_serial',
       'id_issue_place',
@@ -216,26 +329,54 @@ class BbhOnboardingController extends ChangeNotifier {
       'id_expiry_date',
     ];
     for (final key in required) {
-      final c = form.controllerFor(key);
-      if (c == null || !_filled(c)) {
+      if (!_fieldFilled(key)) {
         return _fail('Please fill all required fields.', fieldKey: key);
       }
     }
+    // if (form.noPassport) {
+    //   for (final key in [
+    //     'id_en_father',
+    //     'id_en_gf',
+    //     'id_en_mother',
+    //   ]) {
+    //     if (!_fieldFilled(key)) {
+    //       return _fail('Please fill all required fields.', fieldKey: key);
+    //     }
+    //   }
+    // }
     if (!form.noPassport) {
-      for (final key in ['pp_no', 'pp_place', 'pp_issue', 'pp_expiry']) {
-        final c = form.controllerFor(key);
-        if (c == null || !_filled(c)) {
-          return _fail('Complete passport fields or skip passport.', fieldKey: key);
+      for (final key in [
+        'en_first',
+        'en_father',
+        'en_gf',
+        'en_surname',
+        'en_mother',
+        'pp_no',
+        'pp_place',
+        'pp_issue',
+        'pp_expiry',
+      ]) {
+        if (!_fieldFilled(key)) {
+          return _fail(
+            'Complete passport fields or skip passport.',
+            fieldKey: key,
+          );
         }
       }
     }
     final personal = form.idPersonal.text.trim();
     if (!RegExp(r'^\d{12}$').hasMatch(personal)) {
-      return _fail('Personal Number must be exactly 12 digits.', fieldKey: 'id_personal');
+      return _fail(
+        'Personal Number must be exactly 12 digits.',
+        fieldKey: 'id_personal',
+      );
     }
     final serial = form.idSerial.text.trim().toUpperCase();
     if (!RegExp(r'^[A-Z]\d{8}$').hasMatch(serial)) {
-      return _fail('ID Number must be one letter + 8 digits.', fieldKey: 'id_serial');
+      return _fail(
+        'ID Number must be one letter + 8 digits.',
+        fieldKey: 'id_serial',
+      );
     }
     return true;
   }
@@ -260,10 +401,16 @@ class BbhOnboardingController extends ChangeNotifier {
       }
     }
     if (form.foreignRes == 'Yes' && !_filled(form.foreignResCountry)) {
-      return _fail('Enter foreign residency country.', fieldKey: 'foreign_res_country');
+      return _fail(
+        'Enter foreign residency country.',
+        fieldKey: 'foreign_res_country',
+      );
     }
     if (form.foreignCit == 'Yes' && !_filled(form.foreignCitCountry)) {
-      return _fail('Enter foreign citizenship country.', fieldKey: 'foreign_cit_country');
+      return _fail(
+        'Enter foreign citizenship country.',
+        fieldKey: 'foreign_cit_country',
+      );
     }
     return true;
   }
@@ -323,8 +470,17 @@ class BbhOnboardingController extends ChangeNotifier {
     if (!_filled(form.mobile)) {
       return _fail('Enter your mobile number.', fieldKey: 'mobile');
     }
+    if (!BbhPhoneNumberUtil.isValidInput(form.mobile.text)) {
+      return _fail(
+        'Enter a valid mobile number starting with 00 or +.',
+        fieldKey: 'mobile',
+      );
+    }
     if (!bypassMobileVerification && !form.verifiedMobile.value) {
-      return _fail('Verify your mobile number before continuing.', fieldKey: 'mobile');
+      return _fail(
+        'Verify your mobile number before continuing.',
+        fieldKey: 'mobile',
+      );
     }
     if (!_filled(form.email)) {
       return _fail('Enter your email address.', fieldKey: 'email');
@@ -339,7 +495,10 @@ class BbhOnboardingController extends ChangeNotifier {
     if (form.hasAccount != 'Yes') return true;
     final iban = form.iban.text.replaceAll(RegExp(r'\s'), '').toUpperCase();
     if (!RegExp(r'^IQ[A-Z0-9]{21}$').hasMatch(iban)) {
-      return _fail('Enter a valid Iraqi IBAN (IQ + 21 characters).', fieldKey: 'iban');
+      return _fail(
+        'Enter a valid Iraqi IBAN (IQ + 21 characters).',
+        fieldKey: 'iban',
+      );
     }
     return true;
   }
@@ -349,16 +508,29 @@ class BbhOnboardingController extends ChangeNotifier {
       return _fail('Please provide your signature.', fieldKey: 'signature');
     }
     if (!form.consentConfirmed) {
-      return _fail('Please confirm Section 6 has been read.', fieldKey: 'consent_confirmed');
+      return _fail(
+        'Please confirm Section 6 has been read.',
+        fieldKey: 'consent_confirmed',
+      );
     }
     return true;
   }
 
+
   bool _filled(TextEditingController c) => c.text.trim().isNotEmpty;
+
+  bool _fieldFilled(String key) {
+    if (key == 'gender') {
+      return form.gender != null && form.gender!.trim().isNotEmpty;
+    }
+    final c = form.controllerFor(key);
+    return c != null && _filled(c);
+  }
 
   String? lastError;
   String? lastWarning;
   String? lastSuccess;
+
 
   bool _fail(String msg, {String? fieldKey}) {
     lastError = msg;
@@ -373,8 +545,14 @@ class BbhOnboardingController extends ChangeNotifier {
   bool _require(bool ok, String msg, {String? fieldKey}) =>
       ok ? true : _fail(msg, fieldKey: fieldKey);
 
-  bool _applyIpassDocumentFields(IpassKycResult result, IpassScanTarget target) {
-    final mapped = IpassOnboardingMapper.extractFieldValues(result.data, target: target);
+  bool _applyIpassDocumentFields(
+    IpassKycResult result,
+    IpassScanTarget target,
+  ) {
+    final mapped = IpassOnboardingMapper.extractFieldValues(
+      result.data,
+      target: target,
+    );
     final htmlFields = IpassHtmlFieldMapper.forScanTarget(
       target,
       IpassHtmlFieldMapper.toHtmlFieldValues(mapped),
@@ -395,26 +573,147 @@ class BbhOnboardingController extends ChangeNotifier {
     return true;
   }
 
-  bool _faceVerificationRejected(Map<String, dynamic>? data) {
-    if (data == null) return false;
-    final root = _resolveScanDataRoot(data);
-    final overall = root['OverAllStatus']?.toString().toUpperCase();
-    if (overall == 'REJECTED') return true;
+  bool _applyDemoDocumentFields(IpassScanTarget target) {
+    final mapped = IpassOnboardingMapper.demoAcceptedMappedFields(target);
+    final htmlFields = IpassHtmlFieldMapper.forScanTarget(
+      target,
+      IpassHtmlFieldMapper.toHtmlFieldValues(mapped),
+    );
+    if (htmlFields.isEmpty) return false;
+    form.applyScanValues(target, htmlFields);
+    return true;
+  }
 
+  String _ipassRejectionMessage(
+    Map<String, dynamic>? data,
+    IpassScanTarget target,
+  ) {
+    final docLabel = switch (target) {
+      IpassScanTarget.nationalId => 'National ID',
+      IpassScanTarget.passport => 'Passport',
+      IpassScanTarget.residence => 'Residence card',
+    };
+    final root = _resolveScanDataRoot(data ?? {});
     final reasons = root['Reason'];
-    if (reasons is! List) return false;
-    for (final item in reasons) {
-      if (item is! Map) continue;
-      final text = item['Text']?.toString().toLowerCase() ?? '';
-      if (text.contains('face') || text.contains('liveness')) return true;
+    final texts = <String>[];
+    if (reasons is List) {
+      for (final item in reasons) {
+        if (item is! Map) continue;
+        final text = item['Text']?.toString().trim();
+        if (text != null && text.isNotEmpty) texts.add(text);
+      }
     }
-    return false;
+    final header = '$docLabel could not be verified. Please retake the scan.';
+    if (texts.isEmpty) return header;
+    return '$header\n\n${texts.join('\n')}';
+  }
+
+  void _enqueueImagesForTarget(IpassScanTarget target) {
+    if (!BbhOnboardingImageUploadService.enabled) {
+      if (kDebugMode) debugPrint('BbhImageUpload: disabled');
+      return;
+    }
+
+    final result = ipassScanResults[target];
+    if (result == null) {
+      if (kDebugMode) debugPrint('BbhImageUpload: no scan result for $target');
+      return;
+    }
+
+    final scanKey = IpassOnboardingMapper.scanTargetKeys[target];
+    final images = IpassOnboardingMapper.extractAllImagesFromScanResult(
+      result,
+      scanTarget: scanKey,
+    );
+
+    if (kDebugMode) {
+      debugPrint(
+        'BbhImageUpload: $target — '
+        '${IpassOnboardingMapper.describeScanImageDiagnostics(result, scanTarget: scanKey)}',
+      );
+    }
+
+    if (images.isEmpty) {
+      if (kDebugMode) {
+        debugPrint(
+          'BbhImageUpload: $target — nothing to upload (iPass JSON has no base64 images). '
+          'API will NOT be called.',
+        );
+      }
+      return;
+    }
+
+    if (kDebugMode) {
+      debugPrint(
+        'BbhImageUpload: $target — queueing ${images.length} image(s)',
+      );
+    }
+
+    BbhOnboardingImageUploadQueue.instance.enqueue(
+      images,
+      alreadyUploaded: ipassImageUrls,
+    );
+  }
+
+  void _enqueueResidenceImages() {
+    if (!BbhOnboardingImageUploadService.enabled) return;
+    if (residenceFormDataFront == null && residenceFormDataBack == null) return;
+
+    final residenceBundle =
+        IpassOnboardingMapper.buildResidenceSubmissionPayload(
+          front: residenceFormDataFront,
+          back: residenceFormDataBack,
+          preferImageUrls: false,
+          omitUnuploaded: false,
+        );
+    final images = residenceBundle['ipass_residence_images'];
+    if (images is! List) return;
+
+    final entries = <Map<String, dynamic>>[];
+    for (final item in images) {
+      if (item is Map) entries.add(Map<String, dynamic>.from(item));
+    }
+
+    BbhOnboardingImageUploadQueue.instance.enqueue(
+      entries,
+      alreadyUploaded: ipassImageUrls,
+    );
+  }
+
+  Future<Map<String, String>> _latestImageUrls() async {
+    final fromDisk = await BbhOnboardingImageUrlStore.instance.load();
+    ipassImageUrls.addAll(fromDisk);
+    return Map<String, String>.from(ipassImageUrls);
+  }
+
+  void _clearImageUrlsForTarget(IpassScanTarget target) {
+    final scanKey = IpassOnboardingMapper.scanTargetKeys[target];
+    if (scanKey == null) return;
+    _clearImageUrlsForScanKey(scanKey);
+  }
+
+  void _clearImageUrlsForScanKey(String scanKey) {
+    final prefix = '$scanKey|';
+    ipassImageUrls.removeWhere((key, _) => key.startsWith(prefix));
+    BbhOnboardingImageUploadQueue.instance.clearForScanKey(scanKey);
+    unawaited(_persistImageUrlsForScanKey(scanKey));
+  }
+
+  Future<void> _persistImageUrlsForScanKey(String scanKey) async {
+    final prefix = '$scanKey|';
+    final stored = await BbhOnboardingImageUrlStore.instance.load();
+    stored.removeWhere((key, _) => key.startsWith(prefix));
+    await BbhOnboardingImageUrlStore.instance.save(stored);
+    ipassImageUrls
+      ..clear()
+      ..addAll(stored);
   }
 
   Map<String, dynamic> _resolveScanDataRoot(Map<String, dynamic> data) {
     var current = data;
     for (var depth = 0; depth < 4; depth++) {
-      if (current.containsKey('OverAllStatus') || current.containsKey('DocDetails')) {
+      if (current.containsKey('OverAllStatus') ||
+          current.containsKey('DocDetails')) {
         return current;
       }
       final inner = current['data'];
@@ -429,9 +728,31 @@ class BbhOnboardingController extends ChangeNotifier {
     return current;
   }
 
-  Future<bool> _handleIpassResult(IpassKycResult result, IpassScanTarget target) async {
+  Future<bool> _handleIpassResult(
+    IpassKycResult result,
+    IpassScanTarget target,
+  ) async {
+    final rejected = IpassDocumentRejectionPolicy.isScanRejected(result.data);
+    final bypass = IpassDocumentRejectionPolicy.bypassRejectionFor(target);
+
+    if (rejected && !bypass) {
+      lastError = _ipassRejectionMessage(result.data, target);
+      lastWarning = null;
+      lastSuccess = null;
+      notifyListeners();
+      return false;
+    }
+
     ipassScanResults[target] = result;
-    final docApplied = _applyIpassDocumentFields(result, target);
+    _clearImageUrlsForTarget(target);
+    _enqueueImagesForTarget(target);
+
+    var docApplied = _applyIpassDocumentFields(result, target);
+    var usedDemoFallback = false;
+    if (!docApplied && rejected && bypass) {
+      docApplied = _applyDemoDocumentFields(target);
+      usedDemoFallback = docApplied;
+    }
 
     if (docApplied) {
       switch (target) {
@@ -448,19 +769,26 @@ class BbhOnboardingController extends ChangeNotifier {
 
       switch (target) {
         case IpassScanTarget.nationalId:
-          final faceRejected = _faceVerificationRejected(result.data);
-          if (faceRejected) {
-            lastWarning =
-                'Document details captured. Face verification failed — tap Continue to review.';
+          if (rejected && bypass) {
+            lastWarning = usedDemoFallback
+                ? 'Demo mode: iPass rejected this scan. Sample national ID data was filled for testing.'
+                : 'Demo mode: iPass rejected this scan but OCR data was filled for testing.';
           } else {
-            lastSuccess = 'Document captured. Tap Continue to review your details.';
+            lastSuccess =
+                'Document captured. Tap Continue to review your details.';
           }
         case IpassScanTarget.residence:
           lastSuccess =
               'Residence card captured. Details will appear on the next screen.';
         case IpassScanTarget.passport:
-          lastSuccess =
-              'Passport captured. Missing English name fields were filled where available.';
+          if (rejected && bypass) {
+            lastWarning = usedDemoFallback
+                ? 'Demo mode: iPass rejected this scan. Sample passport data was filled for testing.'
+                : 'Demo mode: iPass rejected this scan but OCR data was filled for testing.';
+          } else {
+            lastSuccess =
+                'Passport captured. Missing English name fields were filled where available.';
+          }
       }
       notifyListeners();
       return true;
@@ -469,7 +797,8 @@ class BbhOnboardingController extends ChangeNotifier {
     if (!result.success || !result.apiStatus) {
       lastError = switch (target) {
         IpassScanTarget.nationalId => 'Identity verification failed.',
-        IpassScanTarget.residence => 'Residence card scan failed. Please try again.',
+        IpassScanTarget.residence =>
+          'Residence card scan failed. Please try again.',
         IpassScanTarget.passport => 'Passport scan failed. Please try again.',
       };
       notifyListeners();
@@ -486,12 +815,14 @@ class BbhOnboardingController extends ChangeNotifier {
     residenceFormDataBack = null;
     form.resFrontCaptured = false;
     form.resBackCaptured = false;
+    _clearImageUrlsForScanKey('residence');
     notifyListeners();
   }
 
   /// Step 1: capture front → encode → OCR. Does not mark document as captured.
   Future<bool> processResidenceFrontSide({required File frontImage}) async {
-    if (activeIpassScan != null && activeIpassScan != IpassScanTarget.residence) {
+    if (activeIpassScan != null &&
+        activeIpassScan != IpassScanTarget.residence) {
       return false;
     }
     activeIpassScan = IpassScanTarget.residence;
@@ -504,7 +835,9 @@ class BbhOnboardingController extends ChangeNotifier {
         return false;
       }
 
-      final frontBase64 = await IpassDocumentImageUtil.encodeToBase64(frontImage);
+      final frontBase64 = await IpassDocumentImageUtil.encodeToBase64(
+        frontImage,
+      );
       final frontResult = await IpassFormDataService.instance.scanImageFile(
         frontImage,
         sideLabel: 'front',
@@ -533,13 +866,16 @@ class BbhOnboardingController extends ChangeNotifier {
   }
 
   /// Step 2: capture back → encode → OCR → merge with front → mark captured.
-  Future<bool> processResidenceBackSideAndFinalize({required File backImage}) async {
+  Future<bool> processResidenceBackSideAndFinalize({
+    required File backImage,
+  }) async {
     if (residenceFormDataFront == null) {
       lastError = 'Capture the front side first.';
       notifyListeners();
       return false;
     }
-    if (activeIpassScan != null && activeIpassScan != IpassScanTarget.residence) {
+    if (activeIpassScan != null &&
+        activeIpassScan != IpassScanTarget.residence) {
       return false;
     }
     activeIpassScan = IpassScanTarget.residence;
@@ -563,6 +899,19 @@ class BbhOnboardingController extends ChangeNotifier {
       final frontResult = residenceFormDataFront!;
       residenceFormDataBack = backResult;
 
+      final residenceAccepted = IpassDocumentRejectionPolicy.isResidenceOcrAccepted(
+        front: frontResult,
+        back: backResult,
+      );
+      final bypassResidency =
+          IpassDocumentRejectionPolicy.bypassResidencyRejection;
+      if (!residenceAccepted && !bypassResidency) {
+        lastError =
+            'Residence document could not be verified. Please retake the scan.';
+        notifyListeners();
+        return false;
+      }
+
       final htmlFields = IpassResidenceFormdataMapper.toHtmlFields(
         front: frontResult,
         back: backResult,
@@ -571,12 +920,11 @@ class BbhOnboardingController extends ChangeNotifier {
       if (kDebugMode) {
         final residencePayload =
             IpassOnboardingMapper.buildResidenceSubmissionPayload(
-          front: frontResult,
-          back: backResult,
-        );
+              front: frontResult,
+              back: backResult,
+            );
         final scans = residencePayload['ipass_scans'];
-        final residenceEnvelope =
-            scans is Map ? scans['residence'] : null;
+        final residenceEnvelope = scans is Map ? scans['residence'] : null;
         IpassOnboardingMapper.logDocumentScanDebug(
           target: IpassScanTarget.residence,
           ipassData: residenceEnvelope is Map
@@ -601,16 +949,18 @@ class BbhOnboardingController extends ChangeNotifier {
       }
 
       if (htmlFields.isNotEmpty) {
-        form.applyScanValues(IpassScanTarget.residence, htmlFields);
+        // Residence OCR is stored for submission only — form fields stay manual.
       }
 
       form.resFrontCaptured = true;
       form.resBackCaptured = true;
+      _clearImageUrlsForScanKey('residence');
       await persist();
+      _enqueueResidenceImages();
 
-      lastSuccess = htmlFields.isEmpty
-          ? 'Residence document captured (front & back). Enter details on the next screen.'
-          : 'Residence document captured. Details will appear on the next screen.';
+      lastSuccess = !residenceAccepted && bypassResidency
+          ? 'Residence captured (demo mode). Enter details on the next screen.'
+          : 'Residence document captured (front & back). Enter details on the next screen.';
       notifyListeners();
       return true;
     } on IpassFormDataException catch (e) {
@@ -675,35 +1025,98 @@ class BbhOnboardingController extends ChangeNotifier {
     }
   }
 
-  void submitPack() {
-    kycReference =
-        'BBH-KYC-${DateTime.now().year.toString().substring(2)}'
-        '${DateTime.now().month.toString().padLeft(2, '0')}'
-        '${DateTime.now().day.toString().padLeft(2, '0')}-'
-        '${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
+  Future<bool> submitPack() async {
+    if (submitInProgress) return false;
 
-    final ipassBundle = IpassOnboardingMapper.mergeSubmissionBundles(
-      IpassOnboardingMapper.buildSubmissionIpassBundle(ipassScanResults),
-      IpassOnboardingMapper.buildResidenceSubmissionPayload(
-        front: residenceFormDataFront,
-        back: residenceFormDataBack,
-      ),
-    );
-    final submittedAt = DateTime.now();
-    submissionPayload = BbhOnboardingSubmissionBuilder.build(
-      form: form,
-      kycReference: kycReference!,
-      submittedAt: submittedAt,
-      ipassBundle: ipassBundle,
-    );
+    submitInProgress = true;
+    lastError = null;
+    notifyListeners();
+
     try {
-      BbhOnboardingSubmissionLogger.logFinalSubmissionOnce(submissionPayload!);
-    } catch (_) {
-      // Logging must never block the success screen.
-    }
+      kycReference =
+          'BBH-KYC-${DateTime.now().year.toString().substring(2)}'
+          '${DateTime.now().month.toString().padLeft(2, '0')}'
+          '${DateTime.now().day.toString().padLeft(2, '0')}-'
+          '${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}';
 
-    goTo(BbhOnboardingStep.success);
-    unawaited(persist());
+      final imageUrls = await _latestImageUrls();
+      final uploadQueue = BbhOnboardingImageUploadQueue.instance;
+      if (kDebugMode &&
+          (uploadQueue.pendingCount > 0 || uploadQueue.failedKeys.isNotEmpty)) {
+        debugPrint(
+          'BbhImageUpload: submit — pending=${uploadQueue.pendingCount}, '
+          'failed=${uploadQueue.failedKeys.length} (empty sent for those images)',
+        );
+      }
+
+      final ipassBundle = IpassOnboardingMapper.sanitizeBundleForSubmission(
+        IpassOnboardingMapper.mergeSubmissionBundles(
+          IpassOnboardingMapper.buildSubmissionIpassBundle(
+            ipassScanResults,
+            imageUrlsByKey: imageUrls,
+            preferImageUrls: true,
+            omitUnuploaded: false,
+          ),
+          IpassOnboardingMapper.buildResidenceSubmissionPayload(
+            front: residenceFormDataFront,
+            back: residenceFormDataBack,
+            imageUrlsByKey: imageUrls,
+            preferImageUrls: true,
+            omitUnuploaded: false,
+          ),
+        ),
+        imageUrlsByKey: imageUrls,
+      );
+      final submittedAt = DateTime.now();
+      final signatureUrl = await _ensureSignatureImageUrl();
+      submissionPayload = BbhOnboardingSubmissionBuilder.build(
+        form: form,
+        kycReference: kycReference!,
+        submittedAt: submittedAt,
+        ipassBundle: ipassBundle,
+        signatureImageUrl: signatureUrl,
+      );
+
+      if (kDebugMode) {
+        final bytes = IpassOnboardingMapper.estimateJsonBytes(
+          submissionPayload!,
+        );
+        debugPrint(
+          'BbhSubmit: payload ~${(bytes / 1024).toStringAsFixed(0)} KB '
+          '(${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB)',
+        );
+        await BbhOnboardingSubmissionLogger.logFinalSubmissionOnce(
+          submissionPayload!,
+        );
+      }
+
+      final result = await BbhOnboardingSubmissionService.instance.submit(
+        submissionPayload!,
+      );
+
+      if (!result.success) {
+        lastError = result.message ?? 'Could not submit onboarding pack.';
+        notifyListeners();
+        return false;
+      }
+
+      final apiKycRef = parseSubmissionKycReference(result.responseData);
+      if (apiKycRef != null) {
+        kycReference = apiKycRef;
+      }
+
+      lastSubmissionResponse = result.responseData;
+      goTo(BbhOnboardingStep.success);
+      unawaited(persist());
+      return true;
+    } catch (e) {
+      lastError = e.toString();
+      notifyListeners();
+      return false;
+    } finally {
+      submitInProgress = false;
+      notifyListeners();
+    }
   }
 
   void resetAll() {
@@ -713,11 +1126,16 @@ class BbhOnboardingController extends ChangeNotifier {
     step = BbhOnboardingStep.cover;
     editReturnStep = null;
     ipassScanResults.clear();
+    ipassImageUrls.clear();
     residenceFormDataFront = null;
     residenceFormDataBack = null;
     kycReference = null;
     submissionPayload = null;
+    lastSubmissionResponse = null;
+    submitInProgress = false;
     BbhOnboardingStateStore.instance.clear();
+    unawaited(BbhOnboardingScanStore.instance.clear());
+    unawaited(BbhOnboardingImageUrlStore.instance.clear());
     notifyListeners();
   }
 

@@ -2129,6 +2129,103 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verify_account => 'Verify Account';
 
   @override
+  String get agreement_account_warning =>
+      'Please sign the user agreement to get access to all the features.';
+
+  @override
+  String get sign_agreement => 'Agreement Signature';
+
+  @override
+  String get kyc_agreement_desc => 'I have read and accept the Agreement';
+
+  @override
+  String get accept_agreement => 'Accept Agreement';
+
+  @override
+  String get sig_agreement => 'Baghdad Bullion House Agreement';
+
+  @override
+  String get kyc_signature => 'Signature';
+
+  @override
+  String get signature_account_warning =>
+      'Please provide your signature to complete your profile.';
+
+  @override
+  String get signature_capture_message =>
+      'Draw your signature in the box below to complete verification.';
+
+  @override
+  String get kyc_doc_national_id => 'National ID';
+
+  @override
+  String get kyc_doc_passport => 'Passport';
+
+  @override
+  String get kyc_doc_residency => 'Residency document';
+
+  @override
+  String kyc_document_rejected(String document) {
+    return 'Your $document was rejected. Tap to update and resubmit.';
+  }
+
+  @override
+  String kyc_document_pending(String document) {
+    return 'Your $document is pending verification. Tap to update.';
+  }
+
+  @override
+  String kyc_document_pending_review(String document) {
+    return 'Your $document is pending verification.';
+  }
+
+  @override
+  String kyc_document_not_verified(String document) {
+    return 'Your $document is not verified. Tap to update and resubmit.';
+  }
+
+  @override
+  String get profile_verification_pending =>
+      'Your profile verification is pending. We will notify you once the review is complete.';
+
+  @override
+  String get profile_verification_reviewing =>
+      'Your profile verification is under review. We will notify you once the review is complete.';
+
+  @override
+  String get profile_verification_rejected_partial =>
+      'Your profile verification was rejected. Please update the required documents.';
+
+  @override
+  String get profile_verification_rejected_full_kyc =>
+      'Your profile verification was rejected. Please complete full KYC verification again.';
+
+  @override
+  String kyc_document_reviewing(String document) {
+    return 'Your $document is under review.';
+  }
+
+  @override
+  String kyc_document_verified(String document) {
+    return 'Your $document is verified.';
+  }
+
+  @override
+  String get kyc_documents_status_title => 'Profile verification status';
+
+  @override
+  String get kyc_status_verified => 'Verified';
+
+  @override
+  String get kyc_status_reviewing => 'Under review';
+
+  @override
+  String get kyc_retake_document => 'Retake document';
+
+  @override
+  String get kyc_complete_verification => 'Complete KYC verification';
+
+  @override
   String get demo_mode_banner => 'You are in Demo Mode';
 
   @override

@@ -560,9 +560,7 @@ class Auth extends _$Auth {
       //   key: Strings.userRefreshToken,
       // );
       final mainStateWatchProvider = ref.watch(homeProvider);
-      bool isKycVerfied =
-          mainStateWatchProvider.isUserKYCVerified &&
-          mainStateWatchProvider.isBasicUserVerified;
+      bool isKycVerfied = mainStateWatchProvider.isProfileVerified;
       String? refreshToken = await SecureStorageService.instance
           .getRefreshToken();
       final headers = {

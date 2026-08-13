@@ -1,6 +1,10 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:pinput/pinput.dart';
 
 import 'funding_portal_theme.dart';
 import 'funding_portal_typography.dart';
@@ -907,9 +911,16 @@ class FundingPortalFormField extends StatelessWidget {
 }
 
 class FundingPortalAmountField extends StatelessWidget {
-  const FundingPortalAmountField({super.key, required this.value});
+  const FundingPortalAmountField({
+    super.key,
+    required this.controller,
+    this.errorText,
+    this.onChanged,
+  });
 
-  final String value;
+  final TextEditingController controller;
+  final String? errorText;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -920,23 +931,49 @@ class FundingPortalAmountField extends StatelessWidget {
         const SizedBox(height: 6),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 18),
-          alignment: Alignment.center,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
           decoration: BoxDecoration(
             color: const Color(0x80FFFFFF),
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: FundingPortalColors.lineStrong),
+            border: Border.all(
+              color: errorText != null
+                  ? FundingPortalColors.red
+                  : FundingPortalColors.lineStrong,
+            ),
           ),
-          child: Text(
-            value,
+          child: TextField(
+            controller: controller,
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             style: FundingPortalTypography.cormorant(
               fontSize: 28,
               fontWeight: FontWeight.w600,
               letterSpacing: 1,
               height: 1.15,
             ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              isDense: true,
+              contentPadding: EdgeInsets.symmetric(vertical: 8),
+              hintText: '0',
+            ),
+            onChanged: onChanged,
           ),
         ),
+        if (errorText != null) ...[
+          const SizedBox(height: 8),
+          Text(
+            errorText!,
+            textAlign: TextAlign.center,
+            style: FundingPortalTypography.manrope(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: FundingPortalColors.red,
+              height: 1.4,
+            ),
+          ),
+        ],
         const SizedBox(height: 10),
         Text(
           'Min 10,000 IQD · Max 5,000,000 IQD per transaction',
@@ -1126,65 +1163,89 @@ class FundingPortalOtpGrid extends StatefulWidget {
 }
 
 class _FundingPortalOtpGridState extends State<FundingPortalOtpGrid> {
-  static const _demoCode = ['1', '2', '3', '4', '5', '6'];
-  int _filled = 0;
+  final _controller = TextEditingController();
+  final _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _animateFill();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _focusNode.requestFocus();
+    });
   }
 
-  Future<void> _animateFill() async {
-    for (var i = 0; i < _demoCode.length; i++) {
-      await Future<void>.delayed(Duration(milliseconds: 200 + i * 180));
-      if (!mounted) return;
-      setState(() => _filled = i + 1);
-    }
-    await Future<void>.delayed(const Duration(milliseconds: 400));
-    widget.onComplete?.call();
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  PinTheme _cellTheme({
+    required double size,
+    required Color background,
+    required Color border,
+    required Color textColor,
+  }) {
+    return PinTheme(
+      width: size,
+      height: size,
+      textStyle: FundingPortalTypography.cormorant(
+        fontSize: 22,
+        fontWeight: FontWeight.w600,
+        color: textColor,
+      ),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: border, width: 1.5),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: List.generate(6, (i) {
-        final filled = i < _filled;
-        return Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(left: i == 0 ? 0 : 4, right: i == 5 ? 0 : 4),
-            child: AspectRatio(
-              aspectRatio: 1,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: filled
-                      ? FundingPortalColors.gold
-                      : const Color(0x80FFFFFF),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: filled
-                        ? FundingPortalColors.gold
-                        : FundingPortalColors.lineStrong,
-                    width: 1.5,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    filled ? _demoCode[i] : '',
-                    style: FundingPortalTypography.cormorant(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: filled
-                          ? FundingPortalColors.cream
-                          : FundingPortalColors.ink,
-                    ),
-                  ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const gap = 8.0;
+        final cellSize = (constraints.maxWidth - gap * 5) / 6;
+        final empty = _cellTheme(
+          size: cellSize,
+          background: const Color(0x80FFFFFF),
+          border: FundingPortalColors.lineStrong,
+          textColor: FundingPortalColors.ink,
+        );
+        final filled = _cellTheme(
+          size: cellSize,
+          background: FundingPortalColors.gold,
+          border: FundingPortalColors.gold,
+          textColor: FundingPortalColors.cream,
+        );
+
+        return Directionality(
+          textDirection: ui.TextDirection.ltr,
+          child: Pinput(
+            length: 6,
+            controller: _controller,
+            focusNode: _focusNode,
+            defaultPinTheme: empty,
+            focusedPinTheme: empty.copyWith(
+              decoration: empty.decoration!.copyWith(
+                border: Border.all(
+                  color: FundingPortalColors.goldDeep,
+                  width: 1.5,
                 ),
               ),
             ),
+            submittedPinTheme: filled,
+            separatorBuilder: (_) => const SizedBox(width: gap),
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            hapticFeedbackType: HapticFeedbackType.lightImpact,
+            onCompleted: (_) => widget.onComplete?.call(),
           ),
         );
-      }),
+      },
     );
   }
 }

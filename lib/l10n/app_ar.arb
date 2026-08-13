@@ -857,6 +857,62 @@
     }
   },
   "verify_account":"التحقق من الحساب",
+  "agreement_account_warning": "يرجى توقيع اتفاقية المستخدم للحصول على إمكانية الوصول إلى جميع الميزات.",
+  "sign_agreement": "توقيع الاتفاقية",
+  "kyc_agreement_desc": "لقد قرأت وأوافق على الاتفاقية",
+  "accept_agreement": "قبول الاتفاقية",
+  "sig_agreement": "اتفاقية دار بغداد للسبائك",
+  "kyc_signature": "التوقيع",
+  "signature_account_warning": "يرجى تقديم توقيعك لإكمال ملفك الشخصي.",
+  "signature_capture_message": "ارسم توقيعك في المربع أدناه لإكمال التحقق.",
+  "kyc_doc_national_id": "البطاقة الوطنية",
+  "kyc_doc_passport": "جواز السفر",
+  "kyc_doc_residency": "وثيقة الإقامة",
+  "kyc_document_rejected": "تم رفض {document}. اضغط للتحديث وإعادة الإرسال.",
+  "@kyc_document_rejected": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_pending": "ما زال {document} قيد المراجعة. اضغط للتحديث.",
+  "@kyc_document_pending": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_pending_review": "ما زال {document} قيد المراجعة.",
+  "@kyc_document_pending_review": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_not_verified": "لم يتم التحقق من {document}. اضغط للتحديث وإعادة الإرسال.",
+  "@kyc_document_not_verified": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "profile_verification_pending": "التحقق من ملفك الشخصي قيد المراجعة. سنخطرك عند اكتمال المراجعة.",
+  "profile_verification_reviewing": "التحقق من ملفك الشخصي قيد المراجعة حالياً. سنخطرك عند اكتمال المراجعة.",
+  "profile_verification_rejected_partial": "تم رفض التحقق من ملفك الشخصي. يرجى تحديث المستندات المطلوبة.",
+  "profile_verification_rejected_full_kyc": "تم رفض التحقق من ملفك الشخصي. يرجى إكمال التحقق من الهوية بالكامل مرة أخرى.",
+  "kyc_document_reviewing": "ما زال {document} قيد المراجعة.",
+  "@kyc_document_reviewing": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_document_verified": "تم التحقق من {document}.",
+  "@kyc_document_verified": {
+    "placeholders": {
+      "document": {"type": "String"}
+    }
+  },
+  "kyc_documents_status_title": "حالة التحقق من الملف الشخصي",
+  "kyc_status_verified": "تم التحقق",
+  "kyc_status_reviewing": "قيد المراجعة",
+  "kyc_retake_document": "إعادة التقاط الوثيقة",
+  "kyc_complete_verification": "إكمال التحقق من الهوية",
   "@DemoMode": {},
   "demo_mode_banner": "أنت في وضع التجربة",
   "demo_mode_go_live": "الانتقال للحساب الحقيقي",

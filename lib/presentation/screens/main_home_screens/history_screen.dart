@@ -83,6 +83,9 @@ class _MetalScreenState extends ConsumerState<HistoryScreen> {
                             height: 40,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
+                              color: imageToShow.isEmpty
+                                  ? Colors.grey.shade400
+                                  : null,
                               border: Border.all(
                                 color: AppColors.goldLightColor,
                                 width: 1.2,
@@ -95,13 +98,17 @@ class _MetalScreenState extends ConsumerState<HistoryScreen> {
                                                 as ImageProvider,
                                       fit: BoxFit.cover,
                                     )
-                                  : const DecorationImage(
-                                      image: AssetImage(
-                                        "assets/images/user_avatar.png",
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
+                                  : null,
                             ),
+                            child: imageToShow.isEmpty
+                                ? Center(
+                                    child: SvgPicture.asset(
+                                      "assets/svg/user_icon.svg",
+                                      width: 20,
+                                      height: 20,
+                                    ),
+                                  )
+                                : null,
                           ),
                         );
                       },

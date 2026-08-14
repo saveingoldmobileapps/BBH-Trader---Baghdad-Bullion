@@ -155,6 +155,44 @@ class BbhOnboardingForm {
     }
   }
 
+  /// Fills empty fields only (cross-document complement — never overwrites).
+  void applyMissingScanValues(Map<String, String> values) {
+    for (final entry in values.entries) {
+      if (_hasValue(entry.key)) continue;
+      final value = entry.value.trim();
+      if (value.isEmpty) continue;
+      _setScannedField(entry.key, value);
+    }
+  }
+
+  /// Copies empty English names both ways: `id_en_*` ↔ `en_*`.
+  void bridgeMissingEnglishNames() {
+    for (final pair in IpassHtmlFieldMapper.englishNameBridgePairs()) {
+      final aFilled = _hasValue(pair.a);
+      final bFilled = _hasValue(pair.b);
+      if (aFilled && !bFilled) {
+        final v = _valueOf(pair.a);
+        if (v != null) _setScannedField(pair.b, v);
+      } else if (bFilled && !aFilled) {
+        final v = _valueOf(pair.b);
+        if (v != null) _setScannedField(pair.a, v);
+      }
+    }
+  }
+
+  String? _valueOf(String key) {
+    final controller = _controllerFor(key);
+    if (controller != null) {
+      final t = controller.text.trim();
+      return t.isEmpty ? null : t;
+    }
+    if (key == 'gender') {
+      final g = gender?.trim();
+      return (g == null || g.isEmpty) ? null : g;
+    }
+    return null;
+  }
+
   void _setField(String key, String value) {
     final controller = _controllerFor(key);
     if (controller != null) {

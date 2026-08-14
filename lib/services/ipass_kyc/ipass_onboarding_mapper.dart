@@ -1576,11 +1576,13 @@ class IpassOnboardingMapper {
       'Document Number',
       'Passport Number',
     ]);
+    // Prefer Arabic authority when Latin OCR is truncated/garbled (e.g. "BAGHDD").
     final issuePlace = _meaningfulSectionValue(section, const [
-      'Authority',
-      'Place of Issue',
-      'Issuing State Name',
       'AuthorityAr',
+      'Place of Issue',
+      'Place of IssueAr',
+      'Authority',
+      'Issuing State Name',
     ]);
     final issueDate = _normalizeDate(_sectionValue(section, 'Date of Issue'));
     final expiryDate = _normalizeDate(_sectionValue(section, 'Date of Expiry'));
@@ -1592,13 +1594,15 @@ class IpassOnboardingMapper {
 
     put(
       'enMother',
-      _motherNameWithMaternalGrandfather(section, arabic: false) ??
-          _firstSectionValue(section, const [
-            'Mothers Name',
-            "Mother's Name",
-            'Mother Name',
-            'Mothers NameAr',
-          ]),
+      _titleCase(
+        _motherNameWithMaternalGrandfather(section, arabic: false) ??
+            _firstSectionValue(section, const [
+              'Mothers Name',
+              "Mother's Name",
+              'Mother Name',
+              'Mothers NameAr',
+            ]),
+      ),
     );
 
     put(
@@ -1620,14 +1624,17 @@ class IpassOnboardingMapper {
         'Country of Birth',
       ]),
     );
+    // Prefer city/region text over ISO country codes like "IRQ".
     put(
       'placeBirth',
-      _meaningfulSectionValue(section, const [
-        'Place of Birth',
-        'Place of BirthAr',
-      ]),
+      _truncatePlaceBirth(
+        _bestPlaceOfBirth(section),
+      ),
     );
     put('gender', _normalizeGender(_firstSectionValue(section, const ['Sex', 'SexAr'])));
+
+    // Arabic names on passport — used to fill empty National ID Arabic fields.
+    _putArabicNames(out, section);
   }
 
   // static void _mapNationalIdFields(Map<String, String> out, Map<String, dynamic> section) {
@@ -1741,10 +1748,7 @@ class IpassOnboardingMapper {
   put(
     'placeBirth',
     _truncatePlaceBirth(
-      _meaningfulSectionValue(section, const [
-        'Place of Birth',
-        'Place of BirthAr',
-      ]),
+      _bestPlaceOfBirth(section),
     ),
   );
 
@@ -1790,10 +1794,20 @@ class IpassOnboardingMapper {
     final hasSurnameGivenArPair =
         rawSurname != null && givenNamesAr != null;
 
-    // Iraqi NFC / visual: prefer Latin surname + Arabic given name for backend.
+  // Iraqi NFC / visual: Latin surname + Latin given names when present;
+    // otherwise Latin surname + Arabic given name for backend.
     if (hasSurnameGivenArPair) {
       put('idEnSurname', _titleCase(rawSurname));
-      put('idEnFirst', givenNamesAr);
+      final givenNames = _sectionValue(section, 'Given Names');
+      if (givenNames != null) {
+        final parts = givenNames.split(RegExp(r'\s+'));
+        if (parts.isNotEmpty) put('idEnFirst', _titleCase(parts.first));
+        if (parts.length > 1) put('idEnFather', _titleCase(parts[1]));
+        if (parts.length > 2) put('idEnGf', _titleCase(parts[2]));
+      }
+      if (!out.containsKey('idEnFirst')) {
+        put('idEnFirst', givenNamesAr);
+      }
     } else {
       final surname = _titleCase(rawSurname);
       final givenNames = _sectionValue(section, 'Given Names');
@@ -2247,6 +2261,30 @@ class IpassOnboardingMapper {
     final v = value.trim();
     if (v.isEmpty || v == '?' || v == '-' || v.toLowerCase() == 'n/a') return true;
     return false;
+  }
+
+  /// True for ISO-style country codes that should not be used as city/place of birth.
+  static bool _isCountryCodeOnly(String value) {
+    final v = value.trim().toUpperCase();
+    return RegExp(r'^[A-Z]{2,3}$').hasMatch(v);
+  }
+
+  /// Prefers detailed place text (often Arabic) over country codes like "IRQ".
+  static String? _bestPlaceOfBirth(Map<String, dynamic> section) {
+    final candidates = <String?>[
+      _sectionValue(section, 'Place of BirthAr'),
+      _sectionValue(section, 'Place of Birth'),
+    ];
+    String? fallback;
+    for (final c in candidates) {
+      if (c == null || _isPlaceholderValue(c)) continue;
+      if (_isCountryCodeOnly(c)) {
+        fallback ??= c;
+        continue;
+      }
+      return c;
+    }
+    return fallback;
   }
 
   static String? _truncatePlaceBirth(String? value) {

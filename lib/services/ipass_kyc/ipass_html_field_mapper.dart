@@ -59,6 +59,24 @@ class IpassHtmlFieldMapper {
     return out;
   }
 
+  /// Personal fields both National ID and Passport may contribute.
+  static const Set<String> sharedPersonalFields = {
+    'dob',
+    'nationality',
+    'gender',
+    'country_birth',
+    'place_birth',
+  };
+
+  /// Bridge English names between ID (`id_en_*`) and passport (`en_*`) sections.
+  static const Map<String, String> englishNameBridges = {
+    'id_en_first': 'en_first',
+    'id_en_father': 'en_father',
+    'id_en_gf': 'en_gf',
+    'id_en_surname': 'en_surname',
+    'id_en_mother': 'en_mother',
+  };
+
   /// Keeps only form keys allowed for each scan type (prevents passport dates on ID fields).
   static Map<String, String> forScanTarget(
     IpassScanTarget target,
@@ -71,11 +89,7 @@ class IpassHtmlFieldMapper {
       'en_gf',
       'en_surname',
       'en_mother',
-      'dob',
-      'nationality',
-      'gender',
-      'country_birth',
-      'place_birth',
+      ...sharedPersonalFields,
     };
     const nationalIdFields = {
       'ar_first',
@@ -94,11 +108,7 @@ class IpassHtmlFieldMapper {
       'id_issue_place',
       'id_issue_date',
       'id_expiry_date',
-      'dob',
-      'nationality',
-      'gender',
-      'country_birth',
-      'place_birth',
+      ...sharedPersonalFields,
     };
 
     bool allowed(String key) => switch (target) {
@@ -112,6 +122,39 @@ class IpassHtmlFieldMapper {
     return Map.fromEntries(
       htmlValues.entries.where((e) => allowed(e.key)),
     );
+  }
+
+  /// Values from [other] that may fill empty form slots after a primary scan.
+  /// Includes that document's scoped fields, plus Arabic names from passport
+  /// (so empty National ID Arabic fields can be filled from passport OCR).
+  static Map<String, String> complementaryFillValues(
+    IpassScanTarget other,
+    Map<String, String> otherHtmlValues,
+  ) {
+    final out = Map<String, String>.from(forScanTarget(other, otherHtmlValues));
+    if (other == IpassScanTarget.passport) {
+      const arabicFromPassport = {
+        'ar_first',
+        'ar_father',
+        'ar_gf',
+        'ar_surname',
+        'ar_mother',
+        'ar_surname_and_given_names',
+      };
+      for (final e in otherHtmlValues.entries) {
+        if (arabicFromPassport.contains(e.key) && e.value.trim().isNotEmpty) {
+          out.putIfAbsent(e.key, () => e.value.trim());
+        }
+      }
+    }
+    return out;
+  }
+
+  /// Bidirectional pairs for empty English name cross-fill (ID ↔ passport).
+  static List<({String a, String b})> englishNameBridgePairs() {
+    return englishNameBridges.entries
+        .map((e) => (a: e.key, b: e.value))
+        .toList(growable: false);
   }
 
   /// Keeps only mapper keys allowed for the scan target (post-extraction safety net).
@@ -136,8 +179,9 @@ class IpassHtmlFieldMapper {
     return out;
   }
 
-  /// National ID overwrites its fields; passport overwrites pp_* and English/personal
-  /// fields (UI: "As it appears on the passport").
+  /// National ID overwrites its fields; passport overwrites pp_* and English names.
+  /// Shared personal fields (dob/place/…) fill only when empty so a better value
+  /// from the other document is not clobbered (e.g. ID city vs passport "IRQ").
   static bool shouldForceApply(IpassScanTarget target, String htmlKey) {
     if (target != IpassScanTarget.passport) return true;
     return const {
@@ -150,11 +194,6 @@ class IpassHtmlFieldMapper {
       'en_gf',
       'en_surname',
       'en_mother',
-      'dob',
-      'gender',
-      'nationality',
-      'country_birth',
-      'place_birth',
     }.contains(htmlKey);
   }
 

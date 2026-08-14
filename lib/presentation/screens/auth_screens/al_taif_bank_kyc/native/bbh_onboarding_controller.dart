@@ -570,6 +570,7 @@ class BbhOnboardingController extends ChangeNotifier {
     if (htmlFields.isEmpty) return false;
 
     form.applyScanValues(target, htmlFields);
+    _fillMissingFromOtherDocuments(target);
     return true;
   }
 
@@ -581,7 +582,39 @@ class BbhOnboardingController extends ChangeNotifier {
     );
     if (htmlFields.isEmpty) return false;
     form.applyScanValues(target, htmlFields);
+    _fillMissingFromOtherDocuments(target);
     return true;
+  }
+
+  /// After a National ID or Passport scan, fill any still-empty fields from the
+  /// other document (shared personal data + English name bridge both ways).
+  void _fillMissingFromOtherDocuments(IpassScanTarget justScanned) {
+    if (justScanned != IpassScanTarget.nationalId &&
+        justScanned != IpassScanTarget.passport) {
+      return;
+    }
+
+    final other = justScanned == IpassScanTarget.nationalId
+        ? IpassScanTarget.passport
+        : IpassScanTarget.nationalId;
+
+    final otherResult = ipassScanResults[other];
+    if (otherResult != null) {
+      final mapped = IpassOnboardingMapper.extractFieldValues(
+        otherResult.data,
+        target: other,
+      );
+      final htmlFields = IpassHtmlFieldMapper.complementaryFillValues(
+        other,
+        IpassHtmlFieldMapper.toHtmlFieldValues(mapped),
+      );
+      if (htmlFields.isNotEmpty) {
+        form.applyMissingScanValues(htmlFields);
+      }
+    }
+
+    // Maximize English names: empty passport en_* ← id_en_* and vice versa.
+    form.bridgeMissingEnglishNames();
   }
 
   String _ipassRejectionMessage(

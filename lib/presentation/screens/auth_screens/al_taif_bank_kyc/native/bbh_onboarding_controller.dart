@@ -247,6 +247,9 @@ class BbhOnboardingController extends ChangeNotifier {
   }
 
   void goTo(BbhOnboardingStep target) {
+    if (target == BbhOnboardingStep.consent) {
+      form.ensureSignerNameFromNationalId();
+    }
     step = target;
     unawaited(persist());
     notifyListeners();

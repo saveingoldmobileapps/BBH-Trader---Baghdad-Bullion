@@ -51,6 +51,16 @@ class BbhOnboardingSubmissionBuilder {
     final hasForeignCit = form.foreignCit == 'Yes';
     final hasAccount = form.hasAccount == 'Yes';
 
+    // National ID English first/last are not collected in UI — use passport
+    // English names for those fields in the final payload.
+    final nationalIdFirstName = !form.noPassport && tc(form.enFirst).isNotEmpty
+        ? tc(form.enFirst)
+        : englishOrArabic(form.idEnFirst, form.arFirst);
+    final nationalIdLastName =
+        !form.noPassport && tc(form.enSurname).isNotEmpty
+            ? tc(form.enSurname)
+            : englishOrArabic(form.idEnSurname, form.arSurname);
+
     return {
       'submissionMeta': {
         'kycReference': kycReference,
@@ -61,10 +71,10 @@ class BbhOnboardingSubmissionBuilder {
       'nationalIdDetails': {
         'idNumber': tc(form.idPersonal),
         'serialNumber': tc(form.idSerial),
-        'firstName': englishOrArabic(form.idEnFirst, form.arFirst),
+        'firstName': nationalIdFirstName,
         'fatherName': englishOrArabic(form.idEnFather, form.arFather),
         'grandfatherName': englishOrArabic(form.idEnGf, form.arGf),
-        'lastName': englishOrArabic(form.idEnSurname, form.arSurname),
+        'lastName': nationalIdLastName,
         'mothersName': tc(form.arMother),
         'firstNameArabic': tc(form.arFirst),
         'fatherNameArabic': tc(form.arFather),
@@ -96,7 +106,10 @@ class BbhOnboardingSubmissionBuilder {
         'issueDate': form.noPassport ? '' : tc(form.ppIssue),
         'expiryDate': form.noPassport ? '' : tc(form.ppExpiry),
         'countryOfIssue': form.noPassport ? '' : tc(form.ppPlace),
-        'mothersNameEnglish': tc(form.enMother),
+        'firstName': form.noPassport ? '' : tc(form.enFirst),
+        'lastName': form.noPassport ? '' : tc(form.enSurname),
+        'grandfatherName': form.noPassport ? '' : tc(form.enGf),
+        'mothersNameEnglish': form.noPassport ? '' : tc(form.enMother),
       },
       'iraqAddressDetails': {
         'governorate': tc(form.addrGov),
@@ -196,6 +209,8 @@ class BbhOnboardingSubmissionBuilder {
   ) {
     final entered = tc(form.signerName);
     if (entered.isNotEmpty) return entered;
+    final fromId = form.nationalIdFullName;
+    if (fromId.isNotEmpty) return fromId;
     final parts = [
       englishOrArabic(form.idEnFirst, form.arFirst),
       englishOrArabic(form.idEnSurname, form.arSurname),

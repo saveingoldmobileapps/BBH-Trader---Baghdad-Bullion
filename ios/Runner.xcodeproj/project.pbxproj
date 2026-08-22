@@ -252,7 +252,7 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2.0NativeiOS" */,
+				447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -312,9 +312,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -344,9 +348,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -509,7 +517,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = CUP3C94XM3;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_NAME = 1.1.6;
@@ -522,7 +530,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.baghdadbullion.bbhtrader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -706,7 +714,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = CUP3C94XM3;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_NAME = 1.1.6;
@@ -719,7 +727,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.baghdadbullion.bbhtrader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -743,7 +751,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = CUP3C94XM3;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_NAME = 1.1.6;
@@ -756,7 +764,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.baghdadbullion.bbhtrader;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -806,7 +814,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2.0NativeiOS" */ = {
+		447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/iPass-MENA/iPass2.0NativeiOS";
 			requirement = {
@@ -819,7 +827,7 @@
 /* Begin XCSwiftPackageProductDependency section */
 		447735C22FD0ADD8001E8E54 /* iPass2.0NativeiOS */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2.0NativeiOS" */;
+			package = 447735C12FD0ADD8001E8E54 /* XCRemoteSwiftPackageReference "iPass2" */;
 			productName = iPass2.0NativeiOS;
 		};
 /* End XCSwiftPackageProductDependency section */

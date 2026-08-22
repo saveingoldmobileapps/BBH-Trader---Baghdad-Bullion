@@ -1433,6 +1433,9 @@ class IpassOnboardingMapper {
   }
 
   /// MRZ → Visual → NFC (chip wins on national ID when NFC data is present).
+  ///
+  /// Only non-null / non-empty values overwrite. SDK Visual/NFC often include
+  /// `"Date of Expiry": null`, which previously wiped a valid MRZ expiry.
   static Map<String, dynamic>? _mergeDocSections(
     Map<String, dynamic> dataRoot, {
     IpassScanTarget target = IpassScanTarget.nationalId,
@@ -1444,17 +1447,29 @@ class IpassOnboardingMapper {
     final mrz = docDetails['MRZ'];
     final nfc = docDetails['NFC'];
     final visual = docDetails['Visual'];
-    if (mrz is Map) merged.addAll(Map<String, dynamic>.from(mrz));
-    if (visual is Map) merged.addAll(Map<String, dynamic>.from(visual));
+
+    void mergeNonEmpty(Map? section) {
+      if (section == null) return;
+      for (final entry in section.entries) {
+        final value = entry.value;
+        if (value == null) continue;
+        final text = value.toString().trim();
+        if (text.isEmpty || text.toLowerCase() == 'null') continue;
+        merged[entry.key] = value;
+      }
+    }
+
+    if (mrz is Map) mergeNonEmpty(mrz);
+    if (visual is Map) mergeNonEmpty(visual);
 
     final nfcMap = nfc is Map ? Map<String, dynamic>.from(nfc) : null;
     final useNfc = target == IpassScanTarget.nationalId &&
         nfcMap != null &&
         hasMeaningfulNfcData(nfcMap);
     if (useNfc) {
-      merged.addAll(nfcMap);
+      mergeNonEmpty(nfcMap);
     } else if (nfcMap != null && target != IpassScanTarget.nationalId) {
-      merged.addAll(nfcMap);
+      mergeNonEmpty(nfcMap);
     }
 
     return merged.isEmpty ? null : merged;
@@ -1775,8 +1790,29 @@ class IpassOnboardingMapper {
       'Issuing State Name',
     ]),
   );
-  put('idIssueDate', _normalizeDate(_sectionValue(section, 'Date of Issue')));
-  put('idExpiryDate', _normalizeDate(_sectionValue(section, 'Date of Expiry')));
+  put(
+    'idIssueDate',
+    _normalizeDate(
+      _firstSectionValue(section, const [
+        'Date of Issue',
+        'Issue Date',
+        'Date of Issuance',
+      ]),
+    ),
+  );
+  put(
+    'idExpiryDate',
+    _normalizeDate(
+      _firstSectionValue(section, const [
+        'Date of Expiry',
+        'Date of Expiration',
+        'Expiry Date',
+        'Valid Until',
+        'Valid To',
+        'Date of ExpiryAr',
+      ]),
+    ),
+  );
   _mirrorArabicNamesToEnglish(out);
 }
 
@@ -2461,8 +2497,25 @@ class IpassOnboardingMapper {
       'issuingauthority',
       'issuingstatename',
     ]));
-    put('idIssueDate', _normalizeDate(_first(flat, const ['dateofissue', 'issuedate'])));
-    put('idExpiryDate', _normalizeDate(_first(flat, const ['dateofexpiry', 'expirydate'])));
+    put(
+      'idIssueDate',
+      _normalizeDate(
+        _first(flat, const ['dateofissue', 'issuedate', 'dateofissuance']),
+      ),
+    );
+    put(
+      'idExpiryDate',
+      _normalizeDate(
+        _first(flat, const [
+          'dateofexpiry',
+          'expirydate',
+          'dateofexpiration',
+          'validuntil',
+          'validto',
+          'dateofexpiryar',
+        ]),
+      ),
+    );
   }
 
   static Map<String, String> _flatten(

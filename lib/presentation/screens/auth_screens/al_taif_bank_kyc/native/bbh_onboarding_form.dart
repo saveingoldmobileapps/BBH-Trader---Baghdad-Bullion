@@ -11,6 +11,28 @@ class BbhOnboardingForm {
 
   bool get hasSignature => signature != null && signature!.isNotEmpty;
 
+  /// Full name from National ID fields (English preferred, Arabic fallback).
+  String get nationalIdFullName {
+    String pick(TextEditingController en, TextEditingController ar) {
+      final english = en.text.trim();
+      if (english.isNotEmpty) return english;
+      return ar.text.trim();
+    }
+
+    return [
+      pick(idEnFirst, arFirst),
+      pick(idEnFather, arFather),
+      pick(idEnGf, arGf),
+      pick(idEnSurname, arSurname),
+    ].where((p) => p.isNotEmpty).join(' ');
+  }
+
+  /// Sets signer name from National ID (used on the signature step).
+  void ensureSignerNameFromNationalId() {
+    final name = nationalIdFullName;
+    if (name.isNotEmpty) signerName.text = name;
+  }
+
   String fatca = 'No';
   String pep = 'No';
   String foreignRes = 'No';
@@ -153,6 +175,44 @@ class BbhOnboardingForm {
       if (!force && _hasValue(entry.key)) continue;
       _setScannedField(entry.key, entry.value);
     }
+  }
+
+  /// Fills empty fields only (cross-document complement — never overwrites).
+  void applyMissingScanValues(Map<String, String> values) {
+    for (final entry in values.entries) {
+      if (_hasValue(entry.key)) continue;
+      final value = entry.value.trim();
+      if (value.isEmpty) continue;
+      _setScannedField(entry.key, value);
+    }
+  }
+
+  /// Copies empty English names both ways: `id_en_*` ↔ `en_*`.
+  void bridgeMissingEnglishNames() {
+    for (final pair in IpassHtmlFieldMapper.englishNameBridgePairs()) {
+      final aFilled = _hasValue(pair.a);
+      final bFilled = _hasValue(pair.b);
+      if (aFilled && !bFilled) {
+        final v = _valueOf(pair.a);
+        if (v != null) _setScannedField(pair.b, v);
+      } else if (bFilled && !aFilled) {
+        final v = _valueOf(pair.b);
+        if (v != null) _setScannedField(pair.a, v);
+      }
+    }
+  }
+
+  String? _valueOf(String key) {
+    final controller = _controllerFor(key);
+    if (controller != null) {
+      final t = controller.text.trim();
+      return t.isEmpty ? null : t;
+    }
+    if (key == 'gender') {
+      final g = gender?.trim();
+      return (g == null || g.isEmpty) ? null : g;
+    }
+    return null;
   }
 
   void _setField(String key, String value) {

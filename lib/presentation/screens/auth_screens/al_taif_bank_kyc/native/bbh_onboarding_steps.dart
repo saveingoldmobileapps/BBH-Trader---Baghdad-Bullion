@@ -1325,6 +1325,7 @@ class BbhOnboardingSteps {
     VoidCallback onChanged, {
     ValueChanged<String?>? onSignatureChanged,
   }) {
+    form.ensureSignerNameFromNationalId();
     return _scroll([
       const BbhStepHeader(
         eyebrow: 'Section 6 · Consent & Authorisation',
@@ -1373,7 +1374,11 @@ class BbhOnboardingSteps {
         ),
       ),
       const SizedBox(height: 12),
-      BbhTextField(controller: form.signerName, label: 'Full Name'),
+      BbhTextField(
+        controller: form.signerName,
+        label: 'Full Name (National ID)',
+        readOnly: true,
+      ),
       const SizedBox(height: 12),
       Align(
         alignment: Alignment.centerLeft,

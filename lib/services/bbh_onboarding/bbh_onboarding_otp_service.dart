@@ -2,6 +2,7 @@ import 'package:baghdad_bullion_house/data/data_sources/network_sources/api_url.
 import 'package:baghdad_bullion_house/data/data_sources/network_sources/dio_network_manager.dart';
 import 'package:baghdad_bullion_house/data/models/ErrorResponse.dart';
 import 'package:baghdad_bullion_house/data/models/SuccessResponse.dart';
+import 'package:flutter/foundation.dart';
 
 import 'bbh_phone_number_util.dart';
 
@@ -121,6 +122,11 @@ class BbhOnboardingOtpService {
 
     if (expectedOtp != null && expectedOtp.trim() == code) {
       return BbhOnboardingOtpResult.ok(message: 'Verified');
+    }
+
+    // Debug builds: accept any 6-digit code for email/phone (wrong OTP included).
+    if (kDebugMode) {
+      return BbhOnboardingOtpResult.ok(message: 'Verified (debug)');
     }
 
     return _mapErrorResponse(response);

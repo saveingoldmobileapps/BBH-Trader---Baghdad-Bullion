@@ -39,7 +39,57 @@ class BbhOnboardingSubmissionLogger {
       _logImageSummary(payload);
     } catch (_) {}
 
+    try {
+      _logCopyableFormSections(payload);
+    } catch (_) {}
+
     await logPostmanCopyablePayload(payload);
+  }
+
+  /// Compact form JSON (no iPass/images) — easy to copy from console and check names.
+  static void _logCopyableFormSections(Map<String, dynamic> payload) {
+    Map<String, dynamic>? asMap(dynamic value) {
+      if (value is Map<String, dynamic>) return value;
+      if (value is Map) return Map<String, dynamic>.from(value);
+      return null;
+    }
+
+    final signature = asMap(payload['signature']);
+    final signatureForCheck = signature == null
+        ? null
+        : {
+            'signerName': signature['signerName'],
+            'signatureImage':
+                (signature['signatureImage']?.toString().trim().isNotEmpty ??
+                        false)
+                    ? '(present)'
+                    : '',
+          };
+
+    final checkPayload = <String, dynamic>{
+      if (payload['submissionMeta'] != null)
+        'submissionMeta': payload['submissionMeta'],
+      if (payload['nationalIdDetails'] != null)
+        'nationalIdDetails': payload['nationalIdDetails'],
+      if (payload['passportDetails'] != null)
+        'passportDetails': payload['passportDetails'],
+      if (payload['residencyDetails'] != null)
+        'residencyDetails': payload['residencyDetails'],
+      if (payload['contactInformation'] != null)
+        'contactInformation': payload['contactInformation'],
+      if (signatureForCheck != null) 'signature': signatureForCheck,
+    };
+
+    const encoder = JsonEncoder.withIndent('  ');
+    final json = encoder.convert(checkPayload);
+
+    debugPrint('');
+    debugPrint('========== BBH_KYC_CHECK_JSON (copy this) ==========');
+    debugPrint(json);
+    debugPrint('========== END BBH_KYC_CHECK_JSON ==========');
+    debugPrint('');
+
+    developer.log(json, name: 'BBH_KYC_CHECK_JSON');
   }
 
   /// Prints the exact submit JSON — copy from logcat / Flutter console into Postman.

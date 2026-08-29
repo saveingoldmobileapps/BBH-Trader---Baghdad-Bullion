@@ -209,12 +209,6 @@ class BbhOnboardingSubmissionBuilder {
   ) {
     final entered = tc(form.signerName);
     if (entered.isNotEmpty) return entered;
-    final fromId = form.nationalIdFullName;
-    if (fromId.isNotEmpty) return fromId;
-    final parts = [
-      englishOrArabic(form.idEnFirst, form.arFirst),
-      englishOrArabic(form.idEnSurname, form.arSurname),
-    ].where((p) => p.isNotEmpty).toList();
-    return parts.join(' ');
+    return form.nationalIdArabicFullName;
   }
 }

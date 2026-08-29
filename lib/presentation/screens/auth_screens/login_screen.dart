@@ -103,7 +103,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xFF0F0F0F),
+      backgroundColor: AppColors.brandDark,//const Color(0xFF0F0F0F),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -114,12 +114,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/png/bg_start.png',
-              fit: BoxFit.cover,
-            ),
-          ),
+          // Positioned.fill(
+          //   child: Image.asset(
+          //     'assets/png/bg_start.png',
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           SafeArea(
             top: false,
             bottom: true,

@@ -153,7 +153,7 @@ class _SigHomePageState extends ConsumerState<SigHomePage> {
                 fontSize: sizes!.isPhone
                     ? sizes!.fontRatio * 140
                     : sizes!.fontRatio * 158,
-                fontFamily: GoogleFonts.roboto().fontFamily,
+                fontFamily: AppFonts.english,
                 fontWeight: FontWeight.w400,
                 height: 0.3,
               ),
@@ -166,7 +166,7 @@ class _SigHomePageState extends ConsumerState<SigHomePage> {
                 fontSize: sizes!.isPhone
                     ? sizes!.fontRatio * 130
                     : sizes!.fontRatio * 158,
-                fontFamily: GoogleFonts.roboto().fontFamily,
+                fontFamily: AppFonts.english,
                 fontWeight: FontWeight.normal,
                 height: 0.9,
               ),

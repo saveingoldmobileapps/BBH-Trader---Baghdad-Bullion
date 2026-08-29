@@ -49,12 +49,13 @@ class KycDocumentUpdateSubmissionService {
     if (kDebugMode) {
       await _saveDebugJson(sanitized);
       _logVerificationFlags(sanitized);
-      debugPrint(
+      print(
         'KycDocumentUpdate POST ${ApiEndpoints.updateIpassDocumentApiUrl}',
       );
     }
 
     final token = await LocalDatabase.instance.getLoginToken();
+    print('Body sent to server: $sanitized');
 
     final response = await DioNetworkManager().callAPI(
       url: ApiEndpoints.updateIpassDocumentApiUrl,
@@ -65,6 +66,7 @@ class KycDocumentUpdateSubmissionService {
         'Accept': 'application/json',
         if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
       },
+
       sendTimeout: const Duration(minutes: 3),
       receiveTimeout: const Duration(minutes: 3),
     );

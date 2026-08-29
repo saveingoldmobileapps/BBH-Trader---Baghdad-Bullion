@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/sseGoldPriceProvider/sse_gold_price_provider.dart';
@@ -167,7 +166,7 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
                     children: [
                       Text(
                         dialogTitle,
-                        style: GoogleFonts.inter(
+                        style: AppFonts.text(
                           color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -176,7 +175,7 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
                       const SizedBox(height: 4),
                       Text(
                         dialogSubtitle,
-                        style: GoogleFonts.inter(
+                        style: AppFonts.text(
                           color: const Color(0xFF8E8E93),
                           fontSize: 13,
                         ),
@@ -206,7 +205,7 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
                         ),
                         child: Text(
                           "00:0$_remainingSeconds${l10n.sec}",
-                          style: GoogleFonts.inter(
+                          style: AppFonts.text(
                             color: _remainingSeconds <= 2
                                 ? Colors.red
                                 : const Color(0xFFBBA473),
@@ -251,7 +250,7 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
                 ),
                 child: Text(
                   l10n.deal_take_profit,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.text(
                     color: const Color(0xFFBBA473),
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
@@ -303,7 +302,7 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
                 widget.isLimitOrder
                     ? l10n.trade_confirm_limit_body(widget.targetPrice)
                     : l10n.trade_confirm_market_body(widget.targetPrice),
-                style: GoogleFonts.inter(
+                style: AppFonts.text(
                   color: const Color(0xFF8E8E93),
                   fontSize: 12,
                   height: 1.4,
@@ -330,7 +329,7 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
                       child: Center(
                         child: Text(
                           l10n.cancel,
-                          style: GoogleFonts.inter(
+                          style: AppFonts.text(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
@@ -365,7 +364,7 @@ class _ConfirmTradeDialogState extends ConsumerState<_ConfirmTradeDialog> {
                       child: Center(
                         child: Text(
                           dialogConfirm,
-                          style: GoogleFonts.inter(
+                          style: AppFonts.text(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -389,7 +388,7 @@ Widget tradeConfirmDetailRow(String title, String value) {
     children: [
       Text(
         title,
-        style: GoogleFonts.inter(
+        style: AppFonts.text(
           color: const Color(0xFF8E8E93),
           fontSize: 12,
           fontWeight: FontWeight.w400,
@@ -397,7 +396,7 @@ Widget tradeConfirmDetailRow(String title, String value) {
       ),
       Text(
         value,
-        style: GoogleFonts.inter(
+        style: AppFonts.text(
           color: Colors.white,
           fontSize: 12,
           fontWeight: FontWeight.w600,

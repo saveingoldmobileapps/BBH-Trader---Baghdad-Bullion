@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -102,6 +103,78 @@ class BbhPrimaryButton extends StatelessWidget {
   }
 }
 
+// class BbhGoldButton extends StatelessWidget {
+//   const BbhGoldButton({
+//     super.key,
+//     required this.label,
+//     required this.onPressed,
+//     this.forCover = false,
+//   });
+
+//   final String label;
+//   final VoidCallback? onPressed;
+//   final bool forCover;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final gradient = forCover
+//         ? const LinearGradient(
+//     begin: Alignment.topCenter,
+//     end: Alignment.bottomCenter,
+//     colors: [Color(0xFFBB912F), Color(0xFFB19E5C), Color(0xFFCFC78C), Color(0xFFAA8A2A)],
+//   )
+//         // LinearGradient(
+//         //     begin: Alignment.topCenter,
+//         //     end: Alignment.bottomCenter,
+//         //     colors: [Color(0xFFD4AF64), Color(0xFFB8924A)],
+//         //   )
+//         : const LinearGradient(
+//             begin: Alignment.topLeft,
+//             end: Alignment.bottomRight,
+//             colors: [BbhOnboardingColors.gold, BbhOnboardingColors.goldDeep],
+//           );
+//     final textColor = forCover ? const Color(0xFF0B1426) : BbhOnboardingColors.cream;
+//     final shadows = forCover
+//         ? const [
+//             BoxShadow(color: Color(0x59D4AF64), blurRadius: 24, offset: Offset(0, 8)),
+//             BoxShadow(color: Color(0x4D000000), blurRadius: 4, offset: Offset(0, 2)),
+//           ]
+//         : const [BoxShadow(color: Color(0x4D8D6C2F), blurRadius: 14, offset: Offset(0, 4))];
+
+//     return SizedBox(
+//       width: double.infinity,
+//       child: DecoratedBox(
+//         decoration: BoxDecoration(
+//           gradient: gradient,
+//           borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
+//           border: forCover ? Border.all(color: const Color(0x99D4AF64)) : null,
+//           boxShadow: shadows,
+//         ),
+//         child: ElevatedButton(
+//           onPressed: onPressed,
+//           style: ElevatedButton.styleFrom(
+//             backgroundColor: Colors.transparent,
+//             shadowColor: Colors.transparent,
+//             foregroundColor: textColor,
+//             padding: const EdgeInsets.symmetric(vertical: 16),
+//             shape: RoundedRectangleBorder(
+//               borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
+//             ),
+//           ),
+//           child: Text(
+//             label.toUpperCase(),
+//             style: BbhOnboardingText.manrope(
+//               size: forCover ? 14 : 12,
+//               weight: FontWeight.w600,
+//               letterSpacing: forCover ? 1.1 : 1.4,
+//               color: textColor,
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 class BbhGoldButton extends StatelessWidget {
   const BbhGoldButton({
     super.key,
@@ -116,33 +189,26 @@ class BbhGoldButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gradient = forCover
-        ? const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFD4AF64), Color(0xFFB8924A)],
-          )
-        : const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [BbhOnboardingColors.gold, BbhOnboardingColors.goldDeep],
-          );
-    final textColor = forCover ? const Color(0xFF0B1426) : BbhOnboardingColors.cream;
-    final shadows = forCover
-        ? const [
-            BoxShadow(color: Color(0x59D4AF64), blurRadius: 24, offset: Offset(0, 8)),
-            BoxShadow(color: Color(0x4D000000), blurRadius: 4, offset: Offset(0, 2)),
-          ]
-        : const [BoxShadow(color: Color(0x4D8D6C2F), blurRadius: 14, offset: Offset(0, 4))];
+    // ✅ Use VERTICAL gradient for buttons (top to bottom)
+    // This matches the gold gradient in your first image
+    final gradient = AppColors.brandGoldGradient; // Vertical gradient
+    
+    // For cover, you might want diagonal
+    // final gradient = forCover 
+    //     ? AppColors.brandGoldGradient 
+    //     : AppColors.brandGoldGradientDiagonal;
+
+    final textColor = forCover 
+        ? const Color(0xFF0B1426) 
+        : AppColors.whiteColor;
 
     return SizedBox(
       width: double.infinity,
       child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: gradient,
-          borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
+          borderRadius: BorderRadius.circular(12),
           border: forCover ? Border.all(color: const Color(0x99D4AF64)) : null,
-          boxShadow: shadows,
         ),
         child: ElevatedButton(
           onPressed: onPressed,
@@ -152,25 +218,24 @@ class BbhGoldButton extends StatelessWidget {
             foregroundColor: textColor,
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(BbhOnboardingRadii.md),
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
           child: Text(
             label.toUpperCase(),
-            style: BbhOnboardingText.manrope(
-              size: forCover ? 14 : 12,
-              weight: FontWeight.w600,
+            style: TextStyle(
+              fontSize: forCover ? 14 : 12,
+              fontWeight: FontWeight.w600,
               letterSpacing: forCover ? 1.1 : 1.4,
               color: textColor,
+              fontFamily: 'Manrope',
             ),
           ),
         ),
       ),
     );
   }
-}
-
-class BbhGhostButton extends StatelessWidget {
+}class BbhGhostButton extends StatelessWidget {
   const BbhGhostButton({
     super.key,
     required this.label,

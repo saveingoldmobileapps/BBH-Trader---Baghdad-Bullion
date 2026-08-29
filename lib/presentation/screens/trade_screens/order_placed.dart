@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:baghdad_bullion_house/core/theme/app_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/global_time.dart';
 
@@ -73,7 +73,7 @@ class OrderPlacedScreen extends StatelessWidget {
               const SizedBox(height: 20),
               Text(
                 AppLocalizations.of(context)!.order_placed_title,
-                style: GoogleFonts.inter(
+                style: AppFonts.text(
                   color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
@@ -87,7 +87,7 @@ class OrderPlacedScreen extends StatelessWidget {
                   ? Text(
                       AppLocalizations.of(context)!.limit_order_des,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.text(
                         color: Colors.white60,
                         fontSize: 13,
                       ),
@@ -95,7 +95,7 @@ class OrderPlacedScreen extends StatelessWidget {
                   : Text(
                       AppLocalizations.of(context)!.limit_order_success,
                       textAlign: TextAlign.center,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.text(
                         color: Colors.white60,
                         fontSize: 13,
                       ),
@@ -162,7 +162,7 @@ class OrderPlacedScreen extends StatelessWidget {
            
            Text(
                 "${AppLocalizations.of(context)!.will_notify}",
-                style: GoogleFonts.inter(
+                style: AppFonts.text(
                   color: Colors.white38,
                   fontSize: 12,
                 ),
@@ -201,7 +201,7 @@ class OrderPlacedScreen extends StatelessWidget {
                     ),
                     child: Text(
                       "${AppLocalizations.of(context)!.return_home}",
-                      style: GoogleFonts.inter(
+                      style: AppFonts.text(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
                       ),
@@ -224,11 +224,11 @@ class OrderPlacedScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: GoogleFonts.inter(color: Colors.white38, fontSize: 12),
+            style: AppFonts.text(color: Colors.white38, fontSize: 12),
           ),
           Text(
             value,
-            style: GoogleFonts.inter(color: Colors.white, fontSize: 12),
+            style: AppFonts.text(color: Colors.white, fontSize: 12),
           ),
         ],
       ),
@@ -243,7 +243,7 @@ class OrderPlacedScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: GoogleFonts.inter(color: Colors.white38, fontSize: 12),
+            style: AppFonts.text(color: Colors.white38, fontSize: 12),
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -254,7 +254,7 @@ class OrderPlacedScreen extends StatelessWidget {
             ),
             child: Text(
               value,
-              style: GoogleFonts.inter(
+              style: AppFonts.text(
                 color: const Color(0xFFBBA473),
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
@@ -274,11 +274,11 @@ class OrderPlacedScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: GoogleFonts.inter(color: Colors.white, fontSize: 13),
+            style: AppFonts.text(color: Colors.white, fontSize: 13),
           ),
           Text(
             value,
-            style: GoogleFonts.inter(
+            style: AppFonts.text(
               color: const Color(0xFFBBA473),
               fontSize: 14,
               fontWeight: FontWeight.w700,

@@ -200,7 +200,7 @@ class _AddLoadRequestScreenState extends ConsumerState<AddLoanRequestScreen> {
                           //       color: AppColors.whiteColor,
                           //       fontSize: 16,
                           //       fontWeight: FontWeight.w400,
-                          //       fontFamily: GoogleFonts.roboto().fontFamily,
+                          //       fontFamily: AppFonts.english,
                           //     ),
                           //     border: OutlineInputBorder(
                           //       borderSide: BorderSide(

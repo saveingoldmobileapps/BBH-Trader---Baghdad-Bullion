@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 
 class CommonDropdownFormField extends StatelessWidget {
@@ -38,7 +37,7 @@ class CommonDropdownFormField extends StatelessWidget {
         labelText: labelText,
         hint: Text(
           hintText ?? '', // Default hint if hintText is null
-          style: GoogleFonts.roboto(
+          style: AppFonts.text(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             color: hineClr ?? AppColors.whiteColor.withOpacity(0.7),
@@ -48,9 +47,9 @@ class CommonDropdownFormField extends StatelessWidget {
           color: AppColors.whiteColor,
           fontSize: 16,
           fontWeight: FontWeight.w400,
-          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontFamily: AppFonts.english,
         ),
-        hintStyle: GoogleFonts.roboto(
+        hintStyle: AppFonts.text(
           fontSize: 16,
           fontWeight: FontWeight.w400,
           color: hineClr ?? AppColors.whiteColor.withOpacity(0.7),
@@ -70,7 +69,7 @@ class CommonDropdownFormField extends StatelessWidget {
       ),
       icon: Icon(Icons.keyboard_arrow_down, color: AppColors.whiteColor),
       dropdownColor: AppColors.primaryGold500,
-      style: GoogleFonts.roboto(
+      style: AppFonts.text(
         fontSize: 16,
         color: AppColors.whiteColor,
         fontWeight: FontWeight.w400,
@@ -85,7 +84,7 @@ class CommonDropdownFormField extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Text(
               displayText,
-              style: GoogleFonts.roboto(
+              style: AppFonts.text(
                 color: AppColors.whiteColor,
                 // overflow: TextOverflow.visible,
               ),

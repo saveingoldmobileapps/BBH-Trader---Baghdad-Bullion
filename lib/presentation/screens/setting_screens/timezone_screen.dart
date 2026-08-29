@@ -295,7 +295,7 @@ class _TimezoneScreenState extends ConsumerState<TimezoneScreen> {
                         color: AppColors.whiteColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        fontFamily: GoogleFonts.roboto().fontFamily,
+                        fontFamily: AppFonts.english,
                       ),
                       validator: (value) => value == null
                           ? AppLocalizations.of(context)!.timezone_error

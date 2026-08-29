@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/presentation/screens/SIG/creating_card_screen/setup_pin.dart';
 
@@ -76,7 +75,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
                     fontSize: sizes!.isPhone
                         ? sizes!.fontRatio * 15
                         : sizes!.fontRatio * 18,
-                    fontFamily: GoogleFonts.roboto().fontFamily,
+                    fontFamily: AppFonts.english,
                     fontWeight: FontWeight.w400,
                     height: 0.9,
                   ),
@@ -89,7 +88,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
                     fontSize: sizes!.isPhone
                         ? sizes!.fontRatio * 25
                         : sizes!.fontRatio * 30,
-                    fontFamily: GoogleFonts.roboto().fontFamily,
+                    fontFamily: AppFonts.english,
                     fontWeight: FontWeight.w600,
                     height: 0.9,
                   ),
@@ -104,7 +103,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
                         fontSize: sizes!.isPhone
                             ? sizes!.fontRatio * 16
                             : sizes!.fontRatio * 26,
-                        fontFamily: GoogleFonts.roboto().fontFamily,
+                        fontFamily: AppFonts.english,
                         fontWeight: FontWeight.w300,
                         height: 0.9,
                       ),
@@ -131,7 +130,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
                             fontSize: sizes!.isPhone
                                 ? sizes!.fontRatio * 12
                                 : sizes!.fontRatio * 16,
-                            fontFamily: GoogleFonts.roboto().fontFamily,
+                            fontFamily: AppFonts.english,
                             fontWeight: FontWeight.bold,
                             height: 0.9,
                           ),
@@ -145,7 +144,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
                             fontSize: sizes!.isPhone
                                 ? sizes!.fontRatio * 12
                                 : sizes!.fontRatio * 16,
-                            fontFamily: GoogleFonts.roboto().fontFamily,
+                            fontFamily: AppFonts.english,
                             fontWeight: FontWeight.w600,
                             height: 0.9,
                           ),
@@ -164,7 +163,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
                             fontSize: sizes!.isPhone
                                 ? sizes!.fontRatio * 12
                                 : sizes!.fontRatio * 16,
-                            fontFamily: GoogleFonts.roboto().fontFamily,
+                            fontFamily: AppFonts.english,
                             fontWeight: FontWeight.bold,
                             height: 0.9,
                           ),
@@ -178,7 +177,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
                             fontSize: sizes!.isPhone
                                 ? sizes!.fontRatio * 12
                                 : sizes!.fontRatio * 16,
-                            fontFamily: GoogleFonts.roboto().fontFamily,
+                            fontFamily: AppFonts.english,
                             fontWeight: FontWeight.w600,
                             height: 0.9,
                           ),
@@ -198,7 +197,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
                         fontSize: sizes!.isPhone
                             ? sizes!.fontRatio * 16
                             : sizes!.fontRatio * 26,
-                        fontFamily: GoogleFonts.roboto().fontFamily,
+                        fontFamily: AppFonts.english,
                         fontWeight: FontWeight.w500,
                         height: 0.9,
                       ),
@@ -225,7 +224,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
       children: [
         Text(
           "Almost there!",
-          style: GoogleFonts.roboto(
+          style: AppFonts.text(
             fontSize: sizes!.fontRatio * 22,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -235,7 +234,7 @@ class _AlmostThereScreenState extends ConsumerState<AlmostThereScreen> {
         Text(
           "Let’s just set a pin code for your card for security purposes.",
           textAlign: TextAlign.center,
-          style: GoogleFonts.roboto(
+          style: AppFonts.text(
             fontSize: sizes!.fontRatio * 14,
             fontWeight: FontWeight.w400,
             color: AppColors.grey6Color,

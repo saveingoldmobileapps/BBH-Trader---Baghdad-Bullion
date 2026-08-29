@@ -4,7 +4,6 @@
 // © 2022-2023  - All Rights Reserved
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../core_export.dart';
 
@@ -35,28 +34,23 @@ class GetGenericText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.maybeLocaleOf(context);
+    final preferArabic = locale?.languageCode == 'ar';
+
     return Text(
       text,
       textAlign: textAlign,
       softWrap: true,
       maxLines: lines,
-      // overflow: TextOverflow.ellipsis,
       overflow: overflow ?? TextOverflow.clip,
-      style: isInter
-          ? GoogleFonts.inter(
-              fontSize: sizes!.fontRatio * fontSize,
-              fontWeight: fontWeight,
-              color: color,
-              decoration: isUnderline ? TextDecoration.underline : null,
-              decorationColor: isUnderline ? color : null,
-            )
-          : GoogleFonts.roboto(
-              fontSize: sizes!.fontRatio * fontSize,
-              fontWeight: fontWeight,
-              color: color,
-              decoration: isUnderline ? TextDecoration.underline : null,
-              decorationColor: isUnderline ? color : null,
-            ),
+      style: AppFonts.text(
+        fontSize: sizes!.fontRatio * fontSize,
+        fontWeight: fontWeight,
+        color: color,
+        preferArabic: preferArabic,
+        decoration: isUnderline ? TextDecoration.underline : null,
+        decorationColor: isUnderline ? color : null,
+      ),
     );
   }
 }

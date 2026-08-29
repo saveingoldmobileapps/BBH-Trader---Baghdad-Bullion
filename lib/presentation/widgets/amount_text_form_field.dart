@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/core/decimal_text_input_formatter.dart';
 
@@ -48,7 +47,7 @@ class AmountTextFormField extends StatelessWidget {
           color: AppColors.secondaryColor,
           fontSize: 16,
           fontWeight: FontWeight.w400,
-          fontFamily: GoogleFonts.roboto().fontFamily,
+          fontFamily: AppFonts.english,
         ),
         decoration: InputDecoration(
           floatingLabelAlignment: FloatingLabelAlignment.start,
@@ -77,9 +76,9 @@ class AmountTextFormField extends StatelessWidget {
             color: AppColors.whiteColor,
             fontSize: 16,
             fontWeight: FontWeight.w400,
-            fontFamily: GoogleFonts.roboto().fontFamily,
+            fontFamily: AppFonts.english,
           ),
-          hintStyle: GoogleFonts.roboto(
+          hintStyle: AppFonts.text(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             color: AppColors.secondaryColor,

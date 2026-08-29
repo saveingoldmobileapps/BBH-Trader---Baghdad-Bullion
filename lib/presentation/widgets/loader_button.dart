@@ -17,6 +17,8 @@ class LoaderButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final gradient = AppColors.brandGoldGradient;
     final double buttonWidth = sizes!.isLandscape() && !sizes!.isPhone
         ? sizes!.height
         : sizes!.isPhone
@@ -36,16 +38,17 @@ class LoaderButton extends StatelessWidget {
         width: buttonWidth,
         height: buttonHeight,
         decoration: ShapeDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-            colors: [
-              AppColors.goldColor, // start (darker gold)
-              AppColors.goldDarkColor, // center (highlight gold)
-              AppColors.goldColor, // end (darker gold)
-            ],
-            stops: [0.0, 0.6, 1.0],
-          ),
+          gradient: gradient,
+          // const LinearGradient(
+          //   begin: Alignment.centerLeft,
+          //   end: Alignment.centerRight,
+          //   colors: [
+          //     AppColors.goldColor, // start (darker gold)
+          //     AppColors.goldDarkColor, // center (highlight gold)
+          //     AppColors.goldColor, // end (darker gold)
+          //   ],
+          //   stops: [0.0, 0.6, 1.0],
+          // ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

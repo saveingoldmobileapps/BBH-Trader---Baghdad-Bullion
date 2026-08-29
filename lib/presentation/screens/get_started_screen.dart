@@ -6,7 +6,6 @@ import 'package:baghdad_bullion_house/presentation/screens/setting_screens/suppo
 import 'package:baghdad_bullion_house/presentation/sharedProviders/providers/language_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'auth_screens/login_screen.dart';
@@ -27,6 +26,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final gradient = AppColors.brandGoldGradient;
     sizes!.refreshSize(context);
     final languageState = ref.watch(languageProvider);
     bool isEnglish = languageState.languageCode == "en";
@@ -156,7 +156,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                           TextDirection.rtl
                                       ? TextAlign.right
                                       : TextAlign.left,
-                                  style: GoogleFonts.roboto(
+                                  style: AppFonts.text(
                                     fontSize: 36,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.white,
@@ -174,10 +174,11 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                           TextDirection.rtl
                                       ? TextAlign.right
                                       : TextAlign.left,
-                                  style: GoogleFonts.roboto(
+                                  style: AppFonts.text(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.white70,
+                                    
                                   ),
                                 ),
                                 const SizedBox(height: 14),
@@ -207,10 +208,11 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                       AppLocalizations.of(
                                         context,
                                       )!.login_to_bbh,
-                                      style: const TextStyle(
+                                      style:  TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
                                         color: AppColors.whiteColor,
+                                        fontFamily: isEnglish? AppFonts.english:AppFonts.arabic,
                                       ),
                                     ),
                                   ),
@@ -235,24 +237,26 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                                     child: Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color(0xffB19454),
-                                            Color(0xff74540E),
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
+                                        gradient: gradient,
+                                        // const LinearGradient(
+                                        //   colors: [
+                                        //     Color(0xffB19454),
+                                        //     Color(0xff74540E),
+                                        //   ],
+                                        //   begin: Alignment.topLeft,
+                                        //   end: Alignment.bottomRight,
+                                        // ),
                                       ),
                                       child: Center(
                                         child: Text(
                                           AppLocalizations.of(
                                             context,
                                           )!.register_for_free_demo, //.sign_up_bbh,
-                                          style: const TextStyle(
+                                          style:  TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w600,
                                             color: Colors.black,
+                                            fontFamily: isEnglish? AppFonts.english:AppFonts.arabic,
                                           ),
                                         ),
                                       ),
@@ -367,7 +371,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> {
                         const SizedBox(width: 10),
                         Text(
                           AppLocalizations.of(context)!.need_help,
-                          style: GoogleFonts.roboto(
+                          style: AppFonts.text(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -402,7 +406,7 @@ class ContactUsScreen extends StatelessWidget {
         centerTitle: true,
         title: Text(
           AppLocalizations.of(context)!.contact_us,
-          style: GoogleFonts.roboto(
+          style: AppFonts.text(
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: Colors.white,
@@ -438,7 +442,7 @@ class ContactUsScreen extends StatelessWidget {
               Center(
                 child: Text(
                   AppLocalizations.of(context)!.get_in_touch,
-                  style: GoogleFonts.roboto(
+                  style: AppFonts.text(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -451,7 +455,7 @@ class ContactUsScreen extends StatelessWidget {
                 child: Text(
                   AppLocalizations.of(context)!.contact_desc,
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.roboto(
+                  style: AppFonts.text(
                     fontSize: 14,
                     color: Colors.white70,
                   ),
@@ -545,7 +549,7 @@ class ContactUsScreen extends StatelessWidget {
                         const SizedBox(width: 12),
                         Text(
                           AppLocalizations.of(context)!.office_hours,
-                          style: GoogleFonts.roboto(
+                          style: AppFonts.text(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -556,7 +560,7 @@ class ContactUsScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     Text(
                       AppLocalizations.of(context)!.office_hours_desc,
-                      style: GoogleFonts.roboto(
+                      style: AppFonts.text(
                         fontSize: 14,
                         color: Colors.white70,
                       ),
@@ -613,7 +617,7 @@ Widget _buildContactCard({
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.roboto(
+                  style: AppFonts.text(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
@@ -622,7 +626,7 @@ Widget _buildContactCard({
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: GoogleFonts.roboto(
+                  style: AppFonts.text(
                     fontSize: 14,
                     color: Colors.white70,
                   ),

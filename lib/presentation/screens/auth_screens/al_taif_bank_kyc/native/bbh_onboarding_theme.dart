@@ -1,27 +1,28 @@
+import 'package:baghdad_bullion_house/core/theme/app_fonts.dart';
+import 'package:baghdad_bullion_house/core/theme/const_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
-/// Design tokens from `bbh-onboarding-demo_25.html`.
+/// BBH onboarding design tokens (brand golds + DIN Next).
 abstract final class BbhOnboardingColors {
   static const cream = Color(0xFFF6F0E2);
   static const creamDeep = Color(0xFFEDE4CF);
   static const paper = Color(0xFFFBF8F1);
   static const paperWarm = Color(0xFFF9F3E4);
-  static const ink = Color(0xFF1C2638);
+  static const ink = AppColors.brandDark;
   static const inkSoft = Color(0xFF2C3A52);
-  static const gold = Color(0xFFB8924A);
-  static const goldLight = Color(0xFFD4B674);
-  static const goldDeep = Color(0xFF8D6C2F);
+  static const gold = AppColors.brandGold2;
+  static const goldLight = AppColors.brandGold3;
+  static const goldDeep = AppColors.brandGold1;
   static const muted = Color(0xFF8A7E6B);
   static const muted2 = Color(0xFFA59A85);
   static const rule = Color(0xFFE0D5BD);
   static const ruleSoft = Color(0xFFEBE2CC);
   static const error = Color(0xFF8B2E2E);
   static const success = Color(0xFF4A6741);
-  static const coverDarkTop = Color(0xFF0A1326);
-  static const coverDarkMid = Color(0xFF14213D);
-  static const coverDarkBottom = Color(0xFF0B1428);
-  static const coverText = Color(0xFFEDE0BC);
+  static const coverDarkTop = AppColors.brandDark;
+  static const coverDarkMid = Color(0xFF1F1F1F);
+  static const coverDarkBottom = Color(0xFF0B0B0B);
+  static const coverText = AppColors.brandGold3;
 }
 
 abstract final class BbhOnboardingRadii {
@@ -38,7 +39,7 @@ abstract final class BbhOnboardingText {
     double? height,
     double? letterSpacing,
   }) =>
-      GoogleFonts.manrope(
+      AppFonts.text(
         fontSize: size,
         fontWeight: weight,
         color: color,
@@ -52,33 +53,49 @@ abstract final class BbhOnboardingText {
     Color color = BbhOnboardingColors.ink,
     double? height,
     double? letterSpacing,
+    String? fontFamily,
   }) =>
-      GoogleFonts.cormorantGaramond(
+      AppFonts.text(
         fontSize: size,
         fontWeight: weight,
         color: color,
         height: height,
         letterSpacing: letterSpacing,
+        
       );
 
   static TextStyle arabic({
     double size = 16,
     FontWeight weight = FontWeight.w400,
     Color color = BbhOnboardingColors.ink,
+    String? fontFamily,
   }) =>
-      GoogleFonts.amiri(fontSize: size, fontWeight: weight, color: color);
+      AppFonts.text(
+        fontSize: size,
+        fontWeight: weight,
+        color: color,
+        preferArabic: true,
+      );
 
   static TextStyle stepEyebrow({bool isArabic = false}) => isArabic
-      ? arabic(size: 13, weight: FontWeight.w700, color: BbhOnboardingColors.goldDeep)
+      ? arabic(
+          size: 13,
+          weight: FontWeight.w700,
+          color: BbhOnboardingColors.goldDeep,
+        )
       : manrope(
           size: 10,
           weight: FontWeight.w600,
           color: BbhOnboardingColors.goldDeep,
-          letterSpacing: 2.2, // ~0.22em at 10px
+          letterSpacing: 2.2,
         );
 
   static TextStyle stepTitle({bool isArabic = false}) => isArabic
-      ? arabic(size: 30, weight: FontWeight.w700, color: BbhOnboardingColors.ink)
+      ? arabic(
+          size: 30,
+          weight: FontWeight.w700,
+          color: BbhOnboardingColors.ink,
+        )
       : display(size: 30, weight: FontWeight.w600);
 
   static TextStyle stepLede() =>
@@ -88,7 +105,7 @@ abstract final class BbhOnboardingText {
         size: 10,
         weight: FontWeight.w600,
         color: BbhOnboardingColors.goldDeep,
-        letterSpacing: 1.8, // ~0.18em at 10px
+        letterSpacing: 1.8,
       );
 
   static TextStyle fieldHint() => display(
@@ -104,6 +121,7 @@ abstract final class BbhOnboardingTheme {
   static ThemeData materialTheme() {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: AppFonts.english,
       scaffoldBackgroundColor: BbhOnboardingColors.cream,
       canvasColor: BbhOnboardingColors.cream,
       colorScheme: const ColorScheme.light(
@@ -117,7 +135,8 @@ abstract final class BbhOnboardingTheme {
       textTheme: TextTheme(
         bodyLarge: BbhOnboardingText.manrope(color: BbhOnboardingColors.ink),
         bodyMedium: BbhOnboardingText.manrope(color: BbhOnboardingColors.ink),
-        bodySmall: BbhOnboardingText.manrope(color: BbhOnboardingColors.inkSoft),
+        bodySmall:
+            BbhOnboardingText.manrope(color: BbhOnboardingColors.inkSoft),
         titleLarge: BbhOnboardingText.display(color: BbhOnboardingColors.ink),
         labelLarge: BbhOnboardingText.manrope(
           size: 12,

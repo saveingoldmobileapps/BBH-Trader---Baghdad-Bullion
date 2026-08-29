@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:otp_timer_button/otp_timer_button.dart';
 import 'package:pinput/pinput.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
@@ -92,7 +91,7 @@ class _SetPinScreenState extends ConsumerState<SetPinScreen> {
             ConstPadding.sizeBoxWithWidth(width: 10),
             Text(
               "Set Your Pin",
-              style: GoogleFonts.roboto(
+              style: AppFonts.text(
                 fontSize: sizes!.fontRatio * 22,
                 fontWeight: FontWeight.bold,
                 color: AppColors.grey2Color,
@@ -103,7 +102,7 @@ class _SetPinScreenState extends ConsumerState<SetPinScreen> {
         ConstPadding.sizeBoxWithHeight(height: 10),
         Text(
           "Set your pin for ATM withdrawals.",
-          style: GoogleFonts.roboto(
+          style: AppFonts.text(
             fontSize: sizes!.fontRatio * 14,
             fontWeight: FontWeight.w400,
             color: AppColors.grey2Color,
@@ -137,7 +136,7 @@ class _SetPinScreenState extends ConsumerState<SetPinScreen> {
       children: [
         Text(
           title,
-          style: GoogleFonts.roboto(
+          style: AppFonts.text(
             fontSize: sizes!.fontRatio * 16,
             fontWeight: FontWeight.w400,
             color: AppColors.grey2Color,

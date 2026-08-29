@@ -91,7 +91,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                   fontSize: sizes!.isPhone
                       ? sizes!.fontRatio * 15
                       : sizes!.fontRatio * 18,
-                  fontFamily: GoogleFonts.roboto().fontFamily,
+                  fontFamily: AppFonts.english,
                   fontWeight: FontWeight.w400,
                   height: 0.9,
                 ),
@@ -104,7 +104,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                   fontSize: sizes!.isPhone
                       ? sizes!.fontRatio * 25
                       : sizes!.fontRatio * 30,
-                  fontFamily: GoogleFonts.roboto().fontFamily,
+                  fontFamily: AppFonts.english,
                   fontWeight: FontWeight.w600,
                   height: 0.9,
                 ),
@@ -119,7 +119,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                       fontSize: sizes!.isPhone
                           ? sizes!.fontRatio * 16
                           : sizes!.fontRatio * 26,
-                      fontFamily: GoogleFonts.roboto().fontFamily,
+                      fontFamily: AppFonts.english,
                       fontWeight: FontWeight.w300,
                       height: 0.9,
                     ),
@@ -146,7 +146,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                           fontSize: sizes!.isPhone
                               ? sizes!.fontRatio * 12
                               : sizes!.fontRatio * 16,
-                          fontFamily: GoogleFonts.roboto().fontFamily,
+                          fontFamily: AppFonts.english,
                           fontWeight: FontWeight.bold,
                           height: 0.9,
                         ),
@@ -160,7 +160,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                           fontSize: sizes!.isPhone
                               ? sizes!.fontRatio * 12
                               : sizes!.fontRatio * 16,
-                          fontFamily: GoogleFonts.roboto().fontFamily,
+                          fontFamily: AppFonts.english,
                           fontWeight: FontWeight.w600,
                           height: 0.9,
                         ),
@@ -179,7 +179,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                           fontSize: sizes!.isPhone
                               ? sizes!.fontRatio * 12
                               : sizes!.fontRatio * 16,
-                          fontFamily: GoogleFonts.roboto().fontFamily,
+                          fontFamily: AppFonts.english,
                           fontWeight: FontWeight.bold,
                           height: 0.9,
                         ),
@@ -193,7 +193,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                           fontSize: sizes!.isPhone
                               ? sizes!.fontRatio * 12
                               : sizes!.fontRatio * 16,
-                          fontFamily: GoogleFonts.roboto().fontFamily,
+                          fontFamily: AppFonts.english,
                           fontWeight: FontWeight.w600,
                           height: 0.9,
                         ),
@@ -213,7 +213,7 @@ class _CardScreenState extends ConsumerState<CardScreen> {
                       fontSize: sizes!.isPhone
                           ? sizes!.fontRatio * 16
                           : sizes!.fontRatio * 26,
-                      fontFamily: GoogleFonts.roboto().fontFamily,
+                      fontFamily: AppFonts.english,
                       fontWeight: FontWeight.w500,
                       height: 0.9,
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:baghdad_bullion_house/core/theme/app_fonts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
@@ -122,7 +123,7 @@ class _CommonPhoneFieldWithDropdownState
             color: AppColors.secondaryColor,
             fontSize: 16,
             fontWeight: FontWeight.w400,
-            fontFamily: GoogleFonts.roboto().fontFamily,
+            fontFamily: AppFonts.english,
           ),
           inputDecoration: InputDecoration(
             labelText: widget.title.isNotEmpty
@@ -132,7 +133,7 @@ class _CommonPhoneFieldWithDropdownState
             hintStyle: TextStyle(
               color: AppColors.secondaryColor,
               fontSize: 16,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
             ),
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 18, horizontal: 8),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/core/decimal_text_input_formatter.dart';
 import 'package:baghdad_bullion_house/core/kyc/kyc_home_navigation.dart';
@@ -147,7 +146,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
         elevation: 0,
         title: Text(
           l10n.buy_gold,
-          style: GoogleFonts.inter(
+          style: AppFonts.text(
             fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
@@ -177,7 +176,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   // Gram Input Section
                   Text(
                     l10n.amount,
-                    style: GoogleFonts.inter(
+                    style: AppFonts.text(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
@@ -185,7 +184,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   ),
                   Text(
                     l10n.buy_gold_grams_subtitle,
-                    style: GoogleFonts.inter(color: Colors.grey, fontSize: 13),
+                    style: AppFonts.text(color: Colors.grey, fontSize: 13),
                   ),
                   const SizedBox(height: 15),
 
@@ -201,7 +200,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                             decimal: true,
                             signed: true,
                           ),
-                          style: GoogleFonts.inter(
+                          style: AppFonts.text(
                             color: Colors.white,
                             fontSize: 48,
                             fontWeight: FontWeight.bold,
@@ -231,7 +230,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                       //const SizedBox(width: 5),
                       // Text(
                       //   l10n.grams_unit_lowercase,
-                      //   style: GoogleFonts.inter(
+                      //   style: AppFonts.text(
                       //     color: Colors.white54,
                       //     fontSize: 20,
                       //   ),
@@ -249,7 +248,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                                     .grams_plural_lowercase //grams_unit_lowercase
                               : l10n.grams_unit_lowercase;
                         })(),
-                        style: GoogleFonts.inter(
+                        style: AppFonts.text(
                           color: Colors.white54,
                           fontSize: 20,
                         ),
@@ -258,7 +257,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   ),
                   Text(
                     l10n.buy_gold_approx_total(_formatIqd(calculatedValue)),
-                    style: GoogleFonts.inter(
+                    style: AppFonts.text(
                       color: Colors.white70,
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
@@ -294,7 +293,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Text(
                           "${l10n.max_grams_note} ${CommonService.formatGramForDisplay(maxGrams)}",
-                          style: GoogleFonts.inter(
+                          style: AppFonts.text(
                             color: Colors.white54,
                             fontSize: 13,
                             fontWeight: FontWeight.w400,
@@ -317,7 +316,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   if (isBuyAtPriceStatus) ...[
                     Text(
                       l10n.invest_target_price_per_gram,
-                      style: GoogleFonts.inter(
+                      style: AppFonts.text(
                         color: Colors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -332,7 +331,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                             ? '0'
                             : _formatIqd(buyAtPriceController.text),
                       ),
-                      style: GoogleFonts.inter(
+                      style: AppFonts.text(
                         color: Colors.grey,
                         fontSize: 12,
                       ),
@@ -348,7 +347,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
                             l10n.invest_price_less_than_buying,
-                            style: GoogleFonts.inter(
+                            style: AppFonts.text(
                               color: Colors.redAccent,
                               fontSize: 12,
                             ),
@@ -420,7 +419,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
             children: [
               Text(
                 l10n.current_market_price,
-                style: GoogleFonts.inter(color: Colors.white54, fontSize: 12),
+                style: AppFonts.text(color: Colors.white54, fontSize: 12),
               ),
               const SizedBox(height: 4),
               goldPriceState.when(
@@ -433,7 +432,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                           data.oneGramBuyingPriceInIQD,
                         ),
                       ),
-                      style: GoogleFonts.inter(
+                      style: AppFonts.text(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
@@ -550,7 +549,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
                   isBuyAtPriceStatus
                       ? l10n.invest_target_price_menu
                       : l10n.invest_market_price_short,
-                  style: GoogleFonts.inter(
+                  style: AppFonts.text(
                     color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -582,7 +581,7 @@ class _BuyGoldScreenState extends ConsumerState<BuyGoldScreen> {
           Expanded(
             child: Text(
               title,
-              style: GoogleFonts.inter(
+              style: AppFonts.text(
                 color: Colors.white,
                 fontSize: 13,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,

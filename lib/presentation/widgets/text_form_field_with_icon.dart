@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/core_export.dart';
 
 class TextFormFieldWithIcon extends StatelessWidget {
@@ -59,14 +58,14 @@ class TextFormFieldWithIcon extends StatelessWidget {
               color: textColor ?? AppColors.whiteColor,
               fontSize: 16,
               fontWeight: FontWeight.w400,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
             ),
 
         // TextStyle(
         //   color: textColor ?? AppColors.whiteColor,
         //   fontSize: 16,
         //   fontWeight: FontWeight.w400,
-        //   fontFamily: GoogleFonts.roboto().fontFamily,
+        //   fontFamily: AppFonts.english,
         // ),
         decoration: InputDecoration(
           floatingLabelAlignment: FloatingLabelAlignment.start,
@@ -95,9 +94,9 @@ class TextFormFieldWithIcon extends StatelessWidget {
             color: AppColors.whiteColor,
             fontSize: 16,
             fontWeight: FontWeight.w400,
-            fontFamily: GoogleFonts.roboto().fontFamily,
+            fontFamily: AppFonts.english,
           ),
-          hintStyle: GoogleFonts.roboto(
+          hintStyle: AppFonts.text(
             fontSize: 16,
             fontWeight: FontWeight.w400,
             color: AppColors.secondaryColor,

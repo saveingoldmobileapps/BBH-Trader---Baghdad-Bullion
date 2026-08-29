@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:baghdad_bullion_house/core/theme/app_fonts.dart';
 
 import 'funding_portal_theme.dart';
 
@@ -15,7 +15,7 @@ abstract final class FundingPortalTypography {
     double? letterSpacing,
     double? height,
   }) {
-    return GoogleFonts.manrope(
+    return AppFonts.text(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
@@ -31,7 +31,7 @@ abstract final class FundingPortalTypography {
     double? letterSpacing,
     double? height,
   }) {
-    return GoogleFonts.cormorantGaramond(
+    return AppFonts.text(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,
@@ -47,7 +47,7 @@ abstract final class FundingPortalTypography {
     double? letterSpacing,
     double? height,
   }) {
-    return GoogleFonts.jetBrainsMono(
+    return AppFonts.text(
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color,

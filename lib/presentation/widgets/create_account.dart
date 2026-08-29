@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:baghdad_bullion_house/core/theme/app_fonts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/res_sizes/res.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
@@ -38,7 +39,7 @@ class CreateAccountText extends StatelessWidget {
             style: TextStyle(
               color: regularColor ?? const Color(0xFF939090), // Neutral90 equivalent
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: regularWeight,
             ),
           ),
@@ -48,7 +49,7 @@ class CreateAccountText extends StatelessWidget {
             style: TextStyle(
               color: boldColor ?? const Color(0xFFBBA473), // PrimaryGold500 equivalent
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: boldWeight,
             ),
           ),
@@ -57,7 +58,7 @@ class CreateAccountText extends StatelessWidget {
             style: TextStyle(
               color: boldColor ?? const Color(0xFFBBA473), // PrimaryGold500 equivalent
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: regularWeight,
             ),
           ),

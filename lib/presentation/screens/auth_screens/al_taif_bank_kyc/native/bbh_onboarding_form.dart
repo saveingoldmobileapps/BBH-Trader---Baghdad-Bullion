@@ -11,25 +11,30 @@ class BbhOnboardingForm {
 
   bool get hasSignature => signature != null && signature!.isNotEmpty;
 
-  /// Full name from National ID fields (English preferred, Arabic fallback).
-  String get nationalIdFullName {
-    String pick(TextEditingController en, TextEditingController ar) {
-      final english = en.text.trim();
-      if (english.isNotEmpty) return english;
-      return ar.text.trim();
-    }
-
+  /// Full National ID name in Arabic only (first + father + grandfather + surname).
+  String get nationalIdArabicFullName {
     return [
-      pick(idEnFirst, arFirst),
-      pick(idEnFather, arFather),
-      pick(idEnGf, arGf),
-      pick(idEnSurname, arSurname),
+      arFirst.text.trim(),
+      arFather.text.trim(),
+      arGf.text.trim(),
+      arSurname.text.trim(),
     ].where((p) => p.isNotEmpty).join(' ');
   }
 
-  /// Sets signer name from National ID (used on the signature step).
+  /// Full passport name in English only (first + father + grandfather + surname).
+  String get passportEnglishFullName {
+    if (noPassport) return '';
+    return [
+      enFirst.text.trim(),
+      enFather.text.trim(),
+      enGf.text.trim(),
+      enSurname.text.trim(),
+    ].where((p) => p.isNotEmpty).join(' ');
+  }
+
+  /// Sets signer name from National ID Arabic name only.
   void ensureSignerNameFromNationalId() {
-    final name = nationalIdFullName;
+    final name = nationalIdArabicFullName;
     if (name.isNotEmpty) signerName.text = name;
   }
 

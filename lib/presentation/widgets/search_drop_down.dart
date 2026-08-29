@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:baghdad_bullion_house/core/theme/app_fonts.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:baghdad_bullion_house/core/res_sizes/res.dart';
 import 'package:baghdad_bullion_house/l10n/app_localizations.dart';
 import 'package:baghdad_bullion_house/presentation/widgets/text_form_field_with_icon.dart';
@@ -179,7 +179,7 @@ class FullScreenDropdownState extends State<FullScreenDropdown> {
                   color: AppColors.whiteColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
-                  fontFamily: GoogleFonts.roboto().fontFamily,
+                  fontFamily: AppFonts.english,
                 ),
                 decoration: InputDecoration(
                   floatingLabelAlignment: FloatingLabelAlignment.start,
@@ -208,9 +208,9 @@ class FullScreenDropdownState extends State<FullScreenDropdown> {
                     color: AppColors.whiteColor,
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
-                    fontFamily: GoogleFonts.roboto().fontFamily,
+                    fontFamily: AppFonts.english,
                   ),
-                  hintStyle: GoogleFonts.roboto(
+                  hintStyle: AppFonts.text(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: AppColors.whiteColor,

@@ -164,6 +164,9 @@ dev_dependencies:
   freezed: ^3.2.5
   change_app_package_name: ^1.5.0
 
+  #for build link creation
+  flutter_build_uploader: ^0.0.4
+
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
@@ -198,14 +201,24 @@ flutter:
   fonts:
   - family: DINNextArabic
     fonts:
+      - asset: assets/fonts/din_next_arabic_ultralight.ttf
+        weight: 200
       - asset: assets/fonts/din_next_arabic_light.ttf
         weight: 300
       - asset: assets/fonts/din_next_arabic_regular.ttf
         weight: 400
       - asset: assets/fonts/din_next_arabic_medium.ttf
         weight: 500
-      # - asset: assets/fonts/din_next_arabic_bold.ttf  # If you have it
-      #   weight: 700
+      - asset: assets/fonts/din_next_arabic_bold.ttf
+        weight: 700
+      - asset: assets/fonts/din_next_arabic_heavy.ttf
+        weight: 800
+      - asset: assets/fonts/din_next_arabic_black.ttf
+        weight: 900
+  - family: DINNextEnglish
+    fonts:
+      - asset: assets/fonts/din_next_english_regular.ttf
+        weight: 400
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

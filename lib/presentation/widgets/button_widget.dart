@@ -18,20 +18,22 @@ class ButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isButtonEnabled = enabled && onTap != null;
+    final gradient = AppColors.brandGoldGradient;
 
     return Material(
       color: Colors.transparent,
       child: Ink(
         decoration: BoxDecoration(
           gradient: isButtonEnabled
-              ? const LinearGradient(
-                  begin: Alignment(1.00, 0.01),
-                  end: Alignment(-1, -0.01),
-                  colors: [
-                    Color(0xFF74540E),
-                    Color(0xFFB19454),
-                  ],
-                )
+              ?  gradient
+              // const LinearGradient(
+              //     begin: Alignment(1.00, 0.01),
+              //     end: Alignment(-1, -0.01),
+              //     colors: [
+              //       Color(0xFF74540E),
+              //       Color(0xFFB19454),
+              //     ],
+              //   )
               : LinearGradient(
                   begin: const Alignment(1.00, 0.01),
                   end: const Alignment(-1, -0.01),
@@ -69,7 +71,7 @@ class ButtonWidget extends StatelessWidget {
                     text: title,
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
           ),
         ),

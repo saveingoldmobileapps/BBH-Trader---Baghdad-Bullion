@@ -615,7 +615,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                         color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.w400,
-                        fontFamily: GoogleFonts.inter().fontFamily,
+                        fontFamily: AppFonts.english,
                       ),
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(
@@ -627,7 +627,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                           color: AppColors.grey4Color,
                           fontSize: 22,
                           fontWeight: FontWeight.w400,
-                          fontFamily: GoogleFonts.inter().fontFamily,
+                          fontFamily: AppFonts.english,
                         ),
                       ),
                     ),
@@ -683,7 +683,7 @@ class _SellGoldScreenState extends ConsumerState<SellGoldScreen> {
                         color: AppColors.grey4Color,
                         fontSize: 22,
                         fontWeight: FontWeight.w400,
-                        fontFamily: GoogleFonts.inter().fontFamily,
+                        fontFamily: AppFonts.english,
                       ),
                     ),
                   ),

@@ -113,7 +113,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
                   tabletVal: sizes!.isLandscape() ? 15 : 14,
                 ),
                 fontWeight: FontWeight.w700,
-                fontFamily: GoogleFonts.roboto().fontFamily,
+                fontFamily: AppFonts.english,
               ),
               unselectedLabelStyle: TextStyle(
                 color: AppColors.grey7Color,
@@ -122,7 +122,7 @@ class _MainHomeScreenState extends ConsumerState<MainHomeScreen> {
                   tabletVal: sizes!.isLandscape() ? 15 : 14,
                 ),
                 fontWeight: FontWeight.w400,
-                fontFamily: GoogleFonts.roboto().fontFamily,
+                fontFamily: AppFonts.english,
               ),
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(

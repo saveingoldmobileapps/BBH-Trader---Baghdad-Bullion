@@ -42,7 +42,7 @@ class AlreadyHaveAccountText extends StatelessWidget {
             style: TextStyle(
               color: regularColor ?? AppColors.neutral90,
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: regularWeight,
             ),
           ),
@@ -55,7 +55,7 @@ class AlreadyHaveAccountText extends StatelessWidget {
             style: TextStyle(
               color: boldColor ?? AppColors.primaryGold500,
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: boldWeight,
             ),
           ),
@@ -64,7 +64,7 @@ class AlreadyHaveAccountText extends StatelessWidget {
             style: TextStyle(
               color: boldColor ?? AppColors.primaryGold500,
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: regularWeight,
             ),
           ),

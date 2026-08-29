@@ -42,7 +42,7 @@ class TermsAndPrivacyText extends StatelessWidget {
             style: TextStyle(
               color: regularTextColor ?? const Color(0xFFE5E1E1),
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -60,7 +60,7 @@ class TermsAndPrivacyText extends StatelessWidget {
             style: TextStyle(
               color: linkTextColor ?? const Color(0xFFBBA473),
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -70,7 +70,7 @@ class TermsAndPrivacyText extends StatelessWidget {
             style: TextStyle(
               color: regularTextColor ?? const Color(0xFFE5E1E1),
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -88,7 +88,7 @@ class TermsAndPrivacyText extends StatelessWidget {
             style: TextStyle(
               color: linkTextColor ?? const Color(0xFFBBA473),
               fontSize: effectiveFontSize,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
               fontWeight: FontWeight.w700,
             ),
           ),

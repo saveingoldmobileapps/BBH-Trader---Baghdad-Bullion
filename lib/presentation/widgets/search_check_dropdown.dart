@@ -108,7 +108,7 @@ class _SearchableWithCheckBoxState extends State<SearchableWithCheckBox> {
             labelStyle: TextStyle(
               color: AppColors.whiteColor,
               fontSize: 16,
-              fontFamily: GoogleFonts.roboto().fontFamily,
+              fontFamily: AppFonts.english,
             ),
             border: OutlineInputBorder(
               borderSide: BorderSide(color: AppColors.secondaryColor),
@@ -275,7 +275,7 @@ class _FullScreenMultiSelectState extends State<FullScreenMultiSelect> {
                   color: AppColors.whiteColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
-                  fontFamily: GoogleFonts.roboto().fontFamily,
+                  fontFamily: AppFonts.english,
                 ),
                 decoration: InputDecoration(
                   floatingLabelAlignment: FloatingLabelAlignment.start,

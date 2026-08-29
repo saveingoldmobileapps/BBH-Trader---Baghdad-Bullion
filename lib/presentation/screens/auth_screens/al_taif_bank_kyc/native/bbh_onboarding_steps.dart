@@ -1,3 +1,4 @@
+import 'package:baghdad_bullion_house/core/core_export.dart';
 import 'package:baghdad_bullion_house/services/bbh_onboarding/bbh_onboarding_otp_service.dart';
 import 'package:baghdad_bullion_house/services/ipass_kyc/ipass_onboarding_mapper.dart';
 import 'package:flutter/material.dart';
@@ -53,138 +54,144 @@ class BbhOnboardingSteps {
   ];
 
   static Widget cover({
-    required VoidCallback onBegin,
-    required VoidCallback onExit,
-  }) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          width: constraints.maxWidth,
-          height: constraints.maxHeight,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                BbhOnboardingColors.coverDarkTop,
-                BbhOnboardingColors.coverDarkMid,
-                BbhOnboardingColors.coverDarkBottom,
-              ],
-            ),
+  required VoidCallback onBegin,
+  required VoidCallback onExit,
+}) {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      // Get the current locale
+      final locale = Localizations.localeOf(context);
+      final isArabic = locale.languageCode == 'ar';
+      
+      return Container(
+        width: constraints.maxWidth,
+        height: constraints.maxHeight,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              BbhOnboardingColors.coverDarkTop,
+              BbhOnboardingColors.coverDarkMid,
+              BbhOnboardingColors.coverDarkBottom,
+            ],
           ),
-          child: SafeArea(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 480),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(28, 32, 28, 24),
-                  child: Column(
-                    children: [
-                      const Spacer(),
-                      Image.asset(
-                        'assets/png/app_ic.png',
-                        height: 132,
-                        width: 132,
+        ),
+        child: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(28, 32, 28, 24),
+                child: Column(
+                  children: [
+                    const Spacer(),
+                    Image.asset(
+                      'assets/png/app_ic.png',
+                      height: 132,
+                      width: 132,
+                    ),
+                    const SizedBox(height: 24),
+                    Text(
+                      'Baghdad\nBullion House',
+                      textAlign: TextAlign.center,
+                      style: BbhOnboardingText.display(
+                        size: 38,
+                        weight: FontWeight.w600,
+                        color: const Color(0xFFF0E2BD),
+                        fontFamily: isArabic ? AppFonts.arabic : AppFonts.english,
                       ),
-                      const SizedBox(height: 24),
-                      Text(
-                        'Baghdad\nBullion House',
-                        textAlign: TextAlign.center,
-                        style: BbhOnboardingText.display(
-                          size: 38,
-                          weight: FontWeight.w600,
-                          color: const Color(0xFFF0E2BD),
-                        ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'دار بغداد لصياغة الذهب و الفضة والسبائك الذهبية',
+                      textAlign: TextAlign.center,
+                      style: BbhOnboardingText.arabic(
+                        size: 18,
+                        color: const Color(0xD9E8D49E),
+                        fontFamily: isArabic ? AppFonts.arabic: AppFonts.english, // Always Arabic font
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'دار بغداد لصياغة الذهب و الفضة والسبائك الذهبية',
-                        textAlign: TextAlign.center,
-                        style: BbhOnboardingText.arabic(
-                          size: 18,
-                          color: const Color(0xD9E8D49E),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        width: 90,
-                        height: 1,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.transparent,
-                              BbhOnboardingColors.goldLight.withValues(
-                                alpha: 0.85,
-                              ),
-                              Colors.transparent,
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(vertical: 18),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color: BbhOnboardingColors.gold.withValues(
-                                alpha: 0.28,
-                              ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      width: 90,
+                      height: 1,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.transparent,
+                            BbhOnboardingColors.goldLight.withValues(
+                              alpha: 0.85,
                             ),
-                            bottom: BorderSide(
-                              color: BbhOnboardingColors.gold.withValues(
-                                alpha: 0.28,
-                              ),
-                            ),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              'CLASSIFICATION',
-                              style: BbhOnboardingText.manrope(
-                                size: 9,
-                                weight: FontWeight.w600,
-                                letterSpacing: 2.2,
-                                color: BbhOnboardingColors.goldLight,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Restricted',
-                              style: BbhOnboardingText.display(
-                                size: 15,
-                                weight: FontWeight.w500,
-                                color: const Color(0xFFF0E2BD),
-                              ),
-                            ),
+                            Colors.transparent,
                           ],
                         ),
                       ),
-                      const Spacer(flex: 2),
-                      BbhGoldButton(
-                        label: 'Begin Onboarding',
-                        onPressed: onBegin,
-                        forCover: true,
+                    ),
+                    const SizedBox(height: 32),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            color: BbhOnboardingColors.gold.withValues(
+                              alpha: 0.28,
+                            ),
+                          ),
+                          bottom: BorderSide(
+                            color: BbhOnboardingColors.gold.withValues(
+                              alpha: 0.28,
+                            ),
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 10),
-                      BbhGhostButton(
-                        label: 'Exit',
-                        onPressed: onExit,
-                        onDark: true,
+                      child: Column(
+                        children: [
+                          Text(
+                            'CLASSIFICATION',
+                            style: BbhOnboardingText.manrope(
+                              size: 9,
+                              weight: FontWeight.w600,
+                              letterSpacing: 2.2,
+                              color: BbhOnboardingColors.goldLight,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Restricted',
+                            style: BbhOnboardingText.display(
+                              size: 15,
+                              weight: FontWeight.w500,
+                              color: const Color(0xFFF0E2BD),
+                              fontFamily: isArabic ? 'Cairo' : 'Poppins',
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const Spacer(flex: 2),
+                    BbhGoldButton(
+                      label: 'Begin Onboarding',
+                      onPressed: onBegin,
+                      forCover: true,
+                    ),
+                    const SizedBox(height: 10),
+                    BbhGhostButton(
+                      label: 'Exit',
+                      onPressed: onExit,
+                      onDark: true,
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
+        ),
+      );
+    },
+  );
+}
   static Widget preflight() {
     return _scroll([
       const BbhStepHeader(
@@ -1376,8 +1383,9 @@ class BbhOnboardingSteps {
       const SizedBox(height: 12),
       BbhTextField(
         controller: form.signerName,
-        label: 'Full Name (National ID)',
+        label: 'Full Name (National ID Arabic)',
         readOnly: true,
+        textDirection: TextDirection.rtl,
       ),
       const SizedBox(height: 12),
       Align(
@@ -1434,18 +1442,8 @@ class BbhOnboardingSteps {
       return '$value  ✓ Verified';
     }
 
-    String fullEn() => [
-      v(form.arFirst),
-      v(form.idEnFather),
-      v(form.idEnGf),
-      v(form.arFirst),
-    ].where((e) => e.isNotEmpty).join(' ');
-    String fullAr() => [
-      v(form.arFirst),
-      v(form.arFather),
-      v(form.arGf),
-      v(form.arSurname),
-    ].where((e) => e.isNotEmpty).join(' ');
+    String fullEn() => form.passportEnglishFullName;
+    String fullAr() => form.nationalIdArabicFullName;
     String landmark() {
       final en = v(form.addrLandmarkEn);
       final ar = v(form.addrLandmarkAr);

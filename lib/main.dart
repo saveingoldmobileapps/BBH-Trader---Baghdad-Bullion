@@ -385,6 +385,23 @@ class _MyAppState extends ConsumerState<MyApp> {
       theme: ThemeData(
         useMaterial3: true,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        fontFamily: AppFonts.familyForLocale(locale),
+        textTheme: AppFonts.textThemeFor(
+          locale,
+          bodyColor: AppColors.brandWhite,
+        ),
+        primaryColor: AppColors.primaryGold500,
+        scaffoldBackgroundColor: AppColors.brandDark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.brandGold1,
+          brightness: Brightness.dark,
+        ).copyWith(
+          primary: AppColors.brandGold1,
+          secondary: AppColors.brandGold2,
+          surface: AppColors.brandDark,
+          onPrimary: AppColors.brandWhite,
+          onSurface: AppColors.brandWhite,
+        ),
       ),
       initialRoute: AppRoutes.getStartedScreen,
       routes: AppRoutes.routes,
